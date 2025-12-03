@@ -43,14 +43,22 @@ export default function Home() {
             </a>
           </div>
 
-          {/* CTA Button */}
-          <a
-            href="#contact"
-            className="hidden md:flex group relative px-6 py-2.5 bg-black text-white rounded-full text-sm font-medium overflow-hidden hover:scale-105 transition-transform"
-          >
-            <span className="relative z-10">Let&apos;s Talk</span>
-            <div className="absolute inset-0 bg-fuchsia-500 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
-          </a>
+          {/* CTA Buttons */}
+          <div className="hidden md:flex gap-3 items-center">
+            <a
+              href="/signin"
+              className="px-6 py-2.5 border-2 border-black text-black rounded-full text-sm font-medium hover:bg-black hover:text-white transition-all duration-300"
+            >
+              Sign In
+            </a>
+            <a
+              href="#contact"
+              className="group relative px-6 py-2.5 bg-black text-white rounded-full text-sm font-medium overflow-hidden hover:scale-105 transition-transform"
+            >
+              <span className="relative z-10">Let&apos;s Talk</span>
+              <div className="absolute inset-0 bg-fuchsia-500 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+            </a>
+          </div>
 
           {/* Mobile Menu Button */}
           <button className="md:hidden p-2">
@@ -87,10 +95,10 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <button className="px-8 py-4 bg-slate-900 text-white rounded-full text-lg font-medium hover:bg-fuchsia-500 hover:scale-105 transition-all duration-300 shadow-xl shadow-fuchsia-500/20 flex items-center gap-2">
-              Start a Course
+            <a href="/signin" className="px-8 py-4 bg-slate-900 text-white rounded-full text-lg font-medium hover:bg-fuchsia-500 hover:scale-105 transition-all duration-300 shadow-xl shadow-fuchsia-500/20 flex items-center gap-2">
+              Get Started
               <ArrowRight className="w-5 h-5" />
-            </button>
+            </a>
             <button className="px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-full text-lg font-medium hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
               <Play className="w-5 h-5 text-slate-400" />
               Platform Tour

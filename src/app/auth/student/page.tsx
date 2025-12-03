@@ -1,0 +1,407 @@
+'use client';
+
+import { useState } from 'react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Chrome } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+
+export default function StudentAuth() {
+  const router = useRouter();
+  const supabase = createClient();
+  const [isSignIn, setIsSignIn] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    university: '',
+    domain: '',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      if (isSignIn) {
+        // Sign In
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (error) throw error;
+
+        // Check profile completeness
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', data.user.id)
+          .single();
+
+        const isComplete = profile?.university && profile?.full_name;
+        if (!isComplete) {
+          router.push('/onboarding/student');
+        } else {
+          router.push('/dashboard/student');
+        }
+      } else {
+        // Sign Up
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (authError) throw authError;
+
+        // Create profile
+        if (authData.user) {
+          const { error: profileError } = await supabase.from('profiles').insert({
+            user_id: authData.user.id,
+            role: 'student',
+            full_name: formData.name,
+            email: formData.email,
+            university: formData.university,
+            field_of_study: formData.domain,
+          });
+
+          if (profileError) throw profileError;
+
+          // Redirect to onboarding for profile completion
+          router.push('/onboarding/student');
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?role=student`,
+        },
+      });
+
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || 'Failed to authenticate with Google');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex">
+      {/* Left Side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          {/* Back Button */}
+          <Link
+            href="/signin"
+            className="inline-flex items-center text-sm text-slate-600 hover:text-black mb-8 transition-colors"
+          >
+            ← Back to role selection
+          </Link>
+
+          {/* Header */}
+          <div className="mb-8">
+            <div className="inline-block px-4 py-2 bg-fuchsia-100 text-fuchsia-700 rounded-full text-sm font-semibold mb-4">
+              Student Portal
+            </div>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+            <h1 className="text-4xl font-bold text-black mb-3">
+              {isSignIn ? 'Welcome back!' : 'Create your account'}
+            </h1>
+            <p className="text-slate-600">
+              {isSignIn
+                ? 'Sign in to access your learning dashboard'
+                : 'Join Classera to start your learning journey'}
+            </p>
+          </div>
+
+          {/* Google Sign In */}
+          <button
+            onClick={handleGoogleAuth}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 border-2 border-slate-200 rounded-xl font-medium text-slate-700 hover:border-fuchsia-300 hover:bg-fuchsia-50 transition-all mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Chrome className="w-5 h-5" />
+            {loading ? 'Loading...' : 'Continue with Google'}
+          </button>
+
+          {/* Divider */}
+          <div className="relative flex items-center justify-center my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative px-4 bg-white text-sm text-slate-500">or</div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name (Sign Up only) */}
+            {!isSignIn && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  required
+                />
+              </div>
+            )}
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="email"
+                  placeholder="student@university.edu"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* University (Sign Up only) */}
+            {!isSignIn && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  University
+                </label>
+                <select
+                  value={formData.university}
+                  onChange={(e) => setFormData({ ...formData, university: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  required
+                >
+                  <option value="">Select your university</option>
+                  <option value="lpu">Lovely Professional University (LPU)</option>
+                  <option value="parul">Parul University</option>
+                  <option value="manipal">Manipal University</option>
+                  <option value="vit">VIT University</option>
+                  <option value="amity">Amity University</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            )}
+
+            {/* Domain (Sign Up only) */}
+            {!isSignIn && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Field of Study
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Computer Science, Business, etc."
+                  value={formData.domain}
+                  onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  required
+                />
+              </div>
+            )}
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full pl-12 pr-12 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Forgot Password (Sign In only) */}
+            {isSignIn && (
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-fuchsia-600 hover:text-fuchsia-700 font-medium"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            )}
+
+            {/* Terms (Sign Up only) */}
+            {!isSignIn && (
+              <div className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="mt-1 w-4 h-4 text-fuchsia-600 border-slate-300 rounded focus:ring-fuchsia-500"
+                  required
+                />
+                <label htmlFor="terms" className="text-sm text-slate-600">
+                  I agree to the{' '}
+                  <Link href="/terms" className="text-fuchsia-600 hover:underline">
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-fuchsia-600 hover:underline">
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-fuchsia-600 text-white rounded-xl font-semibold hover:bg-fuchsia-700 transition-colors shadow-lg shadow-fuchsia-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Loading...' : (isSignIn ? 'Sign In' : 'Create Account')}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </form>
+
+          {/* Toggle Sign In/Up */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setIsSignIn(!isSignIn)}
+              className="text-sm text-slate-600"
+            >
+              {isSignIn ? "Don't have an account? " : 'Already have an account? '}
+              <span className="text-fuchsia-600 font-semibold hover:text-fuchsia-700">
+                {isSignIn ? 'Sign up' : 'Sign in'}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side - Visual */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 p-12 items-center justify-center relative overflow-hidden">
+        {/* Decorative Blobs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 text-white max-w-md">
+          <div className="mb-8">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
+              <span className="text-4xl">🎓</span>
+            </div>
+            <h2 className="text-4xl font-bold mb-4">Start Your Learning Journey</h2>
+            <p className="text-white/80 text-lg">
+              Join thousands of students already learning on Classera. Access live classes,
+              complete assignments, and track your progress all in one place.
+            </p>
+          </div>
+
+          {/* Features */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Live Interactive Classes</h3>
+                <p className="text-white/70 text-sm">
+                  Join real-time sessions with mentors and peers
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Track Your Progress</h3>
+                <p className="text-white/70 text-sm">
+                  Monitor your learning journey with detailed analytics
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">AI-Powered Assistance</h3>
+                <p className="text-white/70 text-sm">
+                  Get instant help and explanations when you need them
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
