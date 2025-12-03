@@ -9,6 +9,7 @@ import { Select } from '@/components/ui/Select';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UniversitySearch } from '@/components/ui/UniversitySearch';
 import { User, GraduationCap, Briefcase, Target, ArrowRight, ArrowLeft } from 'lucide-react';
+import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 
 const TOTAL_STEPS = 4;
 
@@ -64,20 +65,62 @@ export default function MentorOnboarding() {
 
       if (!user) throw new Error('No user found');
 
-      const { error: updateError } = await supabase
+      // Check if profile exists
+      const { data: existingProfile } = await supabase
         .from('profiles')
-        .update({
-          full_name: formData.full_name,
-          university: formData.university,
-          expertise: formData.expertise,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
 
-      if (updateError) throw updateError;
+      if (existingProfile) {
+        // Update existing profile
+        const { data: updateData, error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            full_name: formData.full_name,
+            university: formData.university,
+            expertise: formData.expertise,
+          })
+          .eq('user_id', user.id)
+          .select();
 
-      router.push('/dashboard/mentor');
+        if (updateError) {
+          console.error('Update error:', updateError);
+          throw updateError;
+        }
+
+        console.log('Profile updated successfully:', updateData);
+      } else {
+        // Create new profile
+        const avatarUrl = await getGravatarUrlClient(user.email || '');
+        const { data: insertData, error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: user.id,
+            role: 'mentor',
+            full_name: formData.full_name,
+            email: user.email || '',
+            university: formData.university,
+            expertise: formData.expertise,
+            avatar_url: avatarUrl,
+          })
+          .select();
+
+        if (insertError) {
+          console.error('Insert error:', insertError);
+          throw insertError;
+        }
+
+        console.log('Profile created successfully:', insertData);
+      }
+
+      // Wait a bit for the database to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Redirect to dashboard
+      window.location.href = '/dashboard/mentor';
     } catch (err: any) {
+      console.error('Onboarding error:', err);
       setError(err.message || 'Failed to complete onboarding');
       setLoading(false);
     }

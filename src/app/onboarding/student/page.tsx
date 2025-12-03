@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UniversitySearch } from '@/components/ui/UniversitySearch';
+import { FieldOfStudySearch } from '@/components/ui/FieldOfStudySearch';
+import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const TOTAL_STEPS = 4;
@@ -64,20 +66,62 @@ export default function StudentOnboarding() {
 
       if (!user) throw new Error('No user found');
 
-      const { error: updateError } = await supabase
+      // Check if profile exists
+      const { data: existingProfile } = await supabase
         .from('profiles')
-        .update({
-          full_name: formData.full_name,
-          university: formData.university,
-          field_of_study: formData.field_of_study,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('user_id', user.id);
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
 
-      if (updateError) throw updateError;
+      if (existingProfile) {
+        // Update existing profile
+        const { data: updateData, error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            full_name: formData.full_name,
+            university: formData.university,
+            field_of_study: formData.field_of_study,
+          })
+          .eq('user_id', user.id)
+          .select();
 
-      router.push('/dashboard/student');
+        if (updateError) {
+          console.error('Update error:', updateError);
+          throw updateError;
+        }
+
+        console.log('Profile updated successfully:', updateData);
+      } else {
+        // Create new profile
+        const avatarUrl = await getGravatarUrlClient(user.email || '');
+        const { data: insertData, error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: user.id,
+            role: 'student',
+            full_name: formData.full_name,
+            email: user.email || '',
+            university: formData.university,
+            field_of_study: formData.field_of_study,
+            avatar_url: avatarUrl,
+          })
+          .select();
+
+        if (insertError) {
+          console.error('Insert error:', insertError);
+          throw insertError;
+        }
+
+        console.log('Profile created successfully:', insertData);
+      }
+
+      // Wait a bit for the database to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Redirect to dashboard
+      window.location.href = '/dashboard/student';
     } catch (err: any) {
+      console.error('Onboarding error:', err);
       setError(err.message || 'Failed to complete onboarding');
       setLoading(false);
     }
@@ -149,13 +193,16 @@ export default function StudentOnboarding() {
               </p>
             </div>
 
-            <Input
-              label="Field of Study"
-              placeholder="e.g., Computer Science, Business, etc."
-              value={formData.field_of_study}
-              onChange={(e) => setFormData({ ...formData, field_of_study: e.target.value })}
-              icon={<BookOpen className="w-5 h-5" />}
-            />
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Field of Study
+              </label>
+              <FieldOfStudySearch
+                value={formData.field_of_study}
+                onChange={(value) => setFormData({ ...formData, field_of_study: value })}
+                placeholder="Search for your field of study..."
+              />
+            </div>
 
             <Select
               label="Year of Study (Optional)"

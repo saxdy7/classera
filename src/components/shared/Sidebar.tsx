@@ -24,7 +24,7 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/student' },
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/student/courses' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/student/schedule' },
-    { icon: Users, label: 'Find Mentors', href: '/dashboard/student/mentors' },
+    { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/student/sessions' },
     { icon: MessageSquare, label: 'Messages', href: '/dashboard/student/messages' },
     { icon: Bot, label: 'AI Assistant', href: '/dashboard/student/ai-assistant' },

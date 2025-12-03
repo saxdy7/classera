@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, Chrome } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 
 export default function MentorAuth() {
   const router = useRouter();
@@ -17,8 +18,7 @@ export default function MentorAuth() {
     name: '',
     email: '',
     password: '',
-    university: '',
-    expertise: '',
+    confirmPassword: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,6 +51,13 @@ export default function MentorAuth() {
         }
       } else {
         // Sign Up
+        // Check if passwords match
+        if (formData.password !== formData.confirmPassword) {
+          setError('Passwords do not match');
+          setLoading(false);
+          return;
+        }
+
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
@@ -60,13 +67,14 @@ export default function MentorAuth() {
 
         // Create profile
         if (authData.user) {
+          const avatarUrl = await getGravatarUrlClient(formData.email);
           const { error: profileError } = await supabase.from('profiles').insert({
             user_id: authData.user.id,
             role: 'mentor',
             full_name: formData.name,
             email: formData.email,
-            university: formData.university,
-            expertise: formData.expertise,
+            university: '',
+            avatar_url: avatarUrl,
           });
 
           if (profileError) throw profileError;
@@ -165,7 +173,7 @@ export default function MentorAuth() {
                   placeholder="Dr. Jane Smith"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors bg-white text-black placeholder:text-slate-400"
                   required
                 />
               </div>
@@ -183,51 +191,11 @@ export default function MentorAuth() {
                   placeholder="mentor@university.edu"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors bg-white text-black placeholder:text-slate-400"
                   required
                 />
               </div>
             </div>
-
-            {/* University (Sign Up only) */}
-            {!isSignIn && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  University/Institution
-                </label>
-                <select
-                  value={formData.university}
-                  onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
-                  required
-                >
-                  <option value="">Select your institution</option>
-                  <option value="lpu">Lovely Professional University (LPU)</option>
-                  <option value="parul">Parul University</option>
-                  <option value="manipal">Manipal University</option>
-                  <option value="vit">VIT University</option>
-                  <option value="amity">Amity University</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            )}
-
-            {/* Expertise (Sign Up only) */}
-            {!isSignIn && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Area of Expertise
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Computer Science, Mathematics, etc."
-                  value={formData.expertise}
-                  onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
-                  required
-                />
-              </div>
-            )}
 
             {/* Password */}
             <div>
@@ -241,7 +209,7 @@ export default function MentorAuth() {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full pl-12 pr-12 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors bg-white text-black placeholder:text-slate-400"
                   required
                 />
                 <button
@@ -253,6 +221,26 @@ export default function MentorAuth() {
                 </button>
               </div>
             </div>
+
+            {/* Confirm Password (Sign Up only) */}
+            {!isSignIn && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors bg-white text-black placeholder:text-slate-400"
+                    required
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Forgot Password (Sign In only) */}
             {isSignIn && (

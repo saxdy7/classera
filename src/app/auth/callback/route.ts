@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { getGravatarUrl } from '@/lib/utils/gravatar';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -20,12 +21,14 @@ export async function GET(request: Request) {
 
       // If no profile exists, create minimal profile and redirect to onboarding
       if (!profile) {
+        const avatarUrl = getGravatarUrl(data.user.email || '');
         await supabase.from('profiles').insert({
           user_id: data.user.id,
           role: role,
           full_name: data.user.user_metadata.full_name || '',
           email: data.user.email || '',
           university: '',
+          avatar_url: avatarUrl,
         });
 
         return NextResponse.redirect(`${origin}/onboarding/${role}`);

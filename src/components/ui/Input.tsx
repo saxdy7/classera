@@ -21,7 +21,7 @@ export function Input({ label, error, icon, className = '', ...props }: InputPro
           </div>
         )}
         <input
-          className={`w-full ${icon ? 'pl-12' : 'pl-4'} pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors ${error ? 'border-red-500' : ''} ${className}`}
+          className={`w-full ${icon ? 'pl-12' : 'pl-4'} pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors bg-white text-black placeholder:text-slate-400 ${error ? 'border-red-500' : ''} ${className}`}
           {...props}
         />
       </div>

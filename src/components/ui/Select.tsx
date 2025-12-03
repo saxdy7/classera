@@ -15,7 +15,7 @@ export function Select({ label, error, options, className = '', ...props }: Sele
         </label>
       )}
       <select
-        className={`w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors ${error ? 'border-red-500' : ''} ${className}`}
+        className={`w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors bg-white text-black ${error ? 'border-red-500' : ''} ${className}`}
         {...props}
       >
         {options.map((option) => (
