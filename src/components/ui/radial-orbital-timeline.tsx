@@ -228,7 +228,7 @@ export default function RadialOrbitalTimeline({
                       ? "bg-purple-100 text-purple-600"
                       : "bg-gray-100 text-gray-700"
                   }
-                  border-2 
+                  border-2
                   ${
                     isExpanded
                       ? "border-fuchsia-600 shadow-lg shadow-fuchsia-600/30"
