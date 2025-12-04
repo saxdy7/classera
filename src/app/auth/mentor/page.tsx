@@ -315,20 +315,14 @@ export default function MentorAuth() {
       </div>
 
       {/* Right Side - Visual */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        {/* Background with gradient blur effects */}
-        <div className="absolute inset-0 bg-slate-950">
-          <div className="absolute top-20 right-20 w-[600px] h-[600px] bg-gradient-to-br from-indigo-500/20 to-blue-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 text-white max-w-md p-12">
+      <div className="hidden lg:flex lg:w-1/2 p-12 items-center justify-center relative z-10">
+        <div className="relative text-white max-w-md">
           <div className="mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 border border-indigo-500/20">
               <span className="text-4xl">👨‍🏫</span>
             </div>
             <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">Inspire the Next Generation</h2>
-            <p className="text-slate-300 text-lg">
+            <p className="text-slate-400 text-lg">
               Join our community of passionate educators. Create engaging courses, conduct live
               sessions, and make a real impact on students&apos; learning journeys.
             </p>
@@ -352,7 +346,7 @@ export default function MentorAuth() {
               </div>
               <div>
                 <h3 className="font-semibold mb-1 text-white">Create Engaging Content</h3>
-                <p className="text-slate-300 text-sm">
+                <p className="text-slate-400 text-sm">
                   Build courses with our intuitive tools and resources
                 </p>
               </div>
@@ -374,7 +368,7 @@ export default function MentorAuth() {
               </div>
               <div>
                 <h3 className="font-semibold mb-1 text-white">Manage Students Efficiently</h3>
-                <p className="text-slate-300 text-sm">
+                <p className="text-slate-400 text-sm">
                   Track progress, provide feedback, and communicate seamlessly
                 </p>
               </div>
@@ -396,7 +390,7 @@ export default function MentorAuth() {
               </div>
               <div>
                 <h3 className="font-semibold mb-1 text-white">Advanced Analytics</h3>
-                <p className="text-slate-300 text-sm">
+                <p className="text-slate-400 text-sm">
                   Gain insights into student performance and engagement
                 </p>
               </div>
