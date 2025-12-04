@@ -65,7 +65,7 @@ export function Header({ profile }: HeaderProps) {
             {profile.avatar_url ? (
               <Image
                 src={profile.avatar_url}
-                alt={profile.full_name}
+                alt={profile.full_name || 'User avatar'}
                 className="w-9 h-9 rounded-full object-cover"
                 width={36}
                 height={36}
