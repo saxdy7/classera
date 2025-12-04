@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare } from 'lucide-react';
@@ -66,10 +67,12 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Avatar */}
                 <div className="relative -mt-16 mb-6">
                   {student.avatar_url ? (
-                    <img
+                    <Image
                       src={student.avatar_url}
                       alt={student.full_name}
                       className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
+                      width={128}
+                      height={128}
                     />
                   ) : (
                     <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gradient-to-br from-fuchsia-500 to-purple-500 flex items-center justify-center text-white text-4xl font-bold">

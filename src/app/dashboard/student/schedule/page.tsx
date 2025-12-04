@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Calendar, Clock, Video } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 
 export default async function StudentSchedulePage() {
   const supabase = await createClient();

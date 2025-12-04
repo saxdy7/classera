@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
@@ -15,7 +14,6 @@ import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft } from 'lu
 const TOTAL_STEPS = 4;
 
 export default function StudentOnboarding() {
-  const router = useRouter();
   const supabase = createClient();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -120,9 +118,9 @@ export default function StudentOnboarding() {
 
       // Redirect to dashboard
       window.location.href = '/dashboard/student';
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Onboarding error:', err);
-      setError(err.message || 'Failed to complete onboarding');
+      setError((err as Error)?.message || 'Failed to complete onboarding');
       setLoading(false);
     }
   };
@@ -137,7 +135,7 @@ export default function StudentOnboarding() {
                 <User className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-black mb-2">
-                Welcome! Let's get started
+                Welcome! Let&rsquo;s get started
               </h2>
               <p className="text-slate-600">
                 Tell us a bit about yourself

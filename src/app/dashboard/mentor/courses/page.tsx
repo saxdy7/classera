@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { BookOpen, Users, Plus, MoreVertical } from 'lucide-react';
+import { BookOpen, Users, Plus } from 'lucide-react';
 
 export default async function MentorCoursesPage() {
   const supabase = await createClient();

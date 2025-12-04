@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { MessageSquare, Search, Send } from 'lucide-react';
+import { MessageSquare, Search } from 'lucide-react';
 
 export default async function MentorMessagesPage() {
   const supabase = await createClient();

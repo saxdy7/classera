@@ -3,6 +3,7 @@
 import { LogOut, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 
 interface HeaderProps {
@@ -62,10 +63,12 @@ export function Header({ profile }: HeaderProps) {
             className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
           >
             {profile.avatar_url ? (
-              <img
+              <Image
                 src={profile.avatar_url}
                 alt={profile.full_name}
                 className="w-9 h-9 rounded-full object-cover"
+                width={36}
+                height={36}
               />
             ) : (
               <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold text-white ${

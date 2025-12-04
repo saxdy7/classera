@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Chrome, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -83,8 +83,8 @@ export default function MentorAuth() {
           router.push('/onboarding/mentor');
         }
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err: unknown) {
+      setError((err as Error)?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export default function MentorAuth() {
     setError('');
 
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback?role=mentor`,
@@ -103,8 +103,8 @@ export default function MentorAuth() {
       });
 
       if (error) throw error;
-    } catch (err: any) {
-      setError(err.message || 'Failed to authenticate with Google');
+    } catch (err: unknown) {
+      setError((err as Error)?.message || 'Failed to authenticate with Google');
       setLoading(false);
     }
   };

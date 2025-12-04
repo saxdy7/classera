@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowRight, Menu, Star, Music, Play, Check, Send, Layers, Code2, Megaphone, ArrowUpRight, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Menu, Star, Music, Play, Check, Send, Code2, ArrowUpRight, Sparkles } from 'lucide-react';
 import DisplayCards from '@/components/ui/display-cards';
 import RadialOrbitalTimelineDemo from '@/components/demo/radial-orbital-timeline-demo';
 
@@ -119,7 +120,6 @@ export default function Home() {
                   title: "Live Classes",
                   description: "Interactive learning sessions",
                   date: "Active now",
-                  iconClassName: "text-fuchsia-600",
                   titleClassName: "text-fuchsia-600",
                   className: "[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
                 },
@@ -128,7 +128,6 @@ export default function Home() {
                   title: "Course Builder",
                   description: "Design engaging curricula",
                   date: "Updated today",
-                  iconClassName: "text-purple-600",
                   titleClassName: "text-purple-600",
                   className: "[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
                 },
@@ -137,7 +136,6 @@ export default function Home() {
                   title: "Analytics Hub",
                   description: "Track student progress",
                   date: "Real-time",
-                  iconClassName: "text-lime-600",
                   titleClassName: "text-lime-600",
                   className: "[grid-area:stack] translate-x-24 translate-y-20 hover:translate-y-10",
                 },
@@ -390,7 +388,7 @@ export default function Home() {
             <div className="lg:col-span-1 lg:min-h-[520px] flex flex-col">
               {/* Subtitle + CTA */}
               <div className="text-center space-y-6 mb-8">
-                <p className="sm:text-xl text-lg text-gray-700">We don't just make it look good. We make it work. Combining data-driven pedagogy with "whoa, that's cool" design.</p>
+                <p className="sm:text-xl text-lg text-gray-700">We don&rsquo;t just make it look good. We make it work. Combining data-driven pedagogy with &ldquo;whoa, that&rsquo;s cool&rdquo; design.</p>
 
                 <div className="flex flex-wrap gap-3 items-center justify-center">
                   <button className="inline-flex gap-2 hover:bg-slate-800 transition-colors text-sm font-medium text-white bg-slate-900 rounded-full py-2.5 px-4 items-center">
@@ -412,23 +410,23 @@ export default function Home() {
                   <div className="relative h-40 sm:h-48">
                     {/* Back left */}
                     <div className="absolute -left-2 top-2 sm:-left-1 sm:top-0 w-28 h-24 sm:w-32 sm:h-28 ring-1 ring-gray-200 bg-white rounded-2xl p-1 shadow-xl rotate-[-12deg]">
-                      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Educator" className="w-full h-full object-cover rounded-xl" />
+                      <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Educator" className="w-full h-full object-cover rounded-xl" width={128} height={112} />
                     </div>
                     {/* Back right */}
                     <div className="absolute -right-1 top-4 sm:right-0 sm:top-2 w-28 h-24 sm:w-32 sm:h-28 ring-1 ring-gray-200 bg-white rounded-2xl p-1 shadow-xl rotate-[12deg]">
-                      <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&q=80" alt="Developer" className="w-full h-full object-cover rounded-xl" />
+                      <Image src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&q=80" alt="Developer" className="w-full h-full object-cover rounded-xl" width={128} height={112} />
                     </div>
                     {/* Bottom left */}
                     <div className="absolute left-2 bottom-0 w-28 h-24 sm:w-32 sm:h-28 ring-1 ring-gray-200 bg-white rounded-2xl p-1 shadow-xl rotate-[10deg]">
-                      <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Engineer" className="w-full h-full object-cover rounded-xl" />
+                      <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Engineer" className="w-full h-full object-cover rounded-xl" width={128} height={112} />
                     </div>
                     {/* Bottom right */}
                     <div className="absolute right-1 bottom-1 w-28 h-24 sm:w-32 sm:h-28 ring-1 ring-gray-200 bg-white rounded-2xl p-1 shadow-xl rotate-[-8deg]">
-                      <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Designer" className="w-full h-full object-cover rounded-xl" />
+                      <Image src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Designer" className="w-full h-full object-cover rounded-xl" width={128} height={112} />
                     </div>
                     {/* Center card */}
                     <div className="absolute inset-0 w-40 h-32 sm:w-48 sm:h-36 ring-1 ring-gray-200 z-10 bg-white rounded-2xl m-auto p-1 shadow-xl">
-                      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Lead educator" className="w-full h-full object-cover rounded-xl" />
+                      <Image src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Lead educator" className="w-full h-full object-cover rounded-xl" width={192} height={144} />
                     </div>
                   </div>
                   <p className="text-gray-300 mt-4">

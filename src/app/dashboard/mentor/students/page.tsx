@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
@@ -60,10 +61,12 @@ export default async function Students() {
                     {/* Profile Image/Avatar */}
                     <div className="flex flex-col items-center text-center mb-4">
                       {student.avatar_url ? (
-                        <img
+                        <Image
                           src={student.avatar_url}
                           alt={student.full_name}
                           className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-slate-200"
+                          width={80}
+                          height={80}
                         />
                       ) : (
                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold mb-3 border-2 border-slate-200">

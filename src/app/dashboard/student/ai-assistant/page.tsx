@@ -49,7 +49,7 @@ export default async function StudentAIAssistantPage() {
                   <div className="flex-1">
                     <div className="bg-slate-50 rounded-xl p-4">
                       <p className="text-black mb-4">
-                        👋 Hi! I'm your AI learning assistant. I can help you with:
+                        👋 Hi! I&rsquo;m your AI learning assistant. I can help you with:
                       </p>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm text-slate-700">

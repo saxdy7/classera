@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
@@ -60,10 +61,12 @@ export default async function FindMentors() {
                     {/* Profile Image/Avatar */}
                     <div className="flex flex-col items-center text-center mb-4">
                       {mentor.avatar_url ? (
-                        <img
+                        <Image
                           src={mentor.avatar_url}
                           alt={mentor.full_name}
                           className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-slate-200"
+                          width={80}
+                          height={80}
                         />
                       ) : (
                         <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold mb-3 border-2 border-slate-200">

@@ -50,7 +50,7 @@ export default function SignIn() {
               >
                 <GraduationCap className="w-10 h-10" />
               </div>
-              <h2 className="text-2xl font-extrabold mb-3 text-black">I'm a Student</h2>
+              <h2 className="text-2xl font-extrabold mb-3 text-black">I&rsquo;m a Student</h2>
               <p className="text-slate-600 mb-6">
                 Access your courses, join live sessions, complete assignments, and track your progress
               </p>
@@ -100,7 +100,7 @@ export default function SignIn() {
               >
                 <UserCircle className="w-10 h-10" />
               </div>
-              <h2 className="text-2xl font-extrabold mb-3 text-black">I'm a Mentor</h2>
+              <h2 className="text-2xl font-extrabold mb-3 text-black">I&rsquo;m a Mentor</h2>
               <p className="text-slate-600 mb-6">
                 Create courses, conduct live sessions, manage students, and provide personalized feedback
               </p>

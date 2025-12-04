@@ -135,9 +135,9 @@ function isUniversityResult(title: string, snippet?: string): boolean {
 
 function cleanUniversityName(name: string): string {
   // Remove common suffixes and prefixes
-  let cleaned = name
-    .replace(/\s*-\s*Wikipedia.*$/i, '')
-    .replace(/\s*\|\s*.*$/i, '')
+  const cleaned = name
+    .replace(/\\s*-\\s*Wikipedia.*$/i, '')
+    .replace(/\\s*\\|\\s*.*$/i, '')
     .replace(/\s*>.*$/i, '')
     .replace(/Official Website/gi, '')
     .replace(/Homepage/gi, '')

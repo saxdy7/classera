@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
@@ -14,7 +13,6 @@ import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 const TOTAL_STEPS = 4;
 
 export default function MentorOnboarding() {
-  const router = useRouter();
   const supabase = createClient();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -119,9 +117,9 @@ export default function MentorOnboarding() {
 
       // Redirect to dashboard
       window.location.href = '/dashboard/mentor';
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Onboarding error:', err);
-      setError(err.message || 'Failed to complete onboarding');
+      setError((err as Error)?.message || 'Failed to complete onboarding');
       setLoading(false);
     }
   };
@@ -139,7 +137,7 @@ export default function MentorOnboarding() {
                 Welcome, Mentor!
               </h2>
               <p className="text-slate-600">
-                Let's set up your teaching profile
+                Let&rsquo;s set up your teaching profile
               </p>
             </div>
 

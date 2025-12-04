@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Video, Users, Plus, Clock } from 'lucide-react';
+import { Video, Plus, Clock } from 'lucide-react';
 
 export default async function MentorLiveSessionsPage() {
   const supabase = await createClient();

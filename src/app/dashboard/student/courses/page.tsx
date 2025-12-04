@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { BookOpen, Clock, Award, Play } from 'lucide-react';
+import { BookOpen, Clock, Award } from 'lucide-react';
 
 export default async function StudentCoursesPage() {
   const supabase = await createClient();
