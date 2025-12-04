@@ -139,14 +139,6 @@ export default function SignIn() {
             </Link>
           </div>
         )}
-
-        {/* Footer */}
-        <div className="text-center mt-12 text-sm text-slate-500">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-fuchsia-600 font-semibold hover:text-fuchsia-700">
-            Sign up here
-          </Link>
-        </div>
       </div>
     </div>
   );
