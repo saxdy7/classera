@@ -118,7 +118,7 @@ export default function StudentAuth() {
       
       {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative z-10">
-        <div className="w-full max-w-md bg-slate-900/50 backdrop-blur-2xl border border-slate-800/50 rounded-3xl p-8 shadow-2xl">
+        <div className="w-full max-w-xl bg-slate-900/50 backdrop-blur-2xl border border-slate-800/50 rounded-3xl p-8 shadow-2xl">
           {/* Back Button */}
           <Link
             href="/signin"
