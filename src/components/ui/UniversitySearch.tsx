@@ -59,10 +59,18 @@ export function UniversitySearch({
   const searchUniversities = async (searchQuery: string) => {
     setLoading(true);
     try {
-      // Call our API route that uses multiple free sources
-      const response = await fetch(
-        `/api/search-universities?query=${encodeURIComponent(searchQuery)}&country=India`
+      // Try SerpAPI first for real data
+      let response = await fetch(
+        `/api/search-universities-serpapi?query=${encodeURIComponent(searchQuery)}&country=India`
       );
+      
+      // If SerpAPI fails, fallback to free APIs
+      if (!response.ok) {
+        console.log('SerpAPI failed, using fallback...');
+        response = await fetch(
+          `/api/search-universities?query=${encodeURIComponent(searchQuery)}&country=India`
+        );
+      }
       
       if (!response.ok) throw new Error('Search failed');
       
