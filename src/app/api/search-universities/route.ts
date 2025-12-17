@@ -6,16 +6,13 @@ interface University {
   'state-province': string | null;
   domains?: string[];
   web_pages?: string[];
+  type?: string;
+  ugcApproved?: boolean;
 }
 
-// Using multiple free APIs for comprehensive university data
-const HIPOLABS_API = 'http://universities.hipolabs.com/search';
-const GITHUB_UNIVERSITIES_API = 'https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json';
-
-// Cache for GitHub data (to avoid repeated fetches)
-let cachedUniversities: University[] | null = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+// External APIs for Indian Universities
+const HIPOLABS_API = 'http://universities.hipolabs.com/search'; // Real-time search for 9,500+ universities
+const OPENDATASOFT_API = 'https://public.opendatasoft.com/api/records/1.0/search/'; // 25,000+ universities worldwide
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -27,53 +24,75 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Try multiple sources and merge results
-    const results = await searchMultipleSources(query, country);
+    // Search Indian universities from multiple sources:
+    // 1. OpenDataSoft API for 25,000+ universities with rankings
+    // 2. Hipolabs API for real-time search
+    const results = await searchIndianUniversities(query);
     
     // Remove duplicates and sort by relevance
     const uniqueResults = removeDuplicates(results);
     const sortedResults = sortByRelevance(uniqueResults, query);
     
-    return NextResponse.json(sortedResults.slice(0, 15));
+    return NextResponse.json(sortedResults.slice(0, 20)); // Return top 20
   } catch (error) {
     console.error('Error in university search:', error);
-    
-    // Emergency fallback - try direct Hipolabs
-    try {
-      const fallbackResults = await searchHipolabs(query, country);
-      return NextResponse.json(fallbackResults);
-    } catch {
-      return NextResponse.json({ error: 'Failed to fetch universities' }, { status: 500 });
-    }
+    return NextResponse.json({ error: 'Failed to fetch universities' }, { status: 500 });
   }
 }
 
-async function searchMultipleSources(query: string, country: string): Promise<University[]> {
+async function searchIndianUniversities(query: string): Promise<University[]> {
   const results: University[] = [];
 
-  // Source 1: Hipolabs API (fast, reliable)
+  // Source 1: OpenDataSoft API (25,000+ universities with rankings)
   try {
-    const hipolabsResults = await searchHipolabs(query, country);
+    const openDataResults = await searchOpenDataSoft(query);
+    results.push(...openDataResults);
+  } catch (error) {
+    console.error('OpenDataSoft search failed:', error);
+  }
+
+  // Source 2: Hipolabs API (real-time search for 9,500+ universities)
+  try {
+    const hipolabsResults = await searchHipolabs(query);
     results.push(...hipolabsResults);
   } catch (error) {
     console.error('Hipolabs search failed:', error);
   }
 
-  // Source 2: Cached GitHub data (comprehensive)
-  try {
-    const githubResults = await searchCachedUniversities(query, country);
-    results.push(...githubResults);
-  } catch (error) {
-    console.error('GitHub data search failed:', error);
-  }
-
   return results;
 }
 
-async function searchHipolabs(query: string, country: string): Promise<University[]> {
+async function searchOpenDataSoft(query: string): Promise<University[]> {
+  const params = new URLSearchParams({
+    dataset: 'world-university-rankings',
+    q: `${query} AND country:"India"`,
+    rows: '50',
+  });
+
+  const response = await fetch(`${OPENDATASOFT_API}?${params}`, {
+    next: { revalidate: 3600 }, // Cache for 1 hour
+  });
+  
+  if (!response.ok) {
+    throw new Error('OpenDataSoft API request failed');
+  }
+
+  const data = await response.json();
+  
+  // Transform OpenDataSoft format to our format
+  return data.records.map((record: any) => ({
+    name: record.fields.university_name || record.fields.institution,
+    country: 'India',
+    'state-province': record.fields.location || null,
+    web_pages: record.fields.link ? [record.fields.link] : [],
+    type: 'University',
+  }));
+}
+
+async function searchHipolabs(query: string): Promise<University[]> {
   const params = new URLSearchParams({
     name: query,
-    country: country,
+    country: 'India',
   });
 
   const response = await fetch(`${HIPOLABS_API}?${params}`, {
@@ -85,39 +104,6 @@ async function searchHipolabs(query: string, country: string): Promise<Universit
   }
 
   return response.json();
-}
-
-async function searchCachedUniversities(query: string, country: string): Promise<University[]> {
-  const now = Date.now();
-  
-  // Load from cache or fetch fresh data
-  if (!cachedUniversities || (now - cacheTimestamp) > CACHE_DURATION) {
-    try {
-      const response = await fetch(GITHUB_UNIVERSITIES_API, {
-        next: { revalidate: 3600 },
-      });
-      
-      if (response.ok) {
-        cachedUniversities = await response.json();
-        cacheTimestamp = now;
-      }
-    } catch (error) {
-      console.error('Failed to load cached universities:', error);
-      return [];
-    }
-  }
-
-  if (!cachedUniversities) return [];
-
-  // Filter by country and search query
-  const lowerQuery = query.toLowerCase();
-  const filtered = cachedUniversities.filter((uni: University) => {
-    const matchesCountry = uni.country === country;
-    const matchesQuery = uni.name.toLowerCase().includes(lowerQuery);
-    return matchesCountry && matchesQuery;
-  });
-
-  return filtered;
 }
 
 function removeDuplicates(universities: University[]): University[] {

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Menu, Star, Music, Play, Check, Send, Code2, ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Menu, Star, Music, Play, Check, Send, Code2, ArrowUpRight, Sparkles, GraduationCap, Twitter, Linkedin, Instagram, Github } from 'lucide-react';
 import DisplayCards from '@/components/ui/display-cards';
 import RadialOrbitalTimelineDemo from '@/components/demo/radial-orbital-timeline-demo';
+import { AnalyticsChart } from '@/components/ui/analytics-chart';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -17,7 +18,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="scroll-smooth bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900">
+    <div className="scroll-smooth bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900 pb-6">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 transition-all duration-300">
         <div
@@ -41,8 +42,8 @@ export default function Home() {
             <a href="#services" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
               Services
             </a>
-            <a href="#culture" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
-              About
+            <a href="/contact" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
+              Contact
             </a>
           </div>
 
@@ -147,8 +148,20 @@ export default function Home() {
 
       {/* Marquee Section */}
       <div className="py-12 bg-lime-300 -rotate-1 overflow-hidden border-y-2 border-black">
-        <div className="whitespace-nowrap flex gap-8 animate-marquee">
-          <span className="text-4xl font-bold uppercase tracking-tight text-black flex items-center gap-8">
+        <div className="flex animate-marquee">
+          <span className="text-4xl font-bold uppercase tracking-tight text-black flex items-center gap-8 whitespace-nowrap">
+            Live Classes <Star className="w-8 h-8 fill-black" />
+            Student Management <Star className="w-8 h-8 fill-black" />
+            Video Conferencing <Star className="w-8 h-8 fill-black" />
+            Course Builder <Star className="w-8 h-8 fill-black" />
+            Analytics <Star className="w-8 h-8 fill-black" />
+            Live Classes <Star className="w-8 h-8 fill-black" />
+            Student Management <Star className="w-8 h-8 fill-black" />
+            Video Conferencing <Star className="w-8 h-8 fill-black" />
+            Course Builder <Star className="w-8 h-8 fill-black" />
+            Analytics <Star className="w-8 h-8 fill-black" />
+          </span>
+          <span className="text-4xl font-bold uppercase tracking-tight text-black flex items-center gap-8 whitespace-nowrap">
             Live Classes <Star className="w-8 h-8 fill-black" />
             Student Management <Star className="w-8 h-8 fill-black" />
             Video Conferencing <Star className="w-8 h-8 fill-black" />
@@ -164,98 +177,136 @@ export default function Home() {
       </div>
 
       {/* Featured Work / Key Features */}
-      <section id="work" className="py-24 px-6 bg-white">
+      <section id="work" className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-16">
-            <div>
-              <h2 className="text-4xl md:text-6xl font-semibold tracking-tight mb-4">Selected Features</h2>
-              <p className="text-slate-500 text-lg">Tools with purpose.</p>
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-5xl md:text-7xl font-semibold tracking-tight mb-6 leading-tight">
+                Transform Your <span className="text-fuchsia-600">Teaching Experience</span>
+              </h2>
+              <p className="text-slate-600 text-xl leading-relaxed">
+                Everything you need to create engaging, interactive learning environments. From live classrooms to AI-powered analytics.
+              </p>
             </div>
             <a
               href="#"
-              className="hidden md:flex items-center gap-2 text-sm font-semibold uppercase tracking-wide border-b border-black pb-1 hover:text-fuchsia-600 hover:border-fuchsia-600 transition-colors"
+              className="group inline-flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-full font-medium hover:bg-fuchsia-600 transition-all hover:scale-105 shadow-lg"
             >
-              View All Features
-              <ArrowUpRight className="w-4 h-4" />
+              Explore All Features
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </a>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
-            {/* Feature 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+            {/* Feature 1 - Live Virtual Classrooms */}
             <div className="lg:col-span-8 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-100 aspect-[4/3] mb-6 transition-transform duration-300 hover:scale-[1.02] hover:rotate-[-1deg]">
-                <div className="absolute inset-0 bg-[#E9E4DE] flex items-center justify-center p-12">
-                  <div className="w-full h-full bg-cover bg-center rounded-2xl shadow-lg border border-slate-200/50" style={{backgroundImage: "url('https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&q=80&w=2000')"}}></div>
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-50 to-indigo-50 aspect-[4/3] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 flex items-center justify-center p-12">
+                  <div className="w-full h-full bg-cover bg-center rounded-2xl shadow-2xl border-4 border-white/50 backdrop-blur-sm" style={{backgroundImage: "url('https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&q=80&w=2000')"}}></div>
                 </div>
-                <div className="absolute top-8 left-8 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-semibold">
-                  Education
+                <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-md px-5 py-2.5 rounded-full text-xs font-bold text-blue-600 shadow-lg border border-blue-100">
+                  🎓 LIVE TEACHING
+                </div>
+                <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-sm text-slate-600 font-medium">HD video conferencing • Screen sharing • Interactive whiteboard • Real-time polls • Breakout rooms</p>
                 </div>
               </div>
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-2xl font-semibold mb-1">Live Classroom</h3>
-                  <p className="text-slate-500">Interactive Sessions & Teaching Tools</p>
+                  <h3 className="text-3xl font-bold mb-2 group-hover:text-blue-600 transition-colors">Live Virtual Classrooms</h3>
+                  <p className="text-slate-600 text-lg mb-2">Engage students with interactive HD video sessions</p>
+                  <div className="flex gap-2 flex-wrap mt-3">
+                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">HD Video</span>
+                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">Screen Share</span>
+                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">Whiteboard</span>
+                  </div>
                 </div>
-                <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                <div className="w-12 h-12 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all group-hover:scale-110">
+                  <ArrowRight className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 2 - Course Library */}
+            <div className="lg:col-span-4 group cursor-pointer lg:mt-12">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-purple-100 to-pink-100 aspect-[3/4] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 flex flex-col items-center justify-center text-white p-8">
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl animate-pulse"></div>
+                    <GraduationCap className="w-32 h-32 relative z-10" />
+                  </div>
+                  <span className="text-6xl font-black tracking-tighter text-center leading-none mb-4">COURSE<br/>LIBRARY</span>
+                  <p className="text-white/80 text-center text-sm font-medium">500+ Pre-built Templates</p>
+                </div>
+              </div>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 group-hover:text-purple-600 transition-colors">Rich Course Library</h3>
+                  <p className="text-slate-600 mb-2">Pre-built curriculum & templates</p>
+                  <div className="flex gap-2 flex-wrap mt-3">
+                    <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold">500+ Courses</span>
+                  </div>
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:bg-purple-600 group-hover:border-purple-600 group-hover:text-white transition-all group-hover:scale-110">
                   <ArrowRight className="w-5 h-5" />
                 </div>
               </div>
             </div>
 
-            {/* Feature 2 */}
-            <div className="lg:col-span-4 group cursor-pointer mt-12 md:mt-0">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-indigo-100 aspect-[3/4] mb-6 transition-transform duration-300 hover:scale-[1.02] hover:rotate-[-1deg]">
-                <div className="absolute inset-0 bg-indigo-500 flex items-center justify-center text-white">
-                  <Music className="w-32 h-32 opacity-20 animate-pulse" />
-                  <span className="absolute text-8xl font-bold tracking-tighter opacity-10 rotate-90 top-10 -right-10">LEARN</span>
-                </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-2xl font-semibold mb-1">Course Library</h3>
-                  <p className="text-slate-500">Curated Learning Content</p>
-                </div>
-                <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
-                  <ArrowRight className="w-5 h-5" />
-                </div>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
+            {/* Feature 3 - AI-Powered Grading */}
             <div className="lg:col-span-5 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-rose-100 aspect-[1/1] mb-6 transition-transform duration-300 hover:scale-[1.02] hover:rotate-[-1deg]">
-                <div className="absolute inset-0 bg-[#FF6B6B] flex flex-col items-center justify-center p-8 text-white">
-                  <h4 className="text-5xl font-bold tracking-tighter text-center leading-none">SMART<br />GRADING</h4>
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-rose-100 to-orange-100 aspect-[1/1] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-500 to-orange-500 flex flex-col items-center justify-center p-8 text-white">
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-white/30 rounded-full blur-3xl"></div>
+                    <Sparkles className="w-24 h-24 relative z-10 animate-pulse" />
+                  </div>
+                  <h4 className="text-5xl font-black tracking-tighter text-center leading-none mb-3">AI-POWERED<br />GRADING</h4>
+                  <p className="text-white/90 text-center font-semibold">Save 10+ hours per week</p>
                 </div>
               </div>
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-2xl font-semibold mb-1">Assessment Hub</h3>
-                  <p className="text-slate-500">Automated Grading & Feedback</p>
+                  <h3 className="text-2xl font-bold mb-2 group-hover:text-rose-600 transition-colors">Smart Assessment Hub</h3>
+                  <p className="text-slate-600 mb-2">AI-powered grading & instant feedback</p>
+                  <div className="flex gap-2 flex-wrap mt-3">
+                    <span className="px-3 py-1 bg-rose-50 text-rose-700 rounded-full text-xs font-semibold">Auto-Grade</span>
+                    <span className="px-3 py-1 bg-rose-50 text-rose-700 rounded-full text-xs font-semibold">AI Feedback</span>
+                  </div>
                 </div>
-                <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:bg-rose-600 group-hover:border-rose-600 group-hover:text-white transition-all group-hover:scale-110">
                   <ArrowRight className="w-5 h-5" />
                 </div>
               </div>
             </div>
 
-            {/* Feature 4 */}
+            {/* Feature 4 - Analytics Dashboard */}
             <div className="lg:col-span-7 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-teal-50 aspect-[16/10] mb-6 transition-transform duration-300 hover:scale-[1.02] hover:rotate-[-1deg]">
-                <div className="absolute inset-0 bg-slate-900 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl mb-2">⚡️</div>
-                    <div className="text-white text-3xl font-semibold tracking-tight">Progress Tracking</div>
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-teal-50 to-cyan-50 aspect-[16/10] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex items-center justify-center p-8">
+                  <div className="absolute inset-0 bg-teal-400/20 rounded-full blur-3xl"></div>
+                  <div className="relative w-full h-full flex flex-col items-center justify-center -mt-16">
+                    <div className="text-center relative z-10 mb-4">
+                      <div className="text-white text-4xl font-black tracking-tight">Real-Time Analytics</div>
+                    </div>
+                    <div className="relative z-10 w-full max-w-2xl h-[280px]">
+                      <AnalyticsChart />
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-2xl font-semibold mb-1">Learning Analytics</h3>
-                  <p className="text-slate-500">Data-Driven Insights</p>
+                  <h3 className="text-2xl font-bold mb-2 group-hover:text-teal-600 transition-colors">Advanced Learning Analytics</h3>
+                  <p className="text-slate-600 mb-2">Track progress, engagement & outcomes in real-time</p>
+                  <div className="flex gap-2 flex-wrap mt-3">
+                    <span className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-semibold">Live Metrics</span>
+                    <span className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-semibold">Performance Insights</span>
+                    <span className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-semibold">Predictive AI</span>
+                  </div>
                 </div>
-                <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                <div className="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center group-hover:bg-teal-600 group-hover:border-teal-600 group-hover:text-white transition-all group-hover:scale-110">
                   <ArrowRight className="w-5 h-5" />
                 </div>
               </div>
@@ -567,103 +618,174 @@ export default function Home() {
       </section>
 
       {/* Contact / Footer */}
-      <footer id="contact" className="bg-black text-white py-24 px-6 rounded-t-[3rem] mt-12 relative overflow-hidden">
-        {/* Footer Blob */}
-        <div className="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-indigo-900/50 rounded-full blur-[100px] pointer-events-none"></div>
+      <footer id="contact" className="relative px-20 mb-6 overflow-hidden">
+        {/* Floating Footer Card */}
+        <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white rounded-[3rem] relative overflow-hidden shadow-2xl max-w-8xl mx-auto">
+          {/* Animated Background Elements */}
+          <div className="absolute top-0 left-0 w-[60rem] h-[60rem] bg-fuchsia-500/20 rounded-full blur-[120px] pointer-events-none -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-[50rem] h-[50rem] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
+          <div className="absolute top-1/2 left-1/2 w-[40rem] h-[40rem] bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none -translate-x-1/2 -translate-y-1/2 animate-pulse" style={{animationDelay: '1s'}}></div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-            <div>
-              <h2 className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none mb-8">
-                Ready to <br />
-                <span className="text-fuchsia-400">make magic?</span>
-              </h2>
-              <p className="text-xl text-slate-400 max-w-md mb-10">
-                Got a transformative learning idea? We love innovation. Drop us a line and let&apos;s build something extraordinary together.
-              </p>
-
-              <a
-                href="mailto:hello@classera.io"
-                className="inline-flex items-center gap-4 text-3xl font-medium border-b-2 border-white/20 pb-2 hover:border-fuchsia-400 hover:text-fuchsia-400 transition-all"
-              >
-                hello@classera.io
-                <Send className="w-8 h-8" />
-              </a>
-            </div>
-
-            {/* Contact Form */}
-            <div className="bg-white/5 backdrop-blur-sm p-8 rounded-[2rem] border border-white/10">
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300 ml-2">Name</label>
-                    <input
-                      type="text"
-                      placeholder="John Doe"
-                      className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition-all"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300 ml-2">Email</label>
-                    <input
-                      type="email"
-                      placeholder="john@school.com"
-                      className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition-all"
-                    />
-                  </div>
-                </div>  
-
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-slate-300 ml-2">I&apos;m interested in...</label>
-                  <div className="flex flex-wrap gap-3">
-                    {['Course Design', 'Student Engagement', 'Platform Development'].map((interest) => (
-                      <label key={interest} className="cursor-pointer">
-                        <input type="checkbox" className="peer sr-only" />
-                        <span className="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-medium text-slate-300 peer-checked:bg-fuchsia-500 peer-checked:text-white peer-checked:border-fuchsia-500 transition-all hover:bg-white/20">
-                          {interest}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 ml-2">Message</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell us about your project..."
-                    className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 transition-all resize-none"
-                  ></textarea>
-                </div>
-
-                <button className="w-full py-4 bg-white text-black rounded-xl font-bold hover:bg-fuchsia-400 transition-colors">
-                  Send Message
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {/* Footer Bottom */}
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-sm text-slate-500">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-black text-xs font-bold">
-                C
+          <div className="max-w-7xl mx-auto relative z-10 py-20 px-6 md:px-12">
+            {/* Main CTA Section with Text Animation */}
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-sm font-semibold mb-8 hover:bg-fuchsia-500/20 transition-all animate-bounce">
+                <Sparkles className="w-4 h-4" />
+                Join 10,000+ Educators
               </div>
-              <span className="font-semibold text-white">Classera © 2024</span>
+              
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+                <span className="inline-block animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+                  Ready to Transform
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-fuchsia-400 via-purple-400 to-pink-400 text-transparent bg-clip-text inline-block animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+                  Your Classroom?
+                </span>
+              </h2>
+              
+              {/* <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+                Join thousands of educators creating engaging, data-driven learning experiences.
+              </p> */}
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in-up" style={{animationDelay: '0.7s'}}>
+                <a
+                  href="/signin"
+                  className="group px-8 py-5 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-fuchsia-500/50 transition-all hover:scale-105 flex items-center gap-3"
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </a>
+                <a
+                  href="/contact"
+                  className="group px-8 py-5 bg-white/5 backdrop-blur-sm border-2 border-white/10 text-white rounded-full text-lg font-bold hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3"
+                >
+                  Get in Touch
+                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+              </div>
+
+              {/* Trust Indicators
+              <div className="flex flex-wrap justify-center items-center gap-6 text-slate-500 text-sm animate-fade-in-up" style={{animationDelay: '0.9s'}}>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>14-day free trial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span>Cancel anytime</span>
+                </div>
+              </div> */}
             </div>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-white transition-colors">
-                Instagram
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Twitter
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                LinkedIn
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Dribbble
-              </a>
+
+            {/* Divider */}
+            <div className="border-t border-white/10 my-12"></div>
+
+            {/* Footer Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+              {/* Company Info */}
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                    C
+                  </div>
+                  <span className="text-2xl font-bold">Classera</span>
+                </div>
+                <p className="text-slate-400 mb-6 leading-relaxed max-w-sm">
+                  Empowering educators with innovative tools to create engaging, data-driven learning experiences that inspire and transform.
+                </p>
+                <a
+                  href="mailto:hello@classera.io"
+                  className="inline-flex items-center gap-2 text-fuchsia-400 hover:text-fuchsia-300 transition-colors font-medium group"
+                >
+                  hello@classera.io
+                  <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+              </div>
+
+              {/* Product Links */}
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">Product</h4>
+                <ul className="space-y-2.5">
+                  {['Features', 'Pricing', 'Case Studies', 'Integrations', 'API'].map((link) => (
+                    <li key={link}>
+                      <a href="#" className="group text-slate-400 hover:text-white transition-all hover:translate-x-2 inline-flex items-center gap-2 text-sm">
+                        <span className="w-0 h-1 rounded-full bg-fuchsia-400 group-hover:w-1.5 transition-all duration-300 opacity-0 group-hover:opacity-100"></span>
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Company Links */}
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">Company</h4>
+                <ul className="space-y-2.5">
+                  {['About Us', 'Careers', 'Blog', 'Press Kit', 'Partners'].map((link) => (
+                    <li key={link}>
+                      <a href="#" className="group text-slate-400 hover:text-white transition-all hover:translate-x-2 inline-flex items-center gap-2 text-sm">
+                        <span className="w-0 h-1 rounded-full bg-purple-400 group-hover:w-1.5 transition-all duration-300 opacity-0 group-hover:opacity-100"></span>
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Resources Links */}
+              <div>
+                <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">Resources</h4>
+                <ul className="space-y-2.5">
+                  {['Documentation', 'Tutorials', 'Community', 'Support', 'Status'].map((link) => (
+                    <li key={link}>
+                      <a href="#" className="group text-slate-400 hover:text-white transition-all hover:translate-x-2 inline-flex items-center gap-2 text-sm">
+                        <span className="w-0 h-1 rounded-full bg-pink-400 group-hover:w-1.5 transition-all duration-300 opacity-0 group-hover:opacity-100"></span>
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Footer Bottom */}
+            <div className="pt-8 border-t border-white/10">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-sm text-slate-500">
+                  <span>© 2024 Classera. All rights reserved.</span>
+                  <span className="hidden md:block">•</span>
+                  <a href="#" className="hover:text-white transition-colors">Privacy</a>
+                  <span className="hidden md:block">•</span>
+                  <a href="#" className="hover:text-white transition-colors">Terms</a>
+                </div>
+                
+                {/* Social Links */}
+                <div className="flex gap-3">
+                  {[
+                    { name: 'Twitter', icon: Twitter },
+                    { name: 'LinkedIn', icon: Linkedin },
+                    { name: 'Instagram', icon: Instagram },
+                    { name: 'GitHub', icon: Github }
+                  ].map((social) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={social.name}
+                        href="#"
+                        className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-fuchsia-500 hover:border-fuchsia-500 hover:scale-110 transition-all group"
+                        aria-label={social.name}
+                      >
+                        <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -681,6 +803,20 @@ export default function Home() {
         }
         .animate-marquee {
           animation: marquee 20s linear infinite;
+        }
+        @keyframes fade-in-up {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out forwards;
+          opacity: 0;
         }
       `}</style>
     </div>

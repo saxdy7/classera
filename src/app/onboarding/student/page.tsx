@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UniversitySearch } from '@/components/ui/UniversitySearch';
 import { FieldOfStudySearch } from '@/components/ui/FieldOfStudySearch';
+import { YearDropdown } from '@/components/ui/year-dropdown';
 import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -202,19 +202,16 @@ export default function StudentOnboarding() {
               />
             </div>
 
-            <Select
-              label="Year of Study (Optional)"
-              options={[
-                { value: '', label: 'Select year' },
-                { value: '1st', label: '1st Year' },
-                { value: '2nd', label: '2nd Year' },
-                { value: '3rd', label: '3rd Year' },
-                { value: '4th', label: '4th Year' },
-                { value: 'graduate', label: 'Graduate' },
-              ]}
-              value={formData.year_of_study}
-              onChange={(e) => setFormData({ ...formData, year_of_study: e.target.value })}
-            />
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Year of Study (Optional)
+              </label>
+              <YearDropdown
+                value={formData.year_of_study}
+                onChange={(year) => setFormData({ ...formData, year_of_study: year })}
+                placeholder="Select your year of study"
+              />
+            </div>
           </div>
         );
 
