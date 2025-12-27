@@ -46,13 +46,13 @@ interface DisplayCardsProps {
 export default function DisplayCards({ cards }: DisplayCardsProps) {
   const defaultCards = [
     {
-      className: "[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration:700 hover:grayscale-0 before:left-0 before:top-0",
+      className: "[grid-area:stack] hover:-translate-y-10 transition-all duration-700 grayscale-[100%] hover:grayscale-0 before:absolute before:inset-0 before:rounded-3xl before:bg-gray-200/30 before:transition-opacity before:duration-700 hover:before:opacity-0",
     },
     {
-      className: "[grid-area:stack] translate-x-16 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration:700 hover:grayscale-0 before:left-0 before:top-0",
+      className: "[grid-area:stack] translate-x-16 translate-y-10 hover:-translate-y-1 transition-all duration-700 grayscale-[100%] hover:grayscale-0 before:absolute before:inset-0 before:rounded-3xl before:bg-gray-200/30 before:transition-opacity before:duration-700 hover:before:opacity-0",
     },
     {
-      className: "[grid-area:stack] translate-x-32 translate-y-20 hover:translate-y-10",
+      className: "[grid-area:stack] translate-x-32 translate-y-20 hover:translate-y-10 transition-all duration-700",
     },
   ];
 
