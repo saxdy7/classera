@@ -222,8 +222,8 @@ export default function MentorOnboarding() {
                 { value: '6-10', label: '6-10 years' },
                 { value: '10+', label: '10+ years' },
               ]}
-              value={formData.experience_years}
-              onChange={(e) => setFormData({ ...formData, experience_years: e.target.value })}
+              value={formData.years_of_experience}
+              onChange={(e) => setFormData({ ...formData, years_of_experience: e.target.value })}
             />
           </div>
         );
