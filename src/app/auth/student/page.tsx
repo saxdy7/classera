@@ -38,12 +38,12 @@ export default function StudentAuth() {
 
         // Check profile completeness
         const { data: profile } = await supabase
-          .from('profiles')
+          .from('users')
           .select('*')
-          .eq('user_id', data.user.id)
+          .eq('id', data.user.id)
           .single();
 
-        const isComplete = profile?.university && profile?.full_name;
+        const isComplete = profile?.university_id && profile?.full_name;
         if (!isComplete) {
           router.push('/onboarding/student');
         } else {
@@ -68,12 +68,11 @@ export default function StudentAuth() {
         // Create profile
         if (authData.user) {
           const avatarUrl = await getGravatarUrlClient(formData.email);
-          const { error: profileError } = await supabase.from('profiles').insert({
-            user_id: authData.user.id,
+          const { error: profileError } = await supabase.from('users').insert({
+            id: authData.user.id,
             role: 'student',
             full_name: formData.name,
             email: formData.email,
-            university: '',
             avatar_url: avatarUrl,
           });
 

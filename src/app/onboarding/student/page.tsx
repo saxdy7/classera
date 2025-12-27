@@ -22,8 +22,13 @@ export default function StudentOnboarding() {
   const [formData, setFormData] = useState({
     full_name: '',
     university: '',
-    field_of_study: '',
-    year_of_study: '',
+    university_id: null as string | null,
+    degree_type: '',
+    specialization_board: '',
+    current_semester: '',
+    graduation_year: '',
+    linkedin_url: '',
+    github_url: '',
     bio: '',
   });
 
@@ -37,8 +42,8 @@ export default function StudentOnboarding() {
       setError('Please select your university');
       return;
     }
-    if (currentStep === 3 && !formData.field_of_study) {
-      setError('Please enter your field of study');
+    if (currentStep === 3 && !formData.specialization_board) {
+      setError('Please enter your specialization');
       return;
     }
 
@@ -66,21 +71,27 @@ export default function StudentOnboarding() {
 
       // Check if profile exists
       const { data: existingProfile } = await supabase
-        .from('profiles')
+        .from('users')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .single();
 
       if (existingProfile) {
         // Update existing profile
         const { data: updateData, error: updateError } = await supabase
-          .from('profiles')
+          .from('users')
           .update({
             full_name: formData.full_name,
-            university: formData.university,
-            field_of_study: formData.field_of_study,
+            university_id: formData.university_id || null,
+            degree_type: formData.degree_type || null,
+            specialization_board: formData.specialization_board || null,
+            current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
+            graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
+            linkedin_url: formData.linkedin_url || null,
+            github_url: formData.github_url || null,
+            bio: formData.bio || null,
           })
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .select();
 
         if (updateError) {
@@ -93,14 +104,20 @@ export default function StudentOnboarding() {
         // Create new profile
         const avatarUrl = await getGravatarUrlClient(user.email || '');
         const { data: insertData, error: insertError } = await supabase
-          .from('profiles')
+          .from('users')
           .insert({
-            user_id: user.id,
+            id: user.id,
             role: 'student',
             full_name: formData.full_name,
             email: user.email || '',
-            university: formData.university,
-            field_of_study: formData.field_of_study,
+            university_id: formData.university_id || null,
+            degree_type: formData.degree_type || null,
+            specialization_board: formData.specialization_board || null,
+            current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
+            graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
+            linkedin_url: formData.linkedin_url || null,
+            github_url: formData.github_url || null,
+            bio: formData.bio || null,
             avatar_url: avatarUrl,
           })
           .select();
@@ -170,7 +187,11 @@ export default function StudentOnboarding() {
             <UniversitySearch
               label="University"
               value={formData.university}
-              onChange={(value) => setFormData({ ...formData, university: value })}
+              onChange={(value, universityId) => setFormData({ 
+                ...formData, 
+                university: value,
+                university_id: universityId || null
+              })}
               placeholder="Search for your university..."
             />
           </div>
@@ -193,23 +214,23 @@ export default function StudentOnboarding() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Field of Study
+                Specialization
               </label>
               <FieldOfStudySearch
-                value={formData.field_of_study}
-                onChange={(value) => setFormData({ ...formData, field_of_study: value })}
-                placeholder="Search for your field of study..."
+                value={formData.specialization_board}
+                onChange={(value) => setFormData({ ...formData, specialization_board: value })}
+                placeholder="e.g., Computer Science, Data Science..."
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Year of Study (Optional)
+                Current Semester (Optional)
               </label>
               <YearDropdown
-                value={formData.year_of_study}
-                onChange={(year) => setFormData({ ...formData, year_of_study: year })}
-                placeholder="Select your year of study"
+                value={formData.current_semester}
+                onChange={(semester) => setFormData({ ...formData, current_semester: semester })}
+                placeholder="Select your current semester"
               />
             </div>
           </div>
@@ -240,13 +261,13 @@ export default function StudentOnboarding() {
                 <p className="font-semibold text-black">{formData.university}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600 mb-1">Field of Study</p>
-                <p className="font-semibold text-black">{formData.field_of_study}</p>
+                <p className="text-sm text-slate-600 mb-1">Specialization</p>
+                <p className="font-semibold text-black">{formData.specialization_board}</p>
               </div>
-              {formData.year_of_study && (
+              {formData.current_semester && (
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Year of Study</p>
-                  <p className="font-semibold text-black">{formData.year_of_study}</p>
+                  <p className="text-sm text-slate-600 mb-1">Current Semester</p>
+                  <p className="font-semibold text-black">{formData.current_semester}</p>
                 </div>
               )}
             </div>

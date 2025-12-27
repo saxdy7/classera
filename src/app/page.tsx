@@ -583,30 +583,121 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left Side - Stats */}
-          <div className="grid grid-cols-2 gap-6 text-center">
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-blue-300 hover:shadow-lg transition-all duration-300">
-              <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-teal-400 mb-2">
-                50+
-              </div>
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">Happy Educators</div>
+          <div className="grid grid-cols-2 gap-0 relative">
+            {/* Vertical dashed lines */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-[2px] pointer-events-none z-0">
+              <svg width="100%" height="100%" className="opacity-30">
+                <line x1="0" y1="0" x2="0" y2="100%" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="7,7" />
+              </svg>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-purple-300 hover:shadow-lg transition-all duration-300">
-              <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-pink-400 mb-2">
-                12
-              </div>
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">EdTech Awards</div>
+            
+            {/* Horizontal dashed line */}
+            <div className="absolute left-0 right-0 top-1/2 h-[2px] pointer-events-none z-0">
+              <svg width="100%" height="100%" className="opacity-30">
+                <line x1="0" y1="0" x2="100%" y2="0" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="7,7" />
+              </svg>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-orange-300 hover:shadow-lg transition-all duration-300">
-              <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-orange-400 to-yellow-400 mb-2">
-                ∞
+
+            {/* Stat Card 1 */}
+            <div className="group relative p-12 transition-all duration-500 hover:z-10 hover:scale-105">
+              {/* Corner borders */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Hover border effect */}
+              <div className="absolute inset-0 border-2 border-dashed border-slate-300 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+              
+              <div className="relative z-10">
+                <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-teal-400 mb-3">
+                  50+
+                </div>
+                <div className="text-sm font-medium text-slate-700 uppercase tracking-wide">Happy Educators</div>
+                <p className="text-xs text-slate-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Trusted by educators worldwide
+                </p>
               </div>
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">Learning Hours</div>
+              
+              {/* Arrow indicator */}
+              <div className="absolute bottom-4 right-4 w-6 h-6 border border-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute top-1/2 left-1/2 w-3 h-3 border-l-2 border-b-2 border-slate-500 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] group-hover:-translate-y-[60%] transition-transform duration-300"></div>
+              </div>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-lime-300 hover:shadow-lg transition-all duration-300">
-              <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-lime-400 to-green-400 mb-2">
-                100%
+
+            {/* Stat Card 2 */}
+            <div className="group relative p-12 transition-all duration-500 hover:z-10 hover:scale-105">
+              {/* Corner borders */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="absolute inset-0 border-2 border-dashed border-slate-300 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+              
+              <div className="relative z-10">
+                <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-pink-400 mb-3">
+                  12
+                </div>
+                <div className="text-sm font-medium text-slate-700 uppercase tracking-wide">EdTech Awards</div>
+                <p className="text-xs text-slate-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Industry recognition & excellence
+                </p>
               </div>
-              <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">Student Success</div>
+              
+              <div className="absolute bottom-4 right-4 w-6 h-6 border border-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute top-1/2 left-1/2 w-3 h-3 border-l-2 border-b-2 border-slate-500 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] group-hover:-translate-y-[60%] transition-transform duration-300"></div>
+              </div>
+            </div>
+
+            {/* Stat Card 3 */}
+            <div className="group relative p-12 transition-all duration-500 hover:z-10 hover:scale-105">
+              {/* Corner borders */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="absolute inset-0 border-2 border-dashed border-slate-300 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+              
+              <div className="relative z-10">
+                <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-orange-400 to-yellow-400 mb-3">
+                  ∞
+                </div>
+                <div className="text-sm font-medium text-slate-700 uppercase tracking-wide">Learning Hours</div>
+                <p className="text-xs text-slate-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Unlimited learning possibilities
+                </p>
+              </div>
+              
+              <div className="absolute bottom-4 right-4 w-6 h-6 border border-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute top-1/2 left-1/2 w-3 h-3 border-l-2 border-b-2 border-slate-500 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] group-hover:-translate-y-[60%] transition-transform duration-300"></div>
+              </div>
+            </div>
+
+            {/* Stat Card 4 */}
+            <div className="group relative p-12 transition-all duration-500 hover:z-10 hover:scale-105">
+              {/* Corner borders */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="absolute inset-0 border-2 border-dashed border-slate-300 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+              
+              <div className="relative z-10">
+                <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-lime-400 to-green-400 mb-3">
+                  100%
+                </div>
+                <div className="text-sm font-medium text-slate-700 uppercase tracking-wide">Student Success</div>
+                <p className="text-xs text-slate-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Proven learning outcomes
+                </p>
+              </div>
+              
+              <div className="absolute bottom-4 right-4 w-6 h-6 border border-slate-400 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute top-1/2 left-1/2 w-3 h-3 border-l-2 border-b-2 border-slate-500 -translate-x-1/2 -translate-y-1/2 rotate-[-45deg] group-hover:-translate-y-[60%] transition-transform duration-300"></div>
+              </div>
             </div>
           </div>
 

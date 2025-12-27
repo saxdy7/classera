@@ -18,21 +18,21 @@ export default async function FindMentors() {
 
   // Get current user's profile
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
+    .from('users')
+    .select('*, universities(*)')
+    .eq('id', user.id)
     .single();
 
-  if (!profile?.university || !profile?.full_name) {
+  if (!profile?.university_id || !profile?.full_name) {
     redirect('/onboarding/student');
   }
 
-  // Get mentors from the same university - filter by university in application
+  // Get mentors from the same university
   const { data: mentors } = await supabase
-    .from('profiles')
-    .select('*')
+    .from('users')
+    .select('*, universities(*)')
     .eq('role', 'mentor')
-    .eq('university', profile.university)
+    .eq('university_id', profile.university_id)
     .order('full_name');
 
   return (

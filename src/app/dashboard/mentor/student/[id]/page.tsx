@@ -20,19 +20,19 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
   // Get current user's profile
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
+    .from('users')
+    .select('*, universities(*)')
+    .eq('id', user.id)
     .single();
 
-  if (!profile?.university || !profile?.full_name) {
+  if (!profile?.university_id || !profile?.full_name) {
     redirect('/onboarding/mentor');
   }
 
   // Get student profile
   const { data: student } = await supabase
-    .from('profiles')
-    .select('*')
+    .from('users')
+    .select('*, universities(*)')
     .eq('id', id)
     .eq('role', 'student')
     .single();

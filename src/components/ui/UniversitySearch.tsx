@@ -2,16 +2,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Check } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface UniversityOption {
+  id?: string;
   name: string;
   country: string;
   'state-province': string | null;
+  domain?: string;
 }
 
 interface UniversitySearchProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, universityId?: string) => void;
   label?: string;
   error?: string;
   placeholder?: string;
@@ -30,6 +33,7 @@ export function UniversitySearch({
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const supabase = createClient();
 
   // Click outside to close dropdown
   useEffect(() => {
@@ -59,6 +63,7 @@ export function UniversitySearch({
   const searchUniversities = async (searchQuery: string) => {
     setLoading(true);
     try {
+      // First, search the API for universities
       const response = await fetch(
         `/api/search-universities?query=${encodeURIComponent(searchQuery)}&country=India`
       );
@@ -71,7 +76,25 @@ export function UniversitySearch({
         console.error('API Error:', data.error);
         setUniversities([]);
       } else {
-        setUniversities(data.slice(0, 10)); // Limit to 10 results
+        // For each university from API, try to find matching ID in our database
+        const universitiesWithIds = await Promise.all(
+          data.slice(0, 10).map(async (uni: UniversityOption) => {
+            // Try to find university in our database by name or domain
+            const { data: dbUni } = await supabase
+              .from('universities')
+              .select('id, name, domain')
+              .or(`name.ilike.%${uni.name}%,domain.eq.${uni.domain || ''}`)
+              .limit(1)
+              .single();
+            
+            return {
+              ...uni,
+              id: dbUni?.id, // Will be undefined if not found in our DB
+            };
+          })
+        );
+        
+        setUniversities(universitiesWithIds);
         setShowDropdown(true);
       }
     } catch (error) {
@@ -85,14 +108,14 @@ export function UniversitySearch({
   const handleSelect = (university: UniversityOption) => {
     const universityName = university.name;
     setQuery(universityName);
-    onChange(universityName);
+    onChange(universityName, university.id);
     setShowDropdown(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setQuery(newValue);
-    onChange(newValue);
+    onChange(newValue, undefined);
     if (newValue.length >= 2) {
       setShowDropdown(true);
     }

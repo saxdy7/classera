@@ -18,21 +18,21 @@ export default async function Students() {
 
   // Get current user's profile
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
+    .from('users')
+    .select('*, universities(*)')
+    .eq('id', user.id)
     .single();
 
-  if (!profile?.university || !profile?.full_name) {
+  if (!profile?.university_id || !profile?.full_name) {
     redirect('/onboarding/mentor');
   }
 
-  // Get students from the same university - filter by university in application
+  // Get students from the same university
   const { data: students } = await supabase
-    .from('profiles')
-    .select('*')
+    .from('users')
+    .select('*, universities(*)')
     .eq('role', 'student')
-    .eq('university', profile.university)
+    .eq('university_id', profile.university_id)
     .order('full_name');
 
   return (

@@ -14,20 +14,19 @@ export async function GET(request: Request) {
     if (!error && data.user) {
       // Check if profile exists
       const { data: profile } = await supabase
-        .from('profiles')
+        .from('users')
         .select('*')
-        .eq('user_id', data.user.id)
+        .eq('id', data.user.id)
         .single();
 
       // If no profile exists, create minimal profile and redirect to onboarding
       if (!profile) {
         const avatarUrl = getGravatarUrl(data.user.email || '');
-        await supabase.from('profiles').insert({
-          user_id: data.user.id,
-          role: role,
+        await supabase.from('users').insert({
+          id: data.user.id,
+          role: role as 'student' | 'mentor',
           full_name: data.user.user_metadata.full_name || '',
           email: data.user.email || '',
-          university: '',
           avatar_url: avatarUrl,
         });
 
@@ -35,7 +34,7 @@ export async function GET(request: Request) {
       }
 
       // Check if profile is complete
-      const isComplete = profile.university && profile.full_name;
+      const isComplete = profile.university_id && profile.full_name;
       if (!isComplete) {
         return NextResponse.redirect(`${origin}/onboarding/${role}`);
       }

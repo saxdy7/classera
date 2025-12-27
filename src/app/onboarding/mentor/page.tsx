@@ -21,8 +21,11 @@ export default function MentorOnboarding() {
   const [formData, setFormData] = useState({
     full_name: '',
     university: '',
+    university_id: null as string | null,
     expertise: '',
-    experience_years: '',
+    years_of_experience: '',
+    linkedin_url: '',
+    github_url: '',
     bio: '',
   });
 
@@ -65,21 +68,25 @@ export default function MentorOnboarding() {
 
       // Check if profile exists
       const { data: existingProfile } = await supabase
-        .from('profiles')
+        .from('users')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .single();
 
       if (existingProfile) {
         // Update existing profile
         const { data: updateData, error: updateError } = await supabase
-          .from('profiles')
+          .from('users')
           .update({
             full_name: formData.full_name,
-            university: formData.university,
-            expertise: formData.expertise,
+            university_id: formData.university_id || null,
+            expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
+            years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
+            linkedin_url: formData.linkedin_url || null,
+            github_url: formData.github_url || null,
+            bio: formData.bio || null,
           })
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .select();
 
         if (updateError) {
@@ -92,14 +99,18 @@ export default function MentorOnboarding() {
         // Create new profile
         const avatarUrl = await getGravatarUrlClient(user.email || '');
         const { data: insertData, error: insertError } = await supabase
-          .from('profiles')
+          .from('users')
           .insert({
-            user_id: user.id,
+            id: user.id,
             role: 'mentor',
             full_name: formData.full_name,
             email: user.email || '',
-            university: formData.university,
-            expertise: formData.expertise,
+            university_id: formData.university_id || null,
+            expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
+            years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
+            linkedin_url: formData.linkedin_url || null,
+            github_url: formData.github_url || null,
+            bio: formData.bio || null,
             avatar_url: avatarUrl,
           })
           .select();
@@ -169,7 +180,11 @@ export default function MentorOnboarding() {
             <UniversitySearch
               label="Institution"
               value={formData.university}
-              onChange={(value) => setFormData({ ...formData, university: value })}
+              onChange={(value, universityId) => setFormData({ 
+                ...formData, 
+                university: value,
+                university_id: universityId || null
+              })}
               placeholder="Search for your institution..."
             />
           </div>
@@ -192,7 +207,7 @@ export default function MentorOnboarding() {
 
             <Input
               label="Area of Expertise"
-              placeholder="e.g., Computer Science, Mathematics, Business, etc."
+              placeholder="e.g., Full Stack Development, AI/ML, Web Development (comma-separated)"
               value={formData.expertise}
               onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
               icon={<Briefcase className="w-5 h-5" />}

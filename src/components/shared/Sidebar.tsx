@@ -25,7 +25,7 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/student/courses' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/student/schedule' },
     { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
-    { icon: Video, label: 'Live Sessions', href: '/dashboard/student/sessions' },
+    { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
     { icon: MessageSquare, label: 'Messages', href: '/dashboard/student/messages' },
     { icon: Bot, label: 'AI Assistant', href: '/dashboard/student/ai-assistant' },
     { icon: Settings, label: 'Settings', href: '/dashboard/student/settings' },
@@ -36,7 +36,7 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/mentor/courses' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/mentor/schedule' },
     { icon: Users, label: 'Students', href: '/dashboard/mentor/students' },
-    { icon: Video, label: 'Live Sessions', href: '/dashboard/mentor/sessions' },
+    { icon: Video, label: 'Live Sessions', href: '/dashboard/mentor/live-sessions' },
     { icon: MessageSquare, label: 'Messages', href: '/dashboard/mentor/messages' },
     { icon: Settings, label: 'Settings', href: '/dashboard/mentor/settings' },
   ];

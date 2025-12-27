@@ -16,12 +16,12 @@ export default async function StudentLiveSessionsPage() {
   }
 
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
+    .from('users')
+    .select('*, universities(*)')
+    .eq('id', user.id)
     .single();
 
-  if (!profile?.university || !profile?.full_name) {
+  if (!profile?.university_id || !profile?.full_name) {
     redirect('/onboarding/student');
   }
 
