@@ -120,7 +120,7 @@ export default async function MentorDashboard() {
                     {profile.expertise && profile.expertise.length > 0 && (
                       <>
                         <span className="text-slate-400">•</span>
-                        {profile.expertise.slice(0, 3).map((exp, idx) => (
+                        {profile.expertise.slice(0, 3).map((exp: string, idx: number) => (
                           <span key={idx} className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">
                             {exp}
                           </span>
