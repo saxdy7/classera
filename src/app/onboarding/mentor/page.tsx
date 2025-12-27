@@ -256,10 +256,10 @@ export default function MentorOnboarding() {
                 <p className="text-sm text-slate-600 mb-1">Area of Expertise</p>
                 <p className="font-semibold text-black">{formData.expertise}</p>
               </div>
-              {formData.experience_years && (
+              {formData.years_of_experience && (
                 <div>
                   <p className="text-sm text-slate-600 mb-1">Experience</p>
-                  <p className="font-semibold text-black">{formData.experience_years} years</p>
+                  <p className="font-semibold text-black">{formData.years_of_experience} years</p>
                 </div>
               )}
             </div>
