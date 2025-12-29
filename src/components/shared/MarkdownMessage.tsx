@@ -40,7 +40,8 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                 remarkPlugins={[remarkGfm]}
                 components={{
                     // Code blocks
-                    code({ node, inline, className, children, ...props }) {
+                    code(props) {
+                        const { node, inline, className, children, ...rest } = props as any;
                         const match = /language-(\w+)/.exec(className || '');
                         const language = match ? match[1] : '';
                         const value = String(children).replace(/\n$/, '');
@@ -50,7 +51,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                         ) : (
                             <code
                                 className="px-1.5 py-0.5 bg-slate-100 text-fuchsia-600 rounded text-sm font-mono"
-                                {...props}
+                                {...rest}
                             >
                                 {children}
                             </code>
