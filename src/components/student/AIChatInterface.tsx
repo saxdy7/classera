@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Sparkles, Send, Plus, ImageIcon, Mic, ChevronRight } from 'lucide-react';
+import { MarkdownMessage } from '@/components/shared/MarkdownMessage';
 
 interface Message {
   id: string;
@@ -91,10 +92,10 @@ export function AIChatInterface({ userName }: AIChatInterfaceProps) {
   };
 
   const quickPrompts = [
-    { emoji: '📚', title: 'Explain', desc: 'Complex topics' },
-    { emoji: '🧮', title: 'Solve', desc: 'Math problems' },
-    { emoji: '💡', title: 'Tips', desc: 'Study strategies' },
-    { emoji: '✍️', title: 'Review', desc: 'My notes' },
+    { emoji: '💻', title: 'Code Help', desc: 'Explain this code snippet' },
+    { emoji: '🔍', title: 'Compare', desc: 'Differences between concepts' },
+    { emoji: '🧮', title: 'Solve', desc: 'Step-by-step problem solving' },
+    { emoji: '📖', title: 'Learn', desc: 'Understand a new topic' },
   ];
 
   return (
@@ -102,7 +103,7 @@ export function AIChatInterface({ userName }: AIChatInterfaceProps) {
       {/* Left Sidebar - Chat History */}
       <div className="lg:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-lg p-4 overflow-hidden flex flex-col max-h-[calc(100vh-120px)]">
         <div className="mb-4">
-          <button 
+          <button
             onClick={() => setMessages([])}
             className="w-full px-4 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
           >
@@ -194,15 +195,12 @@ export function AIChatInterface({ userName }: AIChatInterfaceProps) {
                   )}
                   <div className={`flex-1 max-w-2xl ${msg.role === 'user' ? 'flex justify-end' : ''}`}>
                     <div
-                      className={`p-4 rounded-2xl ${
-                        msg.role === 'user'
-                          ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-tr-none'
-                          : 'bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-fuchsia-100 rounded-tl-none'
-                      }`}
+                      className={`p-4 rounded-2xl ${msg.role === 'user'
+                        ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-tr-none'
+                        : 'bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-fuchsia-100 rounded-tl-none'
+                        }`}
                     >
-                      <div className={`whitespace-pre-wrap ${msg.role === 'user' ? 'text-white' : 'text-slate-900'}`}>
-                        {msg.content}
-                      </div>
+                      <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
                     </div>
                     <p className="text-xs text-slate-400 mt-2 ml-1">
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

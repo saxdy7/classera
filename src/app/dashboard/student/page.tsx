@@ -27,14 +27,14 @@ export default async function StudentDashboard() {
   if (!profile) {
     redirect('/onboarding/student');
   }
-  
+
   if (!profile.full_name || !profile.university_id) {
     redirect('/onboarding/student');
   }
 
   return (
     <div className="min-h-screen bg-white">
-      <Header profile={profile} />
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 p-4 md:p-8 md:ml-24">
@@ -48,11 +48,11 @@ export default async function StudentDashboard() {
                     Hello, Welcome back! 👋
                   </h1>
                   <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                    Good to see you again, {profile?.full_name?.split(' ')[0]}! You're currently enrolled at {profile.universities?.name}. 
+                    Good to see you again, {profile?.full_name?.split(' ')[0]}! You're currently enrolled at {profile.universities?.name}.
                     Continue your learning journey and explore your courses, connect with mentors, and stay on track with your goals.
                   </p>
                 </div>
-                
+
                 {/* Right Side - Illustration */}
                 <div className="hidden lg:block flex-shrink-0">
                   <Image
@@ -90,13 +90,12 @@ export default async function StudentDashboard() {
                     return (
                       <div
                         key={i}
-                        className={`aspect-square flex items-center justify-center text-sm rounded-lg transition-colors ${
-                          isToday
+                        className={`aspect-square flex items-center justify-center text-sm rounded-lg transition-colors ${isToday
                             ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500 text-white font-bold'
                             : isValidDay
-                            ? 'hover:bg-slate-100 text-slate-700 cursor-pointer'
-                            : 'text-slate-300'
-                        }`}
+                              ? 'hover:bg-slate-100 text-slate-700 cursor-pointer'
+                              : 'text-slate-300'
+                          }`}
                       >
                         {isValidDay ? day : ''}
                       </div>

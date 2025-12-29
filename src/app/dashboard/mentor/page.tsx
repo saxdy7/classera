@@ -27,14 +27,14 @@ export default async function MentorDashboard() {
   if (!profile) {
     redirect('/onboarding/mentor');
   }
-  
+
   if (!profile.full_name || !profile.university_id) {
     redirect('/onboarding/mentor');
   }
 
   return (
     <div className="min-h-screen bg-white">
-      <Header profile={profile} />
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
         <main className="flex-1 p-4 md:p-8 md:ml-24">
@@ -47,11 +47,11 @@ export default async function MentorDashboard() {
                     Hello, Welcome back! 👋
                   </h1>
                   <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                    Good to see you again, {profile?.full_name?.split(' ')[0]}! You're mentoring at {profile.universities?.name}. 
+                    Good to see you again, {profile?.full_name?.split(' ')[0]}! You're mentoring at {profile.universities?.name}.
                     Manage your communities, create tests, and guide your students to success.
                   </p>
                 </div>
-                
+
                 <div className="hidden lg:block flex-shrink-0">
                   <Image
                     src="https://illustrations.popsy.co/amber/man-riding-a-rocket.svg"
@@ -88,13 +88,12 @@ export default async function MentorDashboard() {
                     return (
                       <div
                         key={i}
-                        className={`aspect-square flex items-center justify-center text-sm rounded-lg transition-colors ${
-                          isToday
+                        className={`aspect-square flex items-center justify-center text-sm rounded-lg transition-colors ${isToday
                             ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500 text-white font-bold'
                             : isValidDay
-                            ? 'hover:bg-slate-100 text-slate-700 cursor-pointer'
-                            : 'text-slate-300'
-                        }`}
+                              ? 'hover:bg-slate-100 text-slate-700 cursor-pointer'
+                              : 'text-slate-300'
+                          }`}
                       >
                         {isValidDay ? day : ''}
                       </div>

@@ -3,7 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
-import { BookOpen, Clock, Award } from 'lucide-react';
+import { CoursesDiscoveryClient } from '@/components/student/CoursesDiscoveryClient';
+import Image from 'next/image';
+import { BookOpen, Sparkles, TrendingUp } from 'lucide-react';
 
 export default async function StudentCoursesPage() {
   const supabase = await createClient();
@@ -27,69 +29,96 @@ export default async function StudentCoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header profile={profile} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-black mb-2">My Courses</h2>
-              <p className="text-slate-600">Track your enrolled courses and progress</p>
+            {/* Hero Banner */}
+            <div className="mb-8 bg-gradient-to-br from-fuchsia-500 via-purple-500 to-blue-500 rounded-3xl p-8 md:p-12 relative overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
+              </div>
+
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                {/* Left Side - Text Content */}
+                <div className="flex-1 text-white">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-6 h-6" />
+                    <span className="text-sm font-semibold uppercase tracking-wide">Discover & Learn</span>
+                  </div>
+                  <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    Find Your Perfect Course
+                  </h1>
+                  <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
+                    Explore thousands of courses from top platforms like Coursera, Udemy, edX, and more.
+                    Start learning today with free and paid courses tailored to your goals.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                      <BookOpen className="w-5 h-5" />
+                      <span className="font-semibold">10+ Platforms</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                      <TrendingUp className="w-5 h-5" />
+                      <span className="font-semibold">1000+ Courses</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side - Icon */}
+                <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
+                  <div className="w-72 h-72 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <span className="text-9xl">🎓</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Course Stats */}
+            {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-fuchsia-100 rounded-lg flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 text-fuchsia-600" />
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">🆓</span>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">Active Courses</p>
-                    <p className="text-2xl font-bold text-black">0</p>
+                    <p className="text-sm text-slate-600">Free Courses</p>
+                    <p className="text-2xl font-bold text-slate-900">500+</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-purple-600" />
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">💎</span>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">Hours Learned</p>
-                    <p className="text-2xl font-bold text-black">0</p>
+                    <p className="text-sm text-slate-600">Premium Courses</p>
+                    <p className="text-2xl font-bold text-slate-900">500+</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Award className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">📺</span>
                   </div>
                   <div>
-                    <p className="text-sm text-slate-600">Completed</p>
-                    <p className="text-2xl font-bold text-black">0</p>
+                    <p className="text-sm text-slate-600">YouTube Tutorials</p>
+                    <p className="text-2xl font-bold text-slate-900">100+</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Empty State */}
-            <div className="bg-white rounded-xl p-12 border border-slate-200 text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-10 h-10 text-slate-400" />
-              </div>
-              <h3 className="text-xl font-bold text-black mb-2">No Courses Yet</h3>
-              <p className="text-slate-600 mb-6">
-                Start your learning journey by finding a mentor and enrolling in courses
-              </p>
-              <button className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity">
-                Find Mentors
-              </button>
-            </div>
+            {/* Main Content - Courses Discovery */}
+            <CoursesDiscoveryClient />
           </div>
         </main>
       </div>
