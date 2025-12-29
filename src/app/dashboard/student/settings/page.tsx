@@ -30,7 +30,7 @@ export default async function StudentSettingsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-4xl mx-auto">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-black mb-2">Settings</h2>
@@ -80,18 +80,51 @@ export default async function StudentSettingsPage() {
                     </label>
                     <input
                       type="text"
-                      value={profile.university || ''}
+                      value={profile.universities?.name || 'Not specified'}
                       disabled
                       className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-black"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Field of Study
+                      Specialization/Board
                     </label>
                     <input
                       type="text"
-                      value={profile.field_of_study || ''}
+                      value={profile.specialization_board || 'Not specified'}
+                      disabled
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Degree Type
+                    </label>
+                    <input
+                      type="text"
+                      value={profile.degree_type || 'Not specified'}
+                      disabled
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Current Semester
+                    </label>
+                    <input
+                      type="text"
+                      value={profile.current_semester ? `Semester ${profile.current_semester}` : 'Not specified'}
+                      disabled
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Graduation Year
+                    </label>
+                    <input
+                      type="text"
+                      value={profile.graduation_year || 'Not specified'}
                       disabled
                       className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-black"
                     />

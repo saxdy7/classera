@@ -1,8 +1,9 @@
 'use client';
 
-import { LogOut, ChevronDown } from 'lucide-react';
+import { LogOut, ChevronDown, MessageSquare, Bot, Bell } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 
@@ -49,18 +50,63 @@ export function Header({ profile }: HeaderProps) {
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40">
-      <div className="h-full px-6 flex items-center justify-between">
+      <div className="h-full px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-black">
+          <h1 className="text-lg md:text-xl font-bold text-black">
             {profile.role === 'student' ? 'Student' : 'Mentor'} Dashboard
           </h1>
         </div>
 
-        {/* Profile Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Right Side Actions - Dock Style */}
+          <div className="flex items-center gap-1 md:gap-2 px-2 py-1 bg-slate-50/80 backdrop-blur-sm rounded-2xl border border-slate-200">
+          {/* Messages */}
+          <Link
+            href={`/dashboard/${profile.role}/messages`}
+            className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-125 hover:translate-y-1"
+          >
+            <MessageSquare className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
+            {/* Tooltip */}
+            <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
+              Messages
+            </span>
+          </Link>
+
+          {/* AI Assistant (only for students) */}
+          {profile.role === 'student' && (
+            <Link
+              href="/dashboard/student/ai-assistant"
+              className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-125 hover:translate-y-1"
+            >
+              <Bot className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
+              {/* Tooltip */}
+              <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
+                AI Assistant
+              </span>
+            </Link>
+          )}
+
+          {/* Notifications */}
+          <Link
+            href={`/dashboard/${profile.role}/notifications`}
+            className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-125 hover:translate-y-1"
+          >
+            <Bell className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
+            {/* Tooltip */}
+            <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
+              Notifications
+            </span>
+          </Link>
+          </div>
+
+          {/* Divider */}
+          <div className="h-8 w-px bg-slate-200 mx-1 md:mx-2"></div>
+
+          {/* Profile Dropdown */}
+          <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
           >
             {profile.avatar_url ? (
               <Image
@@ -107,6 +153,7 @@ export function Header({ profile }: HeaderProps) {
               </button>
             </div>
           )}
+          </div>
         </div>
       </div>
     </header>

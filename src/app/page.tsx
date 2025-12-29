@@ -13,17 +13,17 @@ export default function Home() {
   // Track scroll position for nav effects
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="scroll-smooth bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900 pb-6">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 transition-all duration-300">
+      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6 transition-all duration-500 ease-out animate-fade-in-up">
         <div
-          className={`max-w-7xl mx-auto bg-white/80 backdrop-blur-md border border-slate-100 rounded-full px-6 py-4 flex justify-between items-center shadow-sm transition-all duration-300 ${
-            scrollY > 50 ? 'shadow-lg bg-white/95' : ''
+          className={`max-w-7xl mx-auto bg-white/80 backdrop-blur-md border border-slate-100 rounded-full px-6 py-4 flex justify-between items-center transition-all duration-500 ease-out ${
+            scrollY > 50 ? 'shadow-2xl bg-white/95 py-3' : 'shadow-sm'
           }`}
         >
           {/* Logo */}
@@ -75,20 +75,20 @@ export default function Home() {
       <header className="relative pt-40 pb-20 px-6 overflow-hidden">
         {/* Background Blobs */}
         <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[50vw] h-[50vw] bg-purple-200 rounded-full blur-3xl opacity-40 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[40vw] h-[40vw] bg-lime-200 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[40vw] h-[40vw] bg-lime-200 rounded-full blur-3xl opacity-40 animate-float"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="text-center lg:text-left">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold uppercase tracking-wide mb-8 hover:bg-orange-200 transition-colors cursor-default">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold uppercase tracking-wide mb-8 hover:bg-orange-200 transition-colors cursor-default animate-fade-in-up stagger-1">
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-bounce"></span>
                 Freshly Baked Learning
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.9] mb-8 text-slate-900">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.9] mb-8 text-slate-900 animate-fade-in-up stagger-2">
                 We craft <br />
                 <span className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text italic pr-4">
                   digital learning.
@@ -96,17 +96,17 @@ export default function Home() {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg md:text-xl text-slate-500 max-w-xl leading-relaxed mb-12">
+              <p className="text-lg md:text-xl text-slate-500 max-w-xl leading-relaxed mb-12 animate-fade-in-up stagger-3">
                 Classera is the learning platform for educators who refuse to be boring. We mix pedagogy with technology to build experiences that inspire.
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
-                <a href="/signin" className="px-8 py-4 bg-slate-900 text-white rounded-full text-lg font-medium hover:bg-fuchsia-500 hover:scale-105 transition-all duration-300 shadow-xl shadow-fuchsia-500/20 flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center animate-fade-in-up stagger-4">
+                <a href="/signin" className="group px-8 py-4 bg-slate-900 text-white rounded-full text-lg font-medium hover:bg-fuchsia-500 hover:scale-105 hover:shadow-2xl hover:shadow-fuchsia-500/40 transition-all duration-500 ease-out shadow-xl shadow-fuchsia-500/20 flex items-center gap-2">
                   Get Started
                   <ArrowRight className="w-5 h-5" />
                 </a>
-                <button className="px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-full text-lg font-medium hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2">
+                <button className="group px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-full text-lg font-medium hover:bg-slate-50 hover:border-slate-300 hover:shadow-lg transition-all duration-500 ease-out flex items-center gap-2">
                   <Play className="w-5 h-5 text-slate-400" />
                   Platform Tour
                 </button>
@@ -114,7 +114,7 @@ export default function Home() {
             </div>
 
             {/* Right Content - Display Cards */}
-            <div className="flex justify-center lg:justify-start lg:ml-40 -mt-8">
+            <div className="flex justify-center lg:justify-start lg:ml-40 -mt-8 animate-fade-in-up stagger-3">
               <DisplayCards cards={[
                 {
                   icon: <Sparkles className="size-4 text-fuchsia-600" />,
@@ -190,7 +190,7 @@ export default function Home() {
             </div>
             <a
               href="#"
-              className="group inline-flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-full font-medium hover:bg-fuchsia-600 transition-all hover:scale-105 shadow-lg"
+              className="group inline-flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-full font-medium hover:bg-fuchsia-600 hover:shadow-2xl hover:shadow-fuchsia-600/40 transition-all duration-500 ease-out hover:scale-105 shadow-lg"
             >
               Explore All Features
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -198,11 +198,11 @@ export default function Home() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 animate-fade-in-up">
             {/* Feature 1 - Live Virtual Classrooms */}
             <div className="lg:col-span-8 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-50 to-indigo-50 aspect-[4/3] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 flex items-center justify-center p-12">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-50 to-indigo-50 aspect-[4/3] mb-6 transition-all duration-700 ease-out hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/20">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 flex items-center justify-center p-12 transition-all duration-700 group-hover:from-blue-500/20 group-hover:to-indigo-500/20">
                   <div className="w-full h-full bg-cover bg-center rounded-2xl shadow-2xl border-4 border-white/50 backdrop-blur-sm" style={{backgroundImage: "url('https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&q=80&w=2000')"}}></div>
                 </div>
                 <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-md px-5 py-2.5 rounded-full text-xs font-bold text-blue-600 shadow-lg border border-blue-100">
@@ -230,7 +230,7 @@ export default function Home() {
 
             {/* Feature 2 - Course Library */}
             <div className="lg:col-span-4 group cursor-pointer lg:mt-12">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-purple-100 to-pink-100 aspect-[3/4] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-purple-100 to-pink-100 aspect-[3/4] mb-6 transition-all duration-700 ease-out hover:scale-[1.03] hover:shadow-2xl hover:shadow-purple-500/20">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 flex flex-col items-center justify-center text-white p-8">
                   <div className="relative mb-6">
                     <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl animate-pulse"></div>
@@ -256,7 +256,7 @@ export default function Home() {
 
             {/* Feature 3 - AI-Powered Grading */}
             <div className="lg:col-span-5 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-rose-100 to-orange-100 aspect-[1/1] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-rose-100 to-orange-100 aspect-[1/1] mb-6 transition-all duration-700 ease-out hover:scale-[1.03] hover:shadow-2xl hover:shadow-rose-500/20">
                 <div className="absolute inset-0 bg-gradient-to-br from-rose-500 to-orange-500 flex flex-col items-center justify-center p-8 text-white">
                   <div className="relative mb-6">
                     <div className="absolute inset-0 bg-white/30 rounded-full blur-3xl"></div>
@@ -283,7 +283,7 @@ export default function Home() {
 
             {/* Feature 4 - Analytics Dashboard */}
             <div className="lg:col-span-7 group cursor-pointer">
-              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-teal-50 to-cyan-50 aspect-[16/10] mb-6 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+              <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-teal-50 to-cyan-50 aspect-[16/10] mb-6 transition-all duration-700 ease-out hover:scale-[1.03] hover:shadow-2xl hover:shadow-teal-500/20">
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex items-center justify-center p-8">
                   <div className="absolute inset-0 bg-teal-400/20 rounded-full blur-3xl"></div>
                   <div className="relative w-full h-full flex flex-col items-center justify-center -mt-16">
@@ -319,7 +319,7 @@ export default function Home() {
       <section id="services" className="py-24 px-6 bg-slate-50 rounded-[3rem] mx-4 mb-4">
         <div className="max-w-7xl sm:px-6 lg:px-8 mx-auto pt-12 pb-12">
           {/* Main Headlines */}
-          <div className="text-center space-y-4 mb-16">
+          <div className="text-center space-y-4 mb-16 animate-fade-in-up">
             <h1 className="text-4xl sm:text-6xl lg:text-8xl font-light tracking-tighter leading-none">
               <span className="flex items-center justify-center gap-4">
                 OUR
@@ -341,7 +341,7 @@ export default function Home() {
           </div>
 
           {/* Hero Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-1">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-1 animate-fade-in-up stagger-2">
             {/* Left Card */}
             <div className="lg:col-span-1">
               <div className="lg:min-h-[520px] flex flex-col ring-1 ring-gray-200 bg-gradient-to-br from-blue-50 to-white rounded-3xl p-6">
@@ -583,26 +583,26 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left Side - Stats */}
-          <div className="grid grid-cols-2 gap-6 text-center">
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+          <div className="grid grid-cols-2 gap-6 text-center animate-fade-in-up">
+            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-blue-300 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer">
               <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-teal-400 mb-2">
                 50+
               </div>
               <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">Happy Educators</div>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-purple-300 hover:shadow-lg transition-all duration-300">
+            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-purple-300 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer">
               <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-pink-400 mb-2">
                 12
               </div>
               <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">EdTech Awards</div>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-orange-300 hover:shadow-lg transition-all duration-300">
+            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-orange-300 hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer">
               <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-orange-400 to-yellow-400 mb-2">
                 ∞
               </div>
               <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">Learning Hours</div>
             </div>
-            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-lime-300 hover:shadow-lg transition-all duration-300">
+            <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white hover:border-lime-300 hover:shadow-2xl hover:shadow-lime-500/20 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer">
               <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-lime-400 to-green-400 mb-2">
                 100%
               </div>
@@ -611,7 +611,7 @@ export default function Home() {
           </div>
 
           {/* Right Side - Radial Timeline */}
-          <div className="h-[600px] rounded-3xl overflow-hidden border-2 border-gray-200 bg-gray-50">
+          <div className="h-[600px] rounded-3xl overflow-hidden border-2 border-gray-200 bg-gray-50 animate-fade-in-up stagger-3">
             <RadialOrbitalTimelineDemo />
           </div>
         </div>
@@ -651,14 +651,14 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in-up" style={{animationDelay: '0.7s'}}>
                 <a
                   href="/signin"
-                  className="group px-8 py-5 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-fuchsia-500/50 transition-all hover:scale-105 flex items-center gap-3"
+                  className="group px-8 py-5 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-fuchsia-500/50 transition-all duration-500 ease-out hover:scale-110 flex items-center gap-3"
                 >
                   Start Free Trial
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a
                   href="/contact"
-                  className="group px-8 py-5 bg-white/5 backdrop-blur-sm border-2 border-white/10 text-white rounded-full text-lg font-bold hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3"
+                  className="group px-8 py-5 bg-white/5 backdrop-blur-sm border-2 border-white/10 text-white rounded-full text-lg font-bold hover:bg-white/10 hover:border-white/20 hover:scale-105 transition-all duration-500 ease-out flex items-center gap-3"
                 >
                   Get in Touch
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -790,35 +790,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* Custom Marquee Animation */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
+import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import { BookOpen, Clock, Award } from 'lucide-react';
 
 export default async function StudentCoursesPage() {
@@ -92,6 +93,7 @@ export default async function StudentCoursesPage() {
           </div>
         </main>
       </div>
+      <FloatingAIAssistant />
     </div>
   );
 }

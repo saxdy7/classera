@@ -3,8 +3,9 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare, Calendar } from 'lucide-react';
+import { Mail, GraduationCap, BookOpen, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { MentorActions } from '@/components/student/MentorActions';
 
 export default async function MentorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -87,16 +88,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                   <p className="text-xl text-slate-600 mb-4">{mentor.expertise || 'Mentor'}</p>
                   
                   {/* Action Buttons */}
-                  <div className="flex gap-3">
-                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                      <MessageSquare className="w-5 h-5" />
-                      Connect
-                    </button>
-                    <button className="px-6 py-3 border-2 border-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 text-black">
-                      <Calendar className="w-5 h-5" />
-                      Schedule Session
-                    </button>
-                  </div>
+                  <MentorActions mentorId={mentor.id} mentorEmail={mentor.email} />
                 </div>
 
                 {/* Info Grid */}
