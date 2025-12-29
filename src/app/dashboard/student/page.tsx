@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Trophy, BookOpen, CheckCircle, Clock, TrendingUp, Calendar as CalendarIcon, Target, Sparkles, BarChart3 } from 'lucide-react';
 
 export default async function StudentDashboard() {
   const supabase = await createClient();
