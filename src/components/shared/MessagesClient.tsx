@@ -37,10 +37,10 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
     try {
       const response = await fetch('/api/conversations');
       const data = await response.json();
-      
+
       if (data.conversations) {
         setConversations(data.conversations);
-        
+
         // Check if there's a userId in URL params to start conversation
         const userIdParam = searchParams?.get('userId');
         if (userIdParam && !selectedConversation) {
@@ -48,7 +48,7 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
           const existingConv = data.conversations.find(
             (conv: Conversation) => conv.user.id === userIdParam
           );
-          
+
           if (existingConv) {
             setSelectedConversation(existingConv);
           } else {
@@ -71,9 +71,9 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ otherUserId: userId }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.user) {
         const newConversation: Conversation = {
           user: data.user,
@@ -99,7 +99,7 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
     const interval = setInterval(fetchConversations, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [searchParams]);
 
   const filteredConversations = conversations.filter((conv) =>
     conv.user.full_name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -132,9 +132,8 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
     <div className="bg-white rounded-xl border border-slate-200 h-[calc(100vh-250px)] flex">
       {/* Conversations List */}
       <div
-        className={`${
-          selectedConversation ? 'hidden lg:flex' : 'flex'
-        } w-full lg:w-80 border-r border-slate-200 flex-col`}
+        className={`${selectedConversation ? 'hidden lg:flex' : 'flex'
+          } w-full lg:w-80 border-r border-slate-200 flex-col`}
       >
         <div className="p-4 border-b border-slate-200">
           <div className="relative">
@@ -173,9 +172,8 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
               <button
                 key={conversation.user.id}
                 onClick={() => setSelectedConversation(conversation)}
-                className={`w-full p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 text-left ${
-                  selectedConversation?.user.id === conversation.user.id ? 'bg-fuchsia-50' : ''
-                }`}
+                className={`w-full p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 text-left ${selectedConversation?.user.id === conversation.user.id ? 'bg-fuchsia-50' : ''
+                  }`}
               >
                 <div className="flex gap-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -192,11 +190,10 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
                     </div>
                     <div className="flex items-center justify-between">
                       <p
-                        className={`text-sm truncate ${
-                          conversation.unreadCount > 0 && !conversation.lastMessage.isFromCurrentUser
+                        className={`text-sm truncate ${conversation.unreadCount > 0 && !conversation.lastMessage.isFromCurrentUser
                             ? 'text-slate-900 font-medium'
                             : 'text-slate-500'
-                        }`}
+                          }`}
                       >
                         {conversation.lastMessage.isFromCurrentUser ? 'You: ' : ''}
                         {conversation.lastMessage.content}

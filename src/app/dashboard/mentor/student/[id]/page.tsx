@@ -85,13 +85,16 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 <div className="mb-6">
                   <h1 className="text-3xl font-bold text-black mb-2">{student.full_name}</h1>
                   <p className="text-xl text-slate-600 mb-4">{student.field_of_study || 'Student'}</p>
-                  
+
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                    <Link
+                      href={`/dashboard/mentor/messages?userId=${student.id}`}
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                    >
                       <MessageSquare className="w-5 h-5" />
                       Send Message
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
@@ -132,7 +135,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 <div className="border-t border-slate-200 pt-8">
                   <h2 className="text-xl font-bold text-black mb-4">About</h2>
                   <p className="text-slate-700 leading-relaxed">
-                    Student at {student.university} studying {student.field_of_study || 'various subjects'}. 
+                    Student at {student.university} studying {student.field_of_study || 'various subjects'}.
                     Actively engaged in learning and seeking mentorship opportunities.
                   </p>
                 </div>
