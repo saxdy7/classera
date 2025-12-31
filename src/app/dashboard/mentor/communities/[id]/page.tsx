@@ -1,188 +1,170 @@
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Users, Settings, UserPlus, MessageSquare } from 'lucide-react';
+import { CommunityMembersClient } from '@/components/communities/CommunityMembersClient';
+import { CommunityChat } from '@/components/communities/CommunityChat';
+import { ModerationPanel } from '@/components/communities/ModerationPanel';
+import { Users, ArrowLeft, Settings, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
 
-export default async function CommunityDetailPage({ params }: { params: { id: string } }) {
+export default async function CommunityDetailPage({
+  params,
+  searchParams
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  // Next.js 15: params and searchParams are now Promises
+  const { id } = await params;
+  const { tab = 'members' } = await searchParams;
+
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/signin');
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/sign-in');
 
   const { data: profile } = await supabase
     .from('users')
-    .select('*, universities(*)')
+    .select('*')
     .eq('id', user.id)
     .single();
 
-  if (!profile?.university_id || !profile?.full_name) {
-    redirect('/onboarding/mentor');
-  }
+  if (!profile || profile.role !== 'mentor') redirect('/dashboard');
 
+  // Get community details
   const { data: community } = await supabase
     .from('communities')
-    .select('*')
-    .eq('id', params.id)
+    .select(`
+      *,
+      community_members(count)
+    `)
+    .eq('id', id)
+    .eq('mentor_id', user.id)
     .single();
 
   if (!community) {
     redirect('/dashboard/mentor/communities');
   }
 
-  // Get pending join requests
-  const { data: pendingRequests } = await supabase
-    .from('community_members')
-    .select('*, users(full_name, email)')
-    .eq('community_id', params.id)
-    .eq('status', 'pending')
-    .order('created_at', { ascending: false });
+  const memberCount = community.community_members?.[0]?.count || 0;
 
-  // Get approved members
-  const { data: members } = await supabase
-    .from('community_members')
-    .select('*, users(full_name, email)')
-    .eq('community_id', params.id)
-    .eq('status', 'approved')
-    .order('created_at', { ascending: false });
+  // Get channels for moderation panel
+  const { data: channels } = await supabase
+    .from('community_channels')
+    .select('*')
+    .eq('community_id', id);
+
+  const discussionChannel = channels?.find(c => c.type === 'discussion');
 
   return (
     <div className="min-h-screen bg-slate-50">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
+            {/* Back Button */}
+            <Link
+              href="/dashboard/mentor/communities"
+              className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Communities
+            </Link>
+
             {/* Community Header */}
-            <div className="bg-white rounded-xl p-8 border border-slate-200 mb-8">
+            <div className="bg-white rounded-3xl border border-slate-200 p-8 mb-6 shadow-sm">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-                    <Users className="w-10 h-10 text-white" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+                    {community.name.charAt(0)}
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-black mb-2">{community.name}</h1>
-                    <p className="text-slate-600">{community.description}</p>
-                    <div className="flex items-center gap-4 mt-4">
-                      <span className="flex items-center gap-2 text-sm text-slate-600">
+                    <h1 className="text-4xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                      {community.name}
+                    </h1>
+                    <p className="text-slate-600 mb-3">{community.description}</p>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
                         <Users className="w-4 h-4" />
-                        {community.member_count} members
-                      </span>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        community.is_active
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}>
-                        {community.is_active ? 'Active' : 'Inactive'}
-                      </span>
+                        <span>{memberCount} members</span>
+                      </div>
+                      {community.is_active ? (
+                        <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
+                          Inactive
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors">
-                  <Settings className="w-5 h-5" />
-                  Settings
-                </button>
+                <Link
+                  href={`/dashboard/mentor/communities/${id}/settings`}
+                  className="p-3 hover:bg-slate-100 rounded-xl transition-colors"
+                >
+                  <Settings className="w-6 h-6 text-slate-600" />
+                </Link>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Pending Join Requests */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-black flex items-center gap-2">
-                    <UserPlus className="w-6 h-6" />
-                    Pending Requests
-                  </h2>
-                  <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-                    {pendingRequests?.length || 0}
-                  </span>
+            {/* Tab Navigation */}
+            <div className="flex gap-2 mb-6 border-b border-slate-200">
+              <Link
+                href={`/dashboard/mentor/communities/${id}?tab=members`}
+                className={`px-6 py-3 font-semibold transition-colors ${tab === 'members'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-slate-600 hover:text-slate-900'
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Members
                 </div>
-
-                <div className="space-y-3">
-                  {pendingRequests && pendingRequests.length > 0 ? (
-                    pendingRequests.map((request) => (
-                      <div key={request.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
-                        <div>
-                          <p className="font-medium text-black">{request.users.full_name}</p>
-                          <p className="text-sm text-slate-600">{request.users.email}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors">
-                            Approve
-                          </button>
-                          <button className="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">
-                            Reject
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8">
-                      <UserPlus className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                      <p className="text-slate-500">No pending requests</p>
-                    </div>
-                  )}
+              </Link>
+              <Link
+                href={`/dashboard/mentor/communities/${id}?tab=chat`}
+                className={`px-6 py-3 font-semibold transition-colors ${tab === 'chat'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-slate-600 hover:text-slate-900'
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Chat
                 </div>
-              </div>
-
-              {/* Community Members */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-black flex items-center gap-2">
-                    <Users className="w-6 h-6" />
-                    Members
-                  </h2>
-                  <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
-                    {members?.length || 0}
-                  </span>
-                </div>
-
-                <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                  {members && members.length > 0 ? (
-                    members.map((member) => (
-                      <div key={member.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-medium text-sm">
-                              {member.users.full_name.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-black">{member.users.full_name}</p>
-                            <p className="text-sm text-slate-600">{member.users.email}</p>
-                          </div>
-                        </div>
-                        <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors">
-                          <MessageSquare className="w-5 h-5 text-slate-600" />
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8">
-                      <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                      <p className="text-slate-500">No members yet</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+              </Link>
             </div>
 
-            {/* Community Activity / Posts Section */}
-            <div className="mt-8 bg-white rounded-xl p-6 border border-slate-200">
-              <h2 className="text-xl font-bold text-black mb-6">Recent Activity</h2>
-              <div className="text-center py-12">
-                <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500 mb-4">No posts yet in this community</p>
-                <button className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
-                  Create First Post
-                </button>
+            {/* Tab Content */}
+            {tab === 'members' && (
+              <CommunityMembersClient communityId={id} currentUserRole="mentor" />
+            )}
+
+            {tab === 'chat' && (
+              <div className="space-y-6">
+                {/* Moderation Panel */}
+                {discussionChannel && (
+                  <ModerationPanel
+                    communityId={id}
+                    channelId={discussionChannel.id}
+                    channelType="discussion"
+                    isLocked={discussionChannel.is_locked}
+                  />
+                )}
+
+                {/* Chat Component */}
+                <CommunityChat
+                  communityId={id}
+                  userRole="mentor"
+                  userId={user.id}
+                  isMuted={false}
+                />
               </div>
-            </div>
+            )}
           </div>
         </main>
       </div>

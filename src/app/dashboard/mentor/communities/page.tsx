@@ -30,11 +30,11 @@ export default async function MentorCommunitiesPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40">
+    <div className="min-h-screen bg-slate-50">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -54,7 +54,7 @@ export default async function MentorCommunitiesPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-2xl font-bold text-slate-900">{communities?.length || 0}</div>
@@ -63,7 +63,7 @@ export default async function MentorCommunitiesPage() {
                   <Users className="w-8 h-8 text-indigo-500" />
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-2xl font-bold text-slate-900">
@@ -74,7 +74,7 @@ export default async function MentorCommunitiesPage() {
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-2xl font-bold text-slate-900">
@@ -91,7 +91,7 @@ export default async function MentorCommunitiesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {communities && communities.length > 0 ? (
                 communities.map((community) => (
-                  <div key={community.id} className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all">
+                  <div key={community.id} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all">
                     <div className="flex items-start justify-between mb-4">
                       <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
                         {community.name.charAt(0)}

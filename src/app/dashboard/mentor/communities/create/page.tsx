@@ -22,41 +22,23 @@ export default function CreateCommunityPage() {
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/signin');
-        return;
-      }
-
-      const { data: profile } = await supabase
-        .from('users')
-        .select('university_id')
-        .eq('id', user.id)
-        .single();
-
-      if (!profile?.university_id) {
-        alert('University information not found');
-        setLoading(false);
-        return;
-      }
-
-      const { error } = await supabase.from('communities').insert({
-        name: formData.name,
-        description: formData.description,
-        mentor_id: user.id,
-        university_id: profile.university_id,
-        is_active: formData.is_active,
-        member_count: 0,
+      const res = await fetch('/api/communities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          is_active: formData.is_active
+        })
       });
 
-      if (error) {
-        console.error('Error creating community:', error);
-        alert('Failed to create community. Please try again.');
+      if (res.ok) {
+        router.push('/dashboard/mentor/communities');
+      } else {
+        const error = await res.json();
+        alert(error.error || 'Failed to create community. Please try again.');
         setLoading(false);
-        return;
       }
-
-      router.push('/dashboard/mentor/communities');
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred. Please try again.');
