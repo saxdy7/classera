@@ -15,6 +15,7 @@ interface ProctoringSession {
   daily_room_url: string;
   daily_room_name: string;
   started_at: string;
+  ended_at?: string | null;
   is_being_monitored: boolean;
   student: {
     id: string;
@@ -41,10 +42,10 @@ export default function MentorProctoringDashboard() {
 
   useEffect(() => {
     fetchSessions();
-    
+
     // Refresh every 5 seconds
     const interval = setInterval(fetchSessions, 5000);
-    
+
     return () => clearInterval(interval);
   }, [testId]);
 
@@ -52,7 +53,7 @@ export default function MentorProctoringDashboard() {
     try {
       const response = await fetch(`/api/proctoring/sessions?test_id=${testId}`);
       const data = await response.json();
-      
+
       if (data.sessions) {
         setSessions(data.sessions);
       }
@@ -80,11 +81,11 @@ export default function MentorProctoringDashboard() {
 
   const getAlertCount = (session: ProctoringSession, severity?: string) => {
     if (!session.alerts) return 0;
-    
+
     if (severity) {
       return session.alerts.filter(a => a.severity === severity && !a.is_resolved).length;
     }
-    
+
     return session.alerts.filter(a => !a.is_resolved).length;
   };
 
@@ -207,13 +208,12 @@ export default function MentorProctoringDashboard() {
           return (
             <Card
               key={session.id}
-              className={`p-4 ${
-                criticalCount > 0
+              className={`p-4 ${criticalCount > 0
                   ? 'border-red-500 border-2'
                   : highCount > 0
-                  ? 'border-orange-500 border-2'
-                  : ''
-              }`}
+                    ? 'border-orange-500 border-2'
+                    : ''
+                }`}
             >
               <div className="space-y-3">
                 {/* Student Info */}
@@ -289,7 +289,7 @@ export default function MentorProctoringDashboard() {
                     <Camera className="h-4 w-4 mr-2" />
                     Monitor
                   </Button>
-                  
+
                   <Button
                     size="sm"
                     variant="outline"
