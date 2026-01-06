@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import {
   BarChart3,
@@ -18,7 +18,7 @@ export default async function CommunityAnalyticsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: communityId } = await params;
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -199,8 +199,8 @@ export default async function CommunityAnalyticsPage({
     previousPosts && previousPosts > 0
       ? (((recentPosts || 0) - previousPosts) / previousPosts) * 100
       : recentPosts && recentPosts > 0
-      ? 100
-      : 0;
+        ? 100
+        : 0;
 
   const { count: recentMembers } = await supabase
     .from("community_members")
@@ -221,8 +221,8 @@ export default async function CommunityAnalyticsPage({
     previousMembers && previousMembers > 0
       ? (((recentMembers || 0) - previousMembers) / previousMembers) * 100
       : recentMembers && recentMembers > 0
-      ? 100
-      : 0;
+        ? 100
+        : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-8">
@@ -249,11 +249,10 @@ export default async function CommunityAnalyticsPage({
               </div>
               {memberGrowth !== 0 && (
                 <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                    memberGrowth > 0
+                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${memberGrowth > 0
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
-                  }`}
+                    }`}
                 >
                   <TrendingUp className="w-3 h-3" />
                   {memberGrowth > 0 ? "+" : ""}
@@ -272,9 +271,8 @@ export default async function CommunityAnalyticsPage({
               </div>
               {postGrowth !== 0 && (
                 <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                    postGrowth > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                  }`}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${postGrowth > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    }`}
                 >
                   <TrendingUp className="w-3 h-3" />
                   {postGrowth > 0 ? "+" : ""}
@@ -321,15 +319,14 @@ export default async function CommunityAnalyticsPage({
               sortedContributors.map((contributor, index) => (
                 <div key={contributor.author?.id || index} className="p-6 flex items-center gap-4">
                   <div
-                    className={`text-2xl font-bold ${
-                      index === 0
+                    className={`text-2xl font-bold ${index === 0
                         ? "text-amber-500"
                         : index === 1
-                        ? "text-slate-400"
-                        : index === 2
-                        ? "text-orange-600"
-                        : "text-slate-300"
-                    }`}
+                          ? "text-slate-400"
+                          : index === 2
+                            ? "text-orange-600"
+                            : "text-slate-300"
+                      }`}
                   >
                     #{index + 1}
                   </div>

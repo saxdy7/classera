@@ -8,9 +8,9 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Avatar({ src, alt, fallback, className = "", ...props }: AvatarProps) {
   const [imgError, setImgError] = React.useState(false);
-  
+
   const initials = fallback || alt?.split(' ').map(n => n[0]).join('').toUpperCase() || '?';
-  
+
   return (
     <div
       className={`relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full ${className}`}
@@ -31,3 +31,14 @@ export function Avatar({ src, alt, fallback, className = "", ...props }: AvatarP
     </div>
   );
 }
+
+// Export the sub-components for compatibility
+export const AvatarImage = ({ src, alt, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <img src={src} alt={alt} className={`aspect-square h-full w-full object-cover ${className || ''}`} {...props} />
+);
+
+export const AvatarFallback = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold ${className || ''}`} {...props}>
+    {children}
+  </div>
+);

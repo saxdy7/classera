@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Flag, CheckCircle, XCircle, Clock, AlertTriangle, User, MessageSquare, FileText } from "lucide-react";
 import { ModerationActions } from "@/components/communities/ModerationActions";
@@ -9,7 +9,7 @@ export default async function CommunityModerationPage({
   params: Promise<{ id: string }>;
 }) {
   const { id: communityId } = await params;
-  const supabase = await createServerClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
@@ -141,13 +141,12 @@ export default async function CommunityModerationPage({
                   <div className="flex items-start gap-4">
                     {/* Status Indicator */}
                     <div
-                      className={`p-2 rounded-lg ${
-                        report.status === "pending"
+                      className={`p-2 rounded-lg ${report.status === "pending"
                           ? "bg-amber-100"
                           : report.status === "resolved"
-                          ? "bg-green-100"
-                          : "bg-slate-100"
-                      }`}
+                            ? "bg-green-100"
+                            : "bg-slate-100"
+                        }`}
                     >
                       {report.status === "pending" ? (
                         <AlertTriangle className="w-5 h-5 text-amber-600" />
@@ -164,13 +163,12 @@ export default async function CommunityModerationPage({
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                report.status === "pending"
+                              className={`px-3 py-1 rounded-full text-xs font-medium ${report.status === "pending"
                                   ? "bg-amber-100 text-amber-700"
                                   : report.status === "resolved"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-slate-100 text-slate-700"
-                              }`}
+                                    ? "bg-green-100 text-green-700"
+                                    : "bg-slate-100 text-slate-700"
+                                }`}
                             >
                               {report.status.toUpperCase()}
                             </span>
