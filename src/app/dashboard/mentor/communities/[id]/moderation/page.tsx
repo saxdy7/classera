@@ -204,7 +204,7 @@ export default async function CommunityModerationPage({
                       {/* Reported Content */}
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                         <div className="flex items-center gap-2 mb-2">
-                          {report.post_id ? (
+                          {report.post?.[0] ? (
                             <>
                               <FileText className="w-4 h-4 text-red-600" />
                               <span className="text-sm font-medium text-red-900">Reported Post</span>
@@ -216,24 +216,24 @@ export default async function CommunityModerationPage({
                             </>
                           )}
                         </div>
-                        {report.post && (
+                        {report.post?.[0] && (
                           <div>
-                            {report.post.title && (
-                              <h4 className="font-semibold text-slate-900 mb-1">{report.post.title}</h4>
+                            {report.post[0].title && (
+                              <h4 className="font-semibold text-slate-900 mb-1">{report.post[0].title}</h4>
                             )}
-                            <p className="text-sm text-slate-700 line-clamp-3">{report.post.content}</p>
+                            <p className="text-sm text-slate-700 line-clamp-3">{report.post[0].content}</p>
                             <div className="text-xs text-slate-500 mt-2">
-                              By {report.post.author?.full_name || "Unknown"} •{" "}
-                              {new Date(report.post.created_at).toLocaleDateString()}
+                              By {report.post[0].author?.[0]?.full_name || "Unknown"} •{" "}
+                              {new Date(report.post[0].created_at).toLocaleDateString()}
                             </div>
                           </div>
                         )}
-                        {report.comment && (
+                        {report.comment?.[0] && (
                           <div>
-                            <p className="text-sm text-slate-700">{report.comment.content}</p>
+                            <p className="text-sm text-slate-700">{report.comment[0].content}</p>
                             <div className="text-xs text-slate-500 mt-2">
-                              By {report.comment.author?.full_name || "Unknown"} •{" "}
-                              {new Date(report.comment.created_at).toLocaleDateString()}
+                              By {report.comment[0].author?.[0]?.full_name || "Unknown"} •{" "}
+                              {new Date(report.comment[0].created_at).toLocaleDateString()}
                             </div>
                           </div>
                         )}
@@ -243,8 +243,8 @@ export default async function CommunityModerationPage({
                       {report.status === "pending" && (
                         <ModerationActions
                           reportId={report.id}
-                          postId={report.post_id}
-                          commentId={report.comment_id}
+                          postId={report.post?.[0]?.id}
+                          commentId={report.comment?.[0]?.id}
                           communityId={communityId}
                         />
                       )}
