@@ -131,7 +131,7 @@ export default async function CommunityAnalyticsPage({
 
   if (likeData) {
     for (const like of likeData) {
-      const authorId = like.community_posts?.author_id;
+      const authorId = like.community_posts?.[0]?.author_id;
       if (!authorId) continue;
       if (authorStats[authorId]) {
         authorStats[authorId].likeCount++;
@@ -250,8 +250,8 @@ export default async function CommunityAnalyticsPage({
               {memberGrowth !== 0 && (
                 <div
                   className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${memberGrowth > 0
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
                     }`}
                 >
                   <TrendingUp className="w-3 h-3" />
@@ -320,12 +320,12 @@ export default async function CommunityAnalyticsPage({
                 <div key={contributor.author?.id || index} className="p-6 flex items-center gap-4">
                   <div
                     className={`text-2xl font-bold ${index === 0
-                        ? "text-amber-500"
-                        : index === 1
-                          ? "text-slate-400"
-                          : index === 2
-                            ? "text-orange-600"
-                            : "text-slate-300"
+                      ? "text-amber-500"
+                      : index === 1
+                        ? "text-slate-400"
+                        : index === 2
+                          ? "text-orange-600"
+                          : "text-slate-300"
                       }`}
                   >
                     #{index + 1}
@@ -374,7 +374,7 @@ export default async function CommunityAnalyticsPage({
                       )}
                       <p className="text-sm text-slate-600 line-clamp-2 mb-2">{post.content}</p>
                       <div className="flex items-center gap-4 text-xs text-slate-500">
-                        <span>By {post.author?.full_name || "Unknown"}</span>
+                        <span>By {post.author?.[0]?.full_name || "Unknown"}</span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
                           <ThumbsUp className="w-3 h-3" />
