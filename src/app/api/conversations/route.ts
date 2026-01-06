@@ -15,27 +15,52 @@ export async function GET() {
     }
 
     // Get all messages involving current user
-    const { data: messages, error } = await supabase
+    const { data: messages, error: messagesError } = await supabase
       .from('messages')
-      .select(`
-        *,
-        sender:sender_id(id, full_name, avatar_url, role),
-        receiver:receiver_id(id, full_name, avatar_url, role)
-      `)
+      .select('*')
       .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching conversations:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (messagesError) {
+      console.error('Error fetching messages:', messagesError);
+      return NextResponse.json({ error: messagesError.message }, { status: 500 });
     }
+
+    if (!messages || messages.length === 0) {
+      return NextResponse.json({ conversations: [] });
+    }
+
+    // Get unique user IDs (conversation partners)
+    const userIds = new Set<string>();
+    messages.forEach((msg: any) => {
+      if (msg.sender_id !== user.id) userIds.add(msg.sender_id);
+      if (msg.receiver_id !== user.id) userIds.add(msg.receiver_id);
+    });
+
+    // Fetch user details separately
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('id, full_name, avatar_url, role')
+      .in('id', Array.from(userIds));
+
+    if (usersError) {
+      console.error('Error fetching users:', usersError);
+      return NextResponse.json({ error: usersError.message }, { status: 500 });
+    }
+
+    // Create user map for quick lookup
+    const userMap = new Map();
+    users?.forEach((u: any) => {
+      userMap.set(u.id, u);
+    });
 
     // Group messages by conversation partner
     const conversationsMap = new Map();
 
     messages?.forEach((message: any) => {
       const isCurrentUserSender = message.sender_id === user.id;
-      const otherUser = isCurrentUserSender ? message.receiver : message.sender;
+      const otherUserId = isCurrentUserSender ? message.receiver_id : message.sender_id;
+      const otherUser = userMap.get(otherUserId);
       
       if (!otherUser) return;
 

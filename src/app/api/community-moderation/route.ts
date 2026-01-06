@@ -12,18 +12,36 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { communityId, action, targetUserId, duration, reason } = body;
+        const { communityId, action, targetUserId, duration, reason, reportId, deleteContent, postId, commentId } = body;
 
-        if (!communityId || !action) {
-            return NextResponse.json({ error: 'Community ID and action required' }, { status: 400 });
+        if (!communityId && !reportId) {
+            return NextResponse.json({ error: 'Community ID or Report ID required' }, { status: 400 });
+        }
+
+        if (!action) {
+            return NextResponse.json({ error: 'Action required' }, { status: 400 });
         }
 
         // Verify user is mentor of this community
-        const { data: community } = await supabase
-            .from('communities')
-            .select('mentor_id')
-            .eq('id', communityId)
-            .single();
+        let community;
+        if (communityId) {
+            const { data } = await supabase
+                .from('communities')
+                .select('mentor_id')
+                .eq('id', communityId)
+                .single();
+            community = data;
+        } else if (reportId) {
+            const { data: report } = await supabase
+                .from('community_reports')
+                .select('community_id, communities!inner(mentor_id)')
+                .eq('id', reportId)
+                .single();
+            
+            if (report) {
+                community = { mentor_id: report.communities.mentor_id };
+            }
+        }
 
         if (!community || community.mentor_id !== user.id) {
             return NextResponse.json({ error: 'Only community mentor can perform moderation' }, { status: 403 });
@@ -32,6 +50,50 @@ export async function POST(request: Request) {
         let result;
 
         switch (action) {
+            case 'resolve':
+                if (!reportId) {
+                    return NextResponse.json({ error: 'Report ID required' }, { status: 400 });
+                }
+
+                // Delete content if requested
+                if (deleteContent) {
+                    if (postId) {
+                        await supabase.from('community_posts').delete().eq('id', postId);
+                    } else if (commentId) {
+                        await supabase.from('community_comments').delete().eq('id', commentId);
+                    }
+                }
+
+                // Update report status
+                await supabase
+                    .from('community_reports')
+                    .update({
+                        status: 'resolved',
+                        resolved_at: new Date().toISOString(),
+                        resolved_by: user.id,
+                    })
+                    .eq('id', reportId);
+
+                result = { success: true, action: 'resolved' };
+                break;
+
+            case 'dismiss':
+                if (!reportId) {
+                    return NextResponse.json({ error: 'Report ID required' }, { status: 400 });
+                }
+
+                await supabase
+                    .from('community_reports')
+                    .update({
+                        status: 'dismissed',
+                        resolved_at: new Date().toISOString(),
+                        resolved_by: user.id,
+                    })
+                    .eq('id', reportId);
+
+                result = { success: true, action: 'dismissed' };
+                break;
+
             case 'MUTE_USER':
                 if (!targetUserId) {
                     return NextResponse.json({ error: 'Target user ID required' }, { status: 400 });

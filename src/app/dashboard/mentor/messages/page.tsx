@@ -2,7 +2,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { MessagesClient } from '@/components/shared/MessagesClient';
+import { MessagesProvider } from '@/components/messages/MessagesProvider';
+import { MessagesLayout } from '@/components/messages/MessagesLayout';
 
 export default async function MentorMessagesPage() {
   const supabase = await createClient();
@@ -37,10 +38,9 @@ export default async function MentorMessagesPage() {
               <p className="text-slate-600">Chat with your students in real-time</p>
             </div>
 
-            <MessagesClient
-              currentUserId={user.id}
-              currentUserName={profile.full_name}
-            />
+            <MessagesProvider userId={user.id}>
+              <MessagesLayout currentUserId={user.id} currentUserRole="mentor" />
+            </MessagesProvider>
           </div>
         </main>
       </div>

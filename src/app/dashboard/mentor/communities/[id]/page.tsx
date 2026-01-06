@@ -5,7 +5,8 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import { CommunityMembersClient } from '@/components/communities/CommunityMembersClient';
 import { CommunityChat } from '@/components/communities/CommunityChat';
 import { ModerationPanel } from '@/components/communities/ModerationPanel';
-import { Users, ArrowLeft, Settings, MessageCircle } from 'lucide-react';
+import { CommunityFeedClient } from '@/components/communities/CommunityFeedClient';
+import { Users, ArrowLeft, Settings, MessageCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function CommunityDetailPage({
@@ -17,7 +18,7 @@ export default async function CommunityDetailPage({
 }) {
   // Next.js 15: params and searchParams are now Promises
   const { id } = await params;
-  const { tab = 'members' } = await searchParams;
+  const { tab = 'feed' } = await searchParams;
 
   const supabase = await createClient();
 
@@ -58,7 +59,7 @@ export default async function CommunityDetailPage({
   const discussionChannel = channels?.find(c => c.type === 'discussion');
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -114,6 +115,18 @@ export default async function CommunityDetailPage({
             {/* Tab Navigation */}
             <div className="flex gap-2 mb-6 border-b border-slate-200">
               <Link
+                href={`/dashboard/mentor/communities/${id}?tab=feed`}
+                className={`px-6 py-3 font-semibold transition-colors ${tab === 'feed'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-slate-600 hover:text-slate-900'
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Feed
+                </div>
+              </Link>
+              <Link
                 href={`/dashboard/mentor/communities/${id}?tab=members`}
                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'members'
                   ? 'text-indigo-600 border-b-2 border-indigo-600'
@@ -140,6 +153,15 @@ export default async function CommunityDetailPage({
             </div>
 
             {/* Tab Content */}
+            {tab === 'feed' && (
+              <CommunityFeedClient
+                communityId={id}
+                userId={user.id}
+                userRole="mentor"
+                isMentor={true}
+              />
+            )}
+
             {tab === 'members' && (
               <CommunityMembersClient communityId={id} currentUserRole="mentor" />
             )}

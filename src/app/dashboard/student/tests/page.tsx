@@ -2,14 +2,17 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { FileText, Calendar, Clock, Play } from 'lucide-react';
 import Link from 'next/link';
+import { Clock, CheckCircle, AlertCircle, Play, Eye, BarChart3, Award, TrendingUp } from 'lucide-react';
 
 export default async function StudentTestsPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/sign-in');
+
+  if (!user) {
+    redirect('/signin');
+  }
 
   const { data: profile } = await supabase
     .from('users')
@@ -17,175 +20,237 @@ export default async function StudentTestsPage() {
     .eq('id', user.id)
     .single();
 
-  if (!profile || profile.role !== 'student') redirect('/dashboard');
+  if (!profile) {
+    redirect('/onboarding/student');
+  }
 
-  // Get available tests
-  const { data: availableTests } = await supabase
-    .from('tests')
-    .select('*, users!tests_mentor_id_fkey(full_name)')
-    .eq('university_id', profile.university_id)
-    .gte('scheduled_at', new Date().toISOString())
-    .order('scheduled_at', { ascending: true });
-
-  // Get completed tests
-  const { data: completedSubmissions } = await supabase
-    .from('test_submissions')
-    .select('*, tests(title, total_marks, scheduled_at, users!tests_mentor_id_fkey(full_name))')
+  //Get test invitations
+  const { data: invitations } = await supabase
+    .from('test_invitations')
+    .select(`
+      *,
+      test:tests(
+        *,
+        mentor:users!tests_mentor_id_fkey(full_name, avatar_url)
+      )
+    `)
     .eq('student_id', user.id)
-    .not('submitted_at', 'is', null)
+    .order('invited_at', { ascending: false });
+
+  // Get submissions
+  const { data: submissions } = await supabase
+    .from('test_submissions')
+    .select(`
+      *,
+      test:tests(title, total_marks)
+    `)
+    .eq('student_id', user.id)
     .order('submitted_at', { ascending: false });
 
+  // Get IDs of completed tests
+  const completedTestIds = new Set(submissions?.map(s => s.test_id) || []);
+
+  // Live tests: tests that are live AND student hasn't completed yet
+  const liveTests = invitations?.filter(inv => 
+    inv.test?.is_live && 
+    !completedTestIds.has(inv.test.id) &&
+    inv.status !== 'declined'
+  ) || [];
+
+  // Pending tests: not live yet, not completed, and upcoming schedule
+  const pendingTests = invitations?.filter(inv =>
+    inv.status === 'pending' &&
+    !inv.test?.is_live &&
+    !completedTestIds.has(inv.test?.id) &&
+    (!inv.test?.scheduled_at || new Date(inv.test.scheduled_at) > new Date())
+  ) || [];
+
+  const completedTests = submissions || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-fuchsia-50/40">
+    <div className="min-h-screen bg-slate-50">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
-                My Tests
-              </h1>
-              <p className="text-slate-600">View and take your assessments</p>
-            </div>
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Tests</h1>
+            <p className="text-slate-600 mb-8">Your upcoming and past tests</p>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">{availableTests?.length || 0}</div>
-                    <div className="text-sm text-slate-600">Available Tests</div>
-                  </div>
-                  <FileText className="w-8 h-8 text-purple-500" />
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Live Tests</span>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                 </div>
+                <p className="text-3xl font-bold text-green-600">{liveTests.length}</p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">{completedSubmissions?.length || 0}</div>
-                    <div className="text-sm text-slate-600">Completed</div>
-                  </div>
-                  <Calendar className="w-8 h-8 text-green-500" />
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Pending</span>
+                  <AlertCircle className="w-5 h-5 text-orange-500" />
                 </div>
+                <p className="text-3xl font-bold text-orange-600">{pendingTests.length}</p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">
-                      {completedSubmissions && completedSubmissions.length > 0
-                        ? Math.round(completedSubmissions.reduce((sum, s) => sum + (s.percentage || 0), 0) / completedSubmissions.length)
-                        : 0}%
-                    </div>
-                    <div className="text-sm text-slate-600">Average Score</div>
-                  </div>
-                  <Clock className="w-8 h-8 text-fuchsia-500" />
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Completed</span>
+                  <CheckCircle className="w-5 h-5 text-blue-500" />
                 </div>
+                <p className="text-3xl font-bold text-blue-600">{completedTests.length}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
-              {/* Available Tests */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 p-6 shadow-lg">
-                <h2 className="text-xl font-bold text-slate-900 mb-6">Available Tests</h2>
-                
-                {availableTests && availableTests.length > 0 ? (
-                  <div className="space-y-3">
-                    {availableTests.map((test) => (
-                      <div key={test.id} className="p-5 bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-100 rounded-2xl">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <h3 className="font-bold text-slate-900 text-lg mb-1">{test.title}</h3>
-                            {test.description && (
-                              <p className="text-sm text-slate-600">{test.description}</p>
-                            )}
-                          </div>
-                          {test.is_live && (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full ml-4">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs text-green-700 font-bold">LIVE</span>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-4 flex-wrap mb-4">
-                          <div className="text-sm text-slate-600">
-                            <strong>Mentor:</strong> {test.users?.full_name}
-                          </div>
-                          <div className="text-sm text-slate-600">
-                            <Calendar className="w-4 h-4 inline mr-1" />
-                            {new Date(test.scheduled_at).toLocaleString()}
-                          </div>
-                          <div className="text-sm text-slate-600">
-                            <Clock className="w-4 h-4 inline mr-1" />
-                            {test.duration_minutes} minutes
-                          </div>
-                          <div className="px-3 py-1 bg-white/60 rounded-lg text-xs font-semibold text-purple-700">
-                            {test.total_marks} marks
+            {/* Live Tests */}
+            {liveTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  Live Now
+                </h2>
+                <div className="space-y-3">
+                  {liveTests.map((inv) => (
+                    <div key={inv.id} className="bg-white rounded-xl p-6 border-2 border-green-500 shadow-lg">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-slate-900 mb-1">{inv.test.title}</h3>
+                          <p className="text-sm text-slate-600 mb-3">{inv.test.description}</p>
+                          <div className="flex items-center gap-4 text-sm text-slate-500">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {inv.test.duration_minutes} minutes
+                            </span>
+                            <span>📝 {inv.test.total_marks} marks</span>
                           </div>
                         </div>
-
                         <Link
-                          href={`/dashboard/student/tests/${test.id}/take`}
-                          className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-500 to-fuchsia-500 hover:from-purple-600 hover:to-fuchsia-600 text-white font-bold rounded-xl shadow-lg transition-all"
+                          href={`/dashboard/student/tests/${inv.test.id}/take`}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
                         >
-                          <Play className="w-4 h-4" />
+                          <Play className="w-5 h-5" />
                           Start Test
                         </Link>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-slate-400">
-                    <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="font-semibold">No tests available</p>
-                    <p className="text-sm">Check back later for new assessments</p>
-                  </div>
-                )}
+                    </div>
+                  ))}
+                </div>
               </div>
+            )}
 
-              {/* Completed Tests */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 p-6 shadow-lg">
-                <h2 className="text-xl font-bold text-slate-900 mb-6">Completed Tests</h2>
-                
-                {completedSubmissions && completedSubmissions.length > 0 ? (
-                  <div className="space-y-3">
-                    {completedSubmissions.map((submission) => (
-                      <div key={submission.id} className="p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                        <div className="flex items-start justify-between mb-3">
+            {/* Pending Tests */}
+            {pendingTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Upcoming Tests</h2>
+                <div className="space-y-3">
+                  {pendingTests.map((inv) => (
+                    <div key={inv.id} className="bg-white rounded-xl p-6 border border-slate-200">
+                      <h3 className="text-lg font-bold text-slate-900 mb-1">{inv.test.title}</h3>
+                      <p className="text-sm text-slate-600 mb-3">{inv.test.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {inv.test.duration_minutes} mins
+                        </span>
+                        <span>📝 {inv.test.total_marks} marks</span>
+                        {inv.test.scheduled_at && (
+                          <span>📅 {new Date(inv.test.scheduled_at).toLocaleDateString()}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Completed Tests */}
+            {completedTests.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Completed Tests</h2>
+                <div className="space-y-3">
+                  {completedTests.map((sub) => {
+                    const percentage = sub.percentage || 0;
+                    const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F';
+                    const gradeColor = percentage >= 70 ? 'text-green-600 bg-green-50' : percentage >= 50 ? 'text-amber-600 bg-amber-50' : 'text-red-600 bg-red-50';
+                    
+                    return (
+                      <div key={sub.id} className="bg-white rounded-xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
-                            <h3 className="font-bold text-slate-900">{submission.tests?.title}</h3>
-                            <p className="text-sm text-slate-600">
-                              Mentor: {submission.tests?.users?.full_name}
+                            <h3 className="text-lg font-bold text-slate-900 mb-1">{sub.test?.title}</h3>
+                            <p className="text-sm text-slate-600 mb-3">
+                              Submitted: {new Date(sub.submitted_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
                             </p>
+                            
+                            {/* Score Bar */}
+                            <div className="flex items-center gap-4 mb-3">
+                              <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full ${percentage >= 70 ? 'bg-green-500' : percentage >= 50 ? 'bg-amber-500' : 'bg-red-500'}`}
+                                  style={{ width: `${Math.min(percentage, 100)}%` }}
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-slate-600">{percentage.toFixed(0)}%</span>
+                            </div>
+                            
+                            {/* Quick Stats */}
+                            <div className="flex items-center gap-4 text-sm">
+                              <span className="flex items-center gap-1 text-slate-600">
+                                <Award className="w-4 h-4" />
+                                Score: {sub.score || 0}/{sub.test?.total_marks || 0}
+                              </span>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${gradeColor}`}>
+                                Grade: {grade}
+                              </span>
+                              {sub.ai_evaluated_at && (
+                                <span className="flex items-center gap-1 text-fuchsia-600">
+                                  <TrendingUp className="w-4 h-4" />
+                                  AI Analyzed
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <div className={`px-4 py-2 rounded-full font-black text-lg ${
-                            (submission.percentage || 0) >= 70 ? 'bg-green-100 text-green-700' : 
-                            (submission.percentage || 0) >= 50 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                          }`}>
-                            {submission.percentage ? `${Math.round(submission.percentage)}%` : 'Pending'}
+                          
+                          {/* Action Buttons */}
+                          <div className="flex flex-col gap-2">
+                            <Link
+                              href={`/dashboard/student/tests/${sub.test_id}/results`}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                            >
+                              <Eye className="w-4 h-4" />
+                              View Results
+                            </Link>
+                            <Link
+                              href={`/dashboard/student/tests/${sub.test_id}/results`}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors"
+                            >
+                              <BarChart3 className="w-4 h-4" />
+                              Analytics
+                            </Link>
                           </div>
-                        </div>
-
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          <span><strong>Score:</strong> {submission.score || 0}/{submission.max_score || submission.tests?.total_marks}</span>
-                          <span>
-                            <Calendar className="w-4 h-4 inline mr-1" />
-                            {submission.submitted_at ? new Date(submission.submitted_at).toLocaleString() : 'N/A'}
-                          </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-slate-400">
-                    <Clock className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="font-semibold">No completed tests yet</p>
-                    <p className="text-sm">Your test results will appear here</p>
-                  </div>
-                )}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
+
+            {invitations?.length === 0 && submissions?.length === 0 && (
+              <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
+                <AlertCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">No tests yet</h3>
+                <p className="text-slate-600">You'll see tests here when your mentor assigns them</p>
+              </div>
+            )}
           </div>
         </main>
       </div>

@@ -37,7 +37,7 @@ export default async function CommunitySettingsPage({
     }
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-white">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="mentor" />

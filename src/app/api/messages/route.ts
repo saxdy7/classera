@@ -21,22 +21,42 @@ export async function GET(request: Request) {
     }
 
     // Get messages between current user and other user
-    const { data: messages, error } = await supabase
+    const { data: messages, error: messagesError } = await supabase
       .from('messages')
-      .select(`
-        *,
-        sender:sender_id(id, full_name, avatar_url, role),
-        receiver:receiver_id(id, full_name, avatar_url, role)
-      `)
+      .select('*')
       .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${user.id})`)
       .order('created_at', { ascending: true });
 
-    if (error) {
-      console.error('Error fetching messages:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (messagesError) {
+      console.error('Error fetching messages:', messagesError);
+      return NextResponse.json({ error: messagesError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ messages: messages || [] });
+    // Get user details for sender and receiver
+    const userIds = [user.id, otherUserId];
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('id, full_name, avatar_url, role')
+      .in('id', userIds);
+
+    if (usersError) {
+      console.error('Error fetching users:', usersError);
+    }
+
+    // Create user map
+    const userMap = new Map();
+    users?.forEach((u: any) => {
+      userMap.set(u.id, u);
+    });
+
+    // Enrich messages with user data
+    const enrichedMessages = messages?.map((msg: any) => ({
+      ...msg,
+      sender: userMap.get(msg.sender_id),
+      receiver: userMap.get(msg.receiver_id)
+    }));
+
+    return NextResponse.json({ messages: enrichedMessages || [] });
   } catch (error) {
     console.error('Error in GET /api/messages:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -65,26 +85,39 @@ export async function POST(request: Request) {
     }
 
     // Insert message
-    const { data: message, error } = await supabase
+    const { data: message, error: insertError } = await supabase
       .from('messages')
       .insert({
         sender_id: user.id,
         receiver_id: receiverId,
         content: content.trim(),
       })
-      .select(`
-        *,
-        sender:sender_id(id, full_name, avatar_url, role),
-        receiver:receiver_id(id, full_name, avatar_url, role)
-      `)
+      .select('*')
       .single();
 
-    if (error) {
-      console.error('Error sending message:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (insertError) {
+      console.error('Error sending message:', insertError);
+      return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ message });
+    // Fetch user details separately
+    const { data: users } = await supabase
+      .from('users')
+      .select('id, full_name, avatar_url, role')
+      .in('id', [user.id, receiverId]);
+
+    const userMap = new Map();
+    users?.forEach((u: any) => {
+      userMap.set(u.id, u);
+    });
+
+    const enrichedMessage = {
+      ...message,
+      sender: userMap.get(message.sender_id),
+      receiver: userMap.get(message.receiver_id)
+    };
+
+    return NextResponse.json({ message: enrichedMessage });
   } catch (error) {
     console.error('Error in POST /api/messages:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -112,7 +145,7 @@ export async function PATCH(request: Request) {
     // Mark messages as read
     const { error } = await supabase
       .from('messages')
-      .update({ read: true })
+      .update({ read_at: new Date().toISOString() })
       .in('id', messageIds)
       .eq('receiver_id', user.id);
 

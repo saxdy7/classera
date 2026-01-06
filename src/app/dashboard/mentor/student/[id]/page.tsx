@@ -41,130 +41,183 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     redirect('/dashboard/mentor/students');
   }
 
+  // Calculate real stats
+  const enrolledCourses = 0; // TODO: fetch from courses table
+  const totalHours = 0; // TODO: calculate from activity logs
+  const completedAssignments = 0; // TODO: fetch from assignments table
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-8">
-          <div className="max-w-4xl mx-auto">
+        <main className="flex-1 p-6 md:p-12 lg:px-16 md:ml-24">
+          <div className="max-w-[1400px] mx-auto">
             {/* Back Button */}
             <Link
               href="/dashboard/mentor/students"
-              className="inline-flex items-center gap-2 text-slate-600 hover:text-black mb-6 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-slate-600 hover:text-indigo-600 hover:bg-white rounded-xl transition-all group"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Students
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="font-medium">Back to Students</span>
             </Link>
 
-            {/* Profile Card */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-              {/* Header Background */}
-              <div className="h-32 bg-gradient-to-r from-fuchsia-500 to-purple-500"></div>
-
-              {/* Profile Content */}
-              <div className="px-8 pb-8">
-                {/* Avatar */}
-                <div className="relative -mt-16 mb-6">
-                  {student.avatar_url ? (
-                    <Image
-                      src={student.avatar_url}
-                      alt={student.full_name}
-                      className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
-                      width={128}
-                      height={128}
-                    />
-                  ) : (
-                    <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gradient-to-br from-fuchsia-500 to-purple-500 flex items-center justify-center text-white text-4xl font-bold">
-                      {student.full_name.charAt(0).toUpperCase()}
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column - Profile Card */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm sticky top-8">
+                  {/* Profile Header */}
+                  <div className="relative h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400">
+                    <div className="absolute inset-0 bg-black/5"></div>
+                  </div>
+                  
+                  <div className="px-6 pb-6">
+                    {/* Avatar */}
+                    <div className="relative -mt-16 mb-4">
+                      {student.avatar_url ? (
+                        <Image
+                          src={student.avatar_url}
+                          alt={student.full_name}
+                          className="w-28 h-28 rounded-3xl border-4 border-white shadow-xl object-cover"
+                          width={112}
+                          height={112}
+                        />
+                      ) : (
+                        <div className="w-28 h-28 rounded-3xl border-4 border-white shadow-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400 flex items-center justify-center text-white text-3xl font-bold">
+                          {student.full_name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
                     </div>
-                  )}
-                </div>
 
-                {/* Name and Role */}
-                <div className="mb-6">
-                  <h1 className="text-3xl font-bold text-black mb-2">{student.full_name}</h1>
-                  <p className="text-xl text-slate-600 mb-4">{student.field_of_study || 'Student'}</p>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-3">
+                    {/* Name & Title */}
+                    <h1 className="text-2xl font-bold text-slate-900 mb-1">{student.full_name}</h1>
+                    <p className="text-indigo-600 font-medium mb-4">{student.field_of_study || 'Student'}</p>
+                    
+                    {/* Action Button */}
                     <Link
                       href={`/dashboard/mentor/messages?userId=${student.id}`}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 mb-6"
                     >
                       <MessageSquare className="w-5 h-5" />
                       Send Message
                     </Link>
+
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-3 gap-3 p-4 bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl border border-slate-100">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-slate-900">{enrolledCourses}</div>
+                        <div className="text-xs text-slate-600">Courses</div>
+                      </div>
+                      <div className="text-center border-x border-slate-200">
+                        <div className="text-2xl font-bold text-slate-900">{totalHours}h</div>
+                        <div className="text-xs text-slate-600">Hours</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-slate-900">{completedAssignments}</div>
+                        <div className="text-xs text-slate-600">Projects</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Info Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Mail className="w-5 h-5 text-blue-600" />
+              {/* Right Column - Details */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Contact Info Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-blue-500/30">
+                      <Mail className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="text-sm text-slate-600 mb-1">Email</p>
-                      <p className="font-medium text-black">{student.email}</p>
-                    </div>
+                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Email Address</div>
+                    <div className="text-sm text-slate-900 font-medium break-all">{student.email}</div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <GraduationCap className="w-5 h-5 text-purple-600" />
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-purple-500/30">
+                      <GraduationCap className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="text-sm text-slate-600 mb-1">University</p>
-                      <p className="font-medium text-black">{student.university}</p>
-                    </div>
+                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">University</div>
+                    <div className="text-sm text-slate-900 font-medium">{student.universities?.name || student.university}</div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-fuchsia-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <BookOpen className="w-5 h-5 text-fuchsia-600" />
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-indigo-500/30">
+                      <BookOpen className="w-6 h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="text-sm text-slate-600 mb-1">Field of Study</p>
-                      <p className="font-medium text-black">{student.field_of_study || 'Not specified'}</p>
-                    </div>
+                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Field of Study</div>
+                    <div className="text-sm text-slate-900 font-medium">{student.field_of_study || 'Not specified'}</div>
                   </div>
                 </div>
 
                 {/* About Section */}
-                <div className="border-t border-slate-200 pt-8">
-                  <h2 className="text-xl font-bold text-black mb-4">About</h2>
-                  <p className="text-slate-700 leading-relaxed">
-                    Student at {student.university} studying {student.field_of_study || 'various subjects'}.
-                    Actively engaged in learning and seeking mentorship opportunities.
+                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    About
+                  </h2>
+                  <p className="text-slate-600 leading-relaxed">
+                    Student at <span className="font-semibold text-slate-900">{student.universities?.name || student.university}</span> studying <span className="font-semibold text-slate-900">{student.field_of_study || 'various subjects'}</span>.
+                    Actively engaged in learning and seeking mentorship opportunities to excel in academic and professional pursuits.
                   </p>
                 </div>
 
-                {/* Enrolled Courses Section */}
-                <div className="border-t border-slate-200 pt-8 mt-8">
-                  <h2 className="text-xl font-bold text-black mb-4">Enrolled Courses</h2>
-                  <div className="text-center py-8 bg-slate-50 rounded-xl">
-                    <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-slate-500">No courses enrolled yet</p>
+                {/* Learning Progress */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-sm font-medium text-blue-100">Study Hours</div>
+                      <svg className="w-5 h-5 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-3xl font-bold mb-1">{totalHours}h</p>
+                    <p className="text-xs text-blue-100">Total learning time</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-sm font-medium text-purple-100">Assignments</div>
+                      <svg className="w-5 h-5 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-3xl font-bold mb-1">{completedAssignments}</p>
+                    <p className="text-xs text-purple-100">Completed tasks</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-sm font-medium text-indigo-100">Achievements</div>
+                      <svg className="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <p className="text-3xl font-bold mb-1">0</p>
+                    <p className="text-xs text-indigo-100">Badges earned</p>
                   </div>
                 </div>
 
-                {/* Progress Section */}
-                <div className="border-t border-slate-200 pt-8 mt-8">
-                  <h2 className="text-xl font-bold text-black mb-4">Learning Progress</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
-                      <p className="text-sm text-blue-700 mb-1">Total Hours</p>
-                      <p className="text-2xl font-bold text-blue-900">0h</p>
+                {/* Enrolled Courses */}
+                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-indigo-600" />
                     </div>
-                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
-                      <p className="text-sm text-purple-700 mb-1">Assignments</p>
-                      <p className="text-2xl font-bold text-purple-900">0</p>
+                    Enrolled Courses
+                  </h2>
+                  <div className="text-center py-12 bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl border-2 border-dashed border-slate-200">
+                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <BookOpen className="w-8 h-8 text-slate-400" />
                     </div>
-                    <div className="bg-gradient-to-br from-fuchsia-50 to-fuchsia-100 rounded-xl p-4">
-                      <p className="text-sm text-fuchsia-700 mb-1">Achievements</p>
-                      <p className="text-2xl font-bold text-fuchsia-900">0</p>
-                    </div>
+                    <h3 className="font-semibold text-slate-900 mb-1">No Courses Enrolled</h3>
+                    <p className="text-sm text-slate-500">Student hasn't enrolled in any courses yet</p>
                   </div>
                 </div>
               </div>

@@ -44,41 +44,72 @@ export function AIChatInterface({ userName }: AIChatInterfaceProps) {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/ai-chat', {
+      // Create a placeholer for the assistant's reply
+      const assistantMessageId = (Date.now() + 1).toString();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: assistantMessageId,
+          role: 'assistant',
+          content: '',
+          timestamp: new Date(),
+        },
+      ]);
+
+      const history = messages.map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+
+      const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          messages: [...history, { role: 'user', content: userMessage.content }]
+        }),
       });
 
-      const data = await response.json();
-
-      // Ensure reply is a string
-      let replyContent = '';
-      if (typeof data.reply === 'string') {
-        replyContent = data.reply;
-      } else if (data.reply && typeof data.reply === 'object') {
-        replyContent = JSON.stringify(data.reply);
-      } else {
-        replyContent = 'Sorry, I couldn\'t process that.';
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `API Error: ${response.status}`);
       }
 
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: replyContent,
-        timestamp: new Date(),
-      };
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-      setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
+      if (reader) {
+        let accumulatedText = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const text = decoder.decode(value, { stream: true });
+          accumulatedText += text;
+
+          setMessages((prev) =>
+            prev.map(msg =>
+              msg.id === assistantMessageId
+                ? { ...msg, content: accumulatedText }
+                : msg
+            )
+          );
+        }
+      }
+
+    } catch (error: any) {
       console.error('Error sending message:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => {
+        // Remove potential empty placeholder
+        const newHistory = prev.filter(msg => msg.id !== (Date.now() + 1).toString());
+
+        return [...newHistory, {
+          id: (Date.now() + 2).toString(),
+          role: 'assistant',
+          content: `Error: ${error.message || 'Something went wrong. Please try again.'}`,
+          timestamp: new Date(),
+        }];
+      });
     } finally {
       setLoading(false);
     }

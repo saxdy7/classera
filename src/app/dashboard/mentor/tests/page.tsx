@@ -2,173 +2,323 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { FileText, Plus, Calendar, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { Plus, Clock, Users, CheckCircle, Rocket } from 'lucide-react';
 
-export default async function MentorTestsPage() {
+export default async function TestsPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/sign-in');
+
+  if (!user) {
+    redirect('/signin');
+  }
 
   const { data: profile } = await supabase
     .from('users')
-    .select('*')
+    .select('*, universities(*)')
     .eq('id', user.id)
     .single();
 
-  if (!profile || profile.role !== 'mentor') redirect('/dashboard');
+  if (!profile?.university_id || !profile?.full_name) {
+    redirect('/onboarding/mentor');
+  }
 
-  // Get all tests created by this mentor
+  // Fetch tests with submission counts
   const { data: tests } = await supabase
     .from('tests')
-    .select('*, communities(name)')
+    .select(`
+      *,
+      community:communities(id, name),
+      submissions:test_submissions(count),
+      invitations:test_invitations(count)
+    `)
     .eq('mentor_id', user.id)
     .order('created_at', { ascending: false });
 
+  // Live tests - currently active
+  const liveTests = tests?.filter(t => t.is_live) || [];
+  
+  // Draft: not live AND no invitations sent yet
+  const draftTests = tests?.filter(t => 
+    !t.is_live && 
+    (!t.invitations?.[0]?.count || t.invitations[0].count === 0)
+  ) || [];
+  
+  // Ready tests: not live, has invitations, no submissions yet (ready to go live)
+  const readyTests = tests?.filter(t => 
+    !t.is_live && 
+    t.invitations?.[0]?.count > 0 &&
+    (!t.submissions?.[0]?.count || t.submissions[0].count === 0)
+  ) || [];
+  
+  // Scheduled: not live, has future schedule, has invitations
+  const scheduledTests = tests?.filter(t => 
+    !t.is_live && 
+    t.scheduled_at && 
+    new Date(t.scheduled_at) > new Date() &&
+    t.invitations?.[0]?.count > 0
+  ) || [];
+  
+  // Completed: not live, has submissions (test was conducted and has responses)
+  const completedTests = tests?.filter(t => 
+    !t.is_live && 
+    t.submissions?.[0]?.count > 0
+  ) || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40">
+    <div className="min-h-screen bg-slate-50">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-4xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  Test Management
-                </h1>
-                <p className="text-slate-600">Create and manage your assessments</p>
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">Tests</h1>
+                <p className="text-slate-600">Create and manage your tests</p>
               </div>
               <Link
                 href="/dashboard/mentor/tests/create"
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
               >
                 <Plus className="w-5 h-5" />
                 Create Test
               </Link>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">{tests?.length || 0}</div>
-                    <div className="text-sm text-slate-600">Total Tests</div>
-                  </div>
-                  <FileText className="w-8 h-8 text-indigo-500" />
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Total Tests</span>
+                  <CheckCircle className="w-5 h-5 text-blue-500" />
                 </div>
+                <p className="text-3xl font-bold text-slate-900">{tests?.length || 0}</p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">
-                      {tests?.filter(t => t.is_live).length || 0}
-                    </div>
-                    <div className="text-sm text-slate-600">Live Now</div>
-                  </div>
-                  <Users className="w-8 h-8 text-green-500" />
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Live Now</span>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                 </div>
+                <p className="text-3xl font-bold text-green-600">{liveTests.length}</p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">
-                      {tests?.filter(t => new Date(t.scheduled_at) > new Date()).length || 0}
-                    </div>
-                    <div className="text-sm text-slate-600">Upcoming</div>
-                  </div>
-                  <Calendar className="w-8 h-8 text-purple-500" />
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Ready</span>
+                  <Rocket className="w-5 h-5 text-blue-500" />
                 </div>
+                <p className="text-3xl font-bold text-blue-600">{readyTests.length}</p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-slate-900">
-                      {tests?.filter(t => new Date(t.scheduled_at) < new Date() && !t.is_live).length || 0}
-                    </div>
-                    <div className="text-sm text-slate-600">Completed</div>
-                  </div>
-                  <Clock className="w-8 h-8 text-slate-400" />
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Drafts</span>
+                  <div className="w-5 h-5 text-amber-500">📝</div>
                 </div>
+                <p className="text-3xl font-bold text-amber-600">{draftTests.length}</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Scheduled</span>
+                  <Clock className="w-5 h-5 text-orange-500" />
+                </div>
+                <p className="text-3xl font-bold text-orange-600">{scheduledTests.length}</p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-slate-600">Completed</span>
+                  <Users className="w-5 h-5 text-slate-400" />
+                </div>
+                <p className="text-3xl font-bold text-slate-600">{completedTests.length}</p>
               </div>
             </div>
 
-            {/* Tests List */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 p-6 shadow-lg">
-              <h2 className="text-xl font-bold text-slate-900 mb-6">All Tests</h2>
-              
-              {tests && tests.length > 0 ? (
-                <div className="space-y-3">
-                  {tests.map((test) => (
-                    <Link
-                      key={test.id}
-                      href={`/dashboard/mentor/tests/${test.id}`}
-                      className="block p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl hover:shadow-md transition-all cursor-pointer group"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h3 className="font-bold text-slate-900 text-lg group-hover:text-indigo-600 transition-colors">
-                            {test.title}
-                          </h3>
-                          {test.description && (
-                            <p className="text-sm text-slate-600 mt-1">{test.description}</p>
-                          )}
-                        </div>
-                        {test.is_live && (
-                          <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-green-700 font-bold">LIVE</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Calendar className="w-4 h-4" />
-                          {new Date(test.scheduled_at).toLocaleString()}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Clock className="w-4 h-4" />
-                          {test.duration_minutes} minutes
-                        </div>
-                        <div className="px-3 py-1 bg-white/60 rounded-lg text-xs font-semibold text-indigo-700">
-                          {test.test_type === 'individual' ? '👤 Individual' : '👥 Group'}
-                        </div>
-                        <div className="px-3 py-1 bg-white/60 rounded-lg text-xs font-semibold text-purple-700">
-                          {test.question_type}
-                        </div>
-                        {test.communities && (
-                          <div className="px-3 py-1 bg-white/60 rounded-lg text-xs font-semibold text-slate-700">
-                            {test.communities.name}
-                          </div>
-                        )}
-                      </div>
-                    </Link>
+            {/* Ready Tests - Has invitations but not live yet */}
+            {readyTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  🚀 Ready to Go Live
+                  <span className="text-sm font-normal text-slate-500">(students invited)</span>
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {readyTests.map((test) => (
+                    <TestCard key={test.id} test={test} isReady />
                   ))}
                 </div>
-              ) : (
-                <div className="text-center py-16 text-slate-400">
-                  <div className="w-20 h-20 mx-auto mb-4 bg-slate-100 rounded-3xl flex items-center justify-center">
-                    <FileText className="w-10 h-10 opacity-50" />
-                  </div>
-                  <p className="text-lg font-semibold mb-2">No tests created yet</p>
-                  <p className="text-sm mb-4">Create your first test to get started</p>
-                  <Link
-                    href="/dashboard/mentor/tests/create"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Create Test
-                  </Link>
+              </div>
+            )}
+
+            {/* Draft Tests - Show prominently */}
+            {draftTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  📝 Draft Tests
+                  <span className="text-sm font-normal text-slate-500">(needs setup)</span>
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {draftTests.map((test) => (
+                    <TestCard key={test.id} test={test} isDraft />
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* Live Tests */}
+            {liveTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  Live Tests
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {liveTests.map((test) => (
+                    <TestCard key={test.id} test={test} isLive />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Scheduled Tests */}
+            {scheduledTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Scheduled Tests</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {scheduledTests.map((test) => (
+                    <TestCard key={test.id} test={test} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Completed Tests */}
+            {completedTests.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Completed Tests</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {completedTests.map((test) => (
+                    <TestCard key={test.id} test={test} isCompleted />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {tests?.length === 0 && (
+              <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-slate-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">No tests yet</h3>
+                <p className="text-slate-600 mb-6">Create your first test to get started</p>
+                <Link
+                  href="/dashboard/mentor/tests/create"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create Test
+                </Link>
+              </div>
+            )}
           </div>
         </main>
       </div>
     </div>
+  );
+}
+
+function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, isReady = false }: { test: any; isLive?: boolean; isCompleted?: boolean; isDraft?: boolean; isReady?: boolean }) {
+  const submissionCount = test.submissions?.[0]?.count || 0;
+  const invitationCount = test.invitations?.[0]?.count || 0;
+
+  return (
+    <Link
+      href={`/dashboard/mentor/tests/${test.id}`}
+      className={`block bg-white rounded-xl p-6 border hover:shadow-lg transition-all ${
+        isDraft ? 'border-amber-300 hover:border-amber-400 bg-amber-50/30' : 
+        isLive ? 'border-green-300 hover:border-green-400' :
+        isReady ? 'border-blue-300 hover:border-blue-400 bg-blue-50/30' :
+        isCompleted ? 'border-slate-300 hover:border-slate-400' :
+        'border-slate-200 hover:border-indigo-300'
+      }`}
+    >
+      {isLive && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full mb-3">
+          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+          Live Now
+        </span>
+      )}
+
+      {isDraft && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full mb-3">
+          📝 Draft - Needs Setup
+        </span>
+      )}
+
+      {isReady && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full mb-3">
+          🚀 Ready - Go Live
+        </span>
+      )}
+
+      {isCompleted && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full mb-3">
+          ✅ Completed
+        </span>
+      )}
+
+      <h3 className="text-lg font-bold text-slate-900 mb-2">{test.title}</h3>
+      <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+        {test.description || 'No description'}
+      </p>
+
+      <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+        <span className="flex items-center gap-1">
+          <Clock className="w-4 h-4" />
+          {test.duration_minutes} min
+        </span>
+        <span className="flex items-center gap-1">
+          <Users className="w-4 h-4" />
+          {invitationCount} invited
+        </span>
+        <span className="flex items-center gap-1">
+          <CheckCircle className="w-4 h-4" />
+          {submissionCount} submitted
+        </span>
+      </div>
+
+      {isDraft && (
+        <p className="text-xs text-amber-600 font-medium">
+          Click to invite students and go live →
+        </p>
+      )}
+
+      {isReady && (
+        <p className="text-xs text-blue-600 font-medium">
+          Click to start the test →
+        </p>
+      )}
+
+      {isCompleted && (
+        <p className="text-xs text-slate-600 font-medium">
+          Click to view results →
+        </p>
+      )}
+
+      {/* Debug: Show test ID */}
+      <p className="text-[10px] text-slate-400 mt-2 font-mono truncate">
+        ID: {test.id}
+      </p>
+
+      {test.scheduled_at && !isLive && !isDraft && !isReady && (
+        <p className="text-xs text-slate-500">
+          {isCompleted ? 'Conducted' : 'Scheduled'}: {new Date(test.scheduled_at).toLocaleDateString()}
+        </p>
+      )}
+    </Link>
   );
 }

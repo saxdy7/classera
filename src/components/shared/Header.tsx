@@ -53,12 +53,21 @@ export function Header({ profile }: HeaderProps) {
   return (
     <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40">
       <div className="h-full px-4 md:px-6 flex items-center justify-between">
+        {/* Left - Logo */}
         <div className="flex items-center gap-4">
-          <h1 className="text-lg md:text-xl font-bold text-black">
-            {profile.role === 'student' ? 'Student' : 'Mentor'} Dashboard
+          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+            Classera
           </h1>
         </div>
 
+        {/* Center - Dashboard Title */}
+        <div className="absolute left-1/2 -translate-x-1/2">
+          <h2 className="text-lg md:text-xl font-semibold text-slate-700">
+            {profile.role === 'student' ? 'Student' : 'Mentor'} Dashboard
+          </h2>
+        </div>
+
+        {/* Right - Actions */}
         <div className="flex items-center gap-2 md:gap-3">
           {/* Right Side Actions - Dock Style */}
           <div className="flex items-center gap-1 md:gap-2 px-2 py-1 bg-slate-50/80 backdrop-blur-sm rounded-2xl border border-slate-200">

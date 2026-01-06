@@ -4,7 +4,8 @@ import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { CommunityMembersClient } from '@/components/communities/CommunityMembersClient';
 import { CommunityChat } from '@/components/communities/CommunityChat';
-import { Users, ArrowLeft, MessageCircle } from 'lucide-react';
+import { CommunityFeedClient } from '@/components/communities/CommunityFeedClient';
+import { Users, ArrowLeft, MessageCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function StudentCommunityDetailPage({
@@ -15,7 +16,7 @@ export default async function StudentCommunityDetailPage({
     searchParams: Promise<{ tab?: string }>;
 }) {
     const { id } = await params;
-    const { tab = 'chat' } = await searchParams; // Default to chat for students
+    const { tab = 'feed' } = await searchParams; // Default to feed for students
 
     const supabase = await createClient();
 
@@ -35,7 +36,7 @@ export default async function StudentCommunityDetailPage({
         .from('community_members')
         .select('status')
         .eq('community_id', id)
-        .eq('user_id', user.id)
+        .eq('student_id', user.id)
         .single();
 
     if (membership?.status !== 'approved') {
@@ -70,7 +71,7 @@ export default async function StudentCommunityDetailPage({
     const isMuted = muteStatus && (!muteStatus.muted_until || new Date(muteStatus.muted_until) > new Date());
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-white">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="student" />
@@ -114,6 +115,18 @@ export default async function StudentCommunityDetailPage({
                         {/* Tab Navigation */}
                         <div className="flex gap-2 mb-6 border-b border-slate-200">
                             <Link
+                                href={`/dashboard/student/communities/${id}?tab=feed`}
+                                className={`px-6 py-3 font-semibold transition-colors ${tab === 'feed'
+                                    ? 'text-indigo-600 border-b-2 border-indigo-600'
+                                    : 'text-slate-600 hover:text-slate-900'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <FileText className="w-5 h-5" />
+                                    Feed
+                                </div>
+                            </Link>
+                            <Link
                                 href={`/dashboard/student/communities/${id}?tab=chat`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'chat'
                                     ? 'text-indigo-600 border-b-2 border-indigo-600'
@@ -140,6 +153,15 @@ export default async function StudentCommunityDetailPage({
                         </div>
 
                         {/* Tab Content */}
+                        {tab === 'feed' && (
+                            <CommunityFeedClient
+                                communityId={id}
+                                userId={user.id}
+                                userRole="student"
+                                isMentor={false}
+                            />
+                        )}
+
                         {tab === 'members' && (
                             <CommunityMembersClient communityId={id} currentUserRole="student" />
                         )}

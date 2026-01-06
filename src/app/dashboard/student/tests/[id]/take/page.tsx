@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Clock, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, AlertCircle, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
+import { AntiCheatWrapper } from '@/components/tests/AntiCheatWrapper';
 
 interface Question {
   id: string;
   question: string;
-  type: 'mcq' | 'descriptive';
+  type: 'mcq' | 'descriptive' | 'short_answer';
   options?: string[];
   correct_answer?: string;
   marks: number;
@@ -25,6 +26,14 @@ interface Test {
   mentor_id: string;
   university_id: string;
   scheduled_at: string;
+  settings?: {
+    randomize_questions?: boolean;
+    show_results_immediately?: boolean;
+    allow_review?: boolean;
+    enable_anti_cheat?: boolean;
+    passing_percentage?: number;
+  };
+  proctoring_enabled?: boolean;
 }
 
 export default function TakeTestPage() {
@@ -40,6 +49,24 @@ export default function TakeTestPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [userId, setUserId] = useState<string>('');
+  const [violations, setViolations] = useState<{ type: string; count: number; timestamp: string }[]>([]);
+
+  // Anti-cheat violation handler
+  const handleViolation = useCallback((violation: { type: string; count: number; timestamp: string }) => {
+    setViolations(prev => [...prev, violation]);
+    // Log violation to server
+    fetch(`/api/tests/${testId}/violations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...violation, student_id: userId }),
+    }).catch(console.error);
+  }, [testId, userId]);
+
+  // Max violations handler - auto submit
+  const handleMaxViolations = useCallback(() => {
+    alert('Maximum violations reached. Your test will be auto-submitted.');
+    handleSubmit();
+  }, []);
 
   useEffect(() => {
     async function loadTest() {
@@ -63,7 +90,13 @@ export default function TakeTestPage() {
           return;
         }
 
-        setTest(testData);
+        // Randomize questions if setting is enabled
+        let questions = testData.questions || [];
+        if (testData.settings?.randomize_questions) {
+          questions = [...questions].sort(() => Math.random() - 0.5);
+        }
+
+        setTest({ ...testData, questions });
         setTimeRemaining(testData.duration_minutes * 60); // Convert to seconds
         setLoading(false);
       } catch (error) {
@@ -111,36 +144,32 @@ export default function TakeTestPage() {
     setSubmitting(true);
 
     try {
-      // Calculate score (only for MCQ, descriptive needs manual grading)
-      let score = 0;
-      let totalMarks = 0;
-
-      test?.questions.forEach((q) => {
-        totalMarks += q.marks;
-        if (q.type === 'mcq' && answers[q.id] === q.correct_answer) {
-          score += q.marks;
-        }
+      const response = await fetch('/api/tests/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          test_id: testId,
+          answers,
+          violations: violations.length > 0 ? violations : null,
+          time_taken_minutes: test ? (test.duration_minutes * 60 - timeRemaining) / 60 : 0,
+        }),
       });
 
-      const percentage = totalMarks > 0 ? (score / totalMarks) * 100 : 0;
+      const data = await response.json();
 
-      const { error } = await supabase.from('test_submissions').insert({
-        test_id: testId,
-        student_id: userId,
-        answers,
-        score,
-        percentage,
-        status: 'completed',
-      });
-
-      if (error) {
-        console.error('Submission error:', error);
-        alert('Failed to submit test. Please try again.');
+      if (!response.ok) {
+        console.error('Submission error:', data);
+        alert(data.error || 'Failed to submit test. Please try again.');
         setSubmitting(false);
         return;
       }
 
-      router.push('/dashboard/student/tests');
+      // Show results immediately if enabled
+      if (test?.settings?.show_results_immediately) {
+        router.push(`/dashboard/student/tests/${testId}/results`);
+      } else {
+        router.push('/dashboard/student/tests');
+      }
     } catch (error) {
       console.error('Error submitting test:', error);
       alert('An error occurred. Please try again.');
@@ -174,9 +203,25 @@ export default function TakeTestPage() {
   const question = test.questions[currentQuestion];
   const progress = ((currentQuestion + 1) / test.questions.length) * 100;
   const isLastQuestion = currentQuestion === test.questions.length - 1;
+  const antiCheatEnabled = test.settings?.enable_anti_cheat || test.proctoring_enabled;
 
-  return (
+  const testContent = (
     <div className="min-h-screen bg-slate-50">
+      {/* Anti-cheat indicator */}
+      {antiCheatEnabled && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
+          <div className="max-w-7xl mx-auto flex items-center gap-2 text-amber-700 text-sm">
+            <Shield className="w-4 h-4" />
+            <span>Anti-cheat protection is active. Tab switches and copy/paste are being monitored.</span>
+            {violations.length > 0 && (
+              <span className="ml-auto font-medium text-amber-800">
+                Warnings: {violations.length}/5
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Header with Timer */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-8 py-4">
@@ -223,7 +268,7 @@ export default function TakeTestPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-4">
                 <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                  {question.type === 'mcq' ? 'Multiple Choice' : 'Descriptive'}
+                  {question.type === 'mcq' ? 'Multiple Choice' : question.type === 'short_answer' ? 'Short Answer' : 'Descriptive'}
                 </span>
                 <span className="px-3 py-1 bg-fuchsia-100 text-fuchsia-700 rounded-full text-sm font-medium">
                   {question.marks} {question.marks === 1 ? 'mark' : 'marks'}
@@ -239,7 +284,11 @@ export default function TakeTestPage() {
               question.options.map((option, index) => (
                 <label
                   key={index}
-                  className="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-fuchsia-500 transition-colors"
+                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                    answers[question.id] === option
+                      ? 'border-fuchsia-500 bg-fuchsia-50'
+                      : 'border-slate-200 hover:border-fuchsia-300'
+                  }`}
                 >
                   <input
                     type="radio"
@@ -252,6 +301,14 @@ export default function TakeTestPage() {
                   <span className="ml-4 text-black">{option}</span>
                 </label>
               ))
+            ) : question.type === 'short_answer' ? (
+              <input
+                type="text"
+                value={answers[question.id] || ''}
+                onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                placeholder="Type your short answer here..."
+                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-fuchsia-500 transition-colors"
+              />
             ) : (
               <textarea
                 value={answers[question.id] || ''}
@@ -274,7 +331,7 @@ export default function TakeTestPage() {
               Previous
             </button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap justify-center">
               {test.questions.map((_, index) => (
                 <button
                   key={index}
@@ -329,4 +386,28 @@ export default function TakeTestPage() {
       </div>
     </div>
   );
+
+  // Wrap with AntiCheatWrapper if enabled
+  if (antiCheatEnabled) {
+    return (
+      <AntiCheatWrapper
+        testId={testId}
+        studentId={userId}
+        config={{
+          preventCopyPaste: true,
+          detectTabSwitch: true,
+          preventRightClick: true,
+          fullscreenMode: test.proctoring_enabled || false,
+          maxTabSwitches: 3,
+          maxWarnings: 5,
+        }}
+        onViolation={handleViolation}
+        onMaxViolations={handleMaxViolations}
+      >
+        {testContent}
+      </AntiCheatWrapper>
+    );
+  }
+
+  return testContent;
 }

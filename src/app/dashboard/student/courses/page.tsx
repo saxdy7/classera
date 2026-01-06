@@ -3,8 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
-import { CoursesDiscoveryClient } from '@/components/student/CoursesDiscoveryClient';
-import Image from 'next/image';
+import { CoursesTabbedInterface } from '@/components/courses/CoursesTabbedInterface';
 import { BookOpen, Sparkles, TrendingUp } from 'lucide-react';
 
 export default async function StudentCoursesPage() {
@@ -36,89 +35,90 @@ export default async function StudentCoursesPage() {
         <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
             {/* Hero Banner */}
-            <div className="mb-8 bg-gradient-to-br from-fuchsia-500 via-purple-500 to-blue-500 rounded-3xl p-8 md:p-12 relative overflow-hidden">
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
+            <div className="mb-8 bg-gradient-to-r from-slate-50 via-purple-50 to-pink-50 rounded-3xl relative overflow-hidden shadow-lg border border-slate-200">
+              {/* Modern Geometric Background Pattern */}
+              <div className="absolute inset-0">
+                {/* Diagonal stripes */}
+                <div className="absolute inset-0 opacity-30">
+                  <div className="absolute top-0 left-0 w-full h-full" style={{
+                    backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(139,92,246,.05) 35px, rgba(139,92,246,.05) 70px)'
+                  }}></div>
+                </div>
+                {/* Geometric shapes */}
+                <div className="absolute top-10 right-20 w-32 h-32 border-2 border-purple-200 rounded-lg rotate-12"></div>
+                <div className="absolute bottom-10 right-40 w-24 h-24 bg-purple-100 rounded-full"></div>
+                <div className="absolute top-1/2 right-10 w-40 h-40 border-2 border-pink-200 rotate-45"></div>
+                {/* Grid overlay */}
+                <div className="absolute inset-0 opacity-20" style={{
+                  backgroundImage: 'linear-gradient(rgba(139,92,246,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,.2) 1px, transparent 1px)',
+                  backgroundSize: '50px 50px'
+                }}></div>
               </div>
 
-              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4 p-4 md:p-6">
                 {/* Left Side - Text Content */}
-                <div className="flex-1 text-white">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="w-6 h-6" />
-                    <span className="text-sm font-semibold uppercase tracking-wide">Discover & Learn</span>
+                <div className="flex-1 space-y-3">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 bg-purple-100 px-3 py-1.5 rounded-full border border-purple-200">
+                    <Sparkles className="w-3 h-3 text-purple-600" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-purple-700">AI-Powered Learning Platform</span>
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Find Your Perfect Course
-                  </h1>
-                  <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
-                    Explore thousands of courses from top platforms like Coursera, Udemy, edX, and more.
-                    Start learning today with free and paid courses tailored to your goals.
+                  
+                  {/* Main Heading */}
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-extrabold mb-1 leading-tight text-slate-900">
+                      Elevate Your
+                    </h1>
+                    <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
+                      Learning Journey
+                    </h1>
+                  </div>
+                  
+                  {/* Description */}
+                  <p className="text-sm text-slate-700 max-w-2xl leading-relaxed">
+                    Discover personalized courses in <span className="font-semibold text-purple-700">{profile.specialization || 'your field'}</span>. 
+                    Master new skills, earn industry-recognized certificates, and accelerate your career growth.
                   </p>
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                      <BookOpen className="w-5 h-5" />
-                      <span className="font-semibold">10+ Platforms</span>
+                  
+                  {/* Stats/Features */}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:shadow-lg hover:bg-indigo-700 transition-all">
+                      <BookOpen className="w-4 h-4" />
+                      <span>10+ Platforms</span>
                     </div>
-                    <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                      <TrendingUp className="w-5 h-5" />
-                      <span className="font-semibold">1000+ Courses</span>
+                    <div className="flex items-center gap-2 bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow hover:shadow-lg hover:bg-purple-700 transition-all">
+                      <TrendingUp className="w-4 h-4" />
+                      <span>AI Recommendations</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-purple-50 transition-all">
+                      <span>🎓</span>
+                      <span>Certificates</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Side - Icon */}
+                {/* Right Side - Modern Illustration */}
                 <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
-                  <div className="w-72 h-72 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    <span className="text-9xl">🎓</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">🆓</span>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Free Courses</p>
-                    <p className="text-2xl font-bold text-slate-900">500+</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">💎</span>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Premium Courses</p>
-                    <p className="text-2xl font-bold text-slate-900">500+</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">📺</span>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">YouTube Tutorials</p>
-                    <p className="text-2xl font-bold text-slate-900">100+</p>
+                  <div className="relative w-40 h-40">
+                    {/* Floating cards effect */}
+                    <div className="absolute top-0 right-0 w-24 h-16 bg-white rounded-xl border-2 border-purple-200 shadow-lg rotate-6 flex items-center justify-center">
+                      <span className="text-3xl">📚</span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-24 h-16 bg-white rounded-xl border-2 border-pink-200 shadow-lg -rotate-6 flex items-center justify-center">
+                      <span className="text-3xl">🚀</span>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl border-2 border-purple-300 shadow-xl flex items-center justify-center">
+                      <span className="text-4xl">🎯</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Main Content - Courses Discovery */}
-            <CoursesDiscoveryClient />
+            <div className="mb-8">
+              <CoursesTabbedInterface />
+            </div>
           </div>
         </main>
       </div>

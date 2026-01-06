@@ -80,43 +80,50 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
 
   // Subscribe to real-time updates
   useEffect(() => {
-    fetchMessages();
+    let isMounted = true;
+    
+    const loadMessages = async () => {
+      if (isMounted) {
+        await fetchMessages();
+      }
+    };
 
+    loadMessages();
+
+    // Subscribe to new messages - both incoming and outgoing
     const channel = supabase
-      .channel('messages')
+      .channel(`messages:${currentUserId}:${otherUser.id}`, {
+        config: { broadcast: { self: false } } // Don't echo back own messages
+      })
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
-          filter: `sender_id=eq.${otherUser.id}`,
         },
         (payload) => {
-          console.log('New message received:', payload);
-          fetchMessages(); // Refetch to get complete message with user data
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `receiver_id=eq.${currentUserId}`,
-        },
-        (payload) => {
-          console.log('New message for you:', payload);
-          fetchMessages();
+          if (!isMounted) return;
+          
+          const newMsg = payload.new as any;
+          
+          // Check if this message is relevant to this conversation
+          const isRelevant = 
+            (newMsg.sender_id === currentUserId && newMsg.receiver_id === otherUser.id) ||
+            (newMsg.sender_id === otherUser.id && newMsg.receiver_id === currentUserId);
+          
+          if (isRelevant) {
+            // Debounce: only fetch if not already loading
+            if (!loading) {
+              fetchMessages();
+            }
+          }
         }
       )
       .subscribe();
 
-    // Poll for new messages every 3 seconds as fallback
-    const interval = setInterval(fetchMessages, 3000);
-
     return () => {
-      clearInterval(interval);
+      isMounted = false;
       supabase.removeChannel(channel);
     };
   }, [otherUser.id, currentUserId]);
@@ -124,23 +131,36 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
   const sendMessage = async () => {
     if (!newMessage.trim() || loading) return;
 
+    const messageContent = newMessage.trim();
     setLoading(true);
+    setNewMessage(''); // Clear input immediately for better UX
+
     try {
       const response = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           receiverId: otherUser.id,
-          content: newMessage.trim(),
+          content: messageContent,
         }),
       });
 
       if (response.ok) {
-        setNewMessage('');
-        await fetchMessages();
+        const data = await response.json();
+        
+        // Immediately add the new message to UI
+        if (data.message) {
+          setMessages(prev => [...prev, data.message]);
+          scrollToBottom();
+        }
+      } else {
+        // If failed, restore the message text
+        setNewMessage(messageContent);
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      // Restore message text on error
+      setNewMessage(messageContent);
     } finally {
       setLoading(false);
     }
