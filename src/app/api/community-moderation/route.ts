@@ -37,9 +37,9 @@ export async function POST(request: Request) {
                 .select('community_id, communities!inner(mentor_id)')
                 .eq('id', reportId)
                 .single();
-            
+
             if (report) {
-                community = { mentor_id: report.communities.mentor_id };
+                community = { mentor_id: report.communities?.[0]?.mentor_id };
             }
         }
 
