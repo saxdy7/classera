@@ -23,21 +23,56 @@ interface Poll {
   };
 }
 
-interface PollComponentProps {
-  poll: Poll;
+export interface PollComponentProps {
+  poll?: Poll;
+  postId?: string;
+  communityId?: string;
+  userId?: string;
   onVote?: () => void;
 }
 
-export function PollComponent({ poll, onVote }: PollComponentProps) {
+export function PollComponent({ poll: initialPoll, postId, communityId, userId, onVote }: PollComponentProps) {
+  const [poll, setPoll] = useState<Poll | null>(initialPoll || null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [voting, setVoting] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(!initialPoll);
 
-  const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes.length, 0);
-  const isExpired = poll.expires_at ? new Date(poll.expires_at) < new Date() : false;
+  // Fetch poll data if only postId is provided
+  useEffect(() => {
+    if (initialPoll) {
+      setPoll(initialPoll);
+      setLoading(false);
+      return;
+    }
+
+    if (postId) {
+      const fetchPoll = async () => {
+        try {
+          const res = await fetch(`/api/community-polls?postId=${postId}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.poll) {
+              setPoll(data.poll);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching poll:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchPoll();
+    }
+  }, [postId, initialPoll]);
+
+  const totalVotes = poll?.options?.reduce((sum, opt) => sum + (opt.votes?.length || 0), 0) || 0;
+  const isExpired = poll?.expires_at ? new Date(poll.expires_at) < new Date() : false;
 
   useEffect(() => {
+    if (!poll) return;
+
     // Check if user has already voted
     const checkVote = async () => {
       try {
@@ -55,10 +90,10 @@ export function PollComponent({ poll, onVote }: PollComponentProps) {
       }
     };
     checkVote();
-  }, [poll.id]);
+  }, [poll?.id]);
 
   const handleVote = async (optionId: string) => {
-    if (hasVoted && !poll.multiple_choice) return;
+    if (!poll || (hasVoted && !poll.multiple_choice)) return;
 
     setVoting(true);
     try {
@@ -83,8 +118,22 @@ export function PollComponent({ poll, onVote }: PollComponentProps) {
 
   const getPercentage = (option: PollOption) => {
     if (totalVotes === 0) return 0;
-    return Math.round((option.votes.length / totalVotes) * 100);
+    return Math.round(((option.votes?.length || 0) / totalVotes) * 100);
   };
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200">
+        <div className="flex items-center justify-center py-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!poll) {
+    return null;
+  }
 
   return (
     <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200">
@@ -119,22 +168,19 @@ export function PollComponent({ poll, onVote }: PollComponentProps) {
               key={option.id}
               onClick={() => !isExpired && !showResults && handleVote(option.id)}
               disabled={voting || isExpired || showResults}
-              className={`w-full text-left transition-all ${
-                showResults
+              className={`w-full text-left transition-all ${showResults
                   ? 'cursor-default'
                   : 'hover:bg-white hover:shadow-md cursor-pointer'
-              } ${
-                isSelected && showResults
+                } ${isSelected && showResults
                   ? 'bg-purple-100 border-purple-400'
                   : 'bg-white border-slate-200'
-              } rounded-xl border-2 p-4 relative overflow-hidden`}
+                } rounded-xl border-2 p-4 relative overflow-hidden`}
             >
               {/* Progress Bar */}
               {showResults && (
                 <div
-                  className={`absolute inset-0 ${
-                    isSelected ? 'bg-purple-200' : 'bg-slate-100'
-                  } transition-all duration-500`}
+                  className={`absolute inset-0 ${isSelected ? 'bg-purple-200' : 'bg-slate-100'
+                    } transition-all duration-500`}
                   style={{ width: `${percentage}%` }}
                 />
               )}
