@@ -16,10 +16,10 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
     const { conversations, activeConversation, setActiveConversation, onlineUsers } = useMessages();
     const [searchQuery, setSearchQuery] = useState('');
     const [showNewConversationModal, setShowNewConversationModal] = useState(false);
-    
+
     // Filter states
     const [selectedFilter, setSelectedFilter] = useState<'all' | 'unread' | 'starred' | 'archived'>('all');
-    
+
     // Collapsible sections
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
@@ -27,18 +27,18 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
     const filtered = conversations.filter(c => {
         const otherUser = c.participants.find(p => p.user_id !== currentUserId)?.user;
         const matchesSearch = otherUser?.full_name.toLowerCase().includes(searchQuery.toLowerCase());
-        
+
         // Apply filter
         if (selectedFilter === 'unread' && (!c.unread_count || c.unread_count === 0)) return false;
         if (selectedFilter === 'starred') return false; // TODO: Add starred logic
         if (selectedFilter === 'archived') return false; // TODO: Add archived logic
-        
+
         return matchesSearch;
     });
 
     const handleSelectUser = async (user: any) => {
         setShowNewConversationModal(false);
-        
+
         // Create a temporary conversation object to display the chat
         const newConversation = {
             id: `temp-${user.id}`,
@@ -50,14 +50,13 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                     user: {
                         id: user.id,
                         full_name: user.full_name,
-                        avatar_url: user.avatar_url,
-                        last_seen: new Date().toISOString(),
-                        is_online: false
+                        avatar_url: user.avatar_url || '',
+                        role: user.role || 'student'
                     }
                 }
             ]
         };
-        
+
         setActiveConversation(newConversation);
     };
 
@@ -67,7 +66,7 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
             <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-4">
                 <h2 className="text-xl font-bold text-slate-900">Chats</h2>
                 <div className="flex gap-2">
-                    <button 
+                    <button
                         onClick={() => setShowNewConversationModal(true)}
                         className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
                         title="Start new conversation"
@@ -120,7 +119,7 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                         <ChevronDown className="w-4 h-4 text-slate-500" />
                     </motion.div>
                 </button>
-                
+
                 <AnimatePresence>
                     {isFilterOpen && (
                         <motion.div
@@ -133,44 +132,40 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                             <div className="space-y-2 mt-2 mb-3">
                                 <button
                                     onClick={() => setSelectedFilter('all')}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                        selectedFilter === 'all'
+                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'all'
                                             ? 'bg-indigo-50 text-indigo-700'
                                             : 'text-slate-600 hover:bg-slate-50'
-                                    }`}
+                                        }`}
                                 >
                                     <MessageSquare className="w-4 h-4" />
                                     <span>All Messages</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedFilter('unread')}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                        selectedFilter === 'unread'
+                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'unread'
                                             ? 'bg-indigo-50 text-indigo-700'
                                             : 'text-slate-600 hover:bg-slate-50'
-                                    }`}
+                                        }`}
                                 >
                                     <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
                                     <span>Unread</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedFilter('starred')}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                        selectedFilter === 'starred'
+                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'starred'
                                             ? 'bg-indigo-50 text-indigo-700'
                                             : 'text-slate-600 hover:bg-slate-50'
-                                    }`}
+                                        }`}
                                 >
                                     <Star className="w-4 h-4" />
                                     <span>Starred</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedFilter('archived')}
-                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                        selectedFilter === 'archived'
+                                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'archived'
                                             ? 'bg-indigo-50 text-indigo-700'
                                             : 'text-slate-600 hover:bg-slate-50'
-                                    }`}
+                                        }`}
                                 >
                                     <Archive className="w-4 h-4" />
                                     <span>Archived</span>
@@ -190,7 +185,7 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                             {conversations.length === 0 ? 'No conversations yet' : 'No matches found'}
                         </p>
                         <p className="text-sm text-slate-400 mt-1 text-center">
-                            {conversations.length === 0 
+                            {conversations.length === 0
                                 ? `Click the + button to start chatting with ${currentUserRole === 'mentor' ? 'students' : 'mentors'}`
                                 : 'Try a different search term'}
                         </p>
