@@ -142,10 +142,10 @@ export default async function CommunityModerationPage({
                     {/* Status Indicator */}
                     <div
                       className={`p-2 rounded-lg ${report.status === "pending"
-                          ? "bg-amber-100"
-                          : report.status === "resolved"
-                            ? "bg-green-100"
-                            : "bg-slate-100"
+                        ? "bg-amber-100"
+                        : report.status === "resolved"
+                          ? "bg-green-100"
+                          : "bg-slate-100"
                         }`}
                     >
                       {report.status === "pending" ? (
@@ -164,10 +164,10 @@ export default async function CommunityModerationPage({
                           <div className="flex items-center gap-2 mb-1">
                             <span
                               className={`px-3 py-1 rounded-full text-xs font-medium ${report.status === "pending"
-                                  ? "bg-amber-100 text-amber-700"
-                                  : report.status === "resolved"
-                                    ? "bg-green-100 text-green-700"
-                                    : "bg-slate-100 text-slate-700"
+                                ? "bg-amber-100 text-amber-700"
+                                : report.status === "resolved"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-slate-100 text-slate-700"
                                 }`}
                             >
                               {report.status.toUpperCase()}
@@ -189,7 +189,7 @@ export default async function CommunityModerationPage({
                         <span className="text-sm text-slate-600">
                           Reported by{" "}
                           <span className="font-medium text-slate-900">
-                            {report.reporter?.full_name || "Unknown User"}
+                            {report.reporter?.[0]?.full_name || "Unknown User"}
                           </span>
                         </span>
                       </div>
