@@ -164,10 +164,18 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
+    interface CommentWithPost {
+      author_id: string;
+      post_id: string;
+      community_posts: {
+        community_id: string;
+      };
+    }
+
     const { data: community } = await supabase
       .from('communities')
       .select('mentor_id')
-      .eq('id', (comment as any).community_posts.community_id)
+      .eq('id', (comment as CommentWithPost).community_posts.community_id)
       .single();
 
     const canModerate = comment.author_id === user.id || community?.mentor_id === user.id;
@@ -221,10 +229,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
+    interface CommentWithPost2 {
+      author_id: string;
+      post_id: string;
+      community_posts: {
+        community_id: string;
+      };
+    }
+
     const { data: community } = await supabase
       .from('communities')
       .select('mentor_id')
-      .eq('id', (comment as any).community_posts.community_id)
+      .eq('id', (comment as CommentWithPost2).community_posts.community_id)
       .single();
 
     const canDelete = comment.author_id === user.id || community?.mentor_id === user.id;

@@ -56,8 +56,6 @@ export function useTypingIndicator(currentUserId: string, otherUserId: string) {
         const user2 = currentUserId < otherUserId ? otherUserId : currentUserId;
         const topic = `typing:${user1}:${user2}`;
 
-        console.log('⌨️  Subscribing to typing topic:', topic);
-
         // Subscribe to broadcast events for typing indicators
         const channel = supabase
             .channel(topic, {
@@ -71,7 +69,6 @@ export function useTypingIndicator(currentUserId: string, otherUserId: string) {
                     event: 'INSERT',
                 },
                 (payload) => {
-                    console.log('⌨️  Typing indicator received:', payload);
                     setIsOtherUserTyping(true);
 
                     // Clear existing hide timeout
@@ -91,17 +88,14 @@ export function useTypingIndicator(currentUserId: string, otherUserId: string) {
                     event: 'DELETE',
                 },
                 (payload) => {
-                    console.log('⌨️  Typing stopped:', payload);
                     setIsOtherUserTyping(false);
                 }
             )
             .subscribe((status) => {
-                console.log('⌨️  Typing subscription status:', status);
             });
 
         return () => {
             setTyping(false);
-            console.log('⌨️  Unsubscribing from typing:', topic);
             supabase.removeChannel(channel);
             if (typingTimeoutRef.current) {
                 clearTimeout(typingTimeoutRef.current);

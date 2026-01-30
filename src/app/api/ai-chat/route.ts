@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export async function POST(request: Request) {
   let message = '';
   try {
+    if (!OPENROUTER_API_KEY) {
+      return NextResponse.json(
+        { error: 'AI service not configured. Please add OPENROUTER_API_KEY to environment variables.' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     message = body.message;
 

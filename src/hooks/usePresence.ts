@@ -62,11 +62,10 @@ export function usePresence(userId: string) {
                 }
             )
             .subscribe((status) => {
-                console.log('👤 Presence subscription status:', status);
+                // Subscription status handled
             });
 
         return () => {
-            console.log('👤 Unsubscribing from presence:', topic);
             supabase.removeChannel(channel);
         };
     }, [userId, supabase]);

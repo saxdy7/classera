@@ -105,7 +105,15 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
         (payload) => {
           if (!isMounted) return;
           
-          const newMsg = payload.new as any;
+          interface RealtimeMessage {
+            id: string;
+            conversation_id: string;
+            sender_id: string;
+            content: string;
+            type: string;
+            created_at: string;
+          }
+          const newMsg = payload.new as RealtimeMessage;
           
           // Check if this message is relevant to this conversation
           const isRelevant = 

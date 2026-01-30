@@ -41,10 +41,34 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     redirect('/dashboard/mentor/students');
   }
 
-  // Calculate real stats
-  const enrolledCourses = 0; // TODO: fetch from courses table
-  const totalHours = 0; // TODO: calculate from activity logs
-  const completedAssignments = 0; // TODO: fetch from assignments table
+  // Calculate real stats from database
+  const { data: courseProgress } = await supabase
+    .from('course_progress')
+    .select('course_id')
+    .eq('student_id', id);
+  const enrolledCourses = courseProgress?.length || 0;
+
+  // Calculate total study hours from course progress and test submissions
+  const { data: testSubmissions } = await supabase
+    .from('test_submissions')
+    .select('started_at, submitted_at, tests!inner(duration_minutes)')
+    .eq('student_id', id)
+    .not('submitted_at', 'is', null);
+  
+  let totalMinutes = 0;
+  testSubmissions?.forEach((sub: any) => {
+    if (sub.tests?.duration_minutes) {
+      totalMinutes += sub.tests.duration_minutes;
+    }
+  });
+  const totalHours = Math.round(totalMinutes / 60);
+
+  // Count completed test submissions
+  const { count: completedAssignments } = await supabase
+    .from('test_submissions')
+    .select('*', { count: 'exact', head: true })
+    .eq('student_id', id)
+    .not('submitted_at', 'is', null);
 
   return (
     <div className="min-h-screen bg-white">
@@ -93,7 +117,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
                     {/* Name & Title */}
                     <h1 className="text-2xl font-bold text-slate-900 mb-1">{student.full_name}</h1>
-                    <p className="text-indigo-600 font-medium mb-4">{student.field_of_study || 'Student'}</p>
+                    <p className="text-indigo-600 font-medium mb-4">{student.specialization_board || 'Student'}</p>
                     
                     {/* Action Button */}
                     <Link
@@ -148,7 +172,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                       <BookOpen className="w-6 h-6 text-white" />
                     </div>
                     <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Field of Study</div>
-                    <div className="text-sm text-slate-900 font-medium">{student.field_of_study || 'Not specified'}</div>
+                    <div className="text-sm text-slate-900 font-medium">{student.specialization_board || 'Not specified'}</div>
                   </div>
                 </div>
 
@@ -163,7 +187,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                     About
                   </h2>
                   <p className="text-slate-600 leading-relaxed">
-                    Student at <span className="font-semibold text-slate-900">{student.universities?.name || student.university}</span> studying <span className="font-semibold text-slate-900">{student.field_of_study || 'various subjects'}</span>.
+                    Student at <span className="font-semibold text-slate-900">{student.universities?.name || student.university}</span> studying <span className="font-semibold text-slate-900">{student.specialization_board || 'various subjects'}</span>.
                     Actively engaged in learning and seeking mentorship opportunities to excel in academic and professional pursuits.
                   </p>
                 </div>

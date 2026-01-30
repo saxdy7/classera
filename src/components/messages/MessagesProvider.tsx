@@ -173,7 +173,15 @@ export function MessagesProvider({ children, userId }: { children: ReactNode; us
                     filter: `receiver_id=eq.${userId}`
                 },
                 async (payload) => {
-                    const newMsg = payload.new as any;
+                    interface RealtimeMessage {
+                        id: string;
+                        conversation_id: string;
+                        sender_id: string;
+                        content: string;
+                        type: string;
+                        created_at: string;
+                    }
+                    const newMsg = payload.new as RealtimeMessage;
                     console.log('📨 Real-time message received:', newMsg);
                     
                     // Check if this message is from the other user in this conversation

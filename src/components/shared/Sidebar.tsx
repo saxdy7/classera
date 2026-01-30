@@ -15,7 +15,8 @@ import {
   Bot,
   User,
   UsersRound,
-  ClipboardCheck
+  ClipboardCheck,
+  FileText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,8 +33,16 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/student/tests' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/student/schedule' },
     { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
-    { icon: Video, label: 'Live Sessions', href: '/dashboard/student/sessions' },
+    { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/student/communities' },
+    { icon: Bot, label: 'Roadmaps', href: '/roadmaps' },
+  ];
+
+  const aiToolsItems = [
+    { icon: Bot, label: 'AI Career Coach', href: '/ai-tools/career-coach' },
+    { icon: Bot, label: 'AI Roadmap', href: '/roadmaps?generate=true&format=roadmap' },
+    { icon: BookOpen, label: 'AI Course', href: '/courses?generate=true&format=course' },
+    { icon: FileText, label: 'AI Guide', href: '/guides?generate=true&format=guide' },
   ];
 
   const mentorNavItems = [
@@ -42,8 +51,9 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/mentor/tests' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/mentor/schedule' },
     { icon: Users, label: 'Students', href: '/dashboard/mentor/students' },
-    { icon: Video, label: 'Live Sessions', href: '/dashboard/mentor/sessions' },
+    { icon: Video, label: 'Live Sessions', href: '/dashboard/mentor/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/mentor/communities' },
+    { icon: Bot, label: 'Roadmaps', href: '/roadmaps' },
   ];
 
   const navItems = role === 'student' ? studentNavItems : mentorNavItems;
@@ -87,11 +97,11 @@ export function Sidebar({ role }: SidebarProps) {
     >
       <div className="p-4 lg:p-5 h-full flex flex-col w-full relative">
         {/* Decorative gradient background */}
-        <div className={`absolute inset-0 opacity-5 pointer-events-none ${role === 'student' 
-          ? 'bg-gradient-to-br from-fuchsia-500 via-purple-500 to-pink-500' 
+        <div className={`absolute inset-0 opacity-5 pointer-events-none ${role === 'student'
+          ? 'bg-gradient-to-br from-fuchsia-500 via-purple-500 to-pink-500'
           : 'bg-gradient-to-br from-blue-500 via-indigo-500 to-cyan-500'
-        }`} />
-        
+          }`} />
+
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -102,10 +112,10 @@ export function Sidebar({ role }: SidebarProps) {
             <div className={`w-10 h-10 rounded-xl ${role === 'student'
               ? 'bg-gradient-to-br from-fuchsia-500 to-purple-600'
               : 'bg-gradient-to-br from-blue-500 to-indigo-600'
-            } flex items-center justify-center shadow-md ${role === 'student' 
-              ? 'shadow-fuchsia-500/20' 
-              : 'shadow-blue-500/20'
-            } group-hover:scale-110 transition-transform duration-300`}>
+              } flex items-center justify-center shadow-md ${role === 'student'
+                ? 'shadow-fuchsia-500/20'
+                : 'shadow-blue-500/20'
+              } group-hover:scale-110 transition-transform duration-300`}>
               <span className="text-white font-black text-lg lg:text-xl">C</span>
             </div>
             {isHovered && (
@@ -160,12 +170,12 @@ export function Sidebar({ role }: SidebarProps) {
                   {!isActive && (
                     <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   )}
-                  
+
                   <motion.div
                     className="relative z-10 flex-shrink-0"
-                    whileHover={{ 
+                    whileHover={{
                       rotate: isActive ? 0 : [0, -10, 10, -10, 0],
-                      scale: isActive ? 1 : 1.1 
+                      scale: isActive ? 1 : 1.1
                     }}
                     transition={{ duration: 0.5 }}
                   >
@@ -196,13 +206,67 @@ export function Sidebar({ role }: SidebarProps) {
               </motion.div>
             );
           })}
+
+          {/* AI Tools Section */}
+          {role === 'student' && (
+            <>
+              <div className="pt-3">
+                {isHovered && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="px-2.5 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider"
+                  >
+                    AI Tools
+                  </motion.div>
+                )}
+              </div>
+              {aiToolsItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname.startsWith(item.href);
+
+                return (
+                  <motion.div
+                    key={item.href}
+                    variants={itemVariants}
+                    whileHover={{ x: 4, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      href={item.href}
+                      className={`flex items-center gap-3 lg:gap-4 px-2.5 lg:px-3 py-3 lg:py-3.5 rounded-xl lg:rounded-2xl font-medium transition-all relative overflow-hidden group ${isActive
+                        ? 'bg-gradient-to-r from-fuchsia-500 via-purple-500 to-pink-500 text-white shadow-md'
+                        : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-sm'
+                        }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      {isHovered && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="text-sm whitespace-nowrap font-semibold flex items-center gap-2"
+                        >
+                          {item.label}
+                          {/* {item.isPro && (
+                            <span className="text-xs px-1.5 py-0.5 bg-yellow-400 text-yellow-900 rounded font-bold">
+                              Pro
+                            </span>
+                          )} */}
+                        </motion.span>
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </>
+          )}
         </motion.nav>
 
         {/* Divider with gradient */}
         <div className={`h-px my-3 lg:my-4 ${role === 'student'
           ? 'bg-gradient-to-r from-transparent via-fuchsia-200 to-transparent'
           : 'bg-gradient-to-r from-transparent via-blue-200 to-transparent'
-        } relative z-10`} />
+          } relative z-10`} />
 
         {/* Profile Button */}
         <motion.div
@@ -216,7 +280,7 @@ export function Sidebar({ role }: SidebarProps) {
             className="flex items-center gap-3 lg:gap-4 px-2.5 lg:px-3 py-3 lg:py-3.5 rounded-xl lg:rounded-2xl font-medium transition-all relative overflow-hidden group text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-sm lg:hover:shadow-md"
           >
             <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             <motion.div
               className="relative z-10 flex-shrink-0"
               whileHover={{ scale: 1.1, rotate: [0, -10, 10, -10, 0] }}
@@ -225,7 +289,7 @@ export function Sidebar({ role }: SidebarProps) {
               <div className={`w-9 h-9 rounded-xl ${role === 'student'
                 ? 'bg-gradient-to-br from-fuchsia-100 to-purple-100'
                 : 'bg-gradient-to-br from-blue-100 to-indigo-100'
-              } flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                } flex items-center justify-center group-hover:scale-110 transition-transform`}>
                 <User className={`w-4 h-4 ${role === 'student' ? 'text-fuchsia-600' : 'text-blue-600'}`} />
               </div>
             </motion.div>

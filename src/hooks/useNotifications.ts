@@ -153,11 +153,10 @@ export function useNotifications(userId: string) {
                 }
             )
             .subscribe((status) => {
-                console.log('🔔 Notifications subscription status:', status);
+                console.log('Notification subscription status:', status);
             });
 
         return () => {
-            console.log('🔔 Unsubscribing from notifications:', topic);
             supabase.removeChannel(channel);
         };
     }, [userId, fetchNotifications, supabase]);

@@ -21,17 +21,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create notification
+    // Create notification using the regular notifications table
     const { data: notification, error } = await supabase
-      .from("community_notifications")
+      .from("notifications")
       .insert({
-        type,
-        recipient_id: recipientId,
-        sender_id: senderId,
-        community_id: communityId,
-        post_id: postId,
-        comment_id: commentId,
-        content: content || "",
+        user_id: recipientId,
+        type: type || 'community_invite',
+        title: 'Community Notification',
+        message: content || "",
+        related_id: postId || commentId || communityId,
+        related_type: postId ? 'post' : commentId ? 'comment' : 'community',
+        action_url: `/communities/${communityId}`,
+        metadata: { sender_id: senderId, post_id: postId, comment_id: commentId },
         read: false,
       })
       .select()
@@ -64,34 +65,9 @@ export async function GET(request: Request) {
     const unreadOnly = searchParams.get("unreadOnly") === "true";
 
     let query = supabase
-      .from("community_notifications")
-      .select(
-        `
-        id,
-        type,
-        content,
-        read,
-        created_at,
-        sender:sender_id (
-          id,
-          full_name,
-          avatar_url
-        ),
-        community:community_id (
-          id,
-          name
-        ),
-        post:post_id (
-          id,
-          title
-        ),
-        comment:comment_id (
-          id,
-          content
-        )
-      `
-      )
-      .eq("recipient_id", user.id)
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (unreadOnly) {
@@ -133,10 +109,10 @@ export async function PATCH(request: Request) {
     }
 
     const { error } = await supabase
-      .from("community_notifications")
+      .from("notifications")
       .update({ read })
       .eq("id", notificationId)
-      .eq("recipient_id", user.id);
+      .eq("user_id", user.id);
 
     if (error) throw error;
 

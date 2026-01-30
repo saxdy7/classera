@@ -7,6 +7,9 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const communityId = searchParams.get('id');
         const mentorId = searchParams.get('mentorId');
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '20');
+        const offset = (page - 1) * limit;
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
@@ -60,7 +63,7 @@ export async function GET(request: Request) {
             query = query.eq('mentor_id', mentorId);
         }
 
-        const { data, error } = await query;
+        const { data, error } = await query.range(offset, offset + limit - 1);
         if (error) throw error;
 
         return NextResponse.json({ communities: data });

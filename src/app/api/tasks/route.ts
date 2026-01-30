@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('tasks')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('student_id', user.id)
       .order('position', { ascending: true });
 
     if (status) {
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     const { data: maxTask } = await supabase
       .from('tasks')
       .select('position')
-      .eq('user_id', user.id)
+      .eq('student_id', user.id)
       .eq('status', status || 'todo')
       .order('position', { ascending: false })
       .limit(1)
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const { data: task, error } = await supabase
       .from('tasks')
       .insert({
-        user_id: user.id,
+        student_id: user.id,
         title,
         description,
         status: status || 'todo',
@@ -116,7 +116,7 @@ export async function PATCH(request: NextRequest) {
       .from('tasks')
       .update(updates)
       .eq('id', id)
-      .eq('user_id', user.id)
+      .eq('student_id', user.id)
       .select()
       .single();
 
@@ -158,7 +158,7 @@ export async function DELETE(request: NextRequest) {
       .from('tasks')
       .delete()
       .eq('id', id)
-      .eq('user_id', user.id);
+      .eq('student_id', user.id);
 
     if (error) {
       console.error('Error deleting task:', error);

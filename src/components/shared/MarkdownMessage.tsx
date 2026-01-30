@@ -41,7 +41,13 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                 components={{
                     // Code blocks
                     code(props) {
-                        const { node, inline, className, children, ...rest } = props as any;
+                        interface CodeProps {
+                            node?: any;
+                            inline?: boolean;
+                            className?: string;
+                            children?: React.ReactNode;
+                        }
+                        const { node, inline, className, children, ...rest } = props as CodeProps;
                         const match = /language-(\w+)/.exec(className || '');
                         const language = match ? match[1] : '';
                         const value = String(children).replace(/\n$/, '');

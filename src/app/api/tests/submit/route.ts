@@ -59,7 +59,15 @@ export async function POST(request: Request) {
         // Calculate score for MCQ questions
         let score = 0;
         let maxScore = test.total_marks || 0;
-        const questions = (test.questions as any[]) || [];
+        interface TestQuestion {
+            id: string;
+            question: string;
+            type: string;
+            options?: string[];
+            correctAnswer?: string | string[];
+            points?: number;
+        }
+        const questions = (test.questions as TestQuestion[]) || [];
 
         questions.forEach((question: any, index: number) => {
             const questionId = question.id || `q_${index}`;

@@ -55,8 +55,19 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
             
         if (testData) {
             // Evaluate MCQ questions directly
-            const questions = testData.questions as any[];
-            const answers = submission.answers as any;
+            interface TestQuestion {
+                id: string;
+                question: string;
+                type: string;
+                options?: string[];
+                correctAnswer?: string | string[];
+                points?: number;
+            }
+            interface StudentAnswers {
+                [questionId: string]: string | string[];
+            }
+            const questions = testData.questions as TestQuestion[];
+            const answers = submission.answers as StudentAnswers;
             let totalScore = 0;
             let maxScore = 0;
             const analysisResults: any[] = [];
@@ -142,7 +153,13 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
         }
     }
 
-    const aiAnalysis = submission.ai_analysis as any;
+    interface AIAnalysis {
+        overallFeedback?: string;
+        strengths?: string[];
+        improvements?: string[];
+        score?: number;
+    }
+    const aiAnalysis = submission.ai_analysis as AIAnalysis | null;
     const percentage = aiAnalysis?.percentage || submission.percentage || 0;
     const passed = percentage >= 40;
     const grade = aiAnalysis?.grade || (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');

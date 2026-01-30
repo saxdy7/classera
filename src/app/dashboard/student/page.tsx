@@ -7,6 +7,10 @@ import RealCalendar from '@/components/shared/RealCalendar';
 import Image from 'next/image';
 // import { PinterestGrid, PinterestCourseCard, PinterestMentorCard } from '@/components/shared/PinterestCards';
 
+// Disable caching for this page to ensure fresh data after onboarding
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function StudentDashboard() {
   const supabase = await createClient();
 
@@ -19,18 +23,24 @@ export default async function StudentDashboard() {
   }
 
   // Get user profile with university
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('users')
     .select('*, universities(*)')
     .eq('id', user.id)
     .single();
 
   // Check if profile is complete
-  if (!profile) {
+  if (profileError || !profile) {
+    console.error('Profile fetch error:', profileError);
     redirect('/onboarding/student');
   }
 
-  if (!profile.full_name || !profile.university_id) {
+  // Only redirect if truly incomplete (not just null values)
+  const isIncomplete = !profile.full_name || profile.full_name.trim() === '' || 
+                       !profile.university_id;
+  
+  if (isIncomplete) {
+    console.log('Incomplete profile, redirecting to onboarding');
     redirect('/onboarding/student');
   }
 
@@ -53,39 +63,74 @@ export default async function StudentDashboard() {
   ];
   const displayMentors = [...(mentors || []), ...fakeMentors];
 
-  // Fetch real conversations
-  const { data: messages } = await supabase
-    .from('messages')
-    .select('*, sender:users!messages_sender_id_fkey(id, full_name, avatar_url, role), receiver:users!messages_receiver_id_fkey(id, full_name, avatar_url, role)')
-    .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
-    .order('created_at', { ascending: false })
-    .limit(50);
+  // Fetch real conversations using conversation-based structure
+  // Get conversations where user is a participant, with last message and other participant
+  const { data: myConversations } = await supabase
+    .from('conversation_participants')
+    .select(`
+      conversation_id,
+      conversations!inner(
+        id,
+        type,
+        last_message_at,
+        messages(
+          id,
+          content,
+          created_at,
+          sender_id,
+          sender:users!messages_sender_id_fkey(id, full_name, avatar_url, role),
+          read_by
+        )
+      )
+    `)
+    .eq('user_id', user.id)
+    .order('conversations(last_message_at)', { ascending: false })
+    .limit(10);
 
-  // Process conversations
+  // Get other participants for each conversation
   const conversationsMap = new Map();
-  messages?.forEach((message: any) => {
-    const isCurrentUserSender = message.sender_id === user.id;
-    const otherUser = isCurrentUserSender ? message.receiver : message.sender;
-    
-    if (!otherUser) return;
+  if (myConversations) {
+    for (const myConv of myConversations) {
+      const conversation = myConv.conversations;
+      if (!conversation || conversation.type !== 'direct') continue;
 
-    const existingConversation = conversationsMap.get(otherUser.id);
+      // Get the other participant
+      const { data: otherParticipants } = await supabase
+        .from('conversation_participants')
+        .select('user_id, users!conversation_participants_user_id_fkey(id, full_name, avatar_url, role)')
+        .eq('conversation_id', conversation.id)
+        .neq('user_id', user.id)
+        .limit(1);
 
-    if (!existingConversation || new Date(message.created_at) > new Date(existingConversation.lastMessage.created_at)) {
+      if (!otherParticipants || otherParticipants.length === 0) continue;
+      const otherUser = otherParticipants[0].users;
+
+      // Get last message
+      const { data: lastMessages } = await supabase
+        .from('messages')
+        .select('id, content, created_at, sender_id, read_by')
+        .eq('conversation_id', conversation.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (!lastMessages) continue;
+
+      const isCurrentUserSender = lastMessages.sender_id === user.id;
+      const isRead = lastMessages.read_by?.includes?.(user.id) || false;
+
       conversationsMap.set(otherUser.id, {
         user: otherUser,
         lastMessage: {
-          content: message.content,
-          created_at: message.created_at,
+          content: lastMessages.content,
+          created_at: lastMessages.created_at,
           isFromCurrentUser: isCurrentUserSender,
-          read: message.read,
+          read: isRead,
         },
-        unreadCount: message.receiver_id === user.id && !message.read ? 1 : 0,
+        unreadCount: !isCurrentUserSender && !isRead ? 1 : 0,
       });
-    } else if (message.receiver_id === user.id && !message.read) {
-      existingConversation.unreadCount += 1;
     }
-  });
+  }
 
   const conversations = Array.from(conversationsMap.values()).slice(0, 3);
 

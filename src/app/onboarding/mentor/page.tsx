@@ -62,66 +62,45 @@ export default function MentorOnboarding() {
     setError('');
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Get user from session (more reliable than getUser)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (!user) throw new Error('No user found');
-
-      // Check if profile exists
-      const { data: existingProfile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (existingProfile) {
-        // Update existing profile
-        const { data: updateData, error: updateError } = await supabase
-          .from('users')
-          .update({
-            full_name: formData.full_name,
-            university_id: formData.university_id || null,
-            expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
-            years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
-            linkedin_url: formData.linkedin_url || null,
-            github_url: formData.github_url || null,
-            bio: formData.bio || null,
-          })
-          .eq('id', user.id)
-          .select();
-
-        if (updateError) {
-          console.error('Update error:', updateError);
-          throw updateError;
-        }
-
-        console.log('Profile updated successfully:', updateData);
-      } else {
-        // Create new profile
-        const avatarUrl = await getGravatarUrlClient(user.email || '');
-        const { data: insertData, error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: user.id,
-            role: 'mentor',
-            full_name: formData.full_name,
-            email: user.email || '',
-            university_id: formData.university_id || null,
-            expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
-            years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
-            linkedin_url: formData.linkedin_url || null,
-            github_url: formData.github_url || null,
-            bio: formData.bio || null,
-            avatar_url: avatarUrl,
-          })
-          .select();
-
-        if (insertError) {
-          console.error('Insert error:', insertError);
-          throw insertError;
-        }
-
-        console.log('Profile created successfully:', insertData);
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        throw new Error('Authentication error. Please try signing in again.');
       }
+
+      if (!session || !session.user) {
+        console.error('No active session');
+        throw new Error('No active session. Please sign in again.');
+      }
+
+      const user = session.user;
+      console.log('User found:', user.id);
+
+      // Update profile using API route (bypasses RLS)
+      const response = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.full_name,
+          university_id: formData.university_id || null,
+          expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
+          years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
+          linkedin_url: formData.linkedin_url || null,
+          github_url: formData.github_url || null,
+          bio: formData.bio || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Profile update failed:', data);
+        throw new Error(data.error || 'Failed to update profile');
+      }
+
+      console.log('Profile updated successfully');
 
       // Wait a bit for the database to propagate
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -180,8 +159,8 @@ export default function MentorOnboarding() {
             <UniversitySearch
               label="Institution"
               value={formData.university}
-              onChange={(value, universityId) => setFormData({ 
-                ...formData, 
+              onChange={(value, universityId) => setFormData({
+                ...formData,
                 university: value,
                 university_id: universityId || null
               })}

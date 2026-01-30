@@ -20,6 +20,46 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
     // Filter states
     const [selectedFilter, setSelectedFilter] = useState<'all' | 'unread' | 'starred' | 'archived'>('all');
 
+    // Starred and archived conversations (stored in localStorage)
+    const [starredConversations, setStarredConversations] = useState<Set<string>>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`starred-${currentUserId}`);
+            return new Set(stored ? JSON.parse(stored) : []);
+        }
+        return new Set();
+    });
+
+    const [archivedConversations, setArchivedConversations] = useState<Set<string>>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`archived-${currentUserId}`);
+            return new Set(stored ? JSON.parse(stored) : []);
+        }
+        return new Set();
+    });
+
+    // Helper functions for starred/archived
+    const toggleStarred = (conversationId: string) => {
+        const newStarred = new Set(starredConversations);
+        if (newStarred.has(conversationId)) {
+            newStarred.delete(conversationId);
+        } else {
+            newStarred.add(conversationId);
+        }
+        setStarredConversations(newStarred);
+        localStorage.setItem(`starred-${currentUserId}`, JSON.stringify([...newStarred]));
+    };
+
+    const toggleArchived = (conversationId: string) => {
+        const newArchived = new Set(archivedConversations);
+        if (newArchived.has(conversationId)) {
+            newArchived.delete(conversationId);
+        } else {
+            newArchived.add(conversationId);
+        }
+        setArchivedConversations(newArchived);
+        localStorage.setItem(`archived-${currentUserId}`, JSON.stringify([...newArchived]));
+    };
+
     // Collapsible sections
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
@@ -30,8 +70,11 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
 
         // Apply filter
         if (selectedFilter === 'unread' && (!c.unread_count || c.unread_count === 0)) return false;
-        if (selectedFilter === 'starred') return false; // TODO: Add starred logic
-        if (selectedFilter === 'archived') return false; // TODO: Add archived logic
+        if (selectedFilter === 'starred' && !starredConversations.has(c.id)) return false;
+        if (selectedFilter === 'archived' && !archivedConversations.has(c.id)) return false;
+
+        // Hide archived from 'all' and 'unread' views
+        if (selectedFilter !== 'archived' && archivedConversations.has(c.id)) return false;
 
         return matchesSearch;
     });

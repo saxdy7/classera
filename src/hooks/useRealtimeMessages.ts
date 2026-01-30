@@ -83,11 +83,10 @@ export function useRealtimeMessages(currentUserId: string, otherUserId: string) 
                 }
             )
             .subscribe((status) => {
-                console.log('🔌 Realtime subscription status:', status);
+                // Subscription status handled
             });
 
         return () => {
-            console.log('🔌 Unsubscribing from:', topic);
             supabase.removeChannel(channel);
         };
     }, [currentUserId, otherUserId, fetchMessages, supabase]);

@@ -3,19 +3,30 @@
 import { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { useMessages } from './MessagesProvider';
+import { createClient } from '@/lib/supabase/client';
 
 export function SmartReplies() {
     const { activeConversation, sendMessage } = useMessages();
     const [replies, setReplies] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+    // Get current user ID
+    useEffect(() => {
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data }) => {
+            setCurrentUserId(data.user?.id || null);
+        });
+    }, []);
 
     useEffect(() => {
-        if (!activeConversation || !activeConversation.last_message) return;
+        if (!activeConversation || !activeConversation.last_message || !currentUserId) return;
 
-        // Only generate if last message is NOT from me
-        // (This check assumes we have access to currentUserId in context or logic, 
-        // but here we might just check if last_message exists. 
-        // Ideally we check sender but for hacking, just generate.)
+        // Only generate replies if last message is NOT from current user
+        if (activeConversation.last_message.sender_id === currentUserId) {
+            setReplies([]);
+            return;
+        }
 
         const element = document.getElementById('smart-replies-container');
         if (element) element.style.display = 'flex';
@@ -26,20 +37,25 @@ export function SmartReplies() {
                 const response = await fetch('/api/ai/replies', {
                     method: 'POST',
                     body: JSON.stringify({
-                        messages: [activeConversation.last_message] // Send last message for now
+                        message: activeConversation.last_message,
+                        conversationContext: {
+                            senderName: activeConversation.last_message.sender?.full_name,
+                            senderRole: activeConversation.last_message.sender?.role
+                        }
                     })
                 });
                 const data = await response.json();
                 if (data.replies) setReplies(data.replies);
             } catch (e) {
-                console.error(e);
+                // Silently fail for smart replies
+                setReplies([]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchReplies();
-    }, [activeConversation?.last_message?.id]);
+    }, [activeConversation?.last_message?.id, currentUserId]);
 
     if (replies.length === 0) return null;
 

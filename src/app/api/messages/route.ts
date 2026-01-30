@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-// Get messages between two users
+// Get messages for a specific conversation
 export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const otherUserId = searchParams.get('otherUserId');
+
+    // NEW: We now expect a conversationId or we find it
+    let conversationId = searchParams.get('conversationId');
 
     const {
       data: { user },
@@ -16,47 +19,60 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!otherUserId) {
-      return NextResponse.json({ error: 'otherUserId is required' }, { status: 400 });
+    // IF no conversationId but otherUserId is provided, try to find the direct conversation
+    if (!conversationId && otherUserId) {
+      // Find common conversation of type 'direct'
+      const { data: commonConvs } = await supabase
+        .rpc('get_direct_conversation_id', {
+          user1_id: user.id,
+          user2_id: otherUserId
+        });
+
+      // If RPC is not available or returns null, we might need a fallback query or just return empty
+      // Fallback query (more expensive):
+      if (!commonConvs) {
+        // Query conversation_participants for both users
+        const { data: myConvs } = await supabase
+          .from('conversation_participants')
+          .select('conversation_id')
+          .eq('user_id', user.id);
+
+        const { data: otherConvs } = await supabase
+          .from('conversation_participants')
+          .select('conversation_id')
+          .eq('user_id', otherUserId);
+
+        // Find intersection
+        const myConvIds = new Set(myConvs?.map(c => c.conversation_id));
+        const common = otherConvs?.find(c => myConvIds.has(c.conversation_id));
+
+        if (common) {
+          conversationId = common.conversation_id;
+        }
+      }
     }
 
-    // Get messages between current user and other user
+    if (!conversationId) {
+      // No conversation exists yet, return empty list
+      return NextResponse.json({ messages: [] });
+    }
+
+    // Get messages for this conversation
     const { data: messages, error: messagesError } = await supabase
       .from('messages')
-      .select('*')
-      .or(`and(sender_id.eq.${user.id},receiver_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${user.id})`)
-      .order('created_at', { ascending: true });
+      .select(`
+        *,
+        sender:users!messages_sender_id_fkey(id, full_name, avatar_url, role)
+      `)
+      .eq('conversation_id', conversationId)
+      .order('created_at', { ascending: true }); // Chat UI expects ascending usually, or we reverse in frontend
 
     if (messagesError) {
       console.error('Error fetching messages:', messagesError);
       return NextResponse.json({ error: messagesError.message }, { status: 500 });
     }
 
-    // Get user details for sender and receiver
-    const userIds = [user.id, otherUserId];
-    const { data: users, error: usersError } = await supabase
-      .from('users')
-      .select('id, full_name, avatar_url, role')
-      .in('id', userIds);
-
-    if (usersError) {
-      console.error('Error fetching users:', usersError);
-    }
-
-    // Create user map
-    const userMap = new Map();
-    users?.forEach((u: any) => {
-      userMap.set(u.id, u);
-    });
-
-    // Enrich messages with user data
-    const enrichedMessages = messages?.map((msg: any) => ({
-      ...msg,
-      sender: userMap.get(msg.sender_id),
-      receiver: userMap.get(msg.receiver_id)
-    }));
-
-    return NextResponse.json({ messages: enrichedMessages || [] });
+    return NextResponse.json({ messages: messages || [] });
   } catch (error) {
     console.error('Error in GET /api/messages:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -67,7 +83,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const { receiverId, content } = await request.json();
+    const { receiverId, conversationId: existingId, content, type = 'text', fileUrl } = await request.json();
 
     const {
       data: { user },
@@ -77,22 +93,65 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!receiverId || !content) {
-      return NextResponse.json(
-        { error: 'receiverId and content are required' },
-        { status: 400 }
-      );
+    let conversationId = existingId;
+
+    // Phase 1: Ensure Conversation Exists
+    if (!conversationId && receiverId) {
+      // Logic to find or create conversation
+      // 1. Check if exists (same as GET logic)
+      const { data: myConvs } = await supabase
+        .from('conversation_participants')
+        .select('conversation_id')
+        .eq('user_id', user.id);
+
+      const { data: otherConvs } = await supabase
+        .from('conversation_participants')
+        .select('conversation_id')
+        .eq('user_id', receiverId);
+
+      const myConvIds = new Set(myConvs?.map(c => c.conversation_id));
+      const common = otherConvs?.find(c => myConvIds.has(c.conversation_id));
+
+      if (common) {
+        conversationId = common.conversation_id;
+      } else {
+        // CREATE NEW CONVERSATION
+        const { data: newConv, error: createError } = await supabase
+          .from('conversations')
+          .insert({ type: 'direct' })
+          .select()
+          .single();
+
+        if (createError) throw createError;
+
+        conversationId = newConv.id;
+
+        // Add participants
+        await supabase.from('conversation_participants').insert([
+          { conversation_id: conversationId, user_id: user.id },
+          { conversation_id: conversationId, user_id: receiverId }
+        ]);
+      }
     }
 
-    // Insert message
+    if (!conversationId) {
+      return NextResponse.json({ error: 'Could not resolve conversation' }, { status: 400 });
+    }
+
+    // Phase 2: Insert Message
     const { data: message, error: insertError } = await supabase
       .from('messages')
       .insert({
+        conversation_id: conversationId,
         sender_id: user.id,
-        receiver_id: receiverId,
-        content: content.trim(),
+        content: content?.trim(),
+        type: type,
+        file_url: fileUrl
       })
-      .select('*')
+      .select(`
+        *,
+        sender:users!messages_sender_id_fkey(id, full_name, avatar_url, role)
+      `)
       .single();
 
     if (insertError) {
@@ -100,63 +159,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
-    // Fetch user details separately
-    const { data: users } = await supabase
-      .from('users')
-      .select('id, full_name, avatar_url, role')
-      .in('id', [user.id, receiverId]);
-
-    const userMap = new Map();
-    users?.forEach((u: any) => {
-      userMap.set(u.id, u);
-    });
-
-    const enrichedMessage = {
-      ...message,
-      sender: userMap.get(message.sender_id),
-      receiver: userMap.get(message.receiver_id)
-    };
-
-    return NextResponse.json({ message: enrichedMessage });
+    return NextResponse.json({ message });
   } catch (error) {
     console.error('Error in POST /api/messages:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-// Mark messages as read
-export async function PATCH(request: Request) {
-  try {
-    const supabase = await createClient();
-    const { messageIds } = await request.json();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    if (!messageIds || !Array.isArray(messageIds)) {
-      return NextResponse.json({ error: 'messageIds array is required' }, { status: 400 });
-    }
-
-    // Mark messages as read
-    const { error } = await supabase
-      .from('messages')
-      .update({ read_at: new Date().toISOString() })
-      .in('id', messageIds)
-      .eq('receiver_id', user.id);
-
-    if (error) {
-      console.error('Error marking messages as read:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error in PATCH /api/messages:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

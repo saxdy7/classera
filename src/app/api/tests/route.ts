@@ -12,11 +12,14 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const filter = searchParams.get('filter'); // 'all', 'live', 'scheduled', 'past'
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '20');
+        const offset = (page - 1) * limit;
 
         // Get user profile to check role
         const { data: profile } = await supabase
             .from('users')
-            .select('role')
+            .select('role, university_id')
             .eq('id', user.id)
             .single();
 
@@ -27,7 +30,8 @@ export async function GET(request: Request) {
         mentor:users!tests_mentor_id_fkey(id, full_name, avatar_url),
         community:communities(id, name),
         _count:test_submissions(count)
-      `);
+      `)
+            .eq('university_id', profile?.university_id); // Explicit university isolation
 
         if (profile?.role === 'mentor') {
             // Mentors see their own tests
@@ -56,7 +60,9 @@ export async function GET(request: Request) {
                 .lt('scheduled_at', new Date().toISOString());
         }
 
-        const { data: tests, error } = await query.order('id', { ascending: false });
+        const { data: tests, error } = await query
+            .order('id', { ascending: false })
+            .range(offset, offset + limit - 1);
 
         if (error) throw error;
 

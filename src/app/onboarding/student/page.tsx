@@ -65,75 +65,56 @@ export default function StudentOnboarding() {
     setError('');
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Get user from session (more reliable than getUser)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (!user) throw new Error('No user found');
-
-      // Check if profile exists
-      const { data: existingProfile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (existingProfile) {
-        // Update existing profile
-        const { data: updateData, error: updateError } = await supabase
-          .from('users')
-          .update({
-            full_name: formData.full_name,
-            university_id: formData.university_id || null,
-            degree_type: formData.degree_type || null,
-            specialization_board: formData.specialization_board || null,
-            current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
-            graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
-            linkedin_url: formData.linkedin_url || null,
-            github_url: formData.github_url || null,
-            bio: formData.bio || null,
-          })
-          .eq('id', user.id)
-          .select();
-
-        if (updateError) {
-          console.error('Update error:', updateError);
-          throw updateError;
-        }
-
-        console.log('Profile updated successfully:', updateData);
-      } else {
-        // Create new profile
-        const avatarUrl = await getGravatarUrlClient(user.email || '');
-        const { data: insertData, error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: user.id,
-            role: 'student',
-            full_name: formData.full_name,
-            email: user.email || '',
-            university_id: formData.university_id || null,
-            degree_type: formData.degree_type || null,
-            specialization_board: formData.specialization_board || null,
-            current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
-            graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
-            linkedin_url: formData.linkedin_url || null,
-            github_url: formData.github_url || null,
-            bio: formData.bio || null,
-            avatar_url: avatarUrl,
-          })
-          .select();
-
-        if (insertError) {
-          console.error('Insert error:', insertError);
-          throw insertError;
-        }
-
-        console.log('Profile created successfully:', insertData);
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        throw new Error('Authentication error. Please try signing in again.');
       }
 
-      // Wait a bit for the database to propagate
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (!session || !session.user) {
+        console.error('No active session');
+        throw new Error('No active session. Please sign in again.');
+      }
 
-      // Redirect to dashboard
+      const user = session.user;
+      console.log('User found:', user.id);
+
+      // Update profile using API route (bypasses RLS)
+      const response = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: formData.full_name,
+          university_id: formData.university_id || null,
+          degree_type: formData.degree_type || null,
+          specialization_board: formData.specialization_board || null,
+          current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
+          linkedin_url: formData.linkedin_url || null,
+          github_url: formData.github_url || null,
+          bio: formData.bio || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Profile update failed:', data);
+        throw new Error(data.error || 'Failed to update profile');
+      }
+
+      console.log('✅ Profile updated successfully');
+
+      // Clear any cached data
+      await supabase.auth.refreshSession();
+
+      // Wait for database to propagate and cache to clear
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      console.log('🔄 Redirecting to dashboard...');
+
+      // Force a hard redirect to bypass any caching
       window.location.href = '/dashboard/student';
     } catch (err: unknown) {
       console.error('Onboarding error:', err);
@@ -187,8 +168,8 @@ export default function StudentOnboarding() {
             <UniversitySearch
               label="University"
               value={formData.university}
-              onChange={(value, universityId) => setFormData({ 
-                ...formData, 
+              onChange={(value, universityId) => setFormData({
+                ...formData,
                 university: value,
                 university_id: universityId || null
               })}
