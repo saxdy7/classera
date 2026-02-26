@@ -42,15 +42,7 @@ export default async function MentorDashboard() {
     .order('full_name')
     .limit(10);
 
-  // Add fake students after real students for UI
-  const fakeStudents = [
-    { id: 'fake-1', full_name: 'Rahul Sharma', degree: 'Computer Science', semester: 3, avatar_url: null },
-    { id: 'fake-2', full_name: 'Priya Verma', degree: 'Data Science', semester: 2, avatar_url: null },
-    { id: 'fake-3', full_name: 'Amit Patel', degree: 'Software Engineering', semester: 4, avatar_url: null },
-    { id: 'fake-4', full_name: 'Sneha Reddy', degree: 'Information Technology', semester: 2, avatar_url: null },
-    { id: 'fake-5', full_name: 'Arjun Kumar', degree: 'Computer Science', semester: 3, avatar_url: null },
-  ];
-  const displayStudents = [...(students || []), ...fakeStudents];
+  const displayStudents = students || [];
 
   // Fetch real conversations using conversation-based structure
   // Get conversations where user is a participant, with last message and other participant
@@ -71,8 +63,8 @@ export default async function MentorDashboard() {
   // Get other participants for each conversation
   const conversationsMap = new Map();
   if (myConversations) {
-    for (const myConv of myConversations) {
-      const conversation = myConv.conversations;
+    for (const myConv of myConversations as any[]) {
+      const conversation = myConv.conversations as any;
       if (!conversation || conversation.type !== 'direct') continue;
 
       // Get the other participant
@@ -84,7 +76,7 @@ export default async function MentorDashboard() {
         .limit(1);
 
       if (!otherParticipants || otherParticipants.length === 0) continue;
-      const otherUser = otherParticipants[0].users;
+      const otherUser = (otherParticipants[0] as any).users;
 
       // Get last message
       const { data: lastMessages } = await supabase
@@ -170,22 +162,23 @@ export default async function MentorDashboard() {
 
             <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
               {displayStudents && displayStudents.length > 0 ? (
-                displayStudents.map((student: any) => {
-                  const rating = (Math.random() * 0.8 + 4.2).toFixed(1); // Generate realistic rating 4.2-5.0
+                displayStudents.map((student: any, index: number) => {
+                  const gradients = ['from-blue-400 to-cyan-300', 'from-yellow-300 to-orange-300', 'from-purple-400 to-pink-300'];
+                  const ratings = ['4.8', '4.6', '4.9', '4.7', '4.5', '5.0', '4.3', '4.8', '4.6', '4.7'];
+                  const gradient = gradients[index % gradients.length];
+                  const rating = ratings[index % ratings.length];
                   const yearSemester = student.degree ? `${student.degree} - Semester ${student.semester || 1}` : 'Computer Science';
-                  
+
                   return (
                     <div key={student.id} className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                       {/* Header with gradient */}
-                      <div className={`h-24 bg-gradient-to-br ${
-                        ['from-blue-400 to-cyan-300', 'from-yellow-300 to-orange-300', 'from-purple-400 to-pink-300'][Math.floor(Math.random() * 3)]
-                      }`}></div>
-                      
+                      <div className={`h-24 bg-gradient-to-br ${gradient}`}></div>
+
                       {/* Profile Image */}
                       <div className="relative -mt-12 flex flex-col items-center px-6">
                         {student.avatar_url ? (
-                          <img 
-                            src={student.avatar_url} 
+                          <img
+                            src={student.avatar_url}
                             alt={student.full_name}
                             className="w-20 h-20 rounded-full border-4 border-white object-cover shadow-lg"
                           />
@@ -194,7 +187,7 @@ export default async function MentorDashboard() {
                             {student.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || '?'}
                           </div>
                         )}
-                        
+
                         {/* Rating Badge */}
                         <div className="flex items-center gap-1 mt-2 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
                           <span className="text-sm font-bold text-slate-900">{rating}</span>
@@ -225,7 +218,8 @@ export default async function MentorDashboard() {
                 })
               ) : (
                 <div className="col-span-full text-center py-12">
-                  <p className="text-slate-500">No students available at the moment</p>
+                  <p className="text-slate-500">No students enrolled at your university yet</p>
+                  <p className="text-slate-400 text-sm mt-1">Students will appear here once they join</p>
                 </div>
               )}
             </div>
