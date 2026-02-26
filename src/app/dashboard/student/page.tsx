@@ -4,251 +4,293 @@ import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import RealCalendar from '@/components/shared/RealCalendar';
+import Link from 'next/link';
 import Image from 'next/image';
-// import { PinterestGrid, PinterestCourseCard, PinterestMentorCard } from '@/components/shared/PinterestCards';
 
-// Disable caching for this page to ensure fresh data after onboarding
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function StudentDashboard() {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Auth guard
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) redirect('/signin');
 
-  if (!user) {
-    redirect('/auth/sign-in');
-  }
+  // Profile — wrap in try/catch so a DB failure shows a degraded UI, not a 500
+  let profile: any = null;
+  let mentors: any[] = [];
+  let conversations: any[] = [];
 
-  // Get user profile with university
-  const { data: profile, error: profileError } = await supabase
-    .from('users')
-    .select('*, universities(*)')
-    .eq('id', user.id)
-    .single();
+  try {
+    const { data } = await supabase
+      .from('users')
+      .select('*, universities(name)')
+      .eq('id', user.id)
+      .single();
+    profile = data;
+  } catch (_) { }
 
-  // Check if profile is complete
-  if (profileError || !profile) {
-    console.error('Profile fetch error:', profileError);
+  // Redirect to onboarding if profile not set up
+  if (!profile || !profile.full_name || !profile.university_id) {
     redirect('/onboarding/student');
   }
 
-  // Only redirect if truly incomplete (not just null values)
-  const isIncomplete = !profile.full_name || profile.full_name.trim() === '' || 
-                       !profile.university_id;
-  
-  if (isIncomplete) {
-    console.log('Incomplete profile, redirecting to onboarding');
-    redirect('/onboarding/student');
-  }
+  // Fetch mentors (non-fatal)
+  try {
+    const { data } = await supabase
+      .from('users')
+      .select('id, full_name, avatar_url, specialization_board, bio')
+      .eq('role', 'mentor')
+      .eq('university_id', profile.university_id)
+      .order('full_name')
+      .limit(8);
+    mentors = data || [];
+  } catch (_) { }
 
-  // Fetch real mentors from the same university
-  const { data: mentors } = await supabase
-    .from('users')
-    .select('id, full_name, email, avatar_url, role, specialization_board')
-    .eq('role', 'mentor')
-    .eq('university_id', profile.university_id)
-    .order('full_name')
-    .limit(10);
+  // Fetch recent conversations (non-fatal)
+  try {
+    const { data: myConvs } = await supabase
+      .from('conversation_participants')
+      .select('conversation_id')
+      .eq('user_id', user.id)
+      .limit(5);
 
-  // Add fake mentors after real mentors for UI
-  const fakeMentors = [
-    { id: 'fake-1', full_name: 'Dr. Sarah Johnson', specialization_board: 'Computer Science', avatar_url: null },
-    { id: 'fake-2', full_name: 'Prof. Michael Chen', specialization_board: 'Data Science', avatar_url: null },
-    { id: 'fake-3', full_name: 'Dr. Emily Rodriguez', specialization_board: 'Web Development', avatar_url: null },
-    { id: 'fake-4', full_name: 'Prof. James Wilson', specialization_board: 'AI & Machine Learning', avatar_url: null },
-    { id: 'fake-5', full_name: 'Dr. Priya Patel', specialization_board: 'Software Engineering', avatar_url: null },
-  ];
-  const displayMentors = [...(mentors || []), ...fakeMentors];
+    if (myConvs && myConvs.length > 0) {
+      for (const { conversation_id } of myConvs) {
+        try {
+          const { data: otherPs } = await supabase
+            .from('conversation_participants')
+            .select('users!conversation_participants_user_id_fkey(id, full_name, avatar_url)')
+            .eq('conversation_id', conversation_id)
+            .neq('user_id', user.id)
+            .limit(1)
+            .single();
 
-  // Fetch real conversations using conversation-based structure
-  // Get conversations where user is a participant, with last message and other participant
-  const { data: myConversations } = await supabase
-    .from('conversation_participants')
-    .select(`
-      conversation_id,
-      conversations!inner(
-        id,
-        type,
-        last_message_at,
-        messages(
-          id,
-          content,
-          created_at,
-          sender_id,
-          sender:users!messages_sender_id_fkey(id, full_name, avatar_url, role),
-          read_by
-        )
-      )
-    `)
-    .eq('user_id', user.id)
-    .order('conversations(last_message_at)', { ascending: false })
-    .limit(10);
+          const { data: lastMsg } = await supabase
+            .from('messages')
+            .select('content, created_at, read_by, sender_id')
+            .eq('conversation_id', conversation_id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
 
-  // Get other participants for each conversation
-  const conversationsMap = new Map();
-  if (myConversations) {
-    for (const myConv of myConversations) {
-      const conversation = myConv.conversations;
-      if (!conversation || conversation.type !== 'direct') continue;
-
-      // Get the other participant
-      const { data: otherParticipants } = await supabase
-        .from('conversation_participants')
-        .select('user_id, users!conversation_participants_user_id_fkey(id, full_name, avatar_url, role)')
-        .eq('conversation_id', conversation.id)
-        .neq('user_id', user.id)
-        .limit(1);
-
-      if (!otherParticipants || otherParticipants.length === 0) continue;
-      const otherUser = otherParticipants[0].users;
-
-      // Get last message
-      const { data: lastMessages } = await supabase
-        .from('messages')
-        .select('id, content, created_at, sender_id, read_by')
-        .eq('conversation_id', conversation.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (!lastMessages) continue;
-
-      const isCurrentUserSender = lastMessages.sender_id === user.id;
-      const isRead = lastMessages.read_by?.includes?.(user.id) || false;
-
-      conversationsMap.set(otherUser.id, {
-        user: otherUser,
-        lastMessage: {
-          content: lastMessages.content,
-          created_at: lastMessages.created_at,
-          isFromCurrentUser: isCurrentUserSender,
-          read: isRead,
-        },
-        unreadCount: !isCurrentUserSender && !isRead ? 1 : 0,
-      });
+          if (otherPs && lastMsg) {
+            const other = (otherPs as any).users;
+            conversations.push({
+              id: conversation_id,
+              user: other,
+              lastMessage: lastMsg.content,
+              time: new Date(lastMsg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              unread: !lastMsg.read_by?.includes?.(user.id) && lastMsg.sender_id !== user.id,
+            });
+          }
+        } catch (_) { }
+      }
     }
-  }
+  } catch (_) { }
 
-  const conversations = Array.from(conversationsMap.values()).slice(0, 3);
+  const firstName = profile.full_name?.split(' ')[0] || 'Student';
+  const universityName = profile.universities?.name || 'your university';
+  const gradients = ['from-violet-400 to-purple-500', 'from-cyan-400 to-blue-500', 'from-rose-400 to-pink-500', 'from-amber-400 to-orange-500'];
+  const ratings = ['4.8', '4.6', '4.9', '4.7', '4.5', '5.0', '4.3', '4.8'];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-50">
       <Header profile={{ id: user.id, ...profile }} />
-      <div className="flex bg-white">
+      <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24 bg-white">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Welcome Header Container */}
-            <div className="lg:col-span-3 bg-gradient-to-br from-purple-100 via-fuchsia-50 to-pink-50 rounded-3xl p-6 md:p-8 h-fit shadow-sm">
-              <div className="flex items-center justify-between gap-6">
-                {/* Left Side - Welcome Text */}
-                <div className="flex-1">
-                  <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-                    Hello, Welcome back! 👋
-                  </h1>
-                  <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                    Good to see you again, {profile?.full_name?.split(' ')[0]}! You're currently enrolled at {profile.universities?.name}.
-                    Continue your learning journey and explore your courses, connect with mentors, and stay on track with your goals.
-                  </p>
-                </div>
+        <main className="flex-1 md:ml-24 p-4 md:p-8 max-w-screen-xl">
 
-                {/* Right Side - Illustration */}
-                <div className="hidden lg:block flex-shrink-0">
-                  <Image
-                    src="https://illustrations.popsy.co/amber/student-going-to-school.svg"
-                    alt="Student Illustration"
-                    width={200}
-                    height={200}
-                    className="w-48 h-48 object-contain"
-                  />
+          {/* ── Welcome Banner ── */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 rounded-3xl p-8 mb-8 text-white shadow-xl shadow-purple-200">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32" />
+            <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-white/5 rounded-full translate-y-24" />
+
+            <div className="relative flex items-center justify-between">
+              <div>
+                <p className="text-purple-200 text-sm font-medium mb-1">Welcome back 👋</p>
+                <h1 className="text-3xl md:text-4xl font-bold mb-3">Hello, {firstName}!</h1>
+                <p className="text-purple-100 text-sm md:text-base max-w-md leading-relaxed">
+                  You're studying at <span className="font-semibold text-white">{universityName}</span>.
+                  Keep up the great work — your mentors are ready to help!
+                </p>
+                <div className="flex flex-wrap gap-3 mt-6">
+                  <Link href="/dashboard/student/courses" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-purple-700 font-semibold rounded-xl text-sm hover:bg-purple-50 transition-colors shadow-sm">
+                    📚 My Courses
+                  </Link>
+                  <Link href="/dashboard/student/messages" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 text-white font-semibold rounded-xl text-sm hover:bg-white/30 transition-colors border border-white/30">
+                    💬 Messages
+                  </Link>
                 </div>
               </div>
+              <div className="hidden lg:block flex-shrink-0">
+                <Image
+                  src="https://illustrations.popsy.co/amber/student-going-to-school.svg"
+                  alt="Student"
+                  width={200}
+                  height={200}
+                  className="w-48 h-48 object-contain drop-shadow-lg"
+                />
+              </div>
             </div>
-
-            {/* Real Calendar Widget */}
-            <RealCalendar userId={user.id} />
           </div>
 
-          {/* Recommended Mentors Section */}
-          <div className="-mt-48 max-w-6xl z-10 relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold text-slate-900">Recommended Mentors</h2>
-                <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+          {/* ── Main Grid ── */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+            {/* ── Left Column (2/3) ── */}
+            <div className="xl:col-span-2 space-y-8">
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: 'Courses', value: '—', icon: '📚', color: 'bg-blue-50 text-blue-700', border: 'border-blue-100' },
+                  { label: 'Mentors', value: mentors.length || '—', icon: '👨‍🏫', color: 'bg-purple-50 text-purple-700', border: 'border-purple-100' },
+                  { label: 'Messages', value: conversations.length || '—', icon: '💬', color: 'bg-emerald-50 text-emerald-700', border: 'border-emerald-100' },
+                  { label: 'Sessions', value: '—', icon: '🎯', color: 'bg-amber-50 text-amber-700', border: 'border-amber-100' },
+                ].map((stat) => (
+                  <div key={stat.label} className={`bg-white rounded-2xl p-5 border ${stat.border} shadow-sm hover:shadow-md transition-shadow`}>
+                    <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg ${stat.color} mb-3`}>
+                      {stat.icon}
+                    </div>
+                    <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                View More
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+
+              {/* Recommended Mentors */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900">Recommended Mentors</h2>
+                    <p className="text-sm text-slate-500 mt-0.5">From {universityName}</p>
+                  </div>
+                  <Link href="/dashboard/student/mentors" className="text-sm font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1">
+                    View all <span>→</span>
+                  </Link>
+                </div>
+
+                {mentors.length > 0 ? (
+                  <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+                    {mentors.map((mentor: any, i: number) => (
+                      <div key={mentor.id} className="flex-shrink-0 w-56 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+                        {/* Color bar */}
+                        <div className={`h-16 bg-gradient-to-br ${gradients[i % gradients.length]}`} />
+                        <div className="p-4 -mt-8">
+                          {mentor.avatar_url ? (
+                            <img src={mentor.avatar_url} alt={mentor.full_name} className="w-14 h-14 rounded-full border-3 border-white object-cover shadow-md mb-3" />
+                          ) : (
+                            <div className={`w-14 h-14 rounded-full border-3 border-white bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center text-white text-lg font-bold shadow-md mb-3`}>
+                              {mentor.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                            </div>
+                          )}
+                          <h3 className="font-bold text-slate-900 text-sm leading-tight">{mentor.full_name}</h3>
+                          <p className="text-xs text-purple-600 font-medium mt-0.5 truncate">{mentor.specialization_board || 'Mentor'}</p>
+                          <div className="flex items-center gap-1 mt-1 mb-3">
+                            <span className="text-amber-400 text-xs">★</span>
+                            <span className="text-xs font-semibold text-slate-700">{ratings[i % ratings.length]}</span>
+                          </div>
+                          <Link href={`/dashboard/student/messages?userId=${mentor.id}`} className="block w-full text-center py-1.5 px-3 bg-purple-600 text-white text-xs font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                            Connect
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-slate-400">
+                    <div className="text-4xl mb-3">👨‍🏫</div>
+                    <p className="font-medium">No mentors at your university yet</p>
+                    <p className="text-sm mt-1">Check back soon</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Recent Messages */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-slate-900">Recent Messages</h2>
+                  <Link href="/dashboard/student/messages" className="text-sm font-semibold text-purple-600 hover:text-purple-700">
+                    View all →
+                  </Link>
+                </div>
+                {conversations.length > 0 ? (
+                  <div className="space-y-3">
+                    {conversations.map((conv: any) => (
+                      <Link key={conv.id} href={`/dashboard/student/messages?userId=${conv.user?.id}`}
+                        className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                        <div className="relative flex-shrink-0">
+                          {conv.user?.avatar_url ? (
+                            <img src={conv.user.avatar_url} alt={conv.user.full_name} className="w-11 h-11 rounded-full object-cover" />
+                          ) : (
+                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                              {conv.user?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
+                            </div>
+                          )}
+                          {conv.unread && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-purple-500 rounded-full border-2 border-white" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 text-sm truncate group-hover:text-purple-700 transition-colors">{conv.user?.full_name}</p>
+                          <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                        </div>
+                        <span className="text-xs text-slate-400 flex-shrink-0">{conv.time}</span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-10 text-slate-400">
+                    <div className="text-4xl mb-3">💬</div>
+                    <p className="font-medium">No messages yet</p>
+                    <p className="text-sm mt-1">Connect with a mentor to get started</p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-              {displayMentors && displayMentors.length > 0 ? (
-                displayMentors.map((mentor: any) => {
-                  const rating = (Math.random() * 1.3 + 3.7).toFixed(1); // Generate realistic rating 3.7-5.0
-                  const expertise = mentor.specialization_board || 'General Mentorship';
-                  
-                  return (
-                    <div key={mentor.id} className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                      {/* Header with gradient */}
-                      <div className={`h-24 bg-gradient-to-br ${
-                        ['from-blue-400 to-cyan-300', 'from-yellow-300 to-orange-300', 'from-purple-400 to-pink-300'][Math.floor(Math.random() * 3)]
-                      }`}></div>
-                      
-                      {/* Profile Image */}
-                      <div className="relative -mt-12 flex flex-col items-center px-6">
-                        {mentor.avatar_url ? (
-                          <img 
-                            src={mentor.avatar_url} 
-                            alt={mentor.full_name}
-                            className="w-20 h-20 rounded-full border-4 border-white object-cover shadow-lg"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 rounded-full border-4 border-white bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                            {mentor.full_name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || '?'}
-                          </div>
-                        )}
-                        
-                        {/* Rating Badge */}
-                        <div className="flex items-center gap-1 mt-2 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                          <span className="text-sm font-bold text-slate-900">{rating}</span>
-                          <svg className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                        </div>
+            {/* ── Right Column (1/3) ── */}
+            <div className="space-y-6">
+              <RealCalendar userId={user.id} />
 
-                        {/* Name and Title */}
-                        <h3 className="text-lg font-bold text-slate-900 mt-2 text-center">{mentor.full_name}</h3>
-                        <p className="text-sm text-blue-600 font-medium">{expertise}</p>
+              {/* Quick Links */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Quick Access</h3>
+                <nav className="space-y-2">
+                  {[
+                    { href: '/dashboard/student/courses', icon: '📚', label: 'My Courses' },
+                    { href: '/dashboard/student/communities', icon: '👥', label: 'Communities' },
+                    { href: '/dashboard/student/tests', icon: '📝', label: 'Tests & Quizzes' },
+                    { href: '/dashboard/student/sessions', icon: '🎥', label: 'Live Sessions' },
+                    { href: '/dashboard/student/roadmap', icon: '🗺️', label: 'Learning Roadmap' },
+                  ].map((item) => (
+                    <Link key={item.href} href={item.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-all text-sm font-medium group">
+                      <span className="text-base">{item.icon}</span>
+                      {item.label}
+                      <span className="ml-auto text-slate-300 group-hover:text-purple-400">→</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
 
-                        {/* Expertise Tags */}
-                        <p className="text-xs text-slate-600 text-center mt-2 px-4 line-clamp-2">
-                          Expertise: skill building, career/path guidance, job placement
-                        </p>
-
-                        {/* Book Session Button */}
-                        <button className="w-full mt-4 mb-4 px-4 py-2.5 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
-                          Book Session
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="col-span-full text-center py-12">
-                  <p className="text-slate-500">No mentors available at the moment</p>
+              {/* Profile Card */}
+              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-sm">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-lg font-bold shadow-lg">
+                    {firstName[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-bold">{profile.full_name}</p>
+                    <p className="text-slate-400 text-xs">{profile.specialization_board || 'Student'}</p>
+                  </div>
                 </div>
-              )}
+                <p className="text-slate-400 text-xs leading-relaxed">{universityName}</p>
+                <Link href="/dashboard/student/profile" className="mt-4 block text-center py-2 px-4 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl transition-colors border border-white/10">
+                  Edit Profile
+                </Link>
+              </div>
             </div>
           </div>
         </main>

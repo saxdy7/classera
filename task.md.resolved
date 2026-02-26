@@ -1,0 +1,34 @@
+# TradeZen — New Features Task
+
+## 1. Coin Screener Page (`/screener`)
+- [ ] Create `src/app/(dashboard)/screener/page.tsx`
+- [ ] Filter by: % change, volume, market cap, price
+- [ ] Sort columns ascending/descending
+- [ ] Add to Sidebar nav
+
+## 2. Browser Push Notifications for Alerts
+- [ ] Add `requestPermission()` on alerts page load
+- [ ] Use `Notification` API when WebSocket price hits alert target
+- [ ] Update [useAlerts](file:///d:/AI%20project/tradezen/src/hooks/useAlerts.ts#7-106) hook to trigger browser notification
+
+## 3. Persist AI Chat History in Supabase
+- [ ] Create `chat_messages` table (migration SQL)
+- [ ] Update mentor page to load/save messages to Supabase
+- [ ] Add "Clear chat" button
+
+## 4. Portfolio CSV Export
+- [ ] Add export button to portfolio page
+- [ ] Generate CSV from holdings (symbol, amount, buy_price, current_price, P&L)
+- [ ] Trigger browser download
+
+## 5. DCA Calculator  
+- [ ] Create `src/components/portfolio/DCACalculator.tsx`
+- [ ] Inputs: coin, weekly amount, start date
+- [ ] Output: total invested, current value, ROI%
+- [ ] Add to portfolio page
+
+## 6. Landing Page (`/`)
+- [ ] Create `src/app/(landing)/page.tsx`
+- [ ] Hero section with CTA
+- [ ] Features section
+- [ ] Update routing so `/` → landing, `/dashboard` → app

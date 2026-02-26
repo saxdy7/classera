@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { deepseek, groq } from '@/lib/deepseek';
 
 // POST /api/ai/generate-course - Generate structured course content with AI
 export async function POST(request: NextRequest) {
     try {
+        // Auth guard
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+
         const body = await request.json();
         const { topic, difficulty = 'beginner', target_audience } = body;
 

@@ -62,29 +62,13 @@ export default function MentorOnboarding() {
     setError('');
 
     try {
-      // Get user from session (more reliable than getUser)
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (sessionError) {
-        console.error('Session error:', sessionError);
-        throw new Error('Authentication error. Please try signing in again.');
-      }
-
-      if (!session || !session.user) {
-        console.error('No active session');
-        throw new Error('No active session. Please sign in again.');
-      }
-
-      const user = session.user;
-      console.log('User found:', user.id);
-
-      // Update profile using API route (bypasses RLS)
       const response = await fetch('/api/auth/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           full_name: formData.full_name,
           university_id: formData.university_id || null,
+          university_name: formData.university || null, // API auto-creates university if needed
           expertise: formData.expertise ? formData.expertise.split(',').map(s => s.trim()).filter(s => s) : [],
           years_of_experience: formData.years_of_experience ? parseInt(formData.years_of_experience) : null,
           linkedin_url: formData.linkedin_url || null,
@@ -96,19 +80,12 @@ export default function MentorOnboarding() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('Profile update failed:', data);
         throw new Error(data.error || 'Failed to update profile');
       }
 
-      console.log('Profile updated successfully');
-
-      // Wait a bit for the database to propagate
       await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Redirect to dashboard
       window.location.href = '/dashboard/mentor';
     } catch (err: unknown) {
-      console.error('Onboarding error:', err);
       setError((err as Error)?.message || 'Failed to complete onboarding');
       setLoading(false);
     }

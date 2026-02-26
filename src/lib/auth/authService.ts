@@ -4,6 +4,7 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
+import { createHash } from 'crypto';
 import {
   AuthResult,
   CreateProfileRequest,
@@ -29,14 +30,14 @@ const RETRY_DELAY = 1000;
 /**
  * Wait for specified milliseconds
  */
-const delay = (ms: number): Promise<void> => 
+const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Generate Gravatar URL for email
+ * Generate Gravatar URL for email using proper MD5 hash
  */
 const getGravatarUrl = (email: string): string => {
-  const hash = Buffer.from(email.toLowerCase()).toString('hex');
+  const hash = createHash('md5').update(email.toLowerCase().trim()).digest('hex');
   return `https://www.gravatar.com/avatar/${hash}?d=identicon`;
 };
 
@@ -111,8 +112,8 @@ export async function isProfileComplete(
     if (error || !profile) return false;
 
     return Boolean(
-      profile.full_name && 
-      profile.full_name.trim() !== '' && 
+      profile.full_name &&
+      profile.full_name.trim() !== '' &&
       profile.university_id
     );
   } catch {
@@ -154,11 +155,11 @@ export async function signInWithEmail(
 
     // Check profile completeness
     const isComplete = await isProfileComplete(supabase, data.user.id);
-    
+
     return {
       success: true,
-      redirectTo: isComplete 
-        ? `/dashboard/${role}` 
+      redirectTo: isComplete
+        ? `/dashboard/${role}`
         : `/onboarding/${role}`,
     };
   } catch (error) {
@@ -204,8 +205,6 @@ export async function signUpWithEmail(
       };
     }
 
-    console.log('✅ Auth user created:', authData.user.id);
-
     // Wait for auth user to propagate
     await delay(PROFILE_CREATION_DELAY);
 
@@ -222,14 +221,11 @@ export async function signUpWithEmail(
     );
 
     if (!profileResult.success) {
-      console.error('❌ Profile creation failed:', profileResult.error);
+      console.error('Profile creation failed during sign-up:', profileResult.error);
       // Still redirect to onboarding - they can complete profile there
-    } else {
-      console.log('✅ Profile created successfully');
     }
 
     // Always redirect to onboarding after successful signup
-    // Note: If email confirmation is enabled in Supabase, user will need to verify first
     return {
       success: true,
       redirectTo: `/onboarding/${role}`,

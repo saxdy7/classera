@@ -110,7 +110,6 @@ export function useNotifications(userId: string) {
         fetchNotifications();
 
         const topic = `notifications:${userId}`;
-        console.log('🔔 Subscribing to notifications topic:', topic);
 
         // Subscribe to broadcast events for notifications
         const channel: RealtimeChannel = supabase
@@ -124,11 +123,8 @@ export function useNotifications(userId: string) {
                 {
                     event: 'INSERT',
                 },
-                (payload) => {
-                    console.log('🔔 New notification received:', payload);
+                () => {
                     fetchNotifications(); // Refetch to get complete data
-
-                    // Play notification sound (optional)
                     playNotificationSound();
                 }
             )
@@ -137,8 +133,7 @@ export function useNotifications(userId: string) {
                 {
                     event: 'UPDATE',
                 },
-                (payload) => {
-                    console.log('🔔 Notification updated:', payload);
+                () => {
                     fetchNotifications();
                 }
             )
@@ -147,14 +142,11 @@ export function useNotifications(userId: string) {
                 {
                     event: 'DELETE',
                 },
-                (payload) => {
-                    console.log('🔔 Notification deleted:', payload);
+                () => {
                     fetchNotifications();
                 }
             )
-            .subscribe((status) => {
-                console.log('Notification subscription status:', status);
-            });
+            .subscribe();
 
         return () => {
             supabase.removeChannel(channel);

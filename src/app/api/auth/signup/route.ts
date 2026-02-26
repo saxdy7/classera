@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
+import { createHash } from 'crypto';
 
 /**
  * User Profile Creation API
@@ -54,7 +55,6 @@ export async function POST(request: NextRequest) {
             .single();
 
         if (existingProfile) {
-            console.log('Profile already exists for user:', user_id);
             return NextResponse.json({
                 success: true,
                 message: 'Profile already exists',
@@ -76,11 +76,10 @@ export async function POST(request: NextRequest) {
                 500 // Start with 500ms, doubles each time
             );
             authUser = result;
-            console.log('✅ Auth user verified:', user_id);
         } catch (authCheckError) {
-            console.error('❌ Auth user not found after retries:', authCheckError);
+            console.error('Auth user not found after retries:', authCheckError);
             return NextResponse.json(
-                { 
+                {
                     error: 'User not found in authentication system. Please try again or contact support.',
                     code: 'AUTH_USER_NOT_FOUND'
                 },
@@ -88,8 +87,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Generate avatar URL
-        const avatarUrl = `https://www.gravatar.com/avatar/${Buffer.from(email.toLowerCase()).toString('hex')}?d=identicon`;
+        // Generate avatar URL using proper MD5 hash for Gravatar
+        const avatarHash = createHash('md5').update(email.toLowerCase().trim()).digest('hex');
+        const avatarUrl = `https://www.gravatar.com/avatar/${avatarHash}?d=identicon`;
 
         // Create profile
         const { error: profileError } = await supabaseAdmin
@@ -107,25 +107,21 @@ export async function POST(request: NextRequest) {
         if (profileError) {
             // Handle duplicate key errors gracefully
             if (profileError.code === '23505' || profileError.message.includes('duplicate key')) {
-                console.log('Profile already exists (duplicate key):', user_id);
                 return NextResponse.json({
                     success: true,
                     message: 'Profile already exists',
                 });
             }
 
-            // For other errors, return error
-            console.error('❌ Profile creation error:', profileError);
+            console.error('Profile creation error:', profileError);
             return NextResponse.json(
-                { 
+                {
                     error: 'Failed to create user profile: ' + profileError.message,
                     code: 'PROFILE_CREATION_FAILED'
                 },
                 { status: 500 }
             );
         }
-
-        console.log('✅ Profile created successfully:', user_id);
 
         return NextResponse.json({
             success: true,
@@ -141,9 +137,9 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        console.error('❌ Unexpected profile creation error:', error);
+        console.error('Unexpected profile creation error:', error);
         return NextResponse.json(
-            { 
+            {
                 error: error.message || 'Failed to create profile',
                 code: 'UNEXPECTED_ERROR'
             },

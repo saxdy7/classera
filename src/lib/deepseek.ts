@@ -16,3 +16,8 @@ export const deepseek = new OpenAI({
     apiKey: deepSeekApiKey || 'dummy-key',
     dangerouslyAllowBrowser: false
 });
+
+// Convenience factory — some routes destructure both clients via getAIClients()
+export function getAIClients() {
+    return { deepseek, groq };
+}

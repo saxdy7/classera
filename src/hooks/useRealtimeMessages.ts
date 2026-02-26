@@ -6,18 +6,12 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 
 interface Message {
     id: string;
+    conversation_id: string;
     sender_id: string;
-    receiver_id: string;
     content: string;
-    read: boolean;
+    read_by: string[];
     created_at: string;
     sender?: {
-        id: string;
-        full_name: string;
-        avatar_url?: string;
-        role: string;
-    };
-    receiver?: {
         id: string;
         full_name: string;
         avatar_url?: string;
@@ -53,8 +47,6 @@ export function useRealtimeMessages(currentUserId: string, otherUserId: string) 
         const user2 = currentUserId < otherUserId ? otherUserId : currentUserId;
         const topic = `dm:${user1}:${user2}:messages`;
 
-        console.log('📡 Subscribing to realtime topic:', topic);
-
         // Subscribe to broadcast events on this topic
         const channel: RealtimeChannel = supabase
             .channel(topic, {
@@ -67,8 +59,7 @@ export function useRealtimeMessages(currentUserId: string, otherUserId: string) 
                 {
                     event: 'INSERT',
                 },
-                (payload) => {
-                    console.log('✅ New message broadcast received:', payload);
+                () => {
                     fetchMessages(); // Refetch to get complete data with joins
                 }
             )
@@ -77,14 +68,11 @@ export function useRealtimeMessages(currentUserId: string, otherUserId: string) 
                 {
                     event: 'UPDATE',
                 },
-                (payload) => {
-                    console.log('📝 Message updated:', payload);
+                () => {
                     fetchMessages();
                 }
             )
-            .subscribe((status) => {
-                // Subscription status handled
-            });
+            .subscribe();
 
         return () => {
             supabase.removeChannel(channel);

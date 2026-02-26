@@ -26,7 +26,6 @@ export function usePresence(userId: string) {
         fetchPresence();
 
         const topic = `presence:${userId}`;
-        console.log('👤 Subscribing to presence topic:', topic);
 
         // Subscribe to broadcast events for presence changes
         const channel = supabase
@@ -41,7 +40,6 @@ export function usePresence(userId: string) {
                     event: 'INSERT',
                 },
                 (payload: any) => {
-                    console.log('👤 Presence INSERT:', payload);
                     if (payload.payload?.new) {
                         setIsOnline(payload.payload.new.status === 'online');
                         setLastSeen(payload.payload.new.last_seen);
@@ -54,16 +52,13 @@ export function usePresence(userId: string) {
                     event: 'UPDATE',
                 },
                 (payload: any) => {
-                    console.log('👤 Presence UPDATE:', payload);
                     if (payload.payload?.new) {
                         setIsOnline(payload.payload.new.status === 'online');
                         setLastSeen(payload.payload.new.last_seen);
                     }
                 }
             )
-            .subscribe((status) => {
-                // Subscription status handled
-            });
+            .subscribe();
 
         return () => {
             supabase.removeChannel(channel);

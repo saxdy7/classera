@@ -29,32 +29,27 @@ export async function GET(request: Request) {
 
   // Validate role
   if (role !== 'student' && role !== 'mentor') {
-    console.error('Invalid role:', role);
     return NextResponse.redirect(`${origin}/signin?error=invalid_role`);
   }
 
   if (!code) {
-    console.error('No authorization code provided');
     return NextResponse.redirect(`${origin}/signin?error=no_code`);
   }
 
   try {
     const supabase = await createClient();
-    
+
     // Exchange code for session
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
-      console.error('Failed to exchange code for session:', error);
+      console.error('Failed to exchange code for session:', error.message);
       return NextResponse.redirect(`${origin}/signin?error=auth_failed`);
     }
 
     if (!data.user) {
-      console.error('No user data after session exchange');
       return NextResponse.redirect(`${origin}/signin?error=no_user`);
     }
-
-    console.log('✅ OAuth session created for user:', data.user.id);
 
     // Check if profile exists with retry logic
     const profile = await retryWithBackoff(
@@ -78,15 +73,13 @@ export async function GET(request: Request) {
 
     // If no profile exists, create one
     if (!profile) {
-      console.log('No profile found, creating new profile...');
-
       const profileData = {
         user_id: data.user.id,
         email: data.user.email || '',
-        full_name: data.user.user_metadata?.full_name || 
-                   data.user.user_metadata?.name || 
-                   data.user.email?.split('@')[0] || 
-                   'User',
+        full_name: data.user.user_metadata?.full_name ||
+          data.user.user_metadata?.name ||
+          data.user.email?.split('@')[0] ||
+          'User',
         role: role as 'student' | 'mentor',
       };
 
@@ -98,36 +91,30 @@ export async function GET(request: Request) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Failed to create profile in callback:', errorData);
-        
+        console.error('Failed to create profile in OAuth callback:', errorData);
         // Still redirect to onboarding - user can complete profile there
         return NextResponse.redirect(`${origin}/onboarding/${role}?error=profile_creation_failed`);
       }
 
-      console.log('✅ Profile created successfully');
-      
       // New user - always go to onboarding
       return NextResponse.redirect(`${origin}/onboarding/${role}`);
     }
 
     // Profile exists - check completeness
-    const isComplete = profile.full_name && 
-                      profile.full_name.trim() !== '' && 
-                      profile.university_id;
+    const isComplete = profile.full_name &&
+      profile.full_name.trim() !== '' &&
+      profile.university_id;
 
     if (!isComplete) {
-      console.log('Profile incomplete, redirecting to onboarding');
       return NextResponse.redirect(`${origin}/onboarding/${role}`);
     }
 
     // Verify role matches
     if (profile.role !== role) {
-      console.warn(`Role mismatch: profile role is ${profile.role}, requested role is ${role}`);
       // Redirect to the correct dashboard based on profile role
       return NextResponse.redirect(`${origin}/dashboard/${profile.role}`);
     }
 
-    console.log('✅ Profile complete, redirecting to dashboard');
     return NextResponse.redirect(`${origin}/dashboard/${role}`);
 
   } catch (error) {

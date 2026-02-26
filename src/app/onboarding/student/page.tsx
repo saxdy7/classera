@@ -8,7 +8,6 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UniversitySearch } from '@/components/ui/UniversitySearch';
 import { FieldOfStudySearch } from '@/components/ui/FieldOfStudySearch';
 import { YearDropdown } from '@/components/ui/year-dropdown';
-import { getGravatarUrlClient } from '@/lib/utils/gravatar';
 import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft } from 'lucide-react';
 
 const TOTAL_STEPS = 4;
@@ -33,7 +32,6 @@ export default function StudentOnboarding() {
   });
 
   const handleNext = () => {
-    // Validation for each step
     if (currentStep === 1 && !formData.full_name) {
       setError('Please enter your full name');
       return;
@@ -65,29 +63,13 @@ export default function StudentOnboarding() {
     setError('');
 
     try {
-      // Get user from session (more reliable than getUser)
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-      if (sessionError) {
-        console.error('Session error:', sessionError);
-        throw new Error('Authentication error. Please try signing in again.');
-      }
-
-      if (!session || !session.user) {
-        console.error('No active session');
-        throw new Error('No active session. Please sign in again.');
-      }
-
-      const user = session.user;
-      console.log('User found:', user.id);
-
-      // Update profile using API route (bypasses RLS)
       const response = await fetch('/api/auth/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           full_name: formData.full_name,
           university_id: formData.university_id || null,
+          university_name: formData.university || null, // API auto-creates university if needed
           degree_type: formData.degree_type || null,
           specialization_board: formData.specialization_board || null,
           current_semester: formData.current_semester ? parseInt(formData.current_semester) : null,
@@ -100,24 +82,13 @@ export default function StudentOnboarding() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('Profile update failed:', data);
         throw new Error(data.error || 'Failed to update profile');
       }
 
-      console.log('✅ Profile updated successfully');
-
-      // Clear any cached data
       await supabase.auth.refreshSession();
-
-      // Wait for database to propagate and cache to clear
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      console.log('🔄 Redirecting to dashboard...');
-
-      // Force a hard redirect to bypass any caching
+      await new Promise(resolve => setTimeout(resolve, 1000));
       window.location.href = '/dashboard/student';
     } catch (err: unknown) {
-      console.error('Onboarding error:', err);
       setError((err as Error)?.message || 'Failed to complete onboarding');
       setLoading(false);
     }
