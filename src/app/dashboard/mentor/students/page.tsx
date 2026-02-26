@@ -36,25 +36,6 @@ export default async function Students() {
     .eq('university_id', profile.university_id)
     .order('full_name');
 
-  // Get pending connection requests for this mentor
-  const { data: pendingRequests } = await supabase
-    .from('connection_requests')
-    .select(`
-      *,
-      student:users!connection_requests_student_id_fkey(
-        id,
-        full_name,
-        email,
-        avatar_url,
-        degree_type,
-        specialization_board,
-        universities(name)
-      )
-    `)
-    .eq('mentor_id', user.id)
-    .eq('status', 'pending')
-    .order('created_at', { ascending: false });
-
   return (
     <div className="min-h-screen bg-white">
       <Header profile={profile} />
@@ -90,7 +71,7 @@ export default async function Students() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="hidden lg:block flex-shrink-0">
                   <img
                     src="https://illustrations.popsy.co/amber/customer-support.svg"
@@ -130,7 +111,7 @@ export default async function Students() {
                     {students?.length || 0}
                   </span>
                 </div>
-                
+
                 {students && students.length > 0 ? (
                   <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent">
                     {students.map((student, index) => {
@@ -143,7 +124,7 @@ export default async function Students() {
                         { top: 'bg-gray-50', badge: 'bg-gray-100 border-gray-200 text-gray-700', accent: '#9CA3AF' },
                       ];
                       const colorScheme = cardColors[index % cardColors.length];
-                      
+
                       return (
                         <div
                           key={student.id}
@@ -158,7 +139,7 @@ export default async function Students() {
                               </svg>
                               <div className="absolute bottom-2 left-2 w-6 h-6 border-2 rounded-full" style={{ borderColor: colorScheme.accent }}></div>
                             </div>
-                            
+
                             <div className="flex items-center gap-3 relative z-10">
                               {student.avatar_url ? (
                                 <Image
@@ -173,7 +154,7 @@ export default async function Students() {
                                   {student.full_name.charAt(0).toUpperCase()}
                                 </div>
                               )}
-                              
+
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-bold text-slate-900 truncate text-base">
                                   {student.full_name}
@@ -198,7 +179,7 @@ export default async function Students() {
                             <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
                               <div className="absolute top-2 right-4 w-4 h-4 border-2 border-gray-200 rotate-45"></div>
                             </div>
-                            
+
                             <div className="flex items-center justify-between relative z-10">
                               <div className="flex flex-col gap-1">
                                 {student.degree_type && (
