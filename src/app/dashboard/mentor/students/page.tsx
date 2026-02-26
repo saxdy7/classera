@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { ConnectionRequests } from '@/components/mentor/ConnectionRequests';
+
 import Link from 'next/link';
 
 export default async function Students() {
@@ -65,10 +65,7 @@ export default async function Students() {
                       <span className="text-2xl font-bold text-indigo-600">{students?.length || 0}</span>
                       <span className="text-xs text-slate-600 ml-2">Total Students</span>
                     </div>
-                    <div className="px-4 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-100">
-                      <span className="text-2xl font-bold text-purple-600">{pendingRequests?.length || 0}</span>
-                      <span className="text-xs text-slate-600 ml-2">Pending Requests</span>
-                    </div>
+
                   </div>
                 </div>
 
@@ -218,7 +215,7 @@ export default async function Students() {
                 )}
               </div>
 
-              {/* Right Side - Pending Requests */}
+              {/* Right Side - Community join requests (coming soon) */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
@@ -227,13 +224,12 @@ export default async function Students() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-slate-900">Connection Requests</h2>
-                  {(pendingRequests?.length || 0) > 0 && (
-                    <span className="ml-auto px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold animate-pulse">
-                      {pendingRequests?.length}
-                    </span>
-                  )}
                 </div>
-                <ConnectionRequests requests={pendingRequests || []} />
+                <div className="bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl p-8 text-center border border-slate-200">
+                  <div className="text-3xl mb-3">🔔</div>
+                  <p className="font-semibold text-slate-900 mb-1">No pending requests</p>
+                  <p className="text-sm text-slate-500">Students can connect with you via Communities</p>
+                </div>
               </div>
             </div>
           </div>
