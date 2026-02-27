@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, Plus, ImageIcon, Mic, ChevronRight } from 'lucide-react';
+import { Sparkles, Send, Plus, RotateCcw, Bot } from 'lucide-react';
 import { MarkdownMessage } from '@/components/shared/MarkdownMessage';
 
 interface Message {
@@ -11,293 +11,219 @@ interface Message {
   timestamp: Date;
 }
 
-interface AIChatInterfaceProps {
-  userName: string;
-}
+const QUICK_PROMPTS = [
+  { icon: '💡', text: 'Explain a concept to me' },
+  { icon: '🧮', text: 'Help me solve a problem step by step' },
+  { icon: '💻', text: 'Review and explain this code' },
+  { icon: '📝', text: 'Summarize this topic' },
+];
 
-export function AIChatInterface({ userName }: AIChatInterfaceProps) {
+export function AIChatInterface({ userName }: { userName: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  // Auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 160) + 'px';
+    }
+  }, [input]);
 
-    const userMessage: Message = {
+  const sendMessage = async (text?: string) => {
+    const content = (text ?? input).trim();
+    if (!content || loading) return;
+
+    const userMsg: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input,
+      content,
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const aiId = (Date.now() + 1).toString();
+    setMessages(prev => [...prev, userMsg, { id: aiId, role: 'assistant', content: '', timestamp: new Date() }]);
     setInput('');
     setLoading(true);
 
     try {
-      // Create a placeholer for the assistant's reply
-      const assistantMessageId = (Date.now() + 1).toString();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: assistantMessageId,
-          role: 'assistant',
-          content: '',
-          timestamp: new Date(),
-        },
-      ]);
-
-      const history = messages.map(m => ({
-        role: m.role,
-        content: m.content
-      }));
-
-      const response = await fetch('/api/ai/chat', {
+      const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...history, { role: 'user', content: userMessage.content }]
+          messages: [...messages.map(m => ({ role: m.role, content: m.content })), { role: 'user', content }],
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `API Error: ${response.status}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Error ${res.status}`);
       }
 
-      const reader = response.body?.getReader();
+      const reader = res.body?.getReader();
       const decoder = new TextDecoder();
-
       if (reader) {
-        let accumulatedText = '';
-
+        let accumulated = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-
-          const text = decoder.decode(value, { stream: true });
-          accumulatedText += text;
-
-          setMessages((prev) =>
-            prev.map(msg =>
-              msg.id === assistantMessageId
-                ? { ...msg, content: accumulatedText }
-                : msg
-            )
-          );
+          accumulated += decoder.decode(value, { stream: true });
+          setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: accumulated } : m));
         }
       }
-
-    } catch (error: any) {
-      console.error('Error sending message:', error);
-      setMessages((prev) => {
-        // Remove potential empty placeholder
-        const newHistory = prev.filter(msg => msg.id !== (Date.now() + 1).toString());
-
-        return [...newHistory, {
-          id: (Date.now() + 2).toString(),
-          role: 'assistant',
-          content: `Error: ${error.message || 'Something went wrong. Please try again.'}`,
-          timestamp: new Date(),
-        }];
-      });
+    } catch (err: any) {
+      setMessages(prev => prev.map(m =>
+        m.id === aiId ? { ...m, content: `Sorry, something went wrong: ${err.message}` } : m
+      ));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
   };
 
-  const quickPrompts = [
-    { emoji: '💻', title: 'Code Help', desc: 'Explain this code snippet' },
-    { emoji: '🔍', title: 'Compare', desc: 'Differences between concepts' },
-    { emoji: '🧮', title: 'Solve', desc: 'Step-by-step problem solving' },
-    { emoji: '📖', title: 'Learn', desc: 'Understand a new topic' },
-  ];
+  const clearChat = () => setMessages([]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
-      {/* Left Sidebar - Chat History */}
-      <div className="lg:col-span-1 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-lg p-4 overflow-hidden flex flex-col max-h-[calc(100vh-120px)]">
-        <div className="mb-4">
+    <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-white">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-sm">
+            <Bot className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-slate-900">AI Learning Assistant</h2>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-xs text-slate-400">Powered by Groq</span>
+            </div>
+          </div>
+        </div>
+        {messages.length > 0 && (
           <button
-            onClick={() => setMessages([])}
-            className="w-full px-4 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            onClick={clearChat}
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-50"
           >
-            <Plus className="w-5 h-5" />
-            New Chat
+            <RotateCcw className="w-3.5 h-3.5" /> Clear
           </button>
-        </div>
-
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-600">
-          <Sparkles className="w-4 h-4" />
-          Current Session
-        </div>
-
-        <div className="flex-1 overflow-y-auto space-y-2">
-          {messages.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 text-sm">
-              No messages yet. Start chatting!
-            </div>
-          ) : (
-            <div className="p-3 rounded-xl bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-fuchsia-100">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-slate-900 truncate">Active Chat</span>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </div>
-              <p className="text-xs text-slate-500 truncate">{messages.length} messages</p>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* Main Chat Area */}
-      <div className="lg:col-span-3 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/50 shadow-lg overflow-hidden flex flex-col max-h-[calc(100vh-120px)]">
-        {/* Chat Header */}
-        <div className="px-6 py-4 border-b border-slate-200/50 bg-gradient-to-r from-fuchsia-500/5 to-purple-500/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-500 rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+      {/* ── Messages ── */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+
+        {messages.length === 0 ? (
+          /* Empty / Welcome state */
+          <div className="flex flex-col items-center justify-center h-full text-center max-w-lg mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-violet-600" />
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">AI Learning Assistant</h3>
-              <p className="text-xs text-slate-500">Always here to help you learn</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-1">Hey {userName} 👋</h3>
+            <p className="text-slate-500 text-sm mb-8">
+              I'm your AI study companion. Ask me anything — concepts, code, problems, summaries.
+            </p>
+            <div className="grid grid-cols-2 gap-2 w-full">
+              {QUICK_PROMPTS.map((p, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(p.text)}
+                  className="text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-violet-300 hover:bg-violet-50 transition-all text-sm text-slate-700 group"
+                >
+                  <span className="mr-2">{p.icon}</span>
+                  {p.text}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-
-        {/* Chat Messages */}
-        <div className="flex-1 p-6 overflow-y-auto">
-          {messages.length === 0 ? (
-            /* Welcome Message */
-            <div className="flex gap-4 mb-6 animate-fade-in">
-              <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 max-w-2xl">
-                <div className="bg-gradient-to-r from-fuchsia-50 to-purple-50 rounded-2xl rounded-tl-none p-5 border border-fuchsia-100">
-                  <p className="text-slate-900 font-medium mb-3">
-                    👋 Hello {userName}! I&rsquo;m your AI learning companion.
-                  </p>
-                  <p className="text-slate-700 mb-4">
-                    I can help you with studying, explaining concepts, solving problems, and much more. What would you like to learn today?
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 mt-4">
-                    {quickPrompts.map((prompt, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setInput(`Help me with ${prompt.desc.toLowerCase()}`)}
-                        className="p-3 bg-white/80 rounded-xl text-left hover:bg-white hover:shadow-md transition-all border border-slate-100"
-                      >
-                        <div className="text-xs font-semibold text-fuchsia-600 mb-1">
-                          {prompt.emoji} {prompt.title}
-                        </div>
-                        <div className="text-xs text-slate-600">{prompt.desc}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-xs text-slate-400 mt-2 ml-1">Just now</p>
-              </div>
-            </div>
-          ) : (
-            /* Chat Messages */
-            <>
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex gap-4 mb-6 ${msg.role === 'user' ? 'justify-end' : ''}`}>
-                  {msg.role === 'assistant' && (
-                    <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                  )}
-                  <div className={`flex-1 max-w-2xl ${msg.role === 'user' ? 'flex justify-end' : ''}`}>
-                    <div
-                      className={`p-4 rounded-2xl ${msg.role === 'user'
-                        ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-tr-none'
-                        : 'bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-fuchsia-100 rounded-tl-none'
-                        }`}
-                    >
-                      <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
-                    </div>
-                    <p className="text-xs text-slate-400 mt-2 ml-1">
-                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                  {msg.role === 'user' && (
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold">
-                      {userName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {loading && (
-                <div className="flex gap-4 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-white animate-pulse" />
-                  </div>
-                  <div className="flex-1 max-w-2xl">
-                    <div className="bg-gradient-to-r from-fuchsia-50 to-purple-50 rounded-2xl rounded-tl-none p-4 border border-fuchsia-100">
-                      <div className="flex gap-2">
-                        <div className="w-2 h-2 bg-fuchsia-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                        <div className="w-2 h-2 bg-fuchsia-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                      </div>
-                    </div>
-                  </div>
+        ) : (
+          messages.map(msg => (
+            <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {msg.role === 'assistant' && (
+                <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                  <Bot className="w-4 h-4 text-white" />
                 </div>
               )}
-              <div ref={messagesEndRef} />
-            </>
-          )}
-        </div>
+              <div className={`max-w-[75%] ${msg.role === 'user' ? 'order-first' : ''}`}>
+                <div
+                  className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                      ? 'bg-violet-600 text-white rounded-br-sm'
+                      : 'bg-slate-50 border border-slate-200 text-slate-800 rounded-bl-sm'
+                    }`}
+                >
+                  {msg.content === '' && msg.role === 'assistant' ? (
+                    <div className="flex gap-1 py-1">
+                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  ) : (
+                    <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
+                  )}
+                </div>
+                <p className={`text-[10px] text-slate-400 mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+              {msg.role === 'user' && (
+                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold shadow-sm">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+          ))
+        )}
+        <div ref={bottomRef} />
+      </div>
 
-        {/* Input Area */}
-        <div className="p-4 border-t border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-purple-50/50">
-          <div className="flex gap-2 mb-3">
-            <button className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
-              <ImageIcon className="w-5 h-5 text-slate-600" />
-            </button>
-            <button className="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
-              <Mic className="w-5 h-5 text-slate-600" />
-            </button>
-          </div>
-          <div className="flex gap-3">
-            <input
-              type="text"
+      {/* ── Input ── */}
+      <div className="border-t border-slate-100 bg-white px-4 py-3">
+        {messages.length === 0 && (
+          <p className="text-xs text-slate-400 mb-2 text-center">Press Enter to send · Shift+Enter for new line</p>
+        )}
+        <div className="flex items-end gap-2">
+          <button
+            onClick={clearChat}
+            title="New chat"
+            className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors text-slate-500 flex-shrink-0 mb-0.5"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          <div className="flex-1 relative">
+            <textarea
+              ref={inputRef}
+              rows={1}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask me anything about your studies..."
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKey}
+              placeholder="Ask anything about your studies..."
               disabled={loading}
-              className="flex-1 px-5 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-all text-slate-900 bg-white placeholder:text-slate-400 disabled:opacity-50"
+              className="w-full resize-none px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-400 transition-all text-slate-900 placeholder:text-slate-400 disabled:opacity-50 bg-white leading-relaxed"
+              style={{ minHeight: '44px', maxHeight: '160px' }}
             />
-            <button
-              onClick={sendMessage}
-              disabled={loading || !input.trim()}
-              className="px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="w-5 h-5" />
-              Send
-            </button>
           </div>
-          <p className="text-xs text-slate-400 mt-2 text-center">
-            AI can make mistakes. Check important info.
-          </p>
+          <button
+            onClick={() => sendMessage()}
+            disabled={loading || !input.trim()}
+            className="p-2.5 rounded-xl bg-violet-600 text-white hover:bg-violet-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 mb-0.5 shadow-sm"
+          >
+            <Send className="w-4 h-4" />
+          </button>
         </div>
+        <p className="text-[10px] text-slate-300 text-center mt-2">AI can make mistakes. Verify important information.</p>
       </div>
     </div>
   );
