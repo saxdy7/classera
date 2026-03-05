@@ -88,7 +88,7 @@ export default async function MentorNotificationsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="mb-8">

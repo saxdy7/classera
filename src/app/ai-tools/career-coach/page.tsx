@@ -1,64 +1,198 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, ArrowLeft, Sparkles, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
+import { MarkdownMessage } from '@/components/shared/MarkdownMessage';
 
-const features = [
-    { icon: '🎯', title: 'Resume Builder', desc: 'Create ATS-optimized resumes with AI suggestions' },
-    { icon: '💼', title: 'Interview Prep', desc: 'Practice with AI-powered mock interviews' },
-    { icon: '🗺️', title: 'Career Roadmap', desc: 'Get a personalized step-by-step career path' },
-    { icon: '📊', title: 'Skill Gap Analysis', desc: 'Identify skills needed for your dream role' },
-    { icon: '🔍', title: 'Job Market insights', desc: 'Real-time salary and demand data for your field' },
-    { icon: '🤝', title: 'Mentor Matching', desc: 'Get matched with mentors in your target industry' },
+interface Message {
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+}
+
+const SUGGESTIONS = [
+    'What skills do I need to become a Full Stack Developer?',
+    'How do I transition from CS student to Data Scientist?',
+    'What\'s the best path to get into AI/ML engineering?',
+    'How do I prepare for FAANG interviews?',
+    'What certifications are valuable for cloud engineering?',
+    'How do I build a strong portfolio as a backend developer?',
 ];
 
+const SYSTEM_PROMPT = `You are an expert AI Career Coach specialized for university students and early professionals. You provide:
+- Concrete, actionable career advice tailored to their background
+- Step-by-step skill development plans
+- Resume and interview tips
+- Industry insights and job market trends
+- Realistic timelines and milestones
+
+Be encouraging, specific, and practical. Format responses with clear sections using markdown. Keep answers focused and actionable (not generic). Always ask follow-up questions to personalize advice further.`;
+
 export default function CareerCoachPage() {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
+    const bottomRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.style.height = 'auto';
+            inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 120) + 'px';
+        }
+    }, [input]);
+
+    const send = async (text?: string) => {
+        const content = (text ?? input).trim();
+        if (!content || loading) return;
+
+        const userMsg: Message = { id: Date.now().toString(), role: 'user', content };
+        const aiId = (Date.now() + 1).toString();
+        setMessages(prev => [...prev, userMsg, { id: aiId, role: 'assistant', content: '' }]);
+        setInput('');
+        setLoading(true);
+
+        try {
+            const res = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [
+                        { role: 'system', content: SYSTEM_PROMPT },
+                        ...messages.map(m => ({ role: m.role, content: m.content })),
+                        { role: 'user', content }
+                    ]
+                }),
+            });
+
+            const reader = res.body?.getReader();
+            const decoder = new TextDecoder();
+            if (reader) {
+                let accumulated = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    accumulated += decoder.decode(value, { stream: true });
+                    setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: accumulated } : m));
+                }
+            }
+        } catch {
+            setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: 'Sorry, something went wrong. Please try again.' } : m));
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 flex flex-col items-center justify-center p-8">
-            <div className="max-w-3xl w-full">
-
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl text-4xl mb-6 shadow-lg shadow-indigo-200">
-                        🤖
-                    </div>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4">AI Career Coach</h1>
-                    <p className="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
-                        Your personal AI-powered career advisor. Get guidance on resumes, interviews,
-                        and skill development — all tailored to your goals.
-                    </p>
+        <div className="min-h-screen bg-slate-50 flex flex-col">
+            {/* Top bar */}
+            <header className="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
+                <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                    <ArrowLeft size={18} className="text-slate-600" />
+                </Link>
+                <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                    <Bot size={16} className="text-white" />
                 </div>
+                <div>
+                    <h1 className="text-sm font-bold text-slate-900">AI Career Coach</h1>
+                    <div className="flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span className="text-xs text-slate-400">Powered by Groq · Llama 3</span>
+                    </div>
+                </div>
+                {messages.length > 0 && (
+                    <button onClick={() => setMessages([])}
+                        className="ml-auto flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
+                        <RotateCcw size={13} /> New chat
+                    </button>
+                )}
+            </header>
 
-                {/* Feature Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
-                    {features.map((f) => (
-                        <div key={f.title} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-                            <div className="text-2xl mb-3">{f.icon}</div>
-                            <h3 className="font-bold text-slate-900 text-sm mb-1">{f.title}</h3>
-                            <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto px-4 py-6 max-w-3xl mx-auto w-full">
+                {messages.length === 0 ? (
+                    <div className="text-center pt-8 pb-12">
+                        <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/20">
+                            <Sparkles size={28} className="text-white" />
                         </div>
-                    ))}
-                </div>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">AI Career Coach</h2>
+                        <p className="text-slate-500 text-sm mb-10 max-w-md mx-auto">
+                            Get personalized career guidance, skill roadmaps, interview tips, and industry insights — all powered by AI.
+                        </p>
 
-                {/* Coming Soon Banner */}
-                <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-8 text-center text-white shadow-xl shadow-indigo-200">
-                    <div className="text-3xl mb-3">🚀</div>
-                    <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
-                    <p className="text-indigo-200 text-sm mb-6">
-                        The AI Career Coach is being built. In the meantime, use the AI Assistant
-                        or connect with a mentor for career guidance.
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-3">
-                        <Link href="/dashboard/student/find-mentors"
-                            className="px-5 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl text-sm hover:bg-indigo-50 transition-colors">
-                            Find a Mentor
-                        </Link>
-                        <Link href="/dashboard/student/ai-assistant"
-                            className="px-5 py-2.5 bg-white/20 text-white font-semibold rounded-xl text-sm hover:bg-white/30 transition-colors border border-white/30">
-                            AI Assistant
-                        </Link>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-2xl mx-auto text-left">
+                            {SUGGESTIONS.map((s, i) => (
+                                <button key={i} onClick={() => send(s)}
+                                    className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700
+                    hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-all text-left leading-snug">
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="space-y-6">
+                        {messages.map(msg => (
+                            <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                {msg.role === 'assistant' && (
+                                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                                        <Bot size={15} className="text-white" />
+                                    </div>
+                                )}
+                                <div className={`max-w-[80%] ${msg.role === 'user' ? '' : ''}`}>
+                                    <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                                            ? 'bg-indigo-600 text-white rounded-br-sm'
+                                            : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'
+                                        }`}>
+                                        {msg.content === '' && msg.role === 'assistant' ? (
+                                            <div className="flex gap-1 py-1">
+                                                {[0, 150, 300].map(d => (
+                                                    <span key={d} className="w-2 h-2 bg-slate-300 rounded-full animate-bounce"
+                                                        style={{ animationDelay: `${d}ms` }} />
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
+                                        )}
+                                    </div>
+                                </div>
+                                {msg.role === 'user' && (
+                                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                                        <User size={15} className="text-white" />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        <div ref={bottomRef} />
+                    </div>
+                )}
+            </div>
 
+            {/* Input */}
+            <div className="bg-white border-t border-slate-200 px-4 py-3">
+                <div className="max-w-3xl mx-auto flex items-end gap-2">
+                    <textarea
+                        ref={inputRef}
+                        rows={1}
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+                        placeholder="Ask about career paths, skills, salary, interviews..."
+                        disabled={loading}
+                        className="flex-1 resize-none px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all bg-white text-slate-900 placeholder:text-slate-400 disabled:opacity-50"
+                        style={{ minHeight: 44, maxHeight: 120 }}
+                    />
+                    <button onClick={() => send()} disabled={loading || !input.trim()}
+                        className="p-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors disabled:opacity-40 flex-shrink-0 shadow-sm">
+                        <Send size={16} />
+                    </button>
+                </div>
+                <p className="text-center text-[10px] text-slate-300 mt-2 max-w-3xl mx-auto">AI may make mistakes. Verify with career professionals for important decisions.</p>
             </div>
         </div>
     );

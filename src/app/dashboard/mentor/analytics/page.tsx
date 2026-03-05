@@ -24,7 +24,7 @@ export default async function MentorAnalyticsPage() {
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24">
+        <main className="flex-1 md:ml-14">
           <AnalyticsDashboard role="mentor" />
         </main>
       </div>

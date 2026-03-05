@@ -30,7 +30,7 @@ export default async function StudentNotificationsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <NotificationsClient userId={user.id} />
         </main>
       </div>

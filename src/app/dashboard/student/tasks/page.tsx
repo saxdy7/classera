@@ -25,7 +25,7 @@ export default async function StudentTasksPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-fuchsia-50/40">
+    <div className="min-h-screen bg-gradient-to-br bg-slate-50">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -45,3 +45,4 @@ export default async function StudentTasksPage() {
     </div>
   );
 }
+

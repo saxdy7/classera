@@ -2,21 +2,23 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import {
   LayoutDashboard,
+  BookOpen,
+  ClipboardCheck,
+  Calendar,
   Users,
   Video,
-  MessageSquare,
-  BookOpen,
-  Calendar,
-  Settings,
-  Bot,
-  User,
   UsersRound,
-  ClipboardCheck,
-  FileText
+  Bot,
+  FileText,
+  User,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  Map,
+  GraduationCap,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -25,289 +27,176 @@ interface SidebarProps {
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
-  const [isHovered, setIsHovered] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [aiOpen, setAiOpen] = useState(true);
 
-  const studentNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/student' },
+  const isStudent = role === 'student';
+  const accent = isStudent
+    ? { bg: 'bg-indigo-600', activeBg: 'bg-indigo-600', text: 'text-indigo-600', light: 'bg-indigo-50', border: 'border-indigo-200' }
+    : { bg: 'bg-sky-600', activeBg: 'bg-sky-600', text: 'text-sky-600', light: 'bg-sky-50', border: 'border-sky-200' };
+
+  const studentNav = [
+    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/student', exact: true },
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/student/courses' },
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/student/tests' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/student/schedule' },
     { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/student/communities' },
-    { icon: Bot, label: 'Roadmaps', href: '/roadmaps' },
   ];
 
-  const aiToolsItems = [
-    { icon: Bot, label: 'AI Career Coach', href: '/ai-tools/career-coach' },
-    { icon: Bot, label: 'AI Roadmap', href: '/roadmaps?generate=true&format=roadmap' },
-    { icon: BookOpen, label: 'AI Course', href: '/courses?generate=true&format=course' },
-    { icon: FileText, label: 'AI Guide', href: '/guides?generate=true&format=guide' },
-  ];
-
-  const mentorNavItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/mentor' },
+  const mentorNav = [
+    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/mentor', exact: true },
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/mentor/courses' },
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/mentor/tests' },
     { icon: Calendar, label: 'Schedule', href: '/dashboard/mentor/schedule' },
     { icon: Users, label: 'Students', href: '/dashboard/mentor/students' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/mentor/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/mentor/communities' },
-    { icon: Bot, label: 'Roadmaps', href: '/roadmaps' },
+    { icon: Map, label: 'Roadmaps', href: '/roadmaps' },
   ];
 
-  const navItems = role === 'student' ? studentNavItems : mentorNavItems;
+  const aiTools = [
+    { icon: Sparkles, label: 'AI Career Coach', href: '/ai-tools/career-coach' },
+    { icon: Map, label: 'AI Roadmap', href: '/roadmaps' },
+    { icon: GraduationCap, label: 'AI Course', href: '/courses' },
+    { icon: FileText, label: 'AI Guide', href: '/guides' },
+  ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1
-      }
-    }
-  } as const;
+  const navItems = isStudent ? studentNav : mentorNav;
 
-  const itemVariants = {
-    hidden: { x: -20, opacity: 0 },
-    show: {
-      x: 0,
-      opacity: 1
-    }
-  } as const;
+  const isActive = (href: string, exact?: boolean) =>
+    exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <motion.aside
-      initial={{ x: -300, opacity: 0 }}
-      animate={{
-        x: 0,
-        opacity: 1,
-        width: isHovered ? 256 : 80
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-        duration: 0.3
-      }}
-      className="hidden md:fixed md:left-3 lg:left-4 md:top-20 md:bottom-4 md:h-auto bg-gradient-to-b from-white via-slate-50/50 to-white backdrop-blur-2xl border border-slate-200/60 rounded-3xl shadow-lg shadow-slate-900/5 z-50 overflow-hidden md:flex"
-    >
-      <div className="p-4 lg:p-5 h-full flex flex-col w-full relative">
-        {/* Decorative gradient background */}
-        <div className={`absolute inset-0 opacity-5 pointer-events-none ${role === 'student'
-          ? 'bg-gradient-to-br from-fuchsia-500 via-purple-500 to-pink-500'
-          : 'bg-gradient-to-br from-blue-500 via-indigo-500 to-cyan-500'
-          }`} />
+    <>
+      {/* ── Desktop sidebar ── */}
+      <aside
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => setExpanded(false)}
+        className="hidden md:flex md:fixed md:left-0 md:top-14 md:bottom-0 flex-col z-40 transition-all duration-300 ease-in-out overflow-hidden"
+        style={{ width: expanded ? 220 : 56 }}
+      >
+        <div className="h-full bg-white border-r border-slate-200 flex flex-col overflow-y-auto overflow-x-hidden py-3 gap-0.5">
 
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="mb-4 lg:mb-6 flex justify-center relative z-10"
-        >
-          <Link href="/" className="flex items-center gap-3 px-2 py-2 group">
-            <div className={`w-10 h-10 rounded-xl ${role === 'student'
-              ? 'bg-gradient-to-br from-fuchsia-500 to-purple-600'
-              : 'bg-gradient-to-br from-blue-500 to-indigo-600'
-              } flex items-center justify-center shadow-md ${role === 'student'
-                ? 'shadow-fuchsia-500/20'
-                : 'shadow-blue-500/20'
-              } group-hover:scale-110 transition-transform duration-300`}>
-              <span className="text-white font-black text-lg lg:text-xl">C</span>
-            </div>
-            {isHovered && (
-              <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-                className="font-black text-lg lg:text-xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent whitespace-nowrap"
-              >
-                Classera
-              </motion.span>
-            )}
-          </Link>
-        </motion.div>
-
-        <motion.nav
-          className="space-y-1.5 lg:space-y-2 flex-1 overflow-y-auto scrollbar-hide relative z-10"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          {navItems.map((item, index) => {
-            const Icon = item.icon;
-            // For dashboard, use exact match; for others, use startsWith to highlight on child pages
-            const isActive = item.href.endsWith('/student') || item.href.endsWith('/mentor')
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
-
+          {/* Main nav */}
+          {navItems.map(({ icon: Icon, label, href, exact }) => {
+            const active = isActive(href, exact);
             return (
-              <motion.div
-                key={item.href}
-                variants={itemVariants}
-                whileHover={{ x: 4, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 20
-                }}
+              <Link
+                key={href}
+                href={href}
+                title={!expanded ? label : undefined}
+                className={`flex items-center gap-3 mx-2 px-2 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group flex-shrink-0
+                  ${active
+                    ? `${accent.activeBg} text-white shadow-sm`
+                    : `text-slate-600 hover:bg-slate-100 hover:text-slate-900`
+                  }`}
               >
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-3 lg:gap-4 px-2.5 lg:px-3 py-3 lg:py-3.5 rounded-xl lg:rounded-2xl font-medium transition-all relative overflow-hidden group ${isActive
-                    ? role === 'student'
-                      ? 'bg-gradient-to-r from-fuchsia-500 via-purple-500 to-pink-500 text-white shadow-md lg:shadow-lg shadow-fuchsia-500/30'
-                      : 'bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500 text-white shadow-md lg:shadow-lg shadow-blue-500/30'
-                    : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-sm lg:hover:shadow-md'
-                    }`}
-                >
-                  {/* Glassmorphism effect for non-active items */}
-                  {!isActive && (
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  )}
-
-                  <motion.div
-                    className="relative z-10 flex-shrink-0"
-                    whileHover={{
-                      rotate: isActive ? 0 : [0, -10, 10, -10, 0],
-                      scale: isActive ? 1 : 1.1
-                    }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Icon className={`w-5 h-5 ${isActive ? 'drop-shadow-md' : ''}`} />
-                  </motion.div>
-
-                  {isHovered && (
-                    <motion.span
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="text-sm relative z-10 whitespace-nowrap font-semibold tracking-wide"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-
-                  {/* Active indicator dot */}
-                  {isActive && !isHovered && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute -right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-lg"
-                    />
-                  )}
-                </Link>
-              </motion.div>
+                <Icon size={18} className="flex-shrink-0" />
+                {expanded && (
+                  <span className="whitespace-nowrap truncate transition-opacity duration-200">
+                    {label}
+                  </span>
+                )}
+              </Link>
             );
           })}
 
-          {/* AI Tools Section */}
-          {role === 'student' && (
-            <>
-              <div className="pt-3">
-                {isHovered && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="px-2.5 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider"
-                  >
-                    AI Tools
-                  </motion.div>
-                )}
-              </div>
-              {aiToolsItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname.startsWith(item.href);
+          {/* AI Tools section — student only */}
+          {isStudent && (
+            <div className="mt-2">
+              {/* Divider */}
+              <div className="mx-3 mb-1 border-t border-slate-100" />
 
+              {/* Toggle header */}
+              <button
+                onClick={() => setAiOpen(o => !o)}
+                className="w-full flex items-center justify-between mx-0 px-4 py-2 text-left hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Bot size={18} className={`flex-shrink-0 ${accent.text}`} />
+                  {expanded && (
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                      AI Tools
+                    </span>
+                  )}
+                </div>
+                {expanded && (
+                  <span className="text-slate-400 flex-shrink-0">
+                    {aiOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                  </span>
+                )}
+              </button>
+
+              {/* AI tool items */}
+              {aiOpen && aiTools.map(({ icon: Icon, label, href }) => {
+                const active = pathname === href || (href !== '/roadmaps' && pathname.startsWith(href));
                 return (
-                  <motion.div
-                    key={item.href}
-                    variants={itemVariants}
-                    whileHover={{ x: 4, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Link
+                    key={href}
+                    href={href}
+                    title={!expanded ? label : undefined}
+                    className={`flex items-center gap-3 mx-2 px-2 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 flex-shrink-0
+                      ${active
+                        ? `${accent.activeBg} text-white shadow-sm`
+                        : `text-slate-600 hover:bg-slate-100 hover:text-slate-900`
+                      }`}
                   >
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-3 lg:gap-4 px-2.5 lg:px-3 py-3 lg:py-3.5 rounded-xl lg:rounded-2xl font-medium transition-all relative overflow-hidden group ${isActive
-                        ? 'bg-gradient-to-r from-fuchsia-500 via-purple-500 to-pink-500 text-white shadow-md'
-                        : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-sm'
-                        }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      {isHovered && (
-                        <motion.span
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="text-sm whitespace-nowrap font-semibold flex items-center gap-2"
-                        >
-                          {item.label}
-                          {/* {item.isPro && (
-                            <span className="text-xs px-1.5 py-0.5 bg-yellow-400 text-yellow-900 rounded font-bold">
-                              Pro
-                            </span>
-                          )} */}
-                        </motion.span>
-                      )}
-                    </Link>
-                  </motion.div>
+                    <Icon size={17} className="flex-shrink-0" />
+                    {expanded && (
+                      <span className="whitespace-nowrap truncate">{label}</span>
+                    )}
+                  </Link>
                 );
               })}
-            </>
+            </div>
           )}
-        </motion.nav>
 
-        {/* Divider with gradient */}
-        <div className={`h-px my-3 lg:my-4 ${role === 'student'
-          ? 'bg-gradient-to-r from-transparent via-fuchsia-200 to-transparent'
-          : 'bg-gradient-to-r from-transparent via-blue-200 to-transparent'
-          } relative z-10`} />
+          {/* Spacer */}
+          <div className="flex-1" />
 
-        {/* Profile Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="relative z-10"
-        >
+          {/* Divider */}
+          <div className="mx-3 border-t border-slate-100 mb-1" />
+
+          {/* Profile / Settings */}
           <Link
             href={`/dashboard/${role}/settings`}
-            className="flex items-center gap-3 lg:gap-4 px-2.5 lg:px-3 py-3 lg:py-3.5 rounded-xl lg:rounded-2xl font-medium transition-all relative overflow-hidden group text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-sm lg:hover:shadow-md"
+            title={!expanded ? 'Settings' : undefined}
+            className={`flex items-center gap-3 mx-2 px-2 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 flex-shrink-0
+              ${pathname.startsWith(`/dashboard/${role}/settings`)
+                ? `${accent.activeBg} text-white shadow-sm`
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            <motion.div
-              className="relative z-10 flex-shrink-0"
-              whileHover={{ scale: 1.1, rotate: [0, -10, 10, -10, 0] }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className={`w-9 h-9 rounded-xl ${role === 'student'
-                ? 'bg-gradient-to-br from-fuchsia-100 to-purple-100'
-                : 'bg-gradient-to-br from-blue-100 to-indigo-100'
-                } flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <User className={`w-4 h-4 ${role === 'student' ? 'text-fuchsia-600' : 'text-blue-600'}`} />
-              </div>
-            </motion.div>
-
-            {isHovered && (
-              <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm relative z-10 whitespace-nowrap font-semibold tracking-wide"
-              >
-                Profile
-              </motion.span>
-            )}
+            <User size={18} className="flex-shrink-0" />
+            {expanded && <span className="whitespace-nowrap">Settings</span>}
           </Link>
-        </motion.div>
-      </div>
-    </motion.aside>
+        </div>
+      </aside>
+
+      {/* ── Mobile bottom nav ── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 flex items-center justify-around px-2 py-1">
+        {navItems.slice(0, 5).map(({ icon: Icon, label, href, exact }) => {
+          const active = isActive(href, exact);
+          return (
+            <Link key={href} href={href}
+              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors
+                ${active ? accent.text : 'text-slate-400'}`}>
+              <Icon size={20} />
+              <span className="text-[10px] font-medium">{label.split(' ')[0]}</span>
+            </Link>
+          );
+        })}
+        {isStudent && (
+          <Link href="/ai-tools/career-coach"
+            className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors
+              ${pathname.startsWith('/ai-tools') ? accent.text : 'text-slate-400'}`}>
+            <Bot size={20} />
+            <span className="text-[10px] font-medium">AI</span>
+          </Link>
+        )}
+      </nav>
+    </>
   );
 }

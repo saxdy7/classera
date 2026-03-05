@@ -33,11 +33,38 @@ body {
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+/* ── Always show dark text in form controls regardless of OS color scheme ── */
+input,
+select,
+textarea {
+  color: #0f172a !important;
+  background-color: #ffffff;
+  -webkit-text-fill-color: #0f172a;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8;
+  opacity: 1;
+}
+
+select option {
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+
 html {
   scroll-behavior: smooth;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Clash Display', sans-serif;
 }
 
@@ -62,10 +89,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom animations for dashboard */
 @keyframes gradient {
-  0%, 100% {
+
+  0%,
+  100% {
     background-size: 200% 200%;
     background-position: 0% 50%;
   }
+
   50% {
     background-size: 200% 200%;
     background-position: 100% 50%;
@@ -130,6 +160,7 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -145,6 +176,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -160,6 +192,7 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -174,6 +207,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateX(100px);
     opacity: 0;
   }
+
   100% {
     transform: translateX(0);
     opacity: 1;
@@ -185,6 +219,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateX(-100px);
     opacity: 0;
   }
+
   100% {
     transform: translateX(0);
     opacity: 1;
@@ -196,6 +231,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(50px);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -203,9 +239,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -216,10 +255,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.8;
     transform: scale(1.05);
@@ -234,15 +276,19 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-30px);
   }
@@ -280,6 +326,7 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.05);
   }
@@ -287,20 +334,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Arrow bounce */
 @keyframes arrow-bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(5px);
   }
 }
 
 /* Smooth transitions for interactive elements */
-button, a {
+button,
+a {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-button:hover, a:hover {
+button:hover,
+a:hover {
   transform: translateY(-2px);
 }
 
@@ -315,9 +367,12 @@ button:hover, a:hover {
 
 /* Stats card pulse on hover */
 @keyframes stats-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
   }
+
   50% {
     box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
   }

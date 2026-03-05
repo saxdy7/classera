@@ -1,99 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { deepseek, groq } from '@/lib/deepseek';
 
-// POST /api/ai/generate-guide - Generate guide with AI
-export async function POST(request: NextRequest) {
+function extractJSON(raw: string): any {
+    if (!raw?.trim()) throw new Error('Empty AI response');
+    try { return JSON.parse(raw.trim()); } catch { }
+    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (fenced) { try { return JSON.parse(fenced[1].trim()); } catch { } }
+    const start = raw.indexOf('{');
+    if (start !== -1) {
+        let depth = 0, end = -1;
+        for (let i = start; i < raw.length; i++) {
+            if (raw[i] === '{') depth++;
+            else if (raw[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+        }
+        if (end !== -1) {
+            try { return JSON.parse(raw.slice(start, end + 1)); } catch { }
+            const fixed = raw.slice(start, end + 1).replace(/,\s*([}\]])/g, '$1');
+            try { return JSON.parse(fixed); } catch { }
+        }
+    }
+    console.error('RAW (first 1500):', raw.slice(0, 1500));
+    throw new Error('Failed to parse AI response as JSON');
+}
+
+export async function POST(req: NextRequest) {
     try {
-        const body = await request.json();
-        const { topic, difficulty = 'beginner', include_code = true } = body;
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-        if (!topic) {
-            return NextResponse.json(
-                { error: 'topic is required' },
-                { status: 400 }
-            );
-        }
+        const { topic, difficulty = 'beginner' } = await req.json();
+        if (!topic) return NextResponse.json({ error: 'topic is required' }, { status: 400 });
 
-        const prompt = `You are an expert technical writer and educator.
+        const prompt = `Write a comprehensive learning guide for: "${topic}". Level: ${difficulty}.
 
-Create a comprehensive learning guide about: ${topic}
+Output ONLY valid raw JSON (no markdown, no code blocks):
+{
+  "guide_title": "string",
+  "introduction": "string (2-3 paragraphs)",
+  "estimated_read_minutes": number,
+  "difficulty": "${difficulty}",
+  "sections": [
+    {
+      "heading": "string",
+      "content": "string (2-3 detailed paragraphs)",
+      "code_example": "string or null",
+      "key_points": ["string"],
+      "resources": [{ "title": "string", "url": "https://..." }]
+    }
+  ],
+  "summary": "string",
+  "next_steps": ["string"]
+}
 
-Target Audience: ${difficulty} level learners
+Create 5-7 logical sections with progressively deeper content about "${topic}".`;
 
-Requirements:
-1. Clear, concise explanations
-2. Practical examples
-3. Code blocks with syntax highlighting
-4. Key concepts highlighted
-5. Best practices
-6. Common pitfalls to avoid
-7. Curated Resources (List 5+ real, high-quality links to official docs, tutorials, or tools. Do not hallucinate links if possible, focus on domains like MDN, YouTube, Official Docus.)
-
-Structure:
-- **Introduction** (Context and importance)
-- **Prerequisites & Setup** (Tools needed, environment setup - Be specific!)
-- **Step-by-Step Implementation** (The core guide - Use code blocks)
-- **Common Pitfalls** (What goes wrong and how to fix it)
-- **Best Practices** (Industry standards)
-- **Curated External Resources** (CRITICAL: List 5+ REAL, high-quality links to official docs, great tutorials, or tools. Do not hallucinate URLs.)
-- **Next Steps** (What to build/learn next)
-
-Output as clean, structured Markdown.
-Use '\`\`\`language' for code blocks.
-Make it actionable: The user should be able to follow this and build / learn something concrete.
-Include a "Time to Read" estimate at the top.
-
-Generate the guide now: `;
-
-        let content = '';
-        const systemMessage = 'You are an expert technical educator. Create clear, practical learning guides.';
-
+        const system = 'You are a JSON-only API. Output raw valid JSON, no markdown, no explanation.';
+        let text = '';
         try {
-            console.log("🤖 Attempting generation with DeepSeek...");
-            const completion = await deepseek.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
-                model: 'deepseek-chat',
-                temperature: 0.7,
-                max_tokens: 3000
+            const c = await deepseek.chat.completions.create({
+                messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
+                model: 'deepseek-chat', temperature: 0.6, max_tokens: 5000,
             });
-            content = completion.choices[0]?.message?.content || '';
-        } catch (deepseekError: any) {
-            console.warn("⚠️ DeepSeek failed, falling back to Groq...", deepseekError.message);
-            const completion = await groq.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
-                model: 'llama-3.3-70b-versatile',
-                temperature: 0.7,
-                max_tokens: 3000
+            text = c.choices[0]?.message?.content ?? '';
+        } catch {
+            const c = await groq.chat.completions.create({
+                messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
+                model: 'llama-3.3-70b-versatile', temperature: 0.6, max_tokens: 5000,
             });
-            content = completion.choices[0]?.message?.content || '';
+            text = c.choices[0]?.message?.content ?? '';
         }
 
-        // Extract title from content or use topic
-        const titleMatch = content.match(/^#\s+(.+)$/m);
-        const title = titleMatch ? titleMatch[1] : `${topic} - Complete Guide`;
-
-        return NextResponse.json({
-            guide: {
-                title,
-                content,
-                topic,
-                difficulty,
-                ai_generated: true
-            },
-            message: 'Guide generated successfully!'
-        });
-
-    } catch (error: any) {
-        console.error('Error generating guide:', error);
-        return NextResponse.json(
-            { error: error.message || 'Failed to generate guide' },
-            { status: 500 }
-        );
+        return NextResponse.json(extractJSON(text));
+    } catch (err: any) {
+        console.error('generate-guide error:', err);
+        return NextResponse.json({ error: err.message || 'Generation failed' }, { status: 500 });
     }
 }

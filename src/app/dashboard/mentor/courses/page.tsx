@@ -45,7 +45,7 @@ export default async function MentorCoursesPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-8 md:ml-24">
+        <main className="flex-1 p-8 md:ml-14">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <div>

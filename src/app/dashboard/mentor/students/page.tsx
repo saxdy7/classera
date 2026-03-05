@@ -41,7 +41,7 @@ export default async function Students() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <div className="max-w-6xl mx-auto">
             {/* Welcome Banner */}
             <div className="bg-white rounded-3xl p-6 md:p-8 mb-6 border border-slate-200 shadow-sm">

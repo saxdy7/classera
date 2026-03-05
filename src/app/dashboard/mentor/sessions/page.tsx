@@ -61,7 +61,7 @@ export default async function LiveSessionsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <LiveSessionsClient 
             profile={profile}
             initialSessions={sessions || []}

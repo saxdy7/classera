@@ -28,14 +28,14 @@ export default async function StudentCoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br bg-slate-50">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <div className="max-w-7xl mx-auto">
             {/* Hero Banner */}
-            <div className="mb-8 bg-gradient-to-r from-slate-50 via-purple-50 to-pink-50 rounded-3xl relative overflow-hidden shadow-lg border border-slate-200">
+            <div className="mb-8 bg-gradient-to-r bg-slate-50 rounded-3xl relative overflow-hidden shadow-lg border border-slate-200">
               {/* Modern Geometric Background Pattern */}
               <div className="absolute inset-0">
                 {/* Diagonal stripes */}
@@ -126,3 +126,4 @@ export default async function StudentCoursesPage() {
     </div>
   );
 }
+

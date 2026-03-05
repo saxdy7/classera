@@ -72,7 +72,7 @@ export default async function StudentTestsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <div className="max-w-6xl mx-auto">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Tests</h1>
             <p className="text-slate-600 mb-8">Your upcoming and past tests</p>

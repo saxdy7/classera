@@ -30,7 +30,7 @@ export default async function StudentCommunitiesPage() {
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 md:ml-14">
           <CommunitiesClient userId={user.id} universityId={profile.university_id} />
         </main>
       </div>

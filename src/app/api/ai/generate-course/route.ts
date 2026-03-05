@@ -2,127 +2,87 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { deepseek, groq } from '@/lib/deepseek';
 
-// POST /api/ai/generate-course - Generate structured course content with AI
-export async function POST(request: NextRequest) {
-    try {
-        // Auth guard
-        const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-
-        const body = await request.json();
-        const { topic, difficulty = 'beginner', target_audience } = body;
-
-        if (!topic) {
-            return NextResponse.json(
-                { error: 'topic is required' },
-                { status: 400 }
-            );
-        }
-
-        const prompt = `You are an expert academic course creator.
-        Create a "University Grade" structured course on: "${topic}".
-        
-        Target Audience: ${target_audience || 'University Students'}
-        Difficulty: ${difficulty}
-        
-        REQUIREMENTS:
-        1. **Structure**: Create 4-6 Modules, with 3-5 Lessons per module.
-        2. **Content Depth**: For EACH lesson, generate FULL TEXT CONTENT in Markdown format.
-           - Use Headers (##, ###) for sections.
-           - Use Code Blocks (\`\`\`language) for technical concepts.
-           - Include "Key Takeaways" at the end.
-           - Content length should be substantial (like a tutorial article), not just a summary.
-        
-        Output valid JSON exactly like this:
-        {
-          "course": {
-            "title": "Course Title",
-            "description": "Academic description of the course curriculum.",
-            "difficulty": "${difficulty}",
-            "category": "Technology",
-            "tags": ["tag1", "tag2"],
-            "modules": [
-              {
-                "title": "Module 1: Fundamentals",
-                "description": "Module overview",
-                "lessons": [
-                  {
-                    "title": "1.1 Lesson Title",
-                    "description": "Brief abstract",
-                    "content": "# Lesson Title\\n\\n## Introduction\\nDetailed concept explanation...\\n\\n## Technical Deep Dive\\n...\\n\\n## Example\\n\`\`\`javascript\\nconst x = 1;\\n\`\`\`\\n\\n## Key Takeaways\\n- Point 1...",
-                    "duration_minutes": 20
-                  }
-                ]
-              }
-            ]
-          }
-        }`;
-
-        let responseText = '';
-        const systemMessage = 'You are an expert course creator. Always respond with valid JSON only. do not wrap in markdown code blocks.';
-
-        try {
-            console.log("🤖 Attempting generation with DeepSeek...");
-            const completion = await deepseek.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
-                model: 'deepseek-chat', // Try direct/openrouter first
-                temperature: 0.7,
-                max_tokens: 6000
-            });
-            responseText = completion.choices[0]?.message?.content || '';
-        } catch (deepseekError: any) {
-            console.warn("⚠️ DeepSeek failed, falling back to Groq (Llama 3.3)...", deepseekError.message);
-            // Fallback to Groq
-            const completion = await groq.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
-                model: 'llama-3.3-70b-versatile',
-                temperature: 0.7,
-                max_tokens: 6000
-            });
-            responseText = completion.choices[0]?.message?.content || '';
-        }
-
-        // Extract JSON from response
-        let courseData;
-        try {
-            // Try to parse directly first
-            courseData = JSON.parse(responseText);
-        } catch (e) {
-            // Try to extract JSON from markdown if direct parse fails
-            const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) ||
-                responseText.match(/```\n([\s\S]*?)\n```/) ||
-                responseText.match(/\{[\s\S]*\}/); // Fallback to finding first brace
-
-            if (jsonMatch) {
-                // If the match is from regex finding brace, it might be the whole text or capture group
-                const jsonString = jsonMatch[1] || jsonMatch[0];
-                courseData = JSON.parse(jsonString);
-            } else {
-                console.error("Failed to parse response:", responseText);
-                throw new Error('Failed to parse AI response as JSON');
-            }
-        }
-
-        return NextResponse.json({
-            course: courseData.course,
-            message: 'Course generated successfully!'
-        });
-
-    } catch (error: any) {
-        console.error('Error generating course:', error);
-        return NextResponse.json(
-            { error: error.message || 'Failed to generate course' },
-            { status: 500 }
-        );
+function extractJSON(raw: string): any {
+  if (!raw?.trim()) throw new Error('Empty AI response');
+  try { return JSON.parse(raw.trim()); } catch { }
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (fenced) { try { return JSON.parse(fenced[1].trim()); } catch { } }
+  const start = raw.indexOf('{');
+  if (start !== -1) {
+    let depth = 0, end = -1;
+    for (let i = start; i < raw.length; i++) {
+      if (raw[i] === '{') depth++;
+      else if (raw[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
     }
+    if (end !== -1) {
+      try { return JSON.parse(raw.slice(start, end + 1)); } catch { }
+      const fixed = raw.slice(start, end + 1).replace(/,\s*([}\]])/g, '$1');
+      try { return JSON.parse(fixed); } catch { }
+    }
+  }
+  console.error('RAW (first 1500):', raw.slice(0, 1500));
+  throw new Error('Failed to parse AI response as JSON');
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const { topic, difficulty = 'beginner', num_modules = 5 } = await req.json();
+    if (!topic) return NextResponse.json({ error: 'topic is required' }, { status: 400 });
+
+    const prompt = `Create a structured online course for: "${topic}". Level: ${difficulty}. Modules: ${num_modules}.
+
+Output ONLY valid raw JSON (no markdown, no code blocks):
+{
+  "course_title": "string",
+  "course_description": "string",
+  "difficulty": "${difficulty}",
+  "total_duration_minutes": number,
+  "target_audience": "string",
+  "prerequisites": ["string"],
+  "learning_outcomes": ["string"],
+  "modules": [
+    {
+      "title": "string",
+      "description": "string",
+      "lessons": [
+        {
+          "title": "string",
+          "description": "string",
+          "duration_minutes": number,
+          "type": "video|reading|exercise|quiz",
+          "content": "3-4 paragraphs of educational content",
+          "resources": [{ "title": "string", "url": "https://..." }]
+        }
+      ]
+    }
+  ]
+}
+
+Make ${num_modules} modules with 3-4 lessons each.`;
+
+    const system = 'You are a JSON-only API. Output raw valid JSON, no markdown, no explanation.';
+    let text = '';
+    try {
+      const c = await deepseek.chat.completions.create({
+        messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
+        model: 'deepseek-chat', temperature: 0.6, max_tokens: 6000,
+      });
+      text = c.choices[0]?.message?.content ?? '';
+    } catch {
+      const c = await groq.chat.completions.create({
+        messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
+        model: 'llama-3.3-70b-versatile', temperature: 0.6, max_tokens: 6000,
+      });
+      text = c.choices[0]?.message?.content ?? '';
+    }
+
+    return NextResponse.json(extractJSON(text));
+  } catch (err: any) {
+    console.error('generate-course error:', err);
+    return NextResponse.json({ error: err.message || 'Generation failed' }, { status: 500 });
+  }
 }

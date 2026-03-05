@@ -2,16 +2,53 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { deepseek, groq } from '@/lib/deepseek';
 
-// POST /api/ai/generate-roadmap - Generate personalized roadmap with AI
+/** Robustly extract the first JSON object from a string that may contain
+ *  markdown fences, leading text, trailing text, or partial content. */
+function extractJSON(raw: string): any {
+    if (!raw || !raw.trim()) throw new Error('Empty AI response');
+
+    // 1. Try direct parse first
+    try { return JSON.parse(raw.trim()); } catch { }
+
+    // 2. Strip ```json ... ``` or ``` ... ``` fences
+    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (fenced) {
+        try { return JSON.parse(fenced[1].trim()); } catch { }
+    }
+
+    // 3. Find first { ... } block (greedy, handles nested braces)
+    const start = raw.indexOf('{');
+    if (start !== -1) {
+        // Walk to match the closing brace
+        let depth = 0;
+        let end = -1;
+        for (let i = start; i < raw.length; i++) {
+            if (raw[i] === '{') depth++;
+            else if (raw[i] === '}') {
+                depth--;
+                if (depth === 0) { end = i; break; }
+            }
+        }
+        if (end !== -1) {
+            try { return JSON.parse(raw.slice(start, end + 1)); } catch { }
+
+            // 4. Try fixing common issues: trailing commas before } or ]
+            const chunk = raw.slice(start, end + 1)
+                .replace(/,\s*([}\]])/g, '$1')   // trailing commas
+                .replace(/[\u0000-\u001F\u007F]/g, ' '); // control chars
+            try { return JSON.parse(chunk); } catch { }
+        }
+    }
+
+    console.error('RAW AI RESPONSE (first 2000 chars):', raw.slice(0, 2000));
+    throw new Error('Failed to parse AI response as JSON');
+}
+
 export async function POST(request: NextRequest) {
     try {
-        // Auth guard
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
+        if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
         const {
@@ -22,128 +59,83 @@ export async function POST(request: NextRequest) {
             target_weeks = 12
         } = body;
 
-        if (!target_role) {
-            return NextResponse.json(
-                { error: 'target_role is required' },
-                { status: 400 }
-            );
-        }
+        if (!target_role) return NextResponse.json({ error: 'target_role is required' }, { status: 400 });
 
         const prompt = `You are an expert career advisor and technical curriculum designer.
-        
-        Generate a "roadmap.sh" style comprehensive learning path for: "${target_role}".
-        
-        User Context:
-        - Current Skills: ${current_skills.length > 0 ? current_skills.join(', ') : 'None'}
-        - Experience: ${experience_level}
-        - Time: ${daily_hours} hours/day
-        
-        REQUIREMENTS:
-        1. **Structure**: Create 12-18 nodes representing key milestones. Order them logically from basics to advanced.
-        2. **Content Depth**: For EACH node, provide a "detailed_summary" that is 3-4 paragraphs long. It must explain the concept deeply, why it matters, and how to use it. This will be shown in a sidebar reading panel.
-        3. **Resources**: For EACH node, provide 2-4 HIGH QUALITY, REAL resources.
-           - Use known domains: youtube.com, developer.mozilla.org, freecodecamp.org, documentation sites.
-           - DO NOT generate fake URLs. If unsure, use a generic search URL or main domain.
-        
-        Output valid JSON exactly like this:
-        {
-          "roadmap_title": "${target_role} Professional Roadmap",
-          "roadmap_description": "A detailed, step-by-step guide to mastering ${target_role} with curated resources.",
-          "estimated_weeks": ${target_weeks},
-          "nodes": [
-            {
-              "title": "Topic Title",
-              "description": "Short tagline (10 words max)",
-              "detailed_summary": "Paragraph 1: Concept intro...\\n\\nParagraph 2: Deep dive...\\n\\nParagraph 3: Practical application...",
-              "node_type": "topic",
-              "estimated_hours": 10,
-              "resources": [
-                { "title": "Crash Course Video", "url": "https://youtube.com/...", "type": "video" },
-                { "title": "MDN Documentation", "url": "https://developer.mozilla.org/...", "type": "article" }
-              ]
-            }
-          ]
-        }`;
 
+Generate a comprehensive learning roadmap for: "${target_role}".
+
+User context:
+- Current Skills: ${current_skills.length > 0 ? current_skills.join(', ') : 'None'}
+- Experience: ${experience_level}
+- Time available: ${daily_hours} hours/day
+- Timeline: ${target_weeks} weeks
+
+STRICT OUTPUT RULES:
+- Output ONLY raw JSON. No markdown, no code blocks, no prose before or after.
+- The JSON must be valid and parseable directly.
+
+JSON schema (output exactly this shape):
+{
+  "roadmap_title": "string",
+  "roadmap_description": "string",
+  "estimated_weeks": ${target_weeks},
+  "nodes": [
+    {
+      "title": "string",
+      "description": "Short 8-word tagline",
+      "detailed_summary": "3 paragraphs separated by \\n\\n",
+      "node_type": "topic",
+      "estimated_hours": 10,
+      "resources": [
+        { "title": "string", "url": "https://...", "type": "video" }
+      ]
+    }
+  ]
+}
+
+Generate 10-14 nodes, ordered from fundamentals to advanced. Each node must have 2-3 real resources.`;
+
+        const system = 'You are a JSON-only API. Output raw, valid JSON with no markdown, no explanation, no code fences.';
         let responseText = '';
-        const systemMessage = 'You are an expert learning path designer. Always respond with valid JSON only.';
 
         try {
-            console.log("🤖 Attempting generation with DeepSeek...");
-            const completion = await deepseek.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
+            console.log('🤖 Trying DeepSeek…');
+            const c = await deepseek.chat.completions.create({
+                messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
                 model: 'deepseek-chat',
-                temperature: 0.7,
-                max_tokens: 4000
+                temperature: 0.6,
+                max_tokens: 5000,
             });
-            responseText = completion.choices[0]?.message?.content || '';
-        } catch (deepseekError: any) {
-            console.warn("⚠️ DeepSeek failed, falling back to Groq...", deepseekError.message);
-            const completion = await groq.chat.completions.create({
-                messages: [
-                    { role: 'system', content: systemMessage },
-                    { role: 'user', content: prompt }
-                ],
+            responseText = c.choices[0]?.message?.content ?? '';
+        } catch (err: any) {
+            console.warn('⚠️ DeepSeek failed, falling back to Groq:', err.message);
+            const c = await groq.chat.completions.create({
+                messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
                 model: 'llama-3.3-70b-versatile',
-                temperature: 0.7,
-                max_tokens: 4000
+                temperature: 0.6,
+                max_tokens: 5000,
             });
-            responseText = completion.choices[0]?.message?.content || '';
+            responseText = c.choices[0]?.message?.content ?? '';
         }
 
-        // Extract JSON from response
-        let roadmapData;
-        try {
-            // Try to parse directly
-            roadmapData = JSON.parse(responseText);
-        } catch (e) {
-            // Try to extract JSON from markdown code blocks
-            const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) ||
-                responseText.match(/```\n([\s\S]*?)\n```/);
-            if (jsonMatch) {
-                roadmapData = JSON.parse(jsonMatch[1]);
-            } else {
-                console.error("Failed to parse response:", responseText);
-                throw new Error('Failed to parse AI response as JSON');
-            }
+        const roadmapData = extractJSON(responseText);
+
+        // Ensure nodes array exists
+        if (!Array.isArray(roadmapData.nodes)) {
+            throw new Error('AI response missing nodes array');
         }
 
-        // Apply "Tree Layout" Logic (Center Trunk with Alternating Branches)
-        // x=400 is center. x=150 is left. x=650 is right.
-        roadmapData.nodes = roadmapData.nodes.map((node: any, index: number) => {
-            let x = 400; // Default Center
-            let y = 100 + (index * 120); // Spacing vertically
+        // Attach order_index to each node
+        roadmapData.nodes = roadmapData.nodes.map((node: any, index: number) => ({
+            ...node,
+            order_index: index + 1,
+        }));
 
-            // Pattern: Center -> Left -> Right -> Center -> Left -> Right...
-            const positionPattern = index % 3;
-
-            if (positionPattern === 1) {
-                x = 150; // Left Branch
-                y = 100 + ((index - 1) * 120) + 60; // Slightly offset vertically from spine
-            } else if (positionPattern === 2) {
-                x = 650; // Right Branch
-                y = 100 + ((index - 2) * 120) + 60; // Slightly offset vertically from spine
-            }
-            // index % 3 === 0 stays at Center (x=400)
-
-            return {
-                ...node,
-                order_index: index + 1,
-                position_x: x,
-                position_y: y
-            };
-        });
-
-        return NextResponse.json({
-            roadmap: roadmapData,
-            message: 'Roadmap generated successfully!'
-        });
+        return NextResponse.json(roadmapData);
 
     } catch (error: any) {
-        console.error('Error generating roadmap:', error);
+        console.error('generate-roadmap error:', error);
         return NextResponse.json(
             { error: error.message || 'Failed to generate roadmap' },
             { status: 500 }

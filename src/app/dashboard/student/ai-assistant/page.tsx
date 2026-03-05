@@ -30,7 +30,7 @@ export default async function StudentAIAssistantPage() {
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 md:ml-24 p-4 md:p-6">
+        <main className="flex-1 md:ml-14 p-4 md:p-6">
           <div style={{ height: 'calc(100vh - 88px)' }}>
             <AIChatInterface userName={profile.full_name?.split(' ')[0] || 'Student'} />
           </div>
