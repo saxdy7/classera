@@ -23,47 +23,33 @@ interface Roadmap {
 }
 
 export function RoadmapsContent() {
-    const searchParams = useSearchParams();
-    const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [showAIModal, setShowAIModal] = useState(false);
-    const [aiFormat, setAiFormat] = useState<'course' | 'guide' | 'roadmap'>('roadmap');
-    const [filter, setFilter] = useState({
-        type: 'all',
-        difficulty: 'all',
-        search: ''
-    });
+    const [form, setForm] = useState({ topic: '', experience: 'beginner', hours: '2', weeks: '12' });
+    const [loading, setLoading] = useState(false);
+    const [roadmap, setRoadmap] = useState<GeneratedRoadmap | null>(null);
+    const [selected, setSelected] = useState<number | null>(null); // flat node index
+    const [done, setDone] = useState<Set<number>>(new Set());
+    const [error, setError] = useState('');
 
-    useEffect(() => {
-        if (searchParams.get('generate') === 'true') {
-            const format = searchParams.get('format');
-            if (format && ['course', 'guide', 'roadmap'].includes(format)) {
-                setAiFormat(format as 'career' | 'skill' | 'project');
-            }
-            setShowAIModal(true);
-        }
-    }, [searchParams]);
-
-    useEffect(() => {
-        fetchRoadmaps();
-    }, [filter]);
-
-    const fetchRoadmaps = async () => {
-        setLoading(true);
+    const generate = async () => {
+        if (!form.topic.trim()) return;
+        setLoading(true); setError(''); setRoadmap(null); setSelected(null); setDone(new Set());
         try {
-            const params = new URLSearchParams();
-            if (filter.type !== 'all') params.append('type', filter.type);
-            if (filter.difficulty !== 'all') params.append('difficulty', filter.difficulty);
-            if (filter.search) params.append('search', filter.search);
-
-            const response = await fetch(`/api/roadmaps?${params}`);
-            const data = await response.json();
-            setRoadmaps(data.roadmaps || []);
-        } catch (error) {
-            console.error('Error fetching roadmaps:', error);
-        } finally {
-            setLoading(false);
-        }
+            const res = await fetch('/api/ai/generate-roadmap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    target_role: form.topic,
+                    experience_level: form.experience,
+                    daily_hours: parseInt(form.hours),
+                    target_weeks: parseInt(form.weeks),
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Generation failed');
+            setRoadmap(data);
+        } catch (e: any) {
+            setError(e.message || 'Failed to generate roadmap.');
+        } finally { setLoading(false); }
     };
 
     const getDifficultyColor = (difficulty: string) => {
