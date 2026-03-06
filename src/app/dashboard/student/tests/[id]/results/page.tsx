@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { CheckCircle, XCircle, Clock, Award, ArrowLeft, FileText, Sparkles, Lightbulb, TrendingUp, AlertCircle, BookOpen } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Award, ArrowLeft, FileText, Sparkles, Lightbulb, TrendingUp, AlertCircle, BookOpen, Trophy } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function TestResultsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -164,6 +164,34 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
     const passed = percentage >= 40;
     const grade = aiAnalysis?.grade || (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');
 
+    // Fetch per-test leaderboard
+    const { data: classLeaderboard } = await supabase
+        .from('test_submissions')
+        .select('student_id, score, percentage, time_taken_seconds, users!test_submissions_student_id_fkey(id, full_name, avatar_url)')
+        .eq('test_id', testId)
+        .not('submitted_at', 'is', null)
+        .order('percentage', { ascending: false })
+        .order('time_taken_seconds', { ascending: true })
+        .limit(50);
+
+    const leaderboardEntries = (classLeaderboard || []) as Array<{
+        student_id: string;
+        score: number;
+        percentage: number;
+        time_taken_seconds: number;
+        users: { id: string; full_name: string; avatar_url: string | null } | null;
+    }>;
+    const myRank = leaderboardEntries.findIndex(e => e.student_id === user.id);
+    const myRankDisplay = myRank >= 0 ? myRank + 1 : null;
+    const totalParticipants = leaderboardEntries.length;
+
+    const formatTimeTaken = (secs: number) => {
+        if (!secs) return '—';
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return m > 0 ? `${m}m ${s}s` : `${s}s`;
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
             <Header profile={{ id: user.id, ...profile }} />
@@ -196,6 +224,148 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                 </div>
                             </div>
                         </div>
+
+                        {/* ── Per-Test Class Leaderboard ── */}
+                        {myRankDisplay !== null && totalParticipants >= 1 && (
+                            <div className="bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 rounded-2xl p-6 mb-8 border border-violet-800/40 shadow-xl">
+                                {/* Header */}
+                                <div className="flex items-center justify-between mb-5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-yellow-400/20 rounded-xl flex items-center justify-center">
+                                            <Trophy className="w-5 h-5 text-yellow-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-bold text-white">Class Leaderboard</h3>
+                                            <p className="text-slate-400 text-xs">{totalParticipants} student{totalParticipants !== 1 ? 's' : ''} completed this test</p>
+                                        </div>
+                                    </div>
+                                    {/* Your rank badge */}
+                                    <div className={`px-4 py-2 rounded-xl text-center ${
+                                        myRankDisplay === 1 ? 'bg-yellow-400/20 border border-yellow-400/40' :
+                                        myRankDisplay === 2 ? 'bg-slate-400/20 border border-slate-400/40' :
+                                        myRankDisplay === 3 ? 'bg-amber-700/30 border border-amber-700/40' :
+                                        'bg-violet-600/20 border border-violet-600/40'
+                                    }`}>
+                                        <p className="text-xs text-slate-400 font-medium">Your Rank</p>
+                                        <p className={`text-2xl font-bold ${
+                                            myRankDisplay === 1 ? 'text-yellow-400' :
+                                            myRankDisplay === 2 ? 'text-slate-300' :
+                                            myRankDisplay === 3 ? 'text-amber-500' :
+                                            'text-violet-400'
+                                        }`}>
+                                            #{myRankDisplay}
+                                        </p>
+                                        <p className="text-xs text-slate-500">of {totalParticipants}</p>
+                                    </div>
+                                </div>
+
+                                {/* Top 5 list */}
+                                <div className="space-y-2">
+                                    {leaderboardEntries.slice(0, 5).map((entry, idx) => {
+                                        const isMe = entry.student_id === user.id;
+                                        const rank = idx + 1;
+                                        const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
+                                        const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+
+                                        return (
+                                            <div
+                                                key={entry.student_id}
+                                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                                                    isMe
+                                                        ? 'bg-violet-600/25 border border-violet-500/50 shadow-lg shadow-violet-900/30'
+                                                        : 'bg-white/5 border border-white/5 hover:bg-white/10'
+                                                }`}
+                                            >
+                                                {/* Rank */}
+                                                <div className="w-8 text-center flex-shrink-0">
+                                                    {rankIcon ? (
+                                                        <span className="text-xl leading-none">{rankIcon}</span>
+                                                    ) : (
+                                                        <span className="text-slate-500 font-bold text-sm">#{rank}</span>
+                                                    )}
+                                                </div>
+
+                                                {/* Avatar */}
+                                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm ${
+                                                    isMe ? 'bg-violet-500 text-white' : 'bg-slate-700 text-slate-300'
+                                                }`}>
+                                                    {initials}
+                                                </div>
+
+                                                {/* Name */}
+                                                <div className="flex-1 min-w-0">
+                                                    <p className={`font-semibold text-sm truncate ${isMe ? 'text-violet-200' : 'text-white'}`}>
+                                                        {entry.users?.full_name || 'Student'}
+                                                        {isMe && <span className="ml-2 text-xs text-violet-400 font-normal">(You)</span>}
+                                                    </p>
+                                                    <p className="text-slate-500 text-xs">{formatTimeTaken(entry.time_taken_seconds)}</p>
+                                                </div>
+
+                                                {/* Score bar + % */}
+                                                <div className="flex items-center gap-3 flex-shrink-0">
+                                                    <div className="hidden sm:flex w-20 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full rounded-full ${
+                                                                entry.percentage >= 80 ? 'bg-emerald-400' :
+                                                                entry.percentage >= 60 ? 'bg-sky-400' :
+                                                                entry.percentage >= 40 ? 'bg-amber-400' : 'bg-red-400'
+                                                            }`}
+                                                            style={{ width: `${Math.min(100, entry.percentage || 0)}%` }}
+                                                        />
+                                                    </div>
+                                                    <span className={`font-bold text-sm w-12 text-right ${
+                                                        entry.percentage >= 80 ? 'text-emerald-400' :
+                                                        entry.percentage >= 60 ? 'text-sky-400' :
+                                                        entry.percentage >= 40 ? 'text-amber-400' : 'text-red-400'
+                                                    }`}>
+                                                        {(entry.percentage || 0).toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+
+                                    {/* Show student's row if outside top 5 */}
+                                    {myRankDisplay !== null && myRankDisplay > 5 && (
+                                        <>
+                                            <div className="flex items-center gap-2 py-1">
+                                                <div className="flex-1 border-t border-dashed border-slate-700" />
+                                                <span className="text-slate-600 text-xs px-2">···</span>
+                                                <div className="flex-1 border-t border-dashed border-slate-700" />
+                                            </div>
+                                            {leaderboardEntries[myRankDisplay - 1] && (() => {
+                                                const entry = leaderboardEntries[myRankDisplay - 1];
+                                                const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+                                                return (
+                                                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-600/25 border border-violet-500/50">
+                                                        <div className="w-8 text-center flex-shrink-0">
+                                                            <span className="text-slate-400 font-bold text-sm">#{myRankDisplay}</span>
+                                                        </div>
+                                                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm bg-violet-500 text-white">
+                                                            {initials}
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="font-semibold text-sm truncate text-violet-200">
+                                                                {entry.users?.full_name || 'You'}
+                                                                <span className="ml-2 text-xs text-violet-400 font-normal">(You)</span>
+                                                            </p>
+                                                            <p className="text-slate-500 text-xs">{formatTimeTaken(entry.time_taken_seconds)}</p>
+                                                        </div>
+                                                        <span className={`font-bold text-sm w-12 text-right ${
+                                                            (entry.percentage || 0) >= 80 ? 'text-emerald-400' :
+                                                            (entry.percentage || 0) >= 60 ? 'text-sky-400' :
+                                                            (entry.percentage || 0) >= 40 ? 'text-amber-400' : 'text-red-400'
+                                                        }`}>
+                                                            {(entry.percentage || 0).toFixed(0)}%
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })()}
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Score Details */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

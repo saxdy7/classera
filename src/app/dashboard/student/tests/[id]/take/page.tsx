@@ -233,11 +233,15 @@ export default function TakeTestPage() {
               </p>
             </div>
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-fuchsia-50 rounded-lg">
-                <Clock className="w-5 h-5 text-fuchsia-600" />
-                <span className={`font-mono text-lg font-bold ${timeRemaining < 300 ? 'text-red-600' : 'text-fuchsia-600'}`}>
-                  {formatTime(timeRemaining)}
-                </span>
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-mono text-lg font-bold transition-all ${
+                timeRemaining < 60
+                  ? 'bg-red-50 text-red-600 animate-pulse border-2 border-red-300'
+                  : timeRemaining < 300
+                  ? 'bg-orange-50 text-orange-600 border-2 border-orange-200'
+                  : 'bg-fuchsia-50 text-fuchsia-600'
+              }`}>
+                <Clock className="w-5 h-5" />
+                {formatTime(timeRemaining)}
               </div>
               <button
                 onClick={handleSubmit}
@@ -279,28 +283,48 @@ export default function TakeTestPage() {
           </div>
 
           {/* Answer Options */}
-          <div className="space-y-4">
+          <div className={question.type === 'mcq' ? 'grid grid-cols-1 md:grid-cols-2 gap-3' : 'space-y-4'}>
             {question.type === 'mcq' && question.options ? (
-              question.options.map((option, index) => (
-                <label
-                  key={index}
-                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-                    answers[question.id] === option
-                      ? 'border-fuchsia-500 bg-fuchsia-50'
-                      : 'border-slate-200 hover:border-fuchsia-300'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name={`question-${question.id}`}
-                    value={option}
-                    checked={answers[question.id] === option}
-                    onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-                    className="w-5 h-5 text-fuchsia-600 focus:ring-fuchsia-500"
-                  />
-                  <span className="ml-4 text-black">{option}</span>
-                </label>
-              ))
+              (() => {
+                const optionStyles = [
+                  { letter: 'A', badge: 'bg-blue-500', selected: 'border-blue-400 bg-blue-50', text: 'text-blue-700', shadow: 'shadow-blue-100' },
+                  { letter: 'B', badge: 'bg-rose-500', selected: 'border-rose-400 bg-rose-50', text: 'text-rose-700', shadow: 'shadow-rose-100' },
+                  { letter: 'C', badge: 'bg-amber-500', selected: 'border-amber-400 bg-amber-50', text: 'text-amber-700', shadow: 'shadow-amber-100' },
+                  { letter: 'D', badge: 'bg-emerald-500', selected: 'border-emerald-400 bg-emerald-50', text: 'text-emerald-700', shadow: 'shadow-emerald-100' },
+                  { letter: 'E', badge: 'bg-purple-500', selected: 'border-purple-400 bg-purple-50', text: 'text-purple-700', shadow: 'shadow-purple-100' },
+                  { letter: 'F', badge: 'bg-pink-500', selected: 'border-pink-400 bg-pink-50', text: 'text-pink-700', shadow: 'shadow-pink-100' },
+                ];
+                return question.options.map((option: string, index: number) => {
+                  const style = optionStyles[index % optionStyles.length];
+                  const isSelected = answers[question.id] === option;
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleAnswerChange(question.id, option)}
+                      className={`flex items-center gap-4 p-4 border-2 rounded-xl text-left transition-all duration-150 w-full group ${
+                        isSelected
+                          ? `${style.selected} border-current scale-[1.02] shadow-lg ${style.shadow}`
+                          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md hover:scale-[1.01]'
+                      }`}
+                    >
+                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0 text-sm ${style.badge}`}>
+                        {style.letter}
+                      </span>
+                      <span className={`font-medium text-sm md:text-base ${isSelected ? style.text : 'text-slate-800'}`}>
+                        {option}
+                      </span>
+                      {isSelected && (
+                        <span className="ml-auto w-6 h-6 rounded-full bg-white/80 flex items-center justify-center flex-shrink-0">
+                          <svg className={`w-4 h-4 ${style.text}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  );
+                });
+              })()
             ) : question.type === 'short_answer' ? (
               <input
                 type="text"
@@ -331,23 +355,9 @@ export default function TakeTestPage() {
               Previous
             </button>
 
-            <div className="flex gap-2 flex-wrap justify-center">
-              {test.questions.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentQuestion(index)}
-                  className={`w-10 h-10 rounded-lg font-medium transition-colors ${
-                    index === currentQuestion
-                      ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white'
-                      : answers[test.questions[index].id]
-                      ? 'bg-fuchsia-100 text-fuchsia-700'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
+            <span className="text-sm text-slate-500 font-medium">
+              {currentQuestion + 1} / {test.questions.length}
+            </span>
 
             <button
               onClick={() => {
@@ -367,21 +377,39 @@ export default function TakeTestPage() {
 
         {/* Answer Summary */}
         <div className="mt-6 bg-white rounded-xl p-6 border border-slate-200">
-          <h3 className="font-bold text-black mb-4">Answer Summary</h3>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="text-2xl font-bold text-black">{Object.keys(answers).length}</p>
-              <p className="text-sm text-slate-600">Answered</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-slate-400">{test.questions.length - Object.keys(answers).length}</p>
-              <p className="text-sm text-slate-600">Unanswered</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-purple-600">{test.questions.length}</p>
-              <p className="text-sm text-slate-600">Total</p>
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold text-black">Progress Overview</h3>
+            <span className="text-sm text-slate-500">
+              <span className="font-semibold text-fuchsia-600">{Object.keys(answers).length}</span>/{test.questions.length} answered
+            </span>
           </div>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {test.questions.map((q: { id: string }, index: number) => (
+              <button
+                key={index}
+                onClick={() => setCurrentQuestion(index)}
+                title={`Question ${index + 1}${answers[q.id] ? ' (answered)' : ''}`}
+                className={`w-9 h-9 rounded-lg text-sm font-bold transition-all ${
+                  index === currentQuestion
+                    ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white scale-110 shadow-md'
+                    : answers[q.id]
+                    ? 'bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200'
+                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-fuchsia-500 to-purple-500 transition-all duration-500"
+              style={{ width: `${(Object.keys(answers).length / test.questions.length) * 100}%` }}
+            />
+          </div>
+          <p className="text-xs text-slate-400 mt-2 text-center">
+            {test.questions.length - Object.keys(answers).length} question{test.questions.length - Object.keys(answers).length !== 1 ? 's' : ''} remaining
+          </p>
         </div>
       </div>
     </div>

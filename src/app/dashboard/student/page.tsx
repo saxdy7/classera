@@ -295,7 +295,7 @@ export default async function StudentDashboard() {
           </div>
         </main>
       </div>
-      <FloatingAIAssistant />
+      <FloatingAIAssistant quizCompleted={profile?.quiz_completed ?? false} />
     </div>
   );
 }

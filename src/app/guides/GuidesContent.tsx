@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Sparkles, BookText, ArrowLeft, Loader2, Clock, ExternalLink, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, BookText, ArrowLeft, Loader2, Clock, ExternalLink, ChevronDown, History, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useDebouncedCallback } from '@/hooks/useDebounce';
 
 interface GuideSection {
     heading: string;
@@ -28,6 +29,8 @@ const POPULAR = [
     'What is recursion?', 'Big O Notation simply explained',
 ];
 
+interface HistoryItem { id: string; title: string; created_at: string; data: GeneratedGuide; }
+
 export function GuidesContent() {
     const [topic, setTopic] = useState('');
     const [difficulty, setDifficulty] = useState('beginner');
@@ -35,6 +38,37 @@ export function GuidesContent() {
     const [guide, setGuide] = useState<GeneratedGuide | null>(null);
     const [openSections, setOpenSections] = useState<Set<number>>(new Set([0]));
     const [error, setError] = useState('');
+    const [history, setHistory] = useState<HistoryItem[]>([]);
+
+    useEffect(() => { fetchHistory(); }, []);
+
+    const fetchHistory = async () => {
+        try {
+            const res = await fetch('/api/history?type=guide');
+            if (res.ok) setHistory(await res.json());
+        } catch { /* silent */ }
+    };
+
+    const saveHistory = async (generated: GeneratedGuide) => {
+        try {
+            await fetch('/api/history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'guide', title: generated.guide_title, data: generated }),
+            });
+            fetchHistory();
+        } catch { /* silent */ }
+    };
+
+    const deleteHistory = async (id: string) => {
+        setHistory(prev => prev.filter(h => h.id !== id));
+        await fetch(`/api/history?id=${id}`, { method: 'DELETE' });
+    };
+
+    const loadFromHistory = (item: HistoryItem) => {
+        setGuide(item.data);
+        setOpenSections(new Set([0]));
+    };
 
     const generate = async () => {
         if (!topic.trim()) return;
@@ -52,12 +86,16 @@ export function GuidesContent() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Generation failed');
             setGuide(data);
+            saveHistory(data);
         } catch (e: any) {
             setError(e.message || 'Failed to generate guide. Please try again.');
         } finally {
             setLoading(false);
         }
     };
+
+    // Debounced: prevents accidental double-submits from fast Enter presses
+    const debouncedGenerate = useDebouncedCallback(generate, 400);
 
     const toggleSection = (i: number) => {
         setOpenSections(prev => {
@@ -108,7 +146,7 @@ export function GuidesContent() {
                             <input
                                 value={topic}
                                 onChange={e => setTopic(e.target.value)}
-                                onKeyDown={e => { if (e.key === 'Enter') generate(); }}
+                                onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
                                 placeholder="e.g. How REST APIs work, What is recursion, Docker explained..."
                                 className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all"
                             />
@@ -136,6 +174,30 @@ export function GuidesContent() {
                     </div>
 
                     {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 mb-6">{error}</div>}
+
+                    {history.length > 0 && (
+                        <div className="mb-6">
+                            <div className="flex items-center gap-2 mb-3">
+                                <History size={13} className="text-slate-400" />
+                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Guides</p>
+                            </div>
+                            <div className="flex gap-2 overflow-x-auto pb-1">
+                                {history.map(item => (
+                                    <div key={item.id}
+                                        className="flex-shrink-0 w-48 p-3 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 hover:bg-blue-50 transition-all group cursor-pointer"
+                                        onClick={() => loadFromHistory(item)}>
+                                        <p className="text-xs font-bold text-slate-800 truncate mb-1 leading-snug">{item.title}</p>
+                                        <p className="text-[10px] text-slate-400">{new Date(item.created_at).toLocaleDateString()}</p>
+                                        <button
+                                            onClick={e => { e.stopPropagation(); deleteHistory(item.id); }}
+                                            className="mt-1.5 flex items-center gap-1 text-[10px] text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Trash2 size={10} /> Delete
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Try these topics</p>

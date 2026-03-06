@@ -71,7 +71,7 @@ export default async function TestsPage() {
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-14">
+        <main className="flex-1 p-4 md:p-8 md:ml-24">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
@@ -308,11 +308,6 @@ function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, 
           Click to view results →
         </p>
       )}
-
-      {/* Debug: Show test ID */}
-      <p className="text-[10px] text-slate-400 mt-2 font-mono truncate">
-        ID: {test.id}
-      </p>
 
       {test.scheduled_at && !isLive && !isDraft && !isReady && (
         <p className="text-xs text-slate-500">

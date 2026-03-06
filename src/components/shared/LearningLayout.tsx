@@ -41,7 +41,8 @@ export async function LearningLayout({ children }: LearningLayoutProps) {
                     {children}
                 </main>
             </div>
-            <FloatingAIAssistant />
+            {/* AI assistant only for students */}
+            {role === 'student' && <FloatingAIAssistant />}
         </div>
     );
 }

@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import RealCalendar from '@/components/shared/RealCalendar';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -256,11 +255,12 @@ export default async function MentorDashboard() {
                 <h3 className="text-lg font-bold text-slate-900 mb-4">Quick Access</h3>
                 <nav className="space-y-2">
                   {[
-                    { href: '/dashboard/mentor/courses', icon: '📚', label: 'My Courses' },
-                    { href: '/dashboard/mentor/communities', icon: '👥', label: 'Communities' },
-                    { href: '/dashboard/mentor/tests', icon: '📝', label: 'Create Tests' },
-                    { href: '/dashboard/mentor/sessions', icon: '🎥', label: 'Live Sessions' },
-                    { href: '/dashboard/mentor/roadmap', icon: '🗺️', label: 'AI Roadmap Builder' },
+                    { href: '/dashboard/mentor/students',     icon: '🎓', label: 'My Students' },
+                    { href: '/dashboard/mentor/communities',  icon: '👥', label: 'Communities' },
+                    { href: '/dashboard/mentor/tests',        icon: '📝', label: 'Tests & Quizzes' },
+                    { href: '/dashboard/mentor/question-bank',icon: '📚', label: 'Question Bank' },
+                    { href: '/dashboard/mentor/analytics',    icon: '📊', label: 'Analytics' },
+                    { href: '/dashboard/mentor/live-sessions',icon: '🎥', label: 'Live Sessions' },
                   ].map((item) => (
                     <Link key={item.href} href={item.href}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all text-sm font-medium group">
@@ -294,7 +294,6 @@ export default async function MentorDashboard() {
           </div>
         </main>
       </div>
-      <FloatingAIAssistant />
     </div>
   );
 }

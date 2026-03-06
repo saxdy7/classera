@@ -8,7 +8,8 @@ interface Message {
   content: string;
 }
 
-export default function FloatingAIAssistant() {
+export default function FloatingAIAssistant({ quizCompleted = true }: { quizCompleted?: boolean }) {
+  if (!quizCompleted) return null;
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');

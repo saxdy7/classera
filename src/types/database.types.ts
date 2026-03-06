@@ -54,6 +54,8 @@ export interface Database {
           profile_verified: boolean
           linkedin_url: string | null
           github_url: string | null
+          quiz_completed: boolean
+          student_preferences: Record<string, unknown>
           created_at: string
           updated_at: string
         }
@@ -75,6 +77,8 @@ export interface Database {
           profile_verified?: boolean
           linkedin_url?: string | null
           github_url?: string | null
+          quiz_completed?: boolean
+          student_preferences?: Record<string, unknown>
           created_at?: string
           updated_at?: string
         }
@@ -96,6 +100,8 @@ export interface Database {
           profile_verified?: boolean
           linkedin_url?: string | null
           github_url?: string | null
+          quiz_completed?: boolean
+          student_preferences?: Record<string, unknown>
           created_at?: string
           updated_at?: string
         }
@@ -470,6 +476,32 @@ export interface Database {
           last_watched_at?: string | null
           created_at?: string
           updated_at?: string
+        }
+      }
+      ai_history: {
+        Row: {
+          id: string
+          user_id: string
+          type: 'roadmap' | 'course' | 'guide' | 'career_coach'
+          title: string
+          data: Record<string, unknown>
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: 'roadmap' | 'course' | 'guide' | 'career_coach'
+          title: string
+          data: Record<string, unknown>
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: 'roadmap' | 'course' | 'guide' | 'career_coach'
+          title?: string
+          data?: Record<string, unknown>
+          created_at?: string
         }
       }
     }

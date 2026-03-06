@@ -87,7 +87,7 @@ export default function StudentOnboarding() {
 
       await supabase.auth.refreshSession();
       await new Promise(resolve => setTimeout(resolve, 1000));
-      window.location.href = '/dashboard/student';
+      window.location.href = '/onboarding/student/quiz';
     } catch (err: unknown) {
       setError((err as Error)?.message || 'Failed to complete onboarding');
       setLoading(false);
