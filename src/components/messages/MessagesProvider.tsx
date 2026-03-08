@@ -157,7 +157,8 @@ export function MessagesProvider({ children, userId }: { children: ReactNode; us
 
         console.log('📡 Setting up real-time subscription for:', { userId, otherUserId });
 
-        // Subscribe to messages where we are the receiver
+        // Subscribe to incoming messages from the other participant
+        // archive 020 schema has no receiver_id — filter by sender_id instead
         const msgChannel = supabase
             .channel(`messages:${userId}:${otherUserId}`, {
                 config: {
@@ -170,7 +171,7 @@ export function MessagesProvider({ children, userId }: { children: ReactNode; us
                     event: 'INSERT',
                     schema: 'public',
                     table: 'messages',
-                    filter: `receiver_id=eq.${userId}`
+                    filter: `sender_id=eq.${otherUserId}`
                 },
                 async (payload) => {
                     interface RealtimeMessage {

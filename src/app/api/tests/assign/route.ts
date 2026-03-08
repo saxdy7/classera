@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
 
 // POST - Assign test to students
@@ -11,8 +12,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Verify mentor role
-        const { data: profile } = await supabase
+        const admin = createAdminClient();
+
+        // Verify mentor role via admin client (avoids RLS recursion on users table)
+        const { data: profile } = await admin
             .from('users')
             .select('role')
             .eq('id', user.id)
@@ -30,7 +33,7 @@ export async function POST(request: Request) {
         }
 
         // Verify test belongs to this mentor
-        const { data: test } = await supabase
+        const { data: test } = await admin
             .from('tests')
             .select('id, title, mentor_id')
             .eq('id', test_id)
@@ -43,15 +46,16 @@ export async function POST(request: Request) {
 
         let studentsToAssign: string[] = [];
 
-        // If community_id provided, get all members
+        // If community_id provided, get all members via admin (bypasses RLS on community_members)
+        // Real schema from CREATE_COMMUNITIES.sql: student_id (not user_id)
         if (community_id) {
-            const { data: members } = await supabase
+            const { data: members } = await admin
                 .from('community_members')
-                .select('user_id')
+                .select('student_id')
                 .eq('community_id', community_id)
-                .neq('user_id', user.id); // Exclude mentor
+                .neq('student_id', user.id); // Exclude mentor
 
-            studentsToAssign = members?.map(m => m.user_id) || [];
+            studentsToAssign = members?.map((m: any) => m.student_id) || [];
         }
 
         // Add individual students
@@ -63,7 +67,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No students to assign' }, { status: 400 });
         }
 
-        // Create invitations (upsert to avoid duplicates)
+        // Create invitations (upsert to avoid duplicates) via admin client
         const invitations = studentsToAssign.map(student_id => ({
             test_id,
             student_id,
@@ -72,7 +76,7 @@ export async function POST(request: Request) {
             invited_at: new Date().toISOString()
         }));
 
-        const { data: created, error } = await supabase
+        const { data: created, error } = await admin
             .from('test_invitations')
             .upsert(invitations, {
                 onConflict: 'test_id,student_id',
@@ -85,7 +89,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
 
-        // Create notifications for students
+        // Create notifications for students via admin client
         if (send_notification !== false) {
             const notifications = studentsToAssign.map(student_id => ({
                 user_id: student_id,
@@ -96,11 +100,11 @@ export async function POST(request: Request) {
                 is_read: false
             }));
 
-            await supabase.from('notifications').insert(notifications);
+            await admin.from('notifications').insert(notifications);
         }
 
         // Update test to go live if needed
-        await supabase
+        await admin
             .from('tests')
             .update({ is_live: true })
             .eq('id', test_id);
@@ -134,12 +138,14 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Test ID required' }, { status: 400 });
         }
 
-        const { data: invitations, error } = await supabase
+        const admin = createAdminClient();
+
+        // Fetch invitations without FK hints to avoid schema cache issues
+        const { data: invitations, error } = await admin
             .from('test_invitations')
             .select(`
         *,
-        student:users!test_invitations_student_id_fkey(id, full_name, email, avatar_url),
-        submission:test_submissions!test_submissions_test_id_fkey(id, score, submitted_at)
+        student:users(id, full_name, email, avatar_url)
       `)
             .eq('test_id', testId);
 

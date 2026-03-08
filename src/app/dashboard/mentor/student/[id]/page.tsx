@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare } from 'lucide-react';
+import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare, GitBranch } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -69,6 +70,41 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     .select('*', { count: 'exact', head: true })
     .eq('student_id', id)
     .not('submitted_at', 'is', null);
+
+  // GitHub stats
+  const admin = createAdminClient();
+  const { data: githubConn } = await admin
+    .from('github_connections')
+    .select('github_username, github_avatar_url, public_repos')
+    .eq('user_id', id)
+    .single();
+
+  const { data: analyticsRows } = githubConn
+    ? await admin
+        .from('repo_analytics')
+        .select('overall_score, languages, total_commits')
+        .eq('student_id', id)
+        .order('analyzed_at', { ascending: false })
+        .limit(10)
+    : { data: null };
+
+  const avgPlatformScore = analyticsRows?.length
+    ? Math.round(analyticsRows.reduce((s, r) => s + (r.overall_score ?? 0), 0) / analyticsRows.length)
+    : null;
+  const totalPlatformCommits = analyticsRows?.reduce((s, r) => s + (r.total_commits ?? 0), 0) ?? 0;
+
+  const langTotals: Record<string, number> = {};
+  analyticsRows?.forEach((row) => {
+    if (row.languages && typeof row.languages === 'object') {
+      Object.entries(row.languages as Record<string, number>).forEach(([lang, bytes]) => {
+        langTotals[lang] = (langTotals[lang] ?? 0) + bytes;
+      });
+    }
+  });
+  const topLanguages = Object.entries(langTotals)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5)
+    .map(([lang]) => lang);
 
   return (
     <div className="min-h-screen bg-white">
@@ -243,6 +279,96 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                     <h3 className="font-semibold text-slate-900 mb-1">No Courses Enrolled</h3>
                     <p className="text-sm text-slate-500">Student hasn't enrolled in any courses yet</p>
                   </div>
+                </div>
+
+                {/* GitHub Stats */}
+                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                      <GitBranch className="w-4 h-4 text-white" />
+                    </div>
+                    GitHub Activity
+                  </h2>
+
+                  {!githubConn ? (
+                    <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                      <GitBranch className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm font-medium text-slate-600">GitHub not connected</p>
+                      <p className="text-xs text-slate-400 mt-1">Student hasn't linked their GitHub account</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Profile row */}
+                      <div className="flex items-center gap-3">
+                        {githubConn.github_avatar_url && (
+                          <Image
+                            src={githubConn.github_avatar_url}
+                            alt={githubConn.github_username}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded-full border border-slate-200"
+                          />
+                        )}
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">@{githubConn.github_username}</p>
+                          {githubConn.public_repos !== null && (
+                            <p className="text-xs text-slate-500">{githubConn.public_repos} public repos</p>
+                          )}
+                        </div>
+                        <a
+                          href={`https://github.com/${githubConn.github_username}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-auto text-xs text-violet-600 hover:underline"
+                        >
+                          View Profile
+                        </a>
+                      </div>
+
+                      {/* Stats grid */}
+                      <div className="grid grid-cols-3 gap-3">
+                        <div className="bg-slate-50 rounded-xl p-3 text-center">
+                          <p className="text-xl font-bold text-slate-900">{totalPlatformCommits}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">Platform Commits</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-xl p-3 text-center">
+                          <p className="text-xl font-bold text-slate-900">{analyticsRows?.length ?? 0}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">Repos Analyzed</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-xl p-3 text-center">
+                          <p className="text-xl font-bold text-slate-900">
+                            {avgPlatformScore !== null ? `${avgPlatformScore}` : '—'}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-0.5">Avg Score</p>
+                        </div>
+                      </div>
+
+                      {/* Languages */}
+                      {topLanguages.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Top Languages</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {topLanguages.map((lang) => (
+                              <span
+                                key={lang}
+                                className="text-xs bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full"
+                              >
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Link to projects */}
+                      <Link
+                        href={`/dashboard/mentor/projects?student=${id}`}
+                        className="block text-center text-sm text-violet-600 hover:underline pt-1"
+                      >
+                        View Project Submissions
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

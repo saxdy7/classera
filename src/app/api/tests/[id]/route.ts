@@ -19,7 +19,7 @@ export async function GET(
             .from('tests')
             .select(`
         *,
-        mentor:users!tests_mentor_id_fkey(id, full_name, avatar_url, email),
+        mentor:users(id, full_name, avatar_url, email),
         community:communities(id, name),
         submissions:test_submissions(
           id,

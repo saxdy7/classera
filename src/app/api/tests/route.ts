@@ -25,13 +25,7 @@ export async function GET(request: Request) {
 
         let query = supabase
             .from('tests')
-            .select(`
-        *,
-        mentor:users!tests_mentor_id_fkey(id, full_name, avatar_url),
-        community:communities(id, name),
-        _count:test_submissions(count)
-      `)
-            .eq('university_id', profile?.university_id); // Explicit university isolation
+            .select('*, submissions:test_submissions(count)')
 
         if (profile?.role === 'mentor') {
             // Mentors see their own tests
@@ -129,20 +123,11 @@ export async function POST(request: Request) {
                 total_marks,
                 scheduled_at: scheduled_at || null,
                 questions,
+                // enable_screen_recording and enable_face_monitoring exist in actual tests table
                 enable_screen_recording: enable_screen_recording ?? proctoring_settings?.screen_recording ?? true,
                 enable_face_monitoring: enable_face_monitoring ?? proctoring_settings?.face_monitoring ?? true,
-                settings: {
-                    randomize_questions: settings?.randomize_questions ?? false,
-                    show_results_immediately: settings?.show_results_immediately ?? true,
-                    allow_review: settings?.allow_review ?? true,
-                    enable_anti_cheat: proctoring_settings?.anti_cheat ?? settings?.enable_anti_cheat ?? true,
-                },
-                proctoring_settings: proctoring_settings || {
-                    screen_recording: true,
-                    face_monitoring: true,
-                    tab_switch_limit: 3,
-                    fullscreen_required: true,
-                },
+                // settings and proctoring_settings columns don't exist in the actual DB (archive 102 never ran)
+                // those values are accepted from frontend but not stored as separate columns
                 is_live: false
             })
             .select()
@@ -170,13 +155,13 @@ export async function PATCH(request: Request) {
         }
 
         const body = await request.json();
-        const { id, ...updates } = body;
+        const { id, settings: _settings, proctoring_settings: _proctoring, ...updates } = body;
 
         if (!id) {
             return NextResponse.json({ error: 'Test ID required' }, { status: 400 });
         }
 
-        // Update test (RLS ensures only mentor can update their own tests)
+        // Update test — strip settings/proctoring_settings which don't exist in actual DB schema
         const { data: test, error } = await supabase
             .from('tests')
             .update({ ...updates, updated_at: new Date().toISOString() })

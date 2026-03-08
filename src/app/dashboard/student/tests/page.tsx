@@ -31,7 +31,7 @@ export default async function StudentTestsPage() {
       *,
       test:tests(
         *,
-        mentor:users!tests_mentor_id_fkey(full_name, avatar_url)
+        mentor:users(full_name, avatar_url)
       )
     `)
     .eq('student_id', user.id)

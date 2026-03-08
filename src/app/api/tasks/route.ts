@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       .from('tasks')
       .select('*')
       .eq('student_id', user.id)
-      .order('position', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (status) {
       query = query.eq('status', status);
@@ -53,19 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, status, priority, due_date, labels } = body;
-
-    // Get the highest position for this status
-    const { data: maxTask } = await supabase
-      .from('tasks')
-      .select('position')
-      .eq('student_id', user.id)
-      .eq('status', status || 'todo')
-      .order('position', { ascending: false })
-      .limit(1)
-      .single();
-
-    const position = maxTask ? maxTask.position + 1 : 0;
+    const { title, description, status, priority, due_date } = body;
 
     const { data: task, error } = await supabase
       .from('tasks')
@@ -73,11 +61,9 @@ export async function POST(request: NextRequest) {
         student_id: user.id,
         title,
         description,
-        status: status || 'todo',
+        status: status || 'pending',
         priority: priority || 'medium',
         due_date,
-        labels: labels || [],
-        position,
       })
       .select()
       .single();

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { SettingsClient } from '@/components/shared/SettingsClient';
+import SettingsClient from '@/components/shared/SettingsClient';
 
 export const dynamic = 'force-dynamic';
 

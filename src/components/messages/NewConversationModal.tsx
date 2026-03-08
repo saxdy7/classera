@@ -9,7 +9,6 @@ interface User {
     email: string;
     avatar_url: string | null;
     role: string;
-    degree_type?: string | null;
     specialization_board?: string | null;
 }
 
@@ -53,8 +52,8 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
     const filteredUsers = users
         .filter(u => u.role === activeTab.slice(0, -1)) // 'mentors' -> 'mentor', 'students' -> 'student'
         .filter(u =>
-            u.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchQuery.toLowerCase())
+            (u.full_name ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (u.email ?? '').toLowerCase().includes(searchQuery.toLowerCase())
         );
 
     const mentorsCount = users.filter(u => u.role === 'mentor').length;
@@ -201,9 +200,9 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                                             </h3>
                                         </div>
                                         <p className="text-sm text-slate-500 truncate">{user.email}</p>
-                                        {user.degree_type && (
+                                        {user.specialization_board && (
                                             <p className="text-xs text-slate-400 mt-1 truncate">
-                                                {user.degree_type} {user.specialization_board && `• ${user.specialization_board}`}
+                                                {user.specialization_board}
                                             </p>
                                         )}
                                     </div>

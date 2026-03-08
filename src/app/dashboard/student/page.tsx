@@ -90,6 +90,24 @@ export default async function StudentDashboard() {
     }
   } catch (_) { }
 
+  // Fetch real counts (non-fatal)
+  let courseCount: number | string = '—';
+  let sessionCount: number | string = '—';
+  try {
+    const { count: cc } = await supabase
+      .from('course_enrollments')
+      .select('*', { count: 'exact', head: true })
+      .eq('student_id', user.id);
+    if (cc !== null) courseCount = cc;
+  } catch (_) { }
+  try {
+    const { count: sc } = await supabase
+      .from('session_participants')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+    if (sc !== null) sessionCount = sc;
+  } catch (_) { }
+
   const firstName = profile.full_name?.split(' ')[0] || 'Student';
   const universityName = profile.universities?.name || 'your university';
   const gradients = ['from-violet-400 to-purple-500', 'from-cyan-400 to-blue-500', 'from-rose-400 to-pink-500', 'from-amber-400 to-orange-500'];
@@ -146,10 +164,10 @@ export default async function StudentDashboard() {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                  { label: 'Courses', value: '—', icon: '📚', color: 'bg-blue-50 text-blue-700', border: 'border-blue-100' },
+                  { label: 'Courses', value: courseCount, icon: '📚', color: 'bg-blue-50 text-blue-700', border: 'border-blue-100' },
                   { label: 'Mentors', value: mentors.length || '—', icon: '👨‍🏫', color: 'bg-purple-50 text-purple-700', border: 'border-purple-100' },
                   { label: 'Messages', value: conversations.length || '—', icon: '💬', color: 'bg-emerald-50 text-emerald-700', border: 'border-emerald-100' },
-                  { label: 'Sessions', value: '—', icon: '🎯', color: 'bg-amber-50 text-amber-700', border: 'border-amber-100' },
+                  { label: 'Sessions', value: sessionCount, icon: '🎯', color: 'bg-amber-50 text-amber-700', border: 'border-amber-100' },
                 ].map((stat) => (
                   <div key={stat.label} className={`bg-white rounded-2xl p-5 border ${stat.border} shadow-sm hover:shadow-md transition-shadow`}>
                     <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg ${stat.color} mb-3`}>

@@ -115,7 +115,7 @@ function SessionCard({ session, isLive = false }: { session: Session; isLive?: b
 
         downloadICS({
             title: session.title,
-            description: `${session.description || ''}\n\nType: ${config.label}\nHosted by: ${session.host.full_name}`,
+            description: `${session.description || ''}\n\nType: ${config.label}\nHosted by: ${session.host?.full_name ?? ''}`,
             location: session.room_url || 'Online',
             startTime,
             endTime,
@@ -172,20 +172,20 @@ function SessionCard({ session, isLive = false }: { session: Session; isLive?: b
                     </div>
 
                     <div className="flex items-center gap-2 mt-3">
-                        {session.host.avatar_url ? (
+                        {session.host?.avatar_url ? (
                             <img
                                 src={session.host.avatar_url}
-                                alt={session.host.full_name}
+                                alt={session.host?.full_name ?? ''}
                                 className="w-6 h-6 rounded-full"
                             />
                         ) : (
                             <div className="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center">
                                 <span className="text-xs font-medium text-slate-600">
-                                    {session.host.full_name.charAt(0)}
+                                    {session.host?.full_name?.charAt(0) ?? '?'}
                                 </span>
                             </div>
                         )}
-                        <span className="text-sm text-slate-600">Hosted by {session.host.full_name}</span>
+                        <span className="text-sm text-slate-600">Hosted by {session.host?.full_name ?? 'Unknown'}</span>
                     </div>
                 </div>
             </div>

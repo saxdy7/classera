@@ -1,84 +1,93 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // Auth check
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const admin = createAdminClient();
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // NEW SCHEMA: Fetch conversations via conversation_participants
-    const { data: participations, error: participationError } = await supabase
+    // 1. Get all conversation_ids where this user is a participant
+    const { data: myParts, error: partsError } = await admin
       .from('conversation_participants')
-      .select(`
-        conversation_id,
-        updated_at,
-        conversation:conversations!inner(
-          id,
-          type,
-          name,
-          image_url,
-          last_message_at,
-          participants:conversation_participants(
-            user:users(id, full_name, avatar_url, role)
-          )
-        )
-      `)
-      .eq('user_id', user.id)
-      .order('updated_at', { ascending: false });
+      .select('conversation_id')
+      .eq('user_id', user.id);
 
-    if (participationError) {
-      console.error('Error fetching conversations:', participationError);
-      return NextResponse.json({ error: participationError.message }, { status: 500 });
+    if (partsError) throw partsError;
+
+    const convIds = (myParts ?? []).map((p: any) => p.conversation_id);
+    if (convIds.length === 0) return NextResponse.json({ conversations: [] });
+
+    // 2. Get the other participant for each conversation
+    const { data: otherParts } = await admin
+      .from('conversation_participants')
+      .select('conversation_id, user_id')
+      .in('conversation_id', convIds)
+      .neq('user_id', user.id);
+
+    // 3. Fetch user info for all other participants
+    const otherUserIds = [...new Set((otherParts ?? []).map((p: any) => p.user_id))];
+    let usersMap: Record<string, any> = {};
+    if (otherUserIds.length > 0) {
+      const { data: usersData } = await admin
+        .from('users')
+        .select('id, full_name, avatar_url, role')
+        .in('id', otherUserIds);
+      usersMap = Object.fromEntries((usersData ?? []).map((u: any) => [u.id, u]));
     }
 
-    if (!participations || participations.length === 0) {
-      return NextResponse.json({ conversations: [] });
+    // 4. Get last message per conversation
+    const { data: allMsgs } = await admin
+      .from('messages')
+      .select('conversation_id, content, sender_id, created_at')
+      .in('conversation_id', convIds)
+      .order('created_at', { ascending: false });
+
+    const lastMsgMap: Record<string, any> = {};
+    for (const msg of allMsgs ?? []) {
+      if (!lastMsgMap[(msg as any).conversation_id]) lastMsgMap[(msg as any).conversation_id] = msg;
     }
 
-    // Transform data for frontend
-    const conversations = participations.map((p: any) => {
-      const conv = p.conversation;
+    // 5. Build response
+    const conversations = convIds
+      .map((convId: string) => {
+        const otherPart = (otherParts ?? []).find((p: any) => p.conversation_id === convId);
+        if (!otherPart) return null;
+        const otherUser = usersMap[(otherPart as any).user_id];
+        if (!otherUser) return null;
+        const lastMsg = lastMsgMap[convId];
+        return {
+          id: convId,
+          user: otherUser,
+          type: 'direct',
+          lastMessage: {
+            created_at: lastMsg?.created_at ?? null,
+            content: lastMsg?.content ?? '',
+            isFromCurrentUser: lastMsg?.sender_id === user.id,
+            read: true,
+          },
+          unreadCount: 0,
+        };
+      })
+      .filter(Boolean);
 
-      // Find the "other user" for direct chats
-      let otherUser = null;
-      if (conv.type === 'direct') {
-        const otherParticipant = conv.participants.find(
-          (part: any) => part.user.id !== user.id
-        );
-        otherUser = otherParticipant?.user;
-      }
-
-      // Fetch last message (optional optimization: could include in query)
-      // For now, we return structure expected by frontend, but we might need to fetch last message separately
-      // or rely on `last_message_at`. 
-
-      return {
-        id: conv.id, // Conversation ID (new field for frontend to track)
-        user: otherUser, // For direct chats
-        name: conv.name, // For group chats
-        type: conv.type,
-        lastMessage: {
-          // Placeholder - real implementation would fetch from messages table
-          // For simple list, last_message_at might be enough for sorting
-          created_at: conv.last_message_at,
-          content: 'Message',
-          isFromCurrentUser: false,
-          read: true
-        },
-        unreadCount: 0 // Placeholder
-      };
+    // Sort by most recent message
+    conversations.sort((a: any, b: any) => {
+      const at = a.lastMessage?.created_at ? new Date(a.lastMessage.created_at).getTime() : 0;
+      const bt = b.lastMessage?.created_at ? new Date(b.lastMessage.created_at).getTime() : 0;
+      return bt - at;
     });
 
     return NextResponse.json({ conversations });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in GET /api/conversations:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+

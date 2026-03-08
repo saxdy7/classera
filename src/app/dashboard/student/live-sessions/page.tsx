@@ -2,18 +2,15 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Video, Clock } from 'lucide-react';
+import { StudentSessionsClient } from '@/components/sessions/StudentSessionsClient';
+
+export const dynamic = 'force-dynamic';
 
 export default async function StudentLiveSessionsPage() {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/signin');
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/signin');
 
   const { data: profile } = await supabase
     .from('users')
@@ -21,9 +18,44 @@ export default async function StudentLiveSessionsPage() {
     .eq('id', user.id)
     .single();
 
-  if (!profile?.university_id || !profile?.full_name) {
-    redirect('/onboarding/student');
-  }
+  if (!profile?.university_id || !profile?.full_name) redirect('/onboarding/student');
+
+  // Get session IDs this student is invited to
+  const { data: participantData } = await supabase
+    .from('session_participants')
+    .select('session_id')
+    .eq('user_id', user.id);
+
+  const sessionIds = participantData?.map(p => p.session_id) ?? [];
+
+  const { data: sessions } = await supabase
+    .from('live_sessions')
+    .select(`
+      *,
+      host:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url)
+    `)
+    .in('id', sessionIds.length > 0 ? sessionIds : ['00000000-0000-0000-0000-000000000000'])
+    .order('scheduled_at', { ascending: true });
+
+  // Map DB values to component-expected values:
+  // - DB has no session_type column → default to 'mentor_meeting'
+  // - DB meeting_url → component room_url
+  // - DB status 'ongoing' → component 'live', DB 'completed' → component 'ended'
+  const mappedSessions = (sessions ?? []).map(s => ({
+    ...s,
+    session_type: 'mentor_meeting' as const,
+    room_url: s.meeting_url || undefined,
+    status: s.status === 'ongoing' ? 'live' : s.status === 'completed' ? 'ended' : s.status,
+  }));
+
+  const upcomingSessions = mappedSessions.filter(
+    s => s.status === 'scheduled' && new Date(s.scheduled_at) > new Date()
+  );
+  const liveSessions = mappedSessions.filter(s => s.status === 'live');
+  const pastSessions = mappedSessions.filter(
+    s => s.status === 'ended' || s.status === 'cancelled' ||
+         (s.status === 'scheduled' && new Date(s.scheduled_at) <= new Date())
+  );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -31,59 +63,15 @@ export default async function StudentLiveSessionsPage() {
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-black mb-2">Live Sessions</h2>
-              <p className="text-slate-600">Join live classes and interactive sessions</p>
-            </div>
-
-            {/* Session Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <Video className="w-6 h-6 text-red-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Live Now</p>
-                    <p className="text-2xl font-bold text-black">0</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Upcoming</p>
-                    <p className="text-2xl font-bold text-black">0</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Live Sessions List */}
-            <div className="bg-white rounded-xl border border-slate-200">
-              <div className="p-6 border-b border-slate-200">
-                <h3 className="text-lg font-bold text-black">Available Sessions</h3>
-              </div>
-
-              {/* Empty State */}
-              <div className="p-12 text-center">
-                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Video className="w-10 h-10 text-slate-400" />
-                </div>
-                <h3 className="text-xl font-bold text-black mb-2">No Live Sessions</h3>
-                <p className="text-slate-600 mb-6">
-                  Live sessions from your mentors will appear here
-                </p>
-              </div>
-            </div>
-          </div>
+          <StudentSessionsClient
+            profile={profile}
+            upcomingSessions={upcomingSessions}
+            liveSessions={liveSessions}
+            pastSessions={pastSessions}
+          />
         </main>
       </div>
     </div>
   );
 }
+

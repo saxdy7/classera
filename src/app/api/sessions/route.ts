@@ -1,5 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
+
+// Safe notification insert — ignores column-mismatch errors so they never block core operations
+async function safeInsertNotifications(admin: ReturnType<typeof createAdminClient>, notifications: any[]) {
+  try {
+    const { error } = await admin.from('notifications').insert(notifications);
+    if (error) console.error('Non-fatal: notification insert failed', error);
+  } catch (e) {
+    console.error('Non-fatal: notification insert exception', e);
+  }
+}
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 
@@ -51,14 +62,13 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type'); // mentor_meeting, proctored_test, etc.
-    const status = searchParams.get('status'); // scheduled, live, completed
+    const status = searchParams.get('status'); // scheduled, ongoing, completed, cancelled
     const upcoming = searchParams.get('upcoming') === 'true';
 
-    // Get user's university
+    // Get user's role
     const { data: profile } = await supabase
       .from('users')
-      .select('university_id, role')
+      .select('role')
       .eq('id', user.id)
       .single();
 
@@ -66,20 +76,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    let query = supabase
+    const admin = createAdminClient();
+
+    // live_sessions actual columns: id, mentor_id, title, description,
+    //   scheduled_at, duration_minutes, meeting_url, status, max_participants, created_at, updated_at
+    let query = admin
       .from('live_sessions')
       .select(`
         *,
-        host:users!live_sessions_host_id_fkey(id, full_name, avatar_url),
-        test:tests(id, title),
+        mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url),
         participants:session_participants(count)
       `)
-      .eq('university_id', profile.university_id)
       .order('scheduled_at', { ascending: true });
-
-    if (type) {
-      query = query.eq('session_type', type);
-    }
 
     if (status) {
       query = query.eq('status', status);
@@ -89,15 +97,17 @@ export async function GET(request: Request) {
       query = query.gte('scheduled_at', new Date().toISOString());
     }
 
-    // For students, only show sessions they're invited to or public sessions
-    if (profile.role === 'student') {
-      // Get sessions where student is a participant
-      const { data: participantSessions } = await supabase
+    if (profile.role === 'mentor') {
+      // Mentors see their own sessions
+      query = query.eq('mentor_id', user.id);
+    } else {
+      // Students see only sessions they're a participant in
+      const { data: participantSessions } = await admin
         .from('session_participants')
         .select('session_id')
         .eq('user_id', user.id);
 
-      const sessionIds = participantSessions?.map(p => p.session_id) || [];
+      const sessionIds = (participantSessions ?? []).map((p: any) => p.session_id);
 
       if (sessionIds.length > 0) {
         query = query.in('id', sessionIds);
@@ -113,7 +123,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ sessions });
+    return NextResponse.json({ sessions: sessions ?? [] });
   } catch (error) {
     console.error('Error in sessions GET:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -133,7 +143,7 @@ export async function POST(request: Request) {
     // Check if mentor
     const { data: profile } = await supabase
       .from('users')
-      .select('university_id, role')
+      .select('role')
       .eq('id', user.id)
       .single();
 
@@ -145,38 +155,35 @@ export async function POST(request: Request) {
     const {
       title,
       description,
-      session_type,
       scheduled_at,
       duration_minutes,
-      test_id,
       settings,
       participant_ids, // Array of user IDs to invite
     } = body;
 
-    // Validate required fields
-    if (!title || !session_type || !scheduled_at) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!title || !scheduled_at) {
+      return NextResponse.json({ error: 'title and scheduled_at are required' }, { status: 400 });
     }
 
-    // Create Daily room
+    // Optionally create Daily room if API key exists
     const roomName = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const dailyRoom = await createDailyRoom(roomName, settings);
 
-    // Create session
-    const { data: session, error: sessionError } = await supabase
+    const admin = createAdminClient();
+
+    // Insert using only columns that exist in live_sessions:
+    //   mentor_id, title, description, scheduled_at, duration_minutes, meeting_url, status, max_participants
+    const { data: session, error: sessionError } = await admin
       .from('live_sessions')
       .insert({
+        mentor_id: user.id,
         title,
         description: description || null,
-        session_type,
-        host_id: user.id,
-        university_id: profile.university_id,
         scheduled_at,
         duration_minutes: duration_minutes || 60,
-        daily_room_url: dailyRoom?.url || null,
-        daily_room_name: dailyRoom?.name || roomName,
-        test_id: test_id || null, // Convert empty string to null
-        settings: settings || {},
+        meeting_url: dailyRoom?.url || null,
+        status: 'scheduled',
+        max_participants: settings?.max_participants || 50,
       })
       .select()
       .single();
@@ -186,43 +193,29 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: sessionError.message }, { status: 500 });
     }
 
-    // Add host as participant
-    await supabase.from('session_participants').insert({
-      session_id: session.id,
+    // Add mentor as participant — session_participants has: id, session_id, user_id, joined_at
+    await admin.from('session_participants').insert({
+      session_id: (session as any).id,
       user_id: user.id,
-      role: 'host',
-      status: 'accepted',
     });
 
     // Invite participants
     if (participant_ids && participant_ids.length > 0) {
       const participantInserts = participant_ids.map((userId: string) => ({
-        session_id: session.id,
+        session_id: (session as any).id,
         user_id: userId,
-        role: 'attendee',
-        status: 'invited',
       }));
 
-      await supabase.from('session_participants').insert(participantInserts);
+      await admin.from('session_participants').insert(participantInserts);
 
-      // Send notifications
-      const notifications = participant_ids.map((userId: string) => ({
+      // Notify invitees — use only columns safe for notifications schema
+      await safeInsertNotifications(admin, participant_ids.map((userId: string) => ({
         user_id: userId,
-        type: 'system',
+        type: 'session',
         title: `Invited to: ${title}`,
-        message: `You've been invited to a ${session_type.replace('_', ' ')} session scheduled for ${new Date(scheduled_at).toLocaleString()}`,
-        related_id: session.id,
-        related_type: 'session',
+        message: `You've been invited to a session scheduled for ${new Date(scheduled_at).toLocaleString()}`,
         action_url: '/dashboard/student/sessions',
-        metadata: {
-          session_id: session.id,
-          session_title: title,
-          session_type: session_type,
-          scheduled_at: scheduled_at
-        },
-      }));
-
-      await supabase.from('notifications').insert(notifications);
+      })));
     }
 
     return NextResponse.json({ session });
@@ -249,8 +242,10 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Session ID required' }, { status: 400 });
     }
 
-    // Verify ownership
-    const { data: session, error: fetchError } = await supabase
+    const admin = createAdminClient();
+
+    // Verify ownership — live_sessions uses mentor_id, not host_id
+    const { data: session, error: fetchError } = await admin
       .from('live_sessions')
       .select('*')
       .eq('id', session_id)
@@ -260,7 +255,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Session not found' }, { status: 404 });
     }
 
-    if (session.host_id !== user.id) {
+    if ((session as any).mentor_id !== user.id) {
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
     }
 
@@ -268,41 +263,29 @@ export async function PATCH(request: Request) {
 
     switch (action) {
       case 'start':
-        updateData = {
-          status: 'live',
-          started_at: new Date().toISOString(),
-        };
+        // Valid status values (999_CLEAN): 'scheduled', 'ongoing', 'completed', 'cancelled'
+        updateData = { status: 'ongoing' };
         break;
 
       case 'end':
-        updateData = {
-          status: 'completed',
-          ended_at: new Date().toISOString(),
-        };
+        updateData = { status: 'completed' };
         break;
 
       case 'cancel':
-        updateData = {
-          status: 'cancelled',
-        };
+        updateData = { status: 'cancelled' };
         break;
 
       default:
-        // Regular update
-        updateData = {
-          title: updates.title,
-          description: updates.description,
-          scheduled_at: updates.scheduled_at,
-          duration_minutes: updates.duration_minutes,
-          settings: updates.settings,
-        };
-        // Remove undefined values
-        Object.keys(updateData).forEach(key =>
-          updateData[key] === undefined && delete updateData[key]
-        );
+        // Regular update — only include columns that exist in live_sessions
+        if (updates.title !== undefined) updateData.title = updates.title;
+        if (updates.description !== undefined) updateData.description = updates.description;
+        if (updates.scheduled_at !== undefined) updateData.scheduled_at = updates.scheduled_at;
+        if (updates.duration_minutes !== undefined) updateData.duration_minutes = updates.duration_minutes;
+        if (updates.meeting_url !== undefined) updateData.meeting_url = updates.meeting_url;
+        if (updates.max_participants !== undefined) updateData.max_participants = updates.max_participants;
     }
 
-    const { data: updatedSession, error: updateError } = await supabase
+    const { data: updatedSession, error: updateError } = await admin
       .from('live_sessions')
       .update(updateData)
       .eq('id', session_id)
@@ -314,58 +297,25 @@ export async function PATCH(request: Request) {
     }
 
     // Send notifications for cancel or reschedule
-    if (action === 'cancel') {
-      // Get all participants to notify
-      const { data: participants } = await supabase
-        .from('session_participants')
-        .select('user_id')
-        .eq('session_id', session_id)
-        .neq('user_id', user.id); // Don't notify the host
-
-      if (participants && participants.length > 0) {
-        const notifications = participants.map((p: any) => ({
-          user_id: p.user_id,
-          type: 'system',
-          title: 'Session Cancelled',
-          message: `The session "${session.title}" scheduled for ${new Date(session.scheduled_at).toLocaleString()} has been cancelled.`,
-          related_id: session.id,
-          related_type: 'session',
-          action_url: '/dashboard/student/sessions',
-          metadata: {
-            session_id: session.id,
-            session_title: session.title,
-            action: 'cancelled'
-          },
-        }));
-
-        await supabase.from('notifications').insert(notifications);
-      }
-    } else if (!action || (updates.scheduled_at && updates.scheduled_at !== session.scheduled_at)) {
-      // Reschedule notification
-      const { data: participants } = await supabase
+    if (action === 'cancel' || (updates.scheduled_at && updates.scheduled_at !== (session as any).scheduled_at)) {
+      // Get all participants to notify (excluding the mentor)
+      const { data: participants } = await admin
         .from('session_participants')
         .select('user_id')
         .eq('session_id', session_id)
         .neq('user_id', user.id);
 
       if (participants && participants.length > 0) {
-        const notifications = participants.map((p: any) => ({
+        const isCancel = action === 'cancel';
+        await safeInsertNotifications(admin, participants.map((p: any) => ({
           user_id: p.user_id,
-          type: 'system',
-          title: 'Session Rescheduled',
-          message: `The session "${updates.title || session.title}" has been rescheduled to ${new Date(updates.scheduled_at || session.scheduled_at).toLocaleString()}.`,
-          related_id: session.id,
-          related_type: 'session',
+          type: 'session',
+          title: isCancel ? 'Session Cancelled' : 'Session Rescheduled',
+          message: isCancel
+            ? `The session "${(session as any).title}" has been cancelled.`
+            : `The session "${updates.title || (session as any).title}" has been rescheduled to ${new Date(updates.scheduled_at || (session as any).scheduled_at).toLocaleString()}.`,
           action_url: '/dashboard/student/sessions',
-          metadata: {
-            session_id: session.id,
-            session_title: updates.title || session.title,
-            new_schedule: updates.scheduled_at || session.scheduled_at,
-            action: 'rescheduled'
-          },
-        }));
-
-        await supabase.from('notifications').insert(notifications);
+        })));
       }
     }
 
@@ -393,21 +343,20 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Session ID required' }, { status: 400 });
     }
 
-    // Verify ownership
-    const { data: session } = await supabase
+    const admin = createAdminClient();
+
+    // Verify ownership — live_sessions uses mentor_id, not host_id
+    const { data: session } = await admin
       .from('live_sessions')
-      .select('host_id')
+      .select('mentor_id')
       .eq('id', session_id)
       .single();
 
-    if (!session || session.host_id !== user.id) {
+    if (!session || (session as any).mentor_id !== user.id) {
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
     }
 
-    const { error } = await supabase
-      .from('live_sessions')
-      .delete()
-      .eq('id', session_id);
+    const { error } = await admin.from('live_sessions').delete().eq('id', session_id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

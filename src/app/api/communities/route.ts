@@ -23,11 +23,7 @@ export async function GET(request: Request) {
         if (communityId) {
             const { data, error } = await supabase
                 .from('communities')
-                .select(`
-                  *,
-                  creator:users!communities_created_by_fkey(id, full_name, avatar_url, expertise),
-                  community_members(count)
-                `)
+                .select('*, mentor:users!communities_mentor_id_fkey(id, full_name, avatar_url), community_members(count)')
                 .eq('id', communityId)
                 .single();
             if (error) throw error;
@@ -36,15 +32,11 @@ export async function GET(request: Request) {
 
         let query = supabase
             .from('communities')
-            .select(`
-              *,
-              creator:users!communities_created_by_fkey(id, full_name, avatar_url),
-              community_members(count)
-            `)
+            .select('*, mentor:users!communities_mentor_id_fkey(id, full_name, avatar_url), community_members(count)')
             .eq('university_id', profile?.university_id)
             .order('created_at', { ascending: false });
 
-        if (mentorId) query = query.eq('created_by', mentorId);
+        if (mentorId) query = (query as any).eq('mentor_id', mentorId);
 
         const { data, error } = await query.range(offset, offset + limit - 1);
         if (error) throw error;
@@ -79,9 +71,9 @@ export async function POST(request: Request) {
                 name,
                 description,
                 avatar_url,
-                created_by: user.id,
+                mentor_id: user.id,
                 university_id: profile.university_id,
-                is_public: true,
+                is_active: true,
             })
             .select()
             .single();
@@ -110,7 +102,7 @@ export async function PATCH(request: Request) {
                 ...(avatar_url !== undefined && { avatar_url }),
             })
             .eq('id', communityId)
-            .eq('created_by', user.id)
+            .eq('mentor_id', user.id)
             .select()
             .single();
 
@@ -133,7 +125,7 @@ export async function DELETE(request: Request) {
             .from('communities')
             .delete()
             .eq('id', communityId)
-            .eq('created_by', user.id);
+            .eq('mentor_id', user.id);
 
         if (error) throw error;
         return NextResponse.json({ success: true });

@@ -7,6 +7,16 @@ import { Mail, GraduationCap, BookOpen, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { MentorActions } from '@/components/student/MentorActions';
 
+function parseExpertise(expertise: any): string {
+  if (!expertise) return '';
+  if (Array.isArray(expertise)) return expertise.join(', ');
+  try {
+    const parsed = JSON.parse(expertise);
+    if (Array.isArray(parsed)) return parsed.join(', ');
+  } catch {}
+  return String(expertise);
+}
+
 export default async function MentorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
@@ -94,7 +104,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
 
                     {/* Name & Title */}
                     <h1 className="text-2xl font-bold text-slate-900 mb-1">{mentor.full_name}</h1>
-                    <p className="text-purple-600 font-medium mb-4">{mentor.expertise || 'Mentor'}</p>
+                    <p className="text-purple-600 font-medium mb-4">{parseExpertise(mentor.expertise) || 'Mentor'}</p>
                     
                     {/* Action Buttons */}
                     <div className="space-y-2 mb-6">
@@ -145,7 +155,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                       <BookOpen className="w-6 h-6 text-white" />
                     </div>
                     <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Expertise</div>
-                    <div className="text-sm text-slate-900 font-medium">{mentor.expertise || 'Various Subjects'}</div>
+                    <div className="text-sm text-slate-900 font-medium">{parseExpertise(mentor.expertise) || 'Various Subjects'}</div>
                   </div>
                 </div>
 
@@ -160,7 +170,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                     About
                   </h2>
                   <p className="text-slate-600 leading-relaxed">
-                    Experienced mentor at <span className="font-semibold text-slate-900">{mentor.universities?.name || mentor.university}</span> specializing in <span className="font-semibold text-slate-900">{mentor.expertise || 'various subjects'}</span>. 
+                    Experienced mentor at <span className="font-semibold text-slate-900">{mentor.universities?.name || mentor.university}</span> specializing in <span className="font-semibold text-slate-900">{parseExpertise(mentor.expertise) || 'various subjects'}</span>. 
                     Dedicated to helping students succeed in their academic journey and providing career guidance with industry insights.
                   </p>
                 </div>
@@ -176,7 +186,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                     Specializations
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-4 py-2 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl text-sm font-medium">{mentor.expertise || 'General Mentorship'}</span>
+                    <span className="px-4 py-2 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl text-sm font-medium">{parseExpertise(mentor.expertise) || 'General Mentorship'}</span>
                     <span className="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm font-medium">Career Guidance</span>
                     <span className="px-4 py-2 bg-orange-50 border border-orange-200 text-orange-700 rounded-xl text-sm font-medium">Academic Support</span>
                     <span className="px-4 py-2 bg-pink-50 border border-pink-200 text-pink-700 rounded-xl text-sm font-medium">Industry Insights</span>
