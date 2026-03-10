@@ -40,11 +40,11 @@ export default async function StudentProfilePage() {
     .order('submitted_at', { ascending: false })
     .limit(8);
 
-  // Community memberships
+  // Community memberships — schema uses student_id (not user_id)
   const { data: memberships } = await supabase
     .from('community_members')
     .select('id, joined_at, community:communities(id, name, avatar_url)')
-    .eq('user_id', user.id)
+    .eq('student_id', user.id)
     .order('joined_at', { ascending: false })
     .limit(6);
 

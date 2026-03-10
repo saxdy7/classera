@@ -99,16 +99,17 @@ export async function POST(request: Request) {
                 return NextResponse.json({ error: 'Only community mentor can add members' }, { status: 403 });
             }
 
+            // Use upsert so that pending/rejected students get promoted to approved
             const { data, error } = await admin
                 .from('community_members')
-                .insert({ community_id: communityId, student_id: studentId, status: 'approved' })
+                .upsert(
+                    { community_id: communityId, student_id: studentId, status: 'approved' },
+                    { onConflict: 'community_id,student_id' }
+                )
                 .select()
                 .single();
 
-            if (error) {
-                if (error.code === '23505') return NextResponse.json({ error: 'Already a member' }, { status: 400 });
-                throw error;
-            }
+            if (error) throw error;
             return NextResponse.json({ success: true, data });
         }
 

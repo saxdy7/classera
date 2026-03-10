@@ -5,7 +5,7 @@ import { AlertTriangle, AlertOctagon, Info } from 'lucide-react';
 interface Flag {
   type: string;
   message: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
 interface SuspiciousActivityAlertProps {
@@ -13,6 +13,12 @@ interface SuspiciousActivityAlertProps {
 }
 
 const severityConfig = {
+  critical: {
+    border: 'border-red-400 bg-red-100',
+    icon: <AlertOctagon className="w-5 h-5 text-red-600 flex-shrink-0" />,
+    label: 'bg-red-200 text-red-800',
+    text: 'text-red-900',
+  },
   high: {
     border: 'border-red-200 bg-red-50',
     icon: <AlertOctagon className="w-5 h-5 text-red-500 flex-shrink-0" />,
@@ -51,8 +57,8 @@ export default function SuspiciousActivityAlert({ flags }: SuspiciousActivityAle
   }
 
   const sorted = [...flags].sort((a, b) => {
-    const order = { high: 0, medium: 1, low: 2 };
-    return order[a.severity] - order[b.severity];
+    const order: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
+    return (order[a.severity] ?? 99) - (order[b.severity] ?? 99);
   });
 
   return (

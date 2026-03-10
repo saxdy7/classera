@@ -1,5 +1,5 @@
-import QuestionBankManager from '@/components/tests/QuestionBankManager';
+import { redirect } from 'next/navigation';
 
 export default function QuestionBankPage() {
-  return <QuestionBankManager />;
+  redirect('/dashboard/mentor/tests');
 }

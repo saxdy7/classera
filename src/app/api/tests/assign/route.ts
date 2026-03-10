@@ -68,10 +68,11 @@ export async function POST(request: Request) {
         }
 
         // Create invitations (upsert to avoid duplicates) via admin client
+        // Note: invited_by is omitted here to stay compatible with DB schemas that may
+        // not yet have that column. The FIX_TEST_INVITATIONS.sql migration adds it.
         const invitations = studentsToAssign.map(student_id => ({
             test_id,
             student_id,
-            invited_by: user.id,
             status: 'pending',
             invited_at: new Date().toISOString()
         }));

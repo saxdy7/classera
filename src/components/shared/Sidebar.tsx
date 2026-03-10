@@ -7,7 +7,7 @@ import {
   LayoutDashboard, BookOpen, ClipboardCheck, Calendar,
   Users, Video, UsersRound, MapIcon, FileText, User,
   ChevronDown, ChevronUp, Sparkles, GraduationCap, Bot,
-  MessageSquare, BarChart2, Library, GitBranch,
+  MessageSquare, BarChart2, GitBranch,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -43,7 +43,6 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: UsersRound,      label: 'Communities',   href: '/dashboard/mentor/communities' },
     { icon: ClipboardCheck,  label: 'Tests',         href: '/dashboard/mentor/tests' },
     { icon: GitBranch,       label: 'Projects',      href: '/dashboard/mentor/projects' },
-    { icon: Library,         label: 'Question Bank', href: '/dashboard/mentor/question-bank' },
     { icon: Calendar,        label: 'Schedule',      href: '/dashboard/mentor/schedule' },
     { icon: Video,           label: 'Live Sessions', href: '/dashboard/mentor/live-sessions' },
     { icon: MessageSquare,   label: 'Messages',      href: '/dashboard/mentor/messages' },

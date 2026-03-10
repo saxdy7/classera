@@ -1,7 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { Loader2, Save, MessageSquare, Star } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Loader2, Save, MessageSquare, Star, Award } from 'lucide-react';
+
+interface RubricCriterion {
+  id: string;
+  name: string;
+  description: string;
+  max_points: number;
+  weight: number;
+}
+
+interface Rubric {
+  id: string;
+  criteria: RubricCriterion[];
+}
 
 interface EvaluationPanelProps {
   assignmentId: string;
@@ -32,10 +45,71 @@ export default function EvaluationPanel({
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
+  // Rubric state
+  const [rubric, setRubric] = useState<Rubric | null>(null);
+  const [criterionScores, setCriterionScores] = useState<Record<string, { score: number; comment: string }>>({});
+
+  // Fetch rubric on mount
+  useEffect(() => {
+    async function fetchRubric() {
+      try {
+        const res = await fetch(
+          `/api/projects/rubrics?assignment_id=${assignmentId}&submission_id=${submissionId}`,
+        );
+        if (!res.ok) return;
+        const data = await res.json() as {
+          rubric: Rubric | null;
+          scores: Record<string, { score: number; comment: string }> | null;
+        };
+        if (data.rubric) {
+          setRubric(data.rubric);
+          // Initialize scores from existing data or default to 0
+          const init: Record<string, { score: number; comment: string }> = {};
+          for (const c of data.rubric.criteria) {
+            init[c.id] = data.scores?.[c.id] ?? { score: 0, comment: '' };
+          }
+          setCriterionScores(init);
+        }
+      } catch {
+        // silently ignore — rubric is optional
+      }
+    }
+    fetchRubric();
+  }, [assignmentId, submissionId]);
+
+  // Compute weighted score from rubric
+  function computeRubricScore(): number {
+    if (!rubric) return 0;
+    const weighted = rubric.criteria.reduce((sum, c) => {
+      const s = criterionScores[c.id]?.score ?? 0;
+      return sum + (s / c.max_points) * c.weight;
+    }, 0);
+    // weighted is 0-100 (% of max), convert to maxScore points
+    return Math.round((weighted / 100) * maxScore);
+  }
+
+  function applyRubricScore() {
+    setScore(computeRubricScore().toString());
+  }
+
   async function save(opts: { withComment?: boolean } = {}) {
     setSaving(true);
     setError('');
     try {
+      // Save rubric scores first if applicable
+      if (rubric) {
+        const scores = rubric.criteria.map((c) => ({
+          criterion_id: c.id,
+          score: criterionScores[c.id]?.score ?? 0,
+          comment: criterionScores[c.id]?.comment ?? '',
+        }));
+        await fetch('/api/projects/rubrics/scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ submission_id: submissionId, rubric_id: rubric.id, scores }),
+        });
+      }
+
       const res = await fetch(`/api/project-assignments/${assignmentId}/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,6 +139,83 @@ export default function EvaluationPanel({
 
   return (
     <div className="space-y-5">
+      {/* Rubric scoring section */}
+      {rubric && rubric.criteria.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <Award className="w-4 h-4 text-violet-500" />
+              Rubric Scoring
+            </h3>
+            <button
+              onClick={applyRubricScore}
+              className="text-xs text-violet-600 font-medium hover:underline"
+            >
+              Apply score ({computeRubricScore()}/{maxScore})
+            </button>
+          </div>
+
+          {rubric.criteria.map((c) => {
+            const cs = criterionScores[c.id] ?? { score: 0, comment: '' };
+            const pct = c.max_points > 0 ? Math.round((cs.score / c.max_points) * 100) : 0;
+            return (
+              <div key={c.id} className="bg-slate-50 rounded-xl p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-800">{c.name}</p>
+                    {c.description && (
+                      <p className="text-xs text-slate-400">{c.description}</p>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-500">
+                    weight: <span className="font-medium">{c.weight}%</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min={0}
+                    max={c.max_points}
+                    step={1}
+                    value={cs.score}
+                    onChange={(e) =>
+                      setCriterionScores((prev) => ({
+                        ...prev,
+                        [c.id]: { ...prev[c.id], score: Number(e.target.value) },
+                      }))
+                    }
+                    className="flex-1 accent-violet-600"
+                  />
+                  <span className="text-sm font-semibold text-violet-700 w-16 text-right">
+                    {cs.score}/{c.max_points}
+                    <span className="font-normal text-slate-400 ml-1">({pct}%)</span>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Comment for this criterion (optional)"
+                  value={cs.comment}
+                  onChange={(e) =>
+                    setCriterionScores((prev) => ({
+                      ...prev,
+                      [c.id]: { ...prev[c.id], comment: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-300 placeholder-slate-300"
+                />
+              </div>
+            );
+          })}
+
+          <div className="flex items-center justify-between bg-violet-50 border border-violet-100 rounded-xl px-3 py-2">
+            <span className="text-sm text-violet-700 font-medium">Rubric computed score</span>
+            <span className="text-sm font-bold text-violet-700">
+              {computeRubricScore()} / {maxScore}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Score */}
       <div>
         <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">

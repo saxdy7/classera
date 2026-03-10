@@ -18,31 +18,30 @@ export async function GET(request: Request) {
         // (the users RLS policy does a self-referencing subquery on users)
         const admin = createAdminClient();
 
-        // Get caller's university_id
+        // Get caller's profile
         const { data: profile } = await admin
             .from('users')
-            .select('university_id')
+            .select('university_id, role')
             .eq('id', user.id)
             .single();
 
-        if (!profile?.university_id) {
-            return NextResponse.json({ students: [] });
-        }
-
         if (communityId) {
-            // Exclude students already in the community (real column: student_id)
+            // Exclude students who are already APPROVED members
             const { data: existingMembers } = await admin
                 .from('community_members')
                 .select('student_id')
-                .eq('community_id', communityId);
+                .eq('community_id', communityId)
+                .eq('status', 'approved');
 
-            const existingMemberIds = existingMembers?.map(m => (m as any).student_id) || [];
+            const existingMemberIds = existingMembers?.map(m => (m as { student_id: string }).student_id) || [];
 
+            // Fetch ALL students — mentors should be able to add any student
+            // regardless of university so they can build cross-university communities
             let query = admin
                 .from('users')
                 .select('id, full_name, email, avatar_url, degree_type, specialization_board')
                 .eq('role', 'student')
-                .eq('university_id', profile.university_id);
+                .not('full_name', 'is', null);
 
             if (existingMemberIds.length > 0) {
                 query = query.not('id', 'in', `(${existingMemberIds.join(',')})`);
@@ -53,14 +52,15 @@ export async function GET(request: Request) {
             return NextResponse.json({ students: data });
         }
 
-        // Get all students from same university
+
+        // No communityId — return ALL students regardless of university
+        // so mentors can invite any student to their tests.
         const { data, error } = await admin
             .from('users')
             .select('id, full_name, email, avatar_url, degree_type, specialization_board')
             .eq('role', 'student')
-            .eq('university_id', profile.university_id)
+            .not('full_name', 'is', null)
             .order('full_name');
-
         if (error) throw error;
         return NextResponse.json({ students: data });
     } catch (error: any) {

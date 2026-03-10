@@ -68,6 +68,13 @@ export default async function StudentProjectReviewPage({
     .eq('submission_id', submission.id)
     .single();
 
+  // Get analysis snapshots (progress history)
+  const { data: snapshots } = await admin
+    .from('analysis_snapshots')
+    .select('overall_score, consistency_score, activity_score, quality_score, total_commits, active_days, analyzed_at')
+    .eq('submission_id', submission.id)
+    .order('analyzed_at', { ascending: true });
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header profile={profile} />
@@ -166,6 +173,7 @@ export default async function StudentProjectReviewPage({
               status={submission.status}
               analytics={analytics ?? null}
               evaluation={evaluation ?? null}
+              snapshots={snapshots ?? []}
             />
           </div>
         </main>

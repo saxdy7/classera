@@ -10,7 +10,7 @@ interface Session {
     title: string;
     description?: string;
     session_type: 'mentor_meeting' | 'proctored_test' | 'group_study' | 'office_hours' | 'webinar';
-    status: 'scheduled' | 'live' | 'ended' | 'cancelled';
+    status: 'scheduled' | 'live' | 'ongoing' | 'ended' | 'completed' | 'cancelled';
     scheduled_at: string;
     duration_minutes: number;
     room_url?: string;
@@ -100,8 +100,9 @@ function getTimeUntil(date: string) {
 }
 
 function SessionCard({ session, isLive = false }: { session: Session; isLive?: boolean }) {
-    const config = sessionTypeConfig[session.session_type];
+    const config = sessionTypeConfig[session.session_type] ?? sessionTypeConfig['mentor_meeting'];
     const Icon = config.icon;
+
 
     const handleJoin = () => {
         if (session.room_url) {

@@ -4,6 +4,8 @@ import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { StudentSessionsClient } from '@/components/sessions/StudentSessionsClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudentSessionsPage() {
     const supabase = await createClient();
 
@@ -36,25 +38,28 @@ export default async function StudentSessionsPage() {
     console.log('Session IDs student is invited to:', sessionIds);
 
     // Then fetch those sessions with full details
+    // live_sessions uses mentor_id (base column); host_id may exist after FIX_MISSING_COLUMNS migration
+    // status values in base schema: 'scheduled', 'ongoing', 'completed', 'cancelled'
     const { data: sessions, error: sessionsError } = await supabase
         .from('live_sessions')
         .select(`
             *,
-            host:users!live_sessions_host_id_fkey(id, full_name, avatar_url),
-            linked_test_id
+            mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url)
         `)
-        .in('id', sessionIds.length > 0 ? sessionIds : ['00000000-0000-0000-0000-000000000000']) // Use dummy ID if no sessions
-        .in('status', ['scheduled', 'live', 'ended', 'completed'])
+        .in('id', sessionIds.length > 0 ? sessionIds : ['00000000-0000-0000-0000-000000000000'])
+        .in('status', ['scheduled', 'ongoing', 'live', 'completed', 'cancelled'])
         .order('scheduled_at', { ascending: true });
 
     console.log('Sessions found:', sessions?.length || 0);
     console.log('Sessions error:', sessionsError);
 
-    // Map sessions to match expected structure
+    // Map sessions — rename `mentor` relation to `host` for StudentSessionsClient,
+    // and alias daily_room_url / test_id to the names the client expects
     const mappedSessions = (sessions || []).map(session => ({
         ...session,
-        room_url: session.daily_room_url,
-        linked_test_id: session.test_id
+        host: (session as any).mentor,
+        room_url: (session as any).daily_room_url ?? null,
+        linked_test_id: (session as any).test_id ?? null,
     }));
 
     // Get upcoming sessions
@@ -63,8 +68,8 @@ export default async function StudentSessionsPage() {
         s.status === 'scheduled' && new Date(s.scheduled_at) > new Date()
     ) || [];
 
-    // Get live sessions
-    const liveSessions = mappedSessions?.filter(s => s.status === 'live') || [];
+    // Get live sessions (DB status is 'ongoing' when mentor starts, 'live' is a legacy alias)
+    const liveSessions = mappedSessions?.filter(s => s.status === 'live' || s.status === 'ongoing') || [];
 
     // Get past sessions
     const pastSessions = mappedSessions?.filter(s =>
@@ -74,10 +79,10 @@ export default async function StudentSessionsPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <Header profile={profile} />
+            <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
-                <Sidebar role={profile.role} />
-                <main className="flex-1 p-8">
+                <Sidebar role="student" />
+                <main className="flex-1 p-4 md:p-8 md:ml-24">
                     <StudentSessionsClient
                         profile={profile}
                         upcomingSessions={upcomingSessions}

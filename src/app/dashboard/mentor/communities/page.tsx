@@ -9,7 +9,8 @@ export default async function MentorCommunitiesPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/sign-in');
+  if (!user) redirect('/signin');
+
 
   const { data: profile } = await supabase
     .from('users')
@@ -31,7 +32,7 @@ export default async function MentorCommunitiesPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header profile={profile} />
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
         <main className="flex-1 p-4 md:p-8 md:ml-24">

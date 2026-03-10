@@ -122,8 +122,11 @@ export function AddMembersModal({ communityId, onClose, onSuccess }: AddMembersM
                     ) : filteredStudents.length === 0 ? (
                         <div className="text-center py-12">
                             <UserPlus className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-slate-600">
-                                {searchQuery ? 'No students found' : 'All students are already members'}
+                            <p className="text-slate-600 font-medium">
+                                {searchQuery ? 'No students match your search' : 'All students are already members'}
+                            </p>
+                            <p className="text-slate-400 text-sm mt-1">
+                                {!searchQuery && 'Every registered student has been added to this community'}
                             </p>
                         </div>
                     ) : (

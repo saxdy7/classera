@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import TestDetailClient from '@/components/tests/TestDetailClient';
 
@@ -22,7 +23,9 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     redirect('/dashboard/student');
   }
 
-  // Get test first
+  const admin = createAdminClient();
+
+  // Get test first (using user client to enforce mentor_id ownership check via RLS)
   const { data: test, error: testError } = await supabase
     .from('tests')
     .select('*')
@@ -39,8 +42,8 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     redirect('/dashboard/mentor/tests');
   }
 
-  // Get submissions separately
-  const { data: submissions } = await supabase
+  // Get submissions via admin to bypass RLS and avoid FK hint issues
+  const { data: submissions, error: subError } = await admin
     .from('test_submissions')
     .select(`
       id,
@@ -48,21 +51,25 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
       percentage,
       submitted_at,
       ai_evaluated_at,
-      student:users!test_submissions_student_id_fkey(id, full_name, avatar_url)
+      student:users(id, full_name, avatar_url)
     `)
     .eq('test_id', id);
 
-  // Get invitations separately
-  const { data: invitations } = await supabase
+  if (subError) console.error('Error fetching submissions:', subError);
+
+  // Get invitations via admin to bypass RLS and avoid FK hint issues
+  const { data: invitations, error: invError } = await admin
     .from('test_invitations')
     .select(`
       id,
       student_id,
       status,
       invited_at,
-      student:users!test_invitations_student_id_fkey(id, full_name, avatar_url, email)
+      student:users(id, full_name, avatar_url, email)
     `)
     .eq('test_id', id);
+
+  if (invError) console.error('Error fetching invitations:', invError);
 
   // Combine data
   const testWithRelations = {

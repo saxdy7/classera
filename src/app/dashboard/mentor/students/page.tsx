@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
@@ -22,16 +23,18 @@ export default async function Students() {
 
   if (!profile?.university_id || !profile?.full_name) redirect('/onboarding/mentor');
 
-  // All students at same university
-  const { data: students } = await supabase
+  const admin = createAdminClient();
+
+  // All students — show all registered students so mentor can find them
+  const { data: students } = await admin
     .from('users')
     .select('id, full_name, avatar_url, specialization_board, current_semester, degree_type, email, bio')
     .eq('role', 'student')
-    .eq('university_id', profile.university_id)
+    .not('full_name', 'is', null)
     .order('full_name');
 
   // Connection requests sent TO this mentor
-  const { data: requests } = await supabase
+  const { data: requests } = await admin
     .from('connection_requests')
     .select('*, student:users!connection_requests_student_id_fkey(id, full_name, avatar_url, email, specialization_board)')
     .eq('mentor_id', user.id)
@@ -39,7 +42,7 @@ export default async function Students() {
     .order('created_at', { ascending: false });
 
   // Accepted connections
-  const { data: connected } = await supabase
+  const { data: connected } = await admin
     .from('connection_requests')
     .select('student_id')
     .eq('mentor_id', user.id)
@@ -49,7 +52,7 @@ export default async function Students() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header profile={profile} />
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
         <main className="flex-1 p-4 md:p-8 md:ml-24">
@@ -64,9 +67,9 @@ export default async function Students() {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[
-                { icon: Users,     label: 'Total Students',  value: students?.length ?? 0,     color: 'text-indigo-600', bg: 'bg-indigo-50' },
-                { icon: UserCheck, label: 'Connected',        value: connectedIds.size,           color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                { icon: Clock,     label: 'Pending Requests', value: requests?.length ?? 0,       color: 'text-amber-600', bg: 'bg-amber-50' },
+                { icon: Users, label: 'Total Students', value: students?.length ?? 0, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+                { icon: UserCheck, label: 'Connected', value: connectedIds.size, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                { icon: Clock, label: 'Pending Requests', value: requests?.length ?? 0, color: 'text-amber-600', bg: 'bg-amber-50' },
               ].map(({ icon: Icon, label, value, color, bg }) => (
                 <div key={label} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
                   <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>

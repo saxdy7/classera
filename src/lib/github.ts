@@ -319,7 +319,7 @@ export function buildNestedTree(items: TreeItem[]): TreeNode[] {
 export interface SuspiciousFlag {
   type: string;
   message: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
 export function detectSuspiciousActivity(
@@ -374,6 +374,57 @@ export function detectSuspiciousActivity(
         type: 'inactivity_burst',
         message: `${maxGap}-day gap in development activity detected`,
         severity: 'medium',
+      });
+    }
+  }
+
+  // 4 — code dump: all commits squeezed into a 2-hour window
+  if (commits.length >= 3) {
+    const times = commits
+      .map((c) => new Date(c.commit?.author?.date ?? c.commit?.committer?.date ?? 0).getTime())
+      .filter((t) => t > 0)
+      .sort((a, b) => a - b);
+    const spanMs = times[times.length - 1] - times[0];
+    if (spanMs > 0 && spanMs <= 2 * 60 * 60 * 1000) {
+      flags.push({
+        type: 'code_dump',
+        message: `All ${commits.length} commits were made within a 2-hour window — possible code dump`,
+        severity: 'critical',
+      });
+    }
+  }
+
+  // 5 — boilerplate commit messages (bulk upload signals)
+  const boilerplatePatterns = [
+    /^add all files?$/i,
+    /^upload files?$/i,
+    /^first commit$/i,
+    /^initial commit$/i,
+    /^initial$/i,
+    /^update$/i,
+    /^done$/i,
+  ];
+  const boilerplateCount = commits.filter((c) =>
+    boilerplatePatterns.some((re) => re.test((c.commit?.message ?? '').trim())),
+  ).length;
+  if (boilerplateCount >= 3 || (commits.length > 0 && boilerplateCount / commits.length >= 0.7)) {
+    flags.push({
+      type: 'boilerplate_messages',
+      message: `${boilerplateCount} out of ${commits.length} commits have generic/boilerplate messages`,
+      severity: 'high',
+    });
+  }
+
+  // 6 — velocity anomaly: final day commits > 3× average daily commit rate
+  if (dates.length >= 3) {
+    const avgPerActiveDay = commits.length / dates.length;
+    const lastDate = dates[dates.length - 1];
+    const lastDayCountActivity = daily[lastDate] ?? 0;
+    if (lastDayCountActivity > 3 * avgPerActiveDay && lastDayCountActivity >= 5) {
+      flags.push({
+        type: 'velocity_anomaly',
+        message: `${lastDayCountActivity} commits on the final active day vs ${avgPerActiveDay.toFixed(1)} avg/day — unusual velocity spike`,
+        severity: 'critical',
       });
     }
   }

@@ -13,8 +13,11 @@ import {
   CheckCircle2,
   Star,
   FileCode,
+  BarChart2,
+  BookOpen,
 } from 'lucide-react';
 import SubmissionsList from './SubmissionsList';
+import BatchToolbar from '@/components/projects/BatchToolbar';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +35,7 @@ type Submission = {
     activity_score: number;
     quality_score: number;
     total_commits: number;
-    suspicious_flags: Array<{ severity: string }>;
+    suspicious_flags: Array<{ type: string; severity: string }>;
     last_push_at: string | null;
   } | null;
   evaluation: { score: number | null } | null;
@@ -185,6 +188,37 @@ export default async function AssignmentDetailPage({
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Actions row: Compare + Rubric + Batch tools */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex gap-2">
+                <Link
+                  href={`/dashboard/mentor/projects/${id}/compare`}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                >
+                  <BarChart2 size={15} className="text-violet-500" />
+                  Compare All
+                </Link>
+                <Link
+                  href={`/dashboard/mentor/projects/${id}/rubric`}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                >
+                  <BookOpen size={15} className="text-violet-500" />
+                  Rubric
+                </Link>
+              </div>
+              <BatchToolbar
+                assignmentId={id}
+                submissions={subList.map((s) => ({
+                  id: s.id,
+                  status: s.status,
+                  student_name: s.student?.full_name,
+                  student_email: s.student?.email,
+                  score: s.evaluation?.score ?? undefined,
+                  analytics: s.analytics,
+                }))}
+              />
             </div>
 
             <SubmissionsList

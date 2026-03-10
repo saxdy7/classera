@@ -7,6 +7,9 @@ import ActivityHeatmap from '@/components/projects/ActivityHeatmap';
 import CodeQualityCard from '@/components/projects/CodeQualityCard';
 import SuspiciousActivityAlert from '@/components/projects/SuspiciousActivityAlert';
 import ProjectTimeline from '@/components/projects/ProjectTimeline';
+import CommitHistory from '@/components/projects/CommitHistory';
+import AIReviewPanel from '@/components/projects/AIReviewPanel';
+import ProgressChart, { type ProgressSnapshot } from '@/components/projects/ProgressChart';
 import EvaluationPanel from './EvaluationPanel';
 import FileViewer from './FileViewer';
 
@@ -31,7 +34,7 @@ type Analytics = {
   has_readme: boolean;
   has_tests: boolean;
   folder_depth: number;
-  suspicious_flags: Array<{ type: string; message: string; severity: 'low' | 'medium' | 'high' }>;
+  suspicious_flags: Array<{ type: string; message: string; severity: 'low' | 'medium' | 'high' | 'critical' }>;
   timeline_events: Array<{ date: string; type: string; message: string }>;
   file_tree: TreeNode[];
   last_push_at: string | null;
@@ -45,7 +48,7 @@ type Evaluation = {
   comments: Array<{ text: string; created_at: string }>;
 } | null;
 
-type Tab = 'overview' | 'files' | 'quality' | 'timeline' | 'evaluate';
+type Tab = 'overview' | 'commits' | 'files' | 'ai_review' | 'quality' | 'timeline' | 'evaluate';
 
 interface ProjectReviewClientProps {
   assignmentId: string;
@@ -57,6 +60,7 @@ interface ProjectReviewClientProps {
   status: string;
   analytics: Analytics | null;
   evaluation: Evaluation;
+  snapshots?: ProgressSnapshot[];
 }
 
 export default function ProjectReviewClient({
@@ -69,18 +73,22 @@ export default function ProjectReviewClient({
   status,
   analytics,
   evaluation,
+  snapshots,
 }: ProjectReviewClientProps) {
   const [tab, setTab] = useState<Tab>('overview');
   const [reAnalyzing, setReAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [selectedFilePath, setSelectedFilePath] = useState<string | undefined>();
+  const [aiPendingFilePath, setAiPendingFilePath] = useState<string | null>(null);
 
   const tabs: Array<{ id: Tab; label: string }> = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'files', label: 'File Explorer' },
-    { id: 'quality', label: 'Code Quality' },
-    { id: 'timeline', label: 'Timeline' },
-    { id: 'evaluate', label: 'Evaluate' },
+    { id: 'overview',   label: 'Overview' },
+    { id: 'commits',    label: 'Commits' },
+    { id: 'files',      label: 'Files' },
+    { id: 'ai_review',  label: 'AI Review' },
+    { id: 'quality',    label: 'Quality' },
+    { id: 'timeline',   label: 'Timeline' },
+    { id: 'evaluate',   label: 'Evaluate' },
   ];
 
   async function triggerReAnalysis() {
@@ -230,6 +238,14 @@ export default function ProjectReviewClient({
             <h3 className="text-sm font-semibold text-slate-700 mb-3">Activity Integrity Check</h3>
             <SuspiciousActivityAlert flags={analytics.suspicious_flags} />
           </div>
+
+          {/* Progress trend */}
+          {snapshots && snapshots.length >= 2 && (
+            <div className="bg-white border border-slate-100 rounded-2xl p-5">
+              <h3 className="text-sm font-semibold text-slate-700 mb-4">Progress Trend</h3>
+              <ProgressChart snapshots={snapshots} />
+            </div>
+          )}
         </div>
       )}
 
@@ -257,7 +273,11 @@ export default function ProjectReviewClient({
             </div>
 
             {/* Viewer */}
-            <FileViewer submissionId={submissionId} repoUrl={repoUrl} />
+            <FileViewer
+              submissionId={submissionId}
+              repoUrl={repoUrl}
+              onReviewWithAI={(path) => { setAiPendingFilePath(path); setTab('ai_review'); }}
+            />
           </div>
         </div>
       )}
@@ -290,6 +310,26 @@ export default function ProjectReviewClient({
         <div className="bg-white border border-slate-100 rounded-2xl p-5">
           <h3 className="text-sm font-semibold text-slate-700 mb-4">Project Development Timeline</h3>
           <ProjectTimeline events={analytics.timeline_events} />
+        </div>
+      )}
+
+      {/* ── Commits tab ── */}
+      {tab === 'commits' && (
+        <div className="bg-white border border-slate-100 rounded-2xl p-5">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">Commit History</h3>
+          <CommitHistory submissionId={submissionId} />
+        </div>
+      )}
+
+      {/* ── AI Review tab ── */}
+      {tab === 'ai_review' && (
+        <div className="bg-white border border-slate-100 rounded-2xl p-5">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">AI Code Review</h3>
+          <AIReviewPanel
+            submissionId={submissionId}
+            pendingFilePath={aiPendingFilePath}
+            onClearPendingFile={() => setAiPendingFilePath(null)}
+          />
         </div>
       )}
 

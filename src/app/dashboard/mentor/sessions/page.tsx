@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
@@ -19,16 +20,18 @@ export default async function LiveSessionsPage() {
     .eq('id', user.id)
     .single();
 
-  if (!profile?.university_id || !profile?.full_name) {
+  if (!profile?.full_name) {
     redirect('/onboarding/mentor');
   }
 
-  // Fetch upcoming sessions
-  const { data: sessions } = await supabase
+  const admin = createAdminClient();
+
+  // Fetch upcoming sessions — use mentor_id (the actual column in live_sessions)
+  const { data: sessions } = await admin
     .from('live_sessions')
     .select(`
       *,
-      host:users!live_sessions_host_id_fkey(id, full_name, avatar_url),
+      mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url),
       test:tests(id, title),
       participants:session_participants(
         id,
@@ -37,16 +40,21 @@ export default async function LiveSessionsPage() {
         role
       )
     `)
-    .eq('host_id', user.id)
+    .eq('mentor_id', user.id)
     .order('scheduled_at', { ascending: true });
 
-  // Fetch students for inviting
-  const { data: students } = await supabase
+  // Fetch students — if mentor has no university_id show all students
+  let studentsQuery = admin
     .from('users')
     .select('id, full_name, avatar_url, email')
-    .eq('university_id', profile.university_id)
     .eq('role', 'student')
     .order('full_name');
+
+  if (profile.university_id) {
+    studentsQuery = studentsQuery.or(`university_id.eq.${profile.university_id},university_id.is.null`);
+  }
+
+  const { data: students } = await studentsQuery;
 
   // Fetch tests for linking to proctored sessions
   const { data: tests } = await supabase

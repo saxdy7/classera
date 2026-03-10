@@ -27,7 +27,7 @@ interface Session {
   scheduled_at: string;
   duration_minutes: number;
   daily_room_url: string | null;
-  status: 'scheduled' | 'live' | 'completed' | 'cancelled';
+  status: 'scheduled' | 'live' | 'ongoing' | 'completed' | 'cancelled';
   test?: { id: string; title: string } | null;
   participants: any[];
   settings?: any;
@@ -314,7 +314,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
           event: '*',
           schema: 'public',
           table: 'live_sessions',
-          filter: `host_id=eq.${profile.id}`
+          filter: `mentor_id=eq.${profile.id}`
         },
         async (payload) => {
           console.log('Session change detected:', payload);
@@ -341,8 +341,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
   }, [profile.id]);
 
   const upcomingSessions = filterSessions(sessions.filter(s => s.status === 'scheduled'));
-  const liveSessions = filterSessions(sessions.filter(s => s.status === 'live'));
+  const liveSessions = filterSessions(sessions.filter(s => s.status === 'live' || s.status === 'ongoing'));
   const pastSessions = filterSessions(sessions.filter(s => s.status === 'completed' || s.status === 'cancelled'));
+
 
   return (
     <div className="max-w-7xl mx-auto">

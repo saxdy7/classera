@@ -155,6 +155,7 @@ export async function POST(request: Request) {
     const {
       title,
       description,
+      session_type,
       scheduled_at,
       duration_minutes,
       settings,
@@ -179,9 +180,11 @@ export async function POST(request: Request) {
         mentor_id: user.id,
         title,
         description: description || null,
+        session_type: session_type || 'mentor_meeting',
         scheduled_at,
         duration_minutes: duration_minutes || 60,
         meeting_url: dailyRoom?.url || null,
+        daily_room_url: dailyRoom?.url || null,
         status: 'scheduled',
         max_participants: settings?.max_participants || 50,
       })

@@ -33,8 +33,12 @@ export async function GET(request: Request) {
         let query = supabase
             .from('communities')
             .select('*, mentor:users!communities_mentor_id_fkey(id, full_name, avatar_url), community_members(count)')
-            .eq('university_id', profile?.university_id)
             .order('created_at', { ascending: false });
+
+        // Only filter by university when the user has one set
+        if (profile?.university_id) {
+            query = (query as any).eq('university_id', profile.university_id);
+        }
 
         if (mentorId) query = (query as any).eq('mentor_id', mentorId);
 
@@ -92,7 +96,7 @@ export async function PATCH(request: Request) {
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const body = await request.json();
-        const { communityId, name, description, avatar_url } = body;
+        const { communityId, name, description, avatar_url, messaging_enabled } = body;
 
         const { data, error } = await supabase
             .from('communities')
@@ -100,6 +104,7 @@ export async function PATCH(request: Request) {
                 ...(name && { name }),
                 ...(description !== undefined && { description }),
                 ...(avatar_url !== undefined && { avatar_url }),
+                ...(messaging_enabled !== undefined && { messaging_enabled }),
             })
             .eq('id', communityId)
             .eq('mentor_id', user.id)
@@ -112,6 +117,7 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
 
 export async function DELETE(request: Request) {
     try {

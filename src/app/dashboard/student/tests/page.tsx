@@ -5,6 +5,8 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
 import { Clock, CheckCircle, AlertCircle, Play, Eye, BarChart3, Award, TrendingUp } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudentTestsPage() {
   const supabase = await createClient();
 
@@ -25,7 +27,7 @@ export default async function StudentTestsPage() {
   }
 
   //Get test invitations
-  const { data: invitations } = await supabase
+  const { data: invitations, error: invError } = await supabase
     .from('test_invitations')
     .select(`
       *,
@@ -36,6 +38,10 @@ export default async function StudentTestsPage() {
     `)
     .eq('student_id', user.id)
     .order('invited_at', { ascending: false });
+
+  if (invError) {
+    console.error('Failed to load test invitations:', invError);
+  }
 
   // Get submissions
   const { data: submissions } = await supabase
@@ -51,8 +57,8 @@ export default async function StudentTestsPage() {
   const completedTestIds = new Set(submissions?.map(s => s.test_id) || []);
 
   // Live tests: tests that are live AND student hasn't completed yet
-  const liveTests = invitations?.filter(inv => 
-    inv.test?.is_live && 
+  const liveTests = invitations?.filter(inv =>
+    inv.test?.is_live &&
     !completedTestIds.has(inv.test.id) &&
     inv.status !== 'declined'
   ) || [];
@@ -69,7 +75,7 @@ export default async function StudentTestsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header profile={profile} />
+      <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 p-4 md:p-8 md:ml-24">
@@ -174,7 +180,7 @@ export default async function StudentTestsPage() {
                     const percentage = sub.percentage || 0;
                     const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F';
                     const gradeColor = percentage >= 70 ? 'text-green-600 bg-green-50' : percentage >= 50 ? 'text-amber-600 bg-amber-50' : 'text-red-600 bg-red-50';
-                    
+
                     return (
                       <div key={sub.id} className="bg-white rounded-xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between gap-4">
@@ -189,18 +195,18 @@ export default async function StudentTestsPage() {
                                 minute: '2-digit'
                               })}
                             </p>
-                            
+
                             {/* Score Bar */}
                             <div className="flex items-center gap-4 mb-3">
                               <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div 
+                                <div
                                   className={`h-full rounded-full ${percentage >= 70 ? 'bg-green-500' : percentage >= 50 ? 'bg-amber-500' : 'bg-red-500'}`}
                                   style={{ width: `${Math.min(percentage, 100)}%` }}
                                 />
                               </div>
                               <span className="text-sm font-medium text-slate-600">{percentage.toFixed(0)}%</span>
                             </div>
-                            
+
                             {/* Quick Stats */}
                             <div className="flex items-center gap-4 text-sm">
                               <span className="flex items-center gap-1 text-slate-600">
@@ -218,7 +224,7 @@ export default async function StudentTestsPage() {
                               )}
                             </div>
                           </div>
-                          
+
                           {/* Action Buttons */}
                           <div className="flex flex-col gap-2">
                             <Link

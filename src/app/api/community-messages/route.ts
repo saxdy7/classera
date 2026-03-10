@@ -115,19 +115,38 @@ export async function POST(request: Request) {
         }
 
         // Get channel info to check type and lock status
-        const { data: channel } = await supabase
+        const { data: channel, error: channelError } = await supabase
             .from('community_channels')
-            .select('*, community:communities(mentor_id)')
+            .select('*')
             .eq('id', channelId)
             .single();
 
-        if (!channel) {
-            return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+        if (channelError || !channel) {
+            console.error('Channel lookup error:', channelError, 'channelId:', channelId);
+            return NextResponse.json({
+                error: `Channel not found. Debug: channelId=${channelId}, error=${channelError?.message || 'null'}, code=${channelError?.code || 'null'}`
+            }, { status: 404 });
+        }
+
+        // Get community to check limits
+        const { data: community, error: commError } = await supabase
+            .from('communities')
+            .select('mentor_id, messaging_enabled')
+            .eq('id', channel.community_id)
+            .single();
+
+        if (commError || !community) {
+            return NextResponse.json({ error: 'Community not found' }, { status: 404 });
         }
 
         // Check if channel is locked
         if (channel.is_locked) {
             return NextResponse.json({ error: 'Channel is locked' }, { status: 403 });
+        }
+
+        // Check if messaging is enabled
+        if (community.messaging_enabled === false && user.id !== community.mentor_id) {
+            return NextResponse.json({ error: 'Messaging is disabled for this community' }, { status: 403 });
         }
 
         // Check if user is muted
@@ -151,23 +170,34 @@ export async function POST(request: Request) {
             .insert({
                 channel_id: channelId,
                 sender_id: user.id,
+                user_id: user.id, // Providing this in case the old column is still required
                 content,
                 parent_message_id: body.parentMessageId || null
             })
-            .select(`
-        *,
-        sender:users!community_messages_sender_id_fkey(
-          id,
-          full_name,
-          avatar_url,
-          role
-        )
-      `)
+            .select()
             .single();
 
-        if (error) throw error;
+        // Fetch the message with the sender info since the UI expects it
+        const { data: populatedMessage, error: fetchError } = await supabase
+            .from('community_messages')
+            .select(`
+                *,
+                sender:users!community_messages_sender_id_fkey(
+                    id,
+                    full_name,
+                    avatar_url,
+                    role
+                )
+            `)
+            .eq('id', message.id)
+            .single();
 
-        return NextResponse.json({ success: true, message });
+        if (fetchError) {
+            console.error('Fetch inserted message error:', fetchError);
+            throw fetchError;
+        }
+
+        return NextResponse.json({ success: true, message: populatedMessage });
     } catch (error: any) {
         console.error('Error sending message:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -191,14 +221,30 @@ export async function PATCH(request: Request) {
         }
 
         // Get message to check permissions and time
-        const { data: message } = await supabase
+        const { data: message, error: msgError } = await supabase
             .from('community_messages')
-            .select('*, channel:community_channels(community:communities(mentor_id))')
+            .select('*')
             .eq('id', messageId)
             .single();
 
-        if (!message) {
-            return NextResponse.json({ error: 'Message not found' }, { status: 404 });
+        if (msgError || !message) {
+            return NextResponse.json({ error: 'Message not found or lookup failed' }, { status: 404 });
+        }
+
+        const { data: channel } = await supabase
+            .from('community_channels')
+            .select('community_id')
+            .eq('id', message.channel_id)
+            .single();
+
+        let mentorId = null;
+        if (channel?.community_id) {
+            const { data: community } = await supabase
+                .from('communities')
+                .select('mentor_id')
+                .eq('id', channel.community_id)
+                .single();
+            mentorId = community?.mentor_id;
         }
 
         if (action === 'edit') {
@@ -234,7 +280,7 @@ export async function PATCH(request: Request) {
 
         } else {
             // Default to Delete (soft delete)
-            const isMentor = message.channel.community.mentor_id === user.id;
+            const isMentor = mentorId === user.id;
 
             if (!isMentor) {
                 return NextResponse.json({ error: 'Only mentors can delete messages' }, { status: 403 });
@@ -256,7 +302,7 @@ export async function PATCH(request: Request) {
             await supabase
                 .from('community_moderation_logs')
                 .insert({
-                    community_id: message.channel.community.id,
+                    community_id: channel?.community_id || null,
                     action_type: 'delete_message',
                     performed_by: user.id,
                     target_id: messageId,

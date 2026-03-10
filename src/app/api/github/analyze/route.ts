@@ -208,6 +208,18 @@ export async function POST(request: NextRequest) {
       { onConflict: 'submission_id' },
     );
 
+    // Append analysis snapshot for progress tracking
+    await admin.from('analysis_snapshots').insert({
+      submission_id,
+      overall_score: scores.overall,
+      consistency_score: scores.consistency,
+      activity_score: scores.activity,
+      quality_score: scores.quality,
+      total_commits: commits.length,
+      active_days: activeDays,
+      analyzed_at: new Date().toISOString(),
+    });
+
     // Mark submission as analyzed
     await admin
       .from('assignment_submissions')

@@ -172,6 +172,7 @@ export default async function StudentCommunityDetailPage({
                                 userRole="student"
                                 userId={user.id}
                                 isMuted={!!isMuted}
+                                messagingEnabled={community.messaging_enabled ?? true}
                             />
                         )}
                     </div>
