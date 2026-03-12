@@ -17,6 +17,7 @@ interface CommunityFeedClientProps {
 export function CommunityFeedClient({ communityId, userId, userRole, isMentor }: CommunityFeedClientProps) {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [sidebarFilter, setSidebarFilter] = useState<string>('all');
 
   const handlePostCreated = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -49,8 +50,8 @@ export function CommunityFeedClient({ communityId, userId, userRole, isMentor }:
         <div className="col-span-12 lg:col-span-3">
           <CommunitySidebar
             communityId={communityId}
-            activeFilter="all"
-            onFilterChange={(filter) => console.log('Filter:', filter)}
+            activeFilter={sidebarFilter}
+            onFilterChange={setSidebarFilter}
           />
         </div>
 
@@ -62,6 +63,7 @@ export function CommunityFeedClient({ communityId, userId, userRole, isMentor }:
             userId={userId}
             userRole={userRole}
             isMentor={isMentor}
+            activeFilter={sidebarFilter}
           />
         </div>
 

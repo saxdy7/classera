@@ -19,7 +19,7 @@ export async function POST(
         const { type, timestamp, details } = body;
 
         // Valid violation types
-        const validTypes = ['tab_switch', 'face_not_detected', 'multiple_faces', 'screen_share_stopped', 'suspicious_activity'];
+        const validTypes = ['tab_switch', 'fullscreen_exit', 'face_not_detected', 'multiple_faces', 'screen_share_stopped', 'suspicious_activity'];
 
         if (!validTypes.includes(type)) {
             return NextResponse.json({ error: 'Invalid violation type' }, { status: 400 });
@@ -41,11 +41,15 @@ export async function POST(
             console.error('Proctoring log error:', error);
         }
 
-        // Update invitation with violation count
-        await supabase.rpc('increment_violation_count', {
-            p_test_id: testId,
-            p_student_id: user.id
-        });
+        // Update test_submissions with violation count instead of missing RPC
+        await supabase
+            .from('test_submissions')
+            .update({
+                warnings_count: body.warnings_count || 1,
+                is_disqualified: body.warnings_count >= 3
+            })
+            .eq('test_id', testId)
+            .eq('student_id', user.id);
 
         return NextResponse.json({ logged: true });
     } catch (error: any) {

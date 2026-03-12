@@ -11,7 +11,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { test_id, answers, violations, time_taken_minutes } = body;
+        const { test_id, answers, violations, time_taken_minutes, warnings_count, is_disqualified, screen_recording_url } = body;
 
         console.log('Submit request:', { test_id, answersCount: answers ? Object.keys(answers).length : 0, userId: user.id });
 
@@ -119,7 +119,10 @@ export async function POST(request: Request) {
                     max_score: maxScore,
                     percentage,
                     activity_log: violations ? { violations } : null,
-                    submitted_at: new Date().toISOString()
+                    submitted_at: new Date().toISOString(),
+                    ...(warnings_count !== undefined && { warnings_count }),
+                    ...(is_disqualified !== undefined && { is_disqualified }),
+                    ...(screen_recording_url && { screen_recording_url }),
                 })
                 .eq('id', existingSubmission.id)
                 .select()
@@ -139,7 +142,10 @@ export async function POST(request: Request) {
                     max_score: maxScore,
                     percentage,
                     activity_log: violations ? { violations } : null,
-                    submitted_at: new Date().toISOString()
+                    submitted_at: new Date().toISOString(),
+                    warnings_count: warnings_count ?? 0,
+                    is_disqualified: is_disqualified ?? false,
+                    ...(screen_recording_url && { screen_recording_url }),
                 })
                 .select()
                 .single();

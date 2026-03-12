@@ -45,7 +45,7 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
       const { data: members } = await supabase
         .from('community_members')
         .select(`
-          user:users!community_members_user_id_fkey(
+          user:users!community_members_student_id_fkey(
             id,
             full_name,
             avatar_url,
@@ -57,7 +57,7 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
         .limit(10);
 
       // Get online status from user_status table
-      const memberIds = members?.map((m: any) => m.user.id) || [];
+      const memberIds = members?.map((m: any) => m.user?.id).filter(Boolean) || [];
       const { data: statuses } = await supabase
         .from('user_status')
         .select('user_id, status')
@@ -67,7 +67,7 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
       const onlineIds = new Set(statuses?.map((s: any) => s.user_id) || []);
       
       const onlineMembersList = (members || [])
-        .filter((m: any) => onlineIds.has(m.user.id))
+        .filter((m: any) => m.user && onlineIds.has(m.user.id))
         .map((m: any) => ({
           ...m.user,
           status: 'online' as const
@@ -76,31 +76,17 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
 
       setOnlineMembers(onlineMembersList);
 
-      // Fetch top contributors (users with most posts and best answers)
-      const { data: contributors } = await supabase
-        .from('users')
-        .select(`
-          id,
-          full_name,
-          avatar_url,
-          role,
-          community_posts!inner(count),
-          community_comments!inner(count)
-        `)
-        .in('id', memberIds)
-        .limit(5);
-
-      // Transform and sort contributors
-      const topContributorsList = (contributors || [])
-        .map((c: any) => ({
-          id: c.id,
-          full_name: c.full_name,
-          avatar_url: c.avatar_url,
-          role: c.role,
-          posts_count: c.community_posts?.[0]?.count || 0,
-          helpful_answers: c.community_comments?.[0]?.count || 0
+      // Show approved members as contributors (no post-count join needed yet)
+      const topContributorsList = (members || [])
+        .filter((m: any) => m.user)
+        .map((m: any) => ({
+          id: m.user.id,
+          full_name: m.user.full_name,
+          avatar_url: m.user.avatar_url,
+          role: m.user.role,
+          posts_count: 0,
+          helpful_answers: 0,
         }))
-        .sort((a, b) => (b.posts_count + b.helpful_answers) - (a.posts_count + a.helpful_answers))
         .slice(0, 5);
 
       setTopContributors(topContributorsList);

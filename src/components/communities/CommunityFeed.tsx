@@ -77,13 +77,15 @@ interface CommunityFeedProps {
   userId: string;
   userRole: 'student' | 'mentor';
   isMentor: boolean;
+  /** Filter controlled by parent (e.g. CommunitySidebar). When provided the internal tabs are hidden. */
+  activeFilter?: string;
 }
 
-export function CommunityFeed({ communityId, userId, userRole, isMentor }: CommunityFeedProps) {
+export function CommunityFeed({ communityId, userId, userRole, isMentor, activeFilter }: CommunityFeedProps) {
   const supabase = createClient();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'questions' | 'announcements'>('all');
+  const [filter, setFilter] = useState<string>(activeFilter ?? 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
   const [comments, setComments] = useState<Record<string, Comment[]>>({});
@@ -91,9 +93,14 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor }: Commu
   const [loadingComments, setLoadingComments] = useState<Record<string, boolean>>({});
   const [editingPost, setEditingPost] = useState<Post | null>(null);
 
+  // Sync filter when parent (CommunitySidebar) changes it
+  useEffect(() => {
+    if (activeFilter !== undefined) setFilter(activeFilter);
+  }, [activeFilter]);
+
   useEffect(() => {
     fetchPosts();
-    subscribeToChanges();
+    return subscribeToChanges();
   }, [filter]);
 
   const fetchPosts = async () => {
@@ -446,36 +453,38 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor }: Commu
 
   return (
     <div className="space-y-6">
-      {/* Filter Tabs */}
-      <div className="flex gap-2 border-b border-slate-200">
-        <button
-          onClick={() => setFilter('all')}
-          className={`px-6 py-3 font-semibold transition-colors ${filter === 'all'
-            ? 'text-indigo-600 border-b-2 border-indigo-600'
-            : 'text-slate-600 hover:text-slate-900'
-            }`}
-        >
-          All Posts
-        </button>
-        <button
-          onClick={() => setFilter('questions')}
-          className={`px-6 py-3 font-semibold transition-colors ${filter === 'questions'
-            ? 'text-indigo-600 border-b-2 border-indigo-600'
-            : 'text-slate-600 hover:text-slate-900'
-            }`}
-        >
-          Questions
-        </button>
-        <button
-          onClick={() => setFilter('announcements')}
-          className={`px-6 py-3 font-semibold transition-colors ${filter === 'announcements'
-            ? 'text-indigo-600 border-b-2 border-indigo-600'
-            : 'text-slate-600 hover:text-slate-900'
-            }`}
-        >
-          Announcements
-        </button>
-      </div>
+      {/* Filter Tabs — hidden when CommunitySidebar controls the filter */}
+      {activeFilter === undefined && (
+        <div className="flex gap-2 border-b border-slate-200">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-6 py-3 font-semibold transition-colors ${filter === 'all'
+              ? 'text-indigo-600 border-b-2 border-indigo-600'
+              : 'text-slate-600 hover:text-slate-900'
+              }`}
+          >
+            All Posts
+          </button>
+          <button
+            onClick={() => setFilter('questions')}
+            className={`px-6 py-3 font-semibold transition-colors ${filter === 'questions'
+              ? 'text-indigo-600 border-b-2 border-indigo-600'
+              : 'text-slate-600 hover:text-slate-900'
+              }`}
+          >
+            Questions
+          </button>
+          <button
+            onClick={() => setFilter('announcements')}
+            className={`px-6 py-3 font-semibold transition-colors ${filter === 'announcements'
+              ? 'text-indigo-600 border-b-2 border-indigo-600'
+              : 'text-slate-600 hover:text-slate-900'
+              }`}
+          >
+            Announcements
+          </button>
+        </div>
+      )}
 
       {/* Search Bar */}
       <div className="relative">
@@ -511,7 +520,7 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor }: Commu
           </p>
         </div>
       ) : (
-        posts.filter(post => {
+        (filter === 'saved' ? posts.filter(p => p.user_has_saved) : posts).filter(post => {
           if (!searchQuery) return true;
           const query = searchQuery.toLowerCase();
           return (
@@ -531,26 +540,26 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor }: Commu
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                  {post.author.avatar_url ? (
+                  {post.author?.avatar_url ? (
                     <img
                       src={post.author.avatar_url}
-                      alt={post.author.full_name}
+                      alt={post.author?.full_name || ''}
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    post.author.full_name.charAt(0)
+                    (post.author?.full_name || '?').charAt(0)
                   )}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900">{post.author.full_name}</span>
+                    <span className="font-bold text-slate-900">{post.author?.full_name || 'Unknown'}</span>
                     <span
-                      className={`px-2 py-0.5 text-xs font-semibold rounded-full ${post.author.role === 'mentor'
+                      className={`px-2 py-0.5 text-xs font-semibold rounded-full ${post.author?.role === 'mentor'
                         ? 'bg-purple-100 text-purple-700'
                         : 'bg-blue-100 text-blue-700'
                         }`}
                     >
-                      {post.author.role}
+                      {post.author?.role}
                     </span>
                     {post.type !== 'normal' && (
                       <span
@@ -751,28 +760,28 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor }: Commu
                           }`}
                       >
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
-                          {comment.author.avatar_url ? (
+                          {comment.author?.avatar_url ? (
                             <img
                               src={comment.author.avatar_url}
-                              alt={comment.author.full_name}
+                              alt={comment.author?.full_name || ''}
                               className="w-full h-full rounded-full object-cover"
                             />
                           ) : (
-                            comment.author.full_name.charAt(0)
+                            (comment.author?.full_name || '?').charAt(0)
                           )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-slate-900">
-                              {comment.author.full_name}
+                              {comment.author?.full_name || 'Unknown'}
                             </span>
                             <span
-                              className={`px-2 py-0.5 text-xs font-semibold rounded-full ${comment.author.role === 'mentor'
+                              className={`px-2 py-0.5 text-xs font-semibold rounded-full ${comment.author?.role === 'mentor'
                                 ? 'bg-purple-100 text-purple-700'
                                 : 'bg-blue-100 text-blue-700'
                                 }`}
                             >
-                              {comment.author.role}
+                              {comment.author?.role}
                             </span>
                             {comment.is_best_answer && (
                               <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">

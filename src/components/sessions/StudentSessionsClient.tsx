@@ -105,9 +105,10 @@ function SessionCard({ session, isLive = false }: { session: Session; isLive?: b
 
 
     const handleJoin = () => {
-        if (session.room_url) {
-            window.open(session.room_url, '_blank');
-        }
+        // Use room URL if available, otherwise fall back to a Jitsi Meet room
+        const url = session.room_url ||
+            `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`;
+        window.open(url, '_blank');
     };
 
     const handleAddToCalendar = () => {
@@ -216,7 +217,7 @@ function SessionCard({ session, isLive = false }: { session: Session; isLive?: b
                     )}
                 </div>
 
-                {(isLive || session.status === 'live') && session.room_url ? (
+                {(isLive || session.status === 'live') ? (
                     <button
                         onClick={handleJoin}
                         className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -225,7 +226,7 @@ function SessionCard({ session, isLive = false }: { session: Session; isLive?: b
                         Join Session
                         <ExternalLink className="w-3 h-3" />
                     </button>
-                ) : session.room_url && getTimeUntil(session.scheduled_at) === 'Started' ? (
+                ) : getTimeUntil(session.scheduled_at) === 'Started' ? (
                     <button
                         onClick={handleJoin}
                         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

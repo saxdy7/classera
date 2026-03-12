@@ -34,7 +34,7 @@ export async function GET(
           student_id,
           status,
           invited_at,
-          student:users(id, full_name, avatar_url, email)
+          student:users!student_id(id, full_name, avatar_url, email)
         )
       `)
             .eq('id', id)

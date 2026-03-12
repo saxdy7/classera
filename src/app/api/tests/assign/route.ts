@@ -68,8 +68,6 @@ export async function POST(request: Request) {
         }
 
         // Create invitations (upsert to avoid duplicates) via admin client
-        // Note: invited_by is omitted here to stay compatible with DB schemas that may
-        // not yet have that column. The FIX_TEST_INVITATIONS.sql migration adds it.
         const invitations = studentsToAssign.map(student_id => ({
             test_id,
             student_id,
@@ -77,7 +75,7 @@ export async function POST(request: Request) {
             invited_at: new Date().toISOString()
         }));
 
-        const { data: created, error } = await admin
+        let { data: created, error } = await admin
             .from('test_invitations')
             .upsert(invitations, {
                 onConflict: 'test_id,student_id',
@@ -85,9 +83,22 @@ export async function POST(request: Request) {
             })
             .select();
 
+        // If the column set is missing something, try a stripped payload
         if (error) {
-            console.error('Error creating invitations:', error);
-            return NextResponse.json({ error: error.message }, { status: 400 });
+            console.error('Error creating invitations (attempt 1):', error.message);
+            // Retry — sometimes the schema cache needs a moment
+            const retried = await admin
+                .from('test_invitations')
+                .upsert(invitations, {
+                    onConflict: 'test_id,student_id',
+                    ignoreDuplicates: true
+                })
+                .select();
+            if (retried.error) {
+                console.error('Error creating invitations (attempt 2):', retried.error);
+                return NextResponse.json({ error: retried.error.message }, { status: 400 });
+            }
+            created = retried.data;
         }
 
         // Create notifications for students via admin client
@@ -146,7 +157,7 @@ export async function GET(request: Request) {
             .from('test_invitations')
             .select(`
         *,
-        student:users(id, full_name, email, avatar_url)
+        student:users!test_invitations_student_id_fkey(id, full_name, email, avatar_url)
       `)
             .eq('test_id', testId);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ArrowLeft, 
@@ -39,6 +40,7 @@ export default function TestDetailClient({
   avgScore,
   hasDescriptiveQuestions 
 }: TestDetailClientProps) {
+  const router = useRouter();
   const [test, setTest] = useState(initialTest);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showBulkInvite, setShowBulkInvite] = useState(false);
@@ -421,6 +423,22 @@ export default function TestDetailClient({
                           <p className="text-xl font-bold text-indigo-600">{sub.score}/{test.total_marks}</p>
                           <p className="text-sm text-slate-500">{sub.percentage?.toFixed(1)}%</p>
                         </div>
+                        {sub.is_disqualified && (
+                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full font-semibold">
+                            Disqualified
+                          </span>
+                        )}
+                        {!sub.is_disqualified && sub.warnings_count > 0 && (
+                          <span className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded-full font-semibold">
+                            ⚠️ {sub.warnings_count} violation{sub.warnings_count !== 1 ? 's' : ''}
+                          </span>
+                        )}
+                        {sub.screen_recording_url && (
+                          <a href={sub.screen_recording_url} target="_blank" rel="noopener noreferrer"
+                            className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full hover:bg-blue-200 transition-colors">
+                            🎥 Recording
+                          </a>
+                        )}
                         {sub.manual_grades && (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                             Graded
@@ -509,8 +527,9 @@ export default function TestDetailClient({
           onClose={() => setShowBulkInvite(false)}
           onSuccess={() => {
             setShowBulkInvite(false);
-            // Refresh the page to show new invitations
-            window.location.reload();
+            // Hard-navigate to same page to guarantee fresh server data
+            router.push(`/dashboard/mentor/tests/${test.id}`);
+            router.refresh();
           }}
           existingInvitations={test.invitations?.map((inv: any) => inv.student_id) || []}
         />

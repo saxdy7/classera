@@ -35,9 +35,8 @@ export default async function LiveSessionsPage() {
       test:tests(id, title),
       participants:session_participants(
         id,
-        user:users(id, full_name, avatar_url),
-        status,
-        role
+        user_id,
+        user:users(id, full_name, avatar_url)
       )
     `)
     .eq('mentor_id', user.id)

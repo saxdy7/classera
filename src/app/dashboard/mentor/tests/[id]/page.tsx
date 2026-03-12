@@ -42,18 +42,51 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     redirect('/dashboard/mentor/tests');
   }
 
-  // Get submissions via admin to bypass RLS and avoid FK hint issues
-  const { data: submissions, error: subError } = await admin
-    .from('test_submissions')
-    .select(`
+  // Get submissions via admin — try full column set first, fall back to base columns
+  // if extended columns (from ADD_PROCTORING.sql) haven't been migrated yet
+  let submissions: any[] | null = null;
+  let subError: any = null;
+
+  const fullSelect = `
       id,
       score,
+      max_score,
       percentage,
       submitted_at,
       ai_evaluated_at,
-      student:users(id, full_name, avatar_url)
-    `)
+      manual_grades,
+      warnings_count,
+      is_disqualified,
+      screen_recording_url,
+      student:users!student_id(id, full_name, avatar_url)
+    `;
+
+  const baseSelect = `
+      id,
+      score,
+      max_score,
+      percentage,
+      submitted_at,
+      student:users!student_id(id, full_name, avatar_url)
+    `;
+
+  const fullResult = await admin
+    .from('test_submissions')
+    .select(fullSelect)
     .eq('test_id', id);
+
+  if (fullResult.error) {
+    // Extended columns not yet migrated — use base columns
+    console.warn('Submissions full query failed, falling back to base columns:', fullResult.error.message);
+    const baseResult = await admin
+      .from('test_submissions')
+      .select(baseSelect)
+      .eq('test_id', id);
+    submissions = baseResult.data;
+    subError = baseResult.error;
+  } else {
+    submissions = fullResult.data;
+  }
 
   if (subError) console.error('Error fetching submissions:', subError);
 
@@ -65,7 +98,7 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
       student_id,
       status,
       invited_at,
-      student:users(id, full_name, avatar_url, email)
+      student:users!student_id(id, full_name, avatar_url, email)
     `)
     .eq('test_id', id);
 
@@ -84,14 +117,14 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     : 0;
 
   // Check if test has descriptive questions for manual grading
-  const hasDescriptiveQuestions = testWithRelations.questions?.some((q: any) => 
+  const hasDescriptiveQuestions = testWithRelations.questions?.some((q: any) =>
     q.type === 'descriptive' || q.type === 'short_answer'
   );
 
   return (
-    <TestDetailClient 
-      profile={profile} 
-      test={testWithRelations} 
+    <TestDetailClient
+      profile={profile}
+      test={testWithRelations}
       submissionCount={submissionCount}
       avgScore={avgScore}
       hasDescriptiveQuestions={hasDescriptiveQuestions}

@@ -17,8 +17,9 @@ const DAILY_API_KEY = process.env.DAILY_API_KEY;
 // Create a Daily.co room
 async function createDailyRoom(roomName: string, settings: any) {
   if (!DAILY_API_KEY) {
-    console.error('DAILY_API_KEY not configured');
-    return null;
+    // No Daily.co API key — use free Jitsi Meet as fallback (no configuration needed)
+    const safeName = roomName.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 40);
+    return { url: `https://meet.jit.si/classera-${safeName}`, name: safeName };
   }
 
   try {
@@ -78,14 +79,13 @@ export async function GET(request: Request) {
 
     const admin = createAdminClient();
 
-    // live_sessions actual columns: id, mentor_id, title, description,
-    //   scheduled_at, duration_minutes, meeting_url, status, max_participants, created_at, updated_at
     let query = admin
       .from('live_sessions')
       .select(`
         *,
         mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url),
-        participants:session_participants(count)
+        test:tests(id, title),
+        participants:session_participants(id, user_id, user:users(id, full_name, avatar_url))
       `)
       .order('scheduled_at', { ascending: true });
 
@@ -158,6 +158,7 @@ export async function POST(request: Request) {
       session_type,
       scheduled_at,
       duration_minutes,
+      test_id,
       settings,
       participant_ids, // Array of user IDs to invite
     } = body;
@@ -183,8 +184,10 @@ export async function POST(request: Request) {
         session_type: session_type || 'mentor_meeting',
         scheduled_at,
         duration_minutes: duration_minutes || 60,
+        test_id: test_id || null,
         meeting_url: dailyRoom?.url || null,
         daily_room_url: dailyRoom?.url || null,
+        settings: settings || {},
         status: 'scheduled',
         max_participants: settings?.max_participants || 50,
       })
@@ -202,9 +205,10 @@ export async function POST(request: Request) {
       user_id: user.id,
     });
 
-    // Invite participants
-    if (participant_ids && participant_ids.length > 0) {
-      const participantInserts = participant_ids.map((userId: string) => ({
+    // Invite participants (exclude mentor to avoid UNIQUE constraint violation)
+    const filteredParticipantIds = (participant_ids || []).filter((id: string) => id !== user.id);
+    if (filteredParticipantIds.length > 0) {
+      const participantInserts = filteredParticipantIds.map((userId: string) => ({
         session_id: (session as any).id,
         user_id: userId,
       }));
@@ -212,7 +216,7 @@ export async function POST(request: Request) {
       await admin.from('session_participants').insert(participantInserts);
 
       // Notify invitees — use only columns safe for notifications schema
-      await safeInsertNotifications(admin, participant_ids.map((userId: string) => ({
+      await safeInsertNotifications(admin, filteredParticipantIds.map((userId: string) => ({
         user_id: userId,
         type: 'session',
         title: `Invited to: ${title}`,
@@ -265,10 +269,20 @@ export async function PATCH(request: Request) {
     let updateData: any = {};
 
     switch (action) {
-      case 'start':
-        // Valid status values (999_CLEAN): 'scheduled', 'ongoing', 'completed', 'cancelled'
+      case 'start': {
         updateData = { status: 'ongoing' };
+        // Lazily create video room if none was set at schedule-time
+        const existingUrl = (session as any).daily_room_url || (session as any).meeting_url;
+        if (!existingUrl) {
+          const roomName = `session-${session_id.replace(/-/g, '').slice(0, 12)}`;
+          const room = await createDailyRoom(roomName, (session as any).settings || {});
+          if (room?.url) {
+            updateData.daily_room_url = room.url;
+            updateData.meeting_url = room.url;
+          }
+        }
         break;
+      }
 
       case 'end':
         updateData = { status: 'completed' };
@@ -286,6 +300,7 @@ export async function PATCH(request: Request) {
         if (updates.duration_minutes !== undefined) updateData.duration_minutes = updates.duration_minutes;
         if (updates.meeting_url !== undefined) updateData.meeting_url = updates.meeting_url;
         if (updates.max_participants !== undefined) updateData.max_participants = updates.max_participants;
+        if (updates.settings !== undefined) updateData.settings = updates.settings;
     }
 
     const { data: updatedSession, error: updateError } = await admin

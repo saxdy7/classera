@@ -97,13 +97,10 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
         throw new Error(data.error || 'Failed to create session');
       }
 
-      // Refresh sessions to get full data with participants
-      setSessions([data.session, ...sessions]);
+      // Re-fetch to get session with full joins (participants, test)
+      await fetchSessions();
       setShowCreateModal(false);
       resetForm();
-
-      // Show success message
-      console.log('Session created successfully:', data.session);
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -126,12 +123,20 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
         throw new Error(data.error);
       }
 
-      setSessions(sessions.map(s => s.id === session.id ? data.session : s));
+      // Preserve join data (participants, test) — PATCH response has no joins
+      setSessions(sessions.map(s =>
+        s.id === session.id
+          ? { ...data.session, participants: s.participants, test: s.test }
+          : s
+      ));
 
-      // Open video room
-      if (session.daily_room_url) {
-        window.open(session.daily_room_url, '_blank');
-      }
+      // Open video room — use updated URL from response, fall back to Jitsi
+      const roomUrl =
+        data.session.daily_room_url ||
+        data.session.meeting_url ||
+        session.daily_room_url;
+      const jitsiUrl = `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`;
+      window.open(roomUrl || jitsiUrl, '_blank');
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -156,7 +161,12 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
         throw new Error(data.error);
       }
 
-      setSessions(sessions.map(s => s.id === session.id ? data.session : s));
+      // Preserve join data (participants, test) — PATCH response has no joins
+      setSessions(sessions.map(s =>
+        s.id === session.id
+          ? { ...data.session, participants: s.participants, test: s.test }
+          : s
+      ));
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -191,7 +201,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
         throw new Error(data.error || 'Failed to update session');
       }
 
-      setSessions(sessions.map(s => s.id === editingSession.id ? data.session : s));
+      await fetchSessions();
       setShowEditModal(false);
       setEditingSession(null);
       resetForm();
@@ -219,7 +229,12 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
         throw new Error(data.error);
       }
 
-      setSessions(sessions.map(s => s.id === session.id ? data.session : s));
+      // Preserve join data (participants, test) — PATCH response has no joins
+      setSessions(sessions.map(s =>
+        s.id === session.id
+          ? { ...data.session, participants: s.participants, test: s.test }
+          : s
+      ));
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -240,11 +255,16 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       return p.id;
     }).filter(Boolean) || [];
 
+    // Convert stored UTC time to local time for the datetime-local input
+    const d = new Date(session.scheduled_at);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const localDatetime = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
     setFormData({
       title: session.title,
       description: session.description || '',
-      session_type: session.session_type,
-      scheduled_at: new Date(session.scheduled_at).toISOString().slice(0, 16),
+      session_type: (session.session_type || 'mentor_meeting') as Session['session_type'],
+      scheduled_at: localDatetime,
       duration_minutes: session.duration_minutes,
       test_id: session.test?.id || '',
       participant_ids: participantIds,
@@ -258,6 +278,18 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       },
     });
     setShowEditModal(true);
+  };
+
+  const fetchSessions = async () => {
+    try {
+      const res = await fetch('/api/sessions');
+      if (res.ok) {
+        const { sessions: fetched } = await res.json();
+        setSessions(fetched || []);
+      }
+    } catch (e) {
+      console.error('Failed to refresh sessions', e);
+    }
   };
 
   const resetForm = () => {
@@ -320,16 +352,20 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
           console.log('Session change detected:', payload);
 
           if (payload.eventType === 'INSERT' && payload.new) {
-            // Add new session
-            setSessions(prev => [...prev, payload.new as Session]);
+            // Only add if not already present (fetchSessions may have already added it)
+            setSessions(prev => {
+              if (prev.find(s => s.id === (payload.new as any).id)) return prev;
+              return [...prev, payload.new as Session];
+            });
           } else if (payload.eventType === 'UPDATE' && payload.new) {
-            // Update existing session
-            setSessions(prev =>
-              prev.map(s => s.id === payload.new.id ? payload.new as Session : s)
-            );
+            // Preserve join data — realtime payload has no joins
+            setSessions(prev => prev.map(s =>
+              s.id === (payload.new as any).id
+                ? { ...(payload.new as Session), participants: s.participants, test: s.test }
+                : s
+            ));
           } else if (payload.eventType === 'DELETE' && payload.old) {
-            // Remove deleted session
-            setSessions(prev => prev.filter(s => s.id !== payload.old.id));
+            setSessions(prev => prev.filter(s => s.id !== (payload.old as any).id));
           }
         }
       )
@@ -340,10 +376,41 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
     };
   }, [profile.id]);
 
-  const upcomingSessions = filterSessions(sessions.filter(s => s.status === 'scheduled'));
-  const liveSessions = filterSessions(sessions.filter(s => s.status === 'live' || s.status === 'ongoing'));
-  const pastSessions = filterSessions(sessions.filter(s => s.status === 'completed' || s.status === 'cancelled'));
+  // Sessions are "still live" within scheduled_at + duration + 60 min grace period
+  const isStillLive = (s: Session) =>
+    Date.now() < new Date(s.scheduled_at).getTime() + (s.duration_minutes + 60) * 60000;
 
+  const upcomingSessions = filterSessions(sessions.filter(s => s.status === 'scheduled'));
+  const liveSessions = filterSessions(
+    sessions.filter(s => (s.status === 'live' || s.status === 'ongoing') && isStillLive(s))
+  );
+  const pastSessions = filterSessions(
+    sessions.filter(s =>
+      s.status === 'completed' || s.status === 'cancelled' ||
+      ((s.status === 'live' || s.status === 'ongoing') && !isStillLive(s))
+    )
+  );
+
+  // Auto-end sessions that ran past their duration + grace period (runs once on mount)
+  useEffect(() => {
+    const expired = sessions.filter(
+      s => (s.status === 'live' || s.status === 'ongoing') &&
+           Date.now() >= new Date(s.scheduled_at).getTime() + (s.duration_minutes + 60) * 60000
+    );
+    if (expired.length === 0) return;
+    // Optimistically update local state immediately
+    setSessions(prev => prev.map(s =>
+      expired.some(e => e.id === s.id) ? { ...s, status: 'completed' as const } : s
+    ));
+    // Persist to DB
+    expired.forEach(s => {
+      fetch('/api/sessions', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: s.id, action: 'end' }),
+      }).catch(() => {});
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -435,7 +502,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               <SessionCard
                 key={session.id}
                 session={session}
-                typeInfo={sessionTypeLabels[session.session_type]}
+                typeInfo={sessionTypeLabels[session.session_type] || sessionTypeLabels['mentor_meeting']}
                 onStart={handleStartSession}
                 onEnd={handleEndSession}
                 isLive
@@ -454,7 +521,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               <SessionCard
                 key={session.id}
                 session={session}
-                typeInfo={sessionTypeLabels[session.session_type]}
+                typeInfo={sessionTypeLabels[session.session_type] || sessionTypeLabels['mentor_meeting']}
                 onStart={handleStartSession}
                 onEnd={handleEndSession}
                 onEdit={openEditModal}
@@ -474,7 +541,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               <SessionCard
                 key={session.id}
                 session={session}
-                typeInfo={sessionTypeLabels[session.session_type]}
+                typeInfo={sessionTypeLabels[session.session_type] || sessionTypeLabels['mentor_meeting']}
                 onStart={handleStartSession}
                 onEnd={handleEndSession}
                 isPast
@@ -889,7 +956,10 @@ function SessionCard({
           {isLive ? (
             <>
               <a
-                href={session.daily_room_url || '#'}
+                href={
+                  session.daily_room_url ||
+                  `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"

@@ -55,10 +55,11 @@ export async function POST(
             return NextResponse.json({ error: 'This test is not available yet' }, { status: 400 });
         }
 
-        // Update invitation status to in_progress
+        // Mark invitation as accepted/in-progress
+        // Note: DB constraint allows 'pending','accepted','declined' only
         await supabase
             .from('test_invitations')
-            .update({ status: 'in_progress', started_at: new Date().toISOString() })
+            .update({ status: 'accepted' })
             .eq('test_id', testId)
             .eq('student_id', user.id);
 

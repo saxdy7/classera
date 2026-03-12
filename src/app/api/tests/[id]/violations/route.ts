@@ -16,31 +16,20 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { type, count, timestamp, student_id } = body;
+    const { type, count, timestamp } = body;
 
-    // Verify the student_id matches the authenticated user
-    if (student_id !== user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Log violation to test_violations table (or update test_submissions)
-    // First check if violations table exists, otherwise update submission directly
-    const { data: submission, error: subError } = await supabase
+    // Update warnings_count on the submission if it exists (best-effort, non-blocking)
+    const { data: submission } = await supabase
       .from('test_submissions')
-      .select('id, violations')
+      .select('id')
       .eq('test_id', testId)
       .eq('student_id', user.id)
-      .eq('status', 'in_progress')
       .single();
 
     if (submission) {
-      // Update existing submission with new violation
-      const existingViolations = submission.violations || [];
-      const updatedViolations = [...existingViolations, { type, count, timestamp }];
-
       await supabase
         .from('test_submissions')
-        .update({ violations: updatedViolations })
+        .update({ warnings_count: count })
         .eq('id', submission.id);
     }
 
@@ -51,7 +40,7 @@ export async function POST(
         student_id: user.id,
         violation_type: type,
         violation_count: count,
-        occurred_at: timestamp,
+        occurred_at: timestamp || new Date().toISOString(),
       });
     } catch {
       // Table might not exist, that's okay

@@ -37,13 +37,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { data: conn } = await admin
+    // Try student token → mentor token → env fallback (in that priority order)
+    const { data: studentConn } = await admin
       .from('github_connections')
       .select('access_token')
       .eq('user_id', submission.student_id)
       .single();
 
-    const token = conn?.access_token ?? process.env.GITHUB_TOKEN;
+    let token = studentConn?.access_token ?? null;
+    if (!token && mentorId) {
+      const { data: mentorConn } = await admin
+        .from('github_connections')
+        .select('access_token')
+        .eq('user_id', mentorId)
+        .single();
+      token = mentorConn?.access_token ?? null;
+    }
+    token = token ?? process.env.GITHUB_TOKEN ?? null;
     const headers: HeadersInit = {
       Accept: 'application/vnd.github.v3+json',
       'X-GitHub-Api-Version': '2022-11-28',
@@ -57,7 +67,11 @@ export async function GET(request: NextRequest) {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({})) as { message?: string };
-      return NextResponse.json({ error: err.message ?? 'GitHub API error' }, { status: res.status });
+      const isRateLimit = res.status === 403 || res.status === 429;
+      const friendlyMsg = isRateLimit
+        ? 'GitHub API rate limit reached. Ask the student to connect their GitHub account, or add a GITHUB_TOKEN to the server environment.'
+        : (err.message ?? 'GitHub API error');
+      return NextResponse.json({ error: friendlyMsg }, { status: res.status });
     }
 
     const raw = await res.json() as Array<{

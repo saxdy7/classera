@@ -170,7 +170,6 @@ export async function POST(request: Request) {
             .insert({
                 channel_id: channelId,
                 sender_id: user.id,
-                user_id: user.id, // Providing this in case the old column is still required
                 content,
                 parent_message_id: body.parentMessageId || null
             })

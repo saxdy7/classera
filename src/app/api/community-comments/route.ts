@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       .from('community_members')
       .select('status')
       .eq('community_id', post.community_id)
-      .eq('user_id', user.id)
+      .eq('student_id', user.id)
       .single();
 
     const { data: community } = await supabase

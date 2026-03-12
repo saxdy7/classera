@@ -249,7 +249,7 @@ export function CommunityChat({
 
     const filteredMessages = searchQuery
         ? messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            m.sender.full_name.toLowerCase().includes(searchQuery.toLowerCase()))
+            m.sender?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()))
         : messages;
 
     // ─── render ───────────────────────────────────────────────────────────────

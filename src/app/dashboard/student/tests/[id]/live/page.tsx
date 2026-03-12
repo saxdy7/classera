@@ -1,6 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { TestRoom } from '@/components/tests/TestRoom';
 
 export default async function LiveTestPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

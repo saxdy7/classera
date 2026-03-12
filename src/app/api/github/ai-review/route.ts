@@ -120,13 +120,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { data: conn } = await admin
+    const { data: studentConn } = await admin
       .from('github_connections')
       .select('access_token')
       .eq('user_id', submission.student_id)
       .single();
 
-    const token = conn?.access_token ?? process.env.GITHUB_TOKEN;
+    let token = studentConn?.access_token ?? null;
+    if (!token) {
+      const mentorId = (submission.assignment as any)?.mentor_id;
+      if (mentorId) {
+        const { data: mentorConn } = await admin
+          .from('github_connections')
+          .select('access_token')
+          .eq('user_id', mentorId)
+          .single();
+        token = mentorConn?.access_token ?? null;
+      }
+    }
+    token = token ?? process.env.GITHUB_TOKEN ?? null;
     const headers: HeadersInit = {
       Accept: 'application/vnd.github.v3.raw',
       'X-GitHub-Api-Version': '2022-11-28',

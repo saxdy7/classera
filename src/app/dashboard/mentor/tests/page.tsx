@@ -1,9 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
 import { Plus, Clock, Users, CheckCircle, Rocket } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 
 export default async function TestsPage() {
   const supabase = await createClient();
@@ -24,46 +27,44 @@ export default async function TestsPage() {
     redirect('/onboarding/mentor');
   }
 
-  // Fetch tests with submission counts
-  const { data: tests } = await supabase
+  const admin = createAdminClient();
+
+  // Fetch tests with submission counts — admin client to bypass RLS edge cases
+  const { data: tests, error: testsError } = await admin
     .from('tests')
     .select(`
       *,
       community:communities(id, name),
-      submissions:test_submissions(count),
-      invitations:test_invitations(count)
+      submissions:test_submissions(id),
+      invitations:test_invitations(id, student_id)
     `)
     .eq('mentor_id', user.id)
     .order('created_at', { ascending: false });
 
+  if (testsError) console.error('Error fetching tests:', testsError);
+
+  // Count helpers — invitations/submissions are now fetched as full rows (not count aggregate)
+  const invCount = (t: any) => t.invitations?.length ?? 0;
+  const subCount = (t: any) => t.submissions?.length ?? 0;
+
   // Live tests - currently active
   const liveTests = tests?.filter(t => t.is_live) || [];
   
-  // Draft: not live AND no invitations sent yet
-  const draftTests = tests?.filter(t => 
-    !t.is_live && 
-    (!t.invitations?.[0]?.count || t.invitations[0].count === 0)
-  ) || [];
-  
-  // Ready tests: not live, has invitations, no submissions yet (ready to go live)
-  const readyTests = tests?.filter(t => 
-    !t.is_live && 
-    t.invitations?.[0]?.count > 0 &&
-    (!t.submissions?.[0]?.count || t.submissions[0].count === 0)
-  ) || [];
-  
-  // Scheduled: not live, has future schedule, has invitations
+  // Completed: not live, has submissions
+  const completedTests = tests?.filter(t => !t.is_live && subCount(t) > 0) || [];
+
+  // Ready: not live, has invitations, no submissions
+  const readyTests = tests?.filter(t => !t.is_live && invCount(t) > 0 && subCount(t) === 0) || [];
+
+  // Draft: not live AND no invitations sent yet, no submissions
+  const draftTests = tests?.filter(t => !t.is_live && invCount(t) === 0 && subCount(t) === 0) || [];
+
+  // Scheduled: subset of ready with a future scheduled_at
   const scheduledTests = tests?.filter(t => 
     !t.is_live && 
     t.scheduled_at && 
     new Date(t.scheduled_at) > new Date() &&
-    t.invitations?.[0]?.count > 0
-  ) || [];
-  
-  // Completed: not live, has submissions (test was conducted and has responses)
-  const completedTests = tests?.filter(t => 
-    !t.is_live && 
-    t.submissions?.[0]?.count > 0
+    invCount(t) > 0
   ) || [];
 
   return (
@@ -208,7 +209,7 @@ export default async function TestsPage() {
               </div>
             )}
 
-            {tests?.length === 0 && (
+            {(!tests || tests.length === 0) && (
               <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-slate-400" />
@@ -232,8 +233,8 @@ export default async function TestsPage() {
 }
 
 function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, isReady = false }: { test: any; isLive?: boolean; isCompleted?: boolean; isDraft?: boolean; isReady?: boolean }) {
-  const submissionCount = test.submissions?.[0]?.count || 0;
-  const invitationCount = test.invitations?.[0]?.count || 0;
+  const submissionCount = test.submissions?.length ?? 0;
+  const invitationCount = test.invitations?.length ?? 0;
 
   return (
     <Link

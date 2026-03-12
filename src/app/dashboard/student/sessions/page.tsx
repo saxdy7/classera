@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { StudentSessionsClient } from '@/components/sessions/StudentSessionsClient';
@@ -37,10 +38,12 @@ export default async function StudentSessionsPage() {
     console.log('Student ID:', user.id);
     console.log('Session IDs student is invited to:', sessionIds);
 
+    // Use admin client to bypass RLS (students can only see sessions they're invited to,
+    // but the live_sessions RLS policy restricts by university which may not match)
+    const admin = createAdminClient();
+
     // Then fetch those sessions with full details
-    // live_sessions uses mentor_id (base column); host_id may exist after FIX_MISSING_COLUMNS migration
-    // status values in base schema: 'scheduled', 'ongoing', 'completed', 'cancelled'
-    const { data: sessions, error: sessionsError } = await supabase
+    const { data: sessions, error: sessionsError } = await admin
         .from('live_sessions')
         .select(`
             *,
@@ -58,7 +61,7 @@ export default async function StudentSessionsPage() {
     const mappedSessions = (sessions || []).map(session => ({
         ...session,
         host: (session as any).mentor,
-        room_url: (session as any).daily_room_url ?? null,
+        room_url: (session as any).daily_room_url ?? (session as any).meeting_url ?? null,
         linked_test_id: (session as any).test_id ?? null,
     }));
 
@@ -68,12 +71,19 @@ export default async function StudentSessionsPage() {
         s.status === 'scheduled' && new Date(s.scheduled_at) > new Date()
     ) || [];
 
-    // Get live sessions (DB status is 'ongoing' when mentor starts, 'live' is a legacy alias)
-    const liveSessions = mappedSessions?.filter(s => s.status === 'live' || s.status === 'ongoing') || [];
+    // Sessions are "still live" within scheduled_at + duration + 60 min grace period
+    const isStillLive = (s: any) =>
+        Date.now() < new Date(s.scheduled_at).getTime() + ((s.duration_minutes ?? 60) + 60) * 60000;
 
-    // Get past sessions
+    // Get live sessions (exclude stale "ongoing" sessions from past days)
+    const liveSessions = mappedSessions?.filter(
+        s => (s.status === 'live' || s.status === 'ongoing') && isStillLive(s)
+    ) || [];
+
+    // Get past sessions (includes overdue "ongoing" sessions stuck in DB)
     const pastSessions = mappedSessions?.filter(s =>
-        (s.status === 'ended' || s.status === 'completed') ||
+        s.status === 'ended' || s.status === 'completed' || s.status === 'cancelled' ||
+        ((s.status === 'live' || s.status === 'ongoing') && !isStillLive(s)) ||
         (s.status === 'scheduled' && new Date(s.scheduled_at) < new Date())
     ) || [];
 

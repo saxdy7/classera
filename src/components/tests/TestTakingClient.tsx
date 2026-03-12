@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Clock, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight, Flag, Send, Zap, Target, Trophy, XCircle } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle, ChevronLeft, ChevronRight, Flag, Send, Zap, Target, Trophy, XCircle, Maximize } from 'lucide-react';
 
 interface Question {
     id: string;
@@ -48,6 +48,12 @@ export function TestTakingClient({ testId }: Props) {
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
 
+    // Anti-cheat state
+    const [warningsCount, setWarningsCount] = useState(0);
+    const [showWarningModal, setShowWarningModal] = useState(false);
+    const [disqualified, setDisqualified] = useState(false);
+    const [hasStarted, setHasStarted] = useState(false);
+
     // Start test
     useEffect(() => {
         const startTest = async () => {
@@ -90,22 +96,59 @@ export function TestTakingClient({ testId }: Props) {
         return () => clearInterval(timer);
     }, [timeRemaining]);
 
-    // Prevent tab switching
+    // Start the test after taking any pre-test steps (like requesting fullscreen)
+    const handleStartTest = async () => {
+        try {
+            if (document.documentElement.requestFullscreen) {
+                await document.documentElement.requestFullscreen();
+            }
+        } catch (err) {
+            console.error('Fullscreen failed:', err);
+        }
+        setHasStarted(true);
+    };
+
+    // Prevent tab switching & fullscreen exiting
     useEffect(() => {
+        if (!test || !hasStarted || submitting || disqualified) return;
+
         const handleVisibilityChange = () => {
-            if (document.hidden && test) {
-                // Log violation
-                fetch(`/api/tests/${testId}/proctor`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'tab_switch', timestamp: new Date().toISOString() })
-                });
+            if (document.hidden) {
+                handleViolation('tab_switch');
+            }
+        };
+
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                handleViolation('fullscreen_exit');
             }
         };
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
-        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-    }, [test, testId]);
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, [test, hasStarted, submitting, disqualified, warningsCount, testId]);
+
+    const handleViolation = (type: string) => {
+        const newCount = warningsCount + 1;
+
+        fetch(`/api/tests/${testId}/proctor`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, timestamp: new Date().toISOString(), warnings_count: newCount })
+        }).catch(console.error);
+
+        if (newCount >= 3) {
+            setDisqualified(true);
+            handleSubmit(true); // Auto-submit due to disqualification
+        } else {
+            setWarningsCount(newCount);
+            setShowWarningModal(true);
+        }
+    };
 
     const formatTime = (seconds: number) => {
         const hrs = Math.floor(seconds / 3600);
@@ -199,6 +242,54 @@ export function TestTakingClient({ testId }: Props) {
 
     if (!test) return null;
 
+    if (!hasStarted) {
+        return (
+            <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent z-0" />
+                    <div className="relative z-10">
+                        <div className="w-20 h-20 bg-violet-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Target className="w-10 h-10 text-violet-400" />
+                        </div>
+                        <h1 className="text-3xl font-bold text-white mb-3">Ready to begin?</h1>
+                        <p className="text-slate-400 mb-8 leading-relaxed">
+                            {test.title} is a timed test. Once you start, the timer will begin.
+                        </p>
+
+                        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 mb-8 text-left">
+                            <h3 className="flex items-center gap-2 text-amber-400 font-semibold mb-3">
+                                <AlertTriangle className="w-5 h-5" />
+                                Anti-Cheat Rules
+                            </h3>
+                            <ul className="space-y-2 text-amber-200/80 text-sm">
+                                <li className="flex items-start gap-2">
+                                    <span className="mt-1 translate-y-[2px] w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                                    This test requires Full Screen mode.
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="mt-1 translate-y-[2px] w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                                    Switching tabs, opening other apps, or exiting full screen will issue a warning.
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="mt-1 translate-y-[2px] w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                                    <strong className="text-red-400">3 warnings will automatically submit and fail your test.</strong>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button
+                            onClick={handleStartTest}
+                            className="w-full py-4 bg-violet-600 hover:bg-violet-500 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-violet-600/20"
+                        >
+                            <Maximize className="w-5 h-5" />
+                            Enter Fullscreen & Start Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     const questions = test.questions || [];
     const currentQ = questions[currentQuestion];
     const answeredCount = Object.keys(answers).length;
@@ -279,11 +370,10 @@ export function TestTakingClient({ testId }: Props) {
                     </div>
 
                     {/* Timer */}
-                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${
-                        isCritical ? 'bg-red-500/15 border-red-500/40' :
-                        isLowTime ? 'bg-amber-500/15 border-amber-500/40' :
-                        'bg-slate-800 border-slate-700'
-                    }`}>
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${isCritical ? 'bg-red-500/15 border-red-500/40' :
+                            isLowTime ? 'bg-amber-500/15 border-amber-500/40' :
+                                'bg-slate-800 border-slate-700'
+                        }`}>
                         <Clock className={`w-4 h-4 ${timerTextColor} ${isCritical ? 'animate-pulse' : ''}`} />
                         <span className={`font-mono font-bold text-xl tabular-nums ${timerTextColor}`}>
                             {formatTime(timeRemaining)}
@@ -313,15 +403,14 @@ export function TestTakingClient({ testId }: Props) {
                                 key={q.id}
                                 onClick={() => setCurrentQuestion(idx)}
                                 title={`Question ${idx + 1}`}
-                                className={`w-9 h-9 rounded-lg font-bold text-xs transition-all active:scale-90 ${
-                                    currentQuestion === idx
+                                className={`w-9 h-9 rounded-lg font-bold text-xs transition-all active:scale-90 ${currentQuestion === idx
                                         ? 'bg-violet-500 text-white ring-2 ring-violet-300 ring-offset-1 ring-offset-slate-950'
                                         : answers[q.id]
                                             ? 'bg-emerald-600/50 text-emerald-300 border border-emerald-600/50'
                                             : flagged.has(q.id)
                                                 ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50'
                                                 : 'bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500'
-                                }`}
+                                    }`}
                             >
                                 {idx + 1}
                             </button>
@@ -348,11 +437,10 @@ export function TestTakingClient({ testId }: Props) {
                             </div>
                             <button
                                 onClick={() => currentQ && toggleFlag(currentQ.id)}
-                                className={`p-2 rounded-xl transition-all active:scale-90 ${
-                                    currentQ && flagged.has(currentQ.id)
+                                className={`p-2 rounded-xl transition-all active:scale-90 ${currentQ && flagged.has(currentQ.id)
                                         ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
                                         : 'bg-slate-800 text-slate-500 border border-slate-700 hover:text-amber-400 hover:border-amber-500/40'
-                                }`}
+                                    }`}
                                 title="Flag for review"
                             >
                                 <Flag className="w-4 h-4" />
@@ -376,14 +464,12 @@ export function TestTakingClient({ testId }: Props) {
                                         <button
                                             key={option.id}
                                             onClick={() => handleAnswerChange(currentQ.id, option.id)}
-                                            className={`group relative flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-left font-medium text-white ${
-                                                isSelected ? theme.selected : theme.base
-                                            }`}
+                                            className={`group relative flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-left font-medium text-white ${isSelected ? theme.selected : theme.base
+                                                }`}
                                         >
                                             {/* Letter badge */}
-                                            <span className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm transition-colors ${
-                                                isSelected ? theme.selectedLetter : theme.letter
-                                            }`}>
+                                            <span className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm transition-colors ${isSelected ? theme.selectedLetter : theme.letter
+                                                }`}>
                                                 {String.fromCharCode(65 + idx)}
                                             </span>
                                             <span className="flex-1 text-sm leading-snug">{option.text}</span>

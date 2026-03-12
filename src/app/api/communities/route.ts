@@ -83,6 +83,13 @@ export async function POST(request: Request) {
             .single();
 
         if (error) throw error;
+
+        // Create default channels for the new community
+        await supabase.from('community_channels').insert([
+            { community_id: data.id, name: 'Announcements', type: 'announcement', is_locked: false, description: 'Official announcements from the mentor' },
+            { community_id: data.id, name: 'General', type: 'discussion', is_locked: false, description: 'General discussion for all members' },
+        ]);
+
         return NextResponse.json({ success: true, community: data });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
