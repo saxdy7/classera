@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
-  LayoutDashboard, BookOpen, ClipboardCheck, Calendar,
+  LayoutDashboard, BookOpen, ClipboardCheck,
   Users, Video, UsersRound, MapIcon, FileText, User,
   ChevronDown, ChevronUp, Sparkles, GraduationCap, Bot,
   MessageSquare, BarChart2, GitBranch,
@@ -31,7 +31,6 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/student/courses' },
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/student/tests' },
     { icon: GitBranch, label: 'Projects', href: '/dashboard/student/projects' },
-    { icon: Calendar, label: 'Schedule', href: '/dashboard/student/schedule' },
     { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/student/communities' },
@@ -43,7 +42,6 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: UsersRound,      label: 'Communities',   href: '/dashboard/mentor/communities' },
     { icon: ClipboardCheck,  label: 'Tests',         href: '/dashboard/mentor/tests' },
     { icon: GitBranch,       label: 'Projects',      href: '/dashboard/mentor/projects' },
-    { icon: Calendar,        label: 'Schedule',      href: '/dashboard/mentor/schedule' },
     { icon: Video,           label: 'Live Sessions', href: '/dashboard/mentor/live-sessions' },
     { icon: MessageSquare,   label: 'Messages',      href: '/dashboard/mentor/messages' },
     { icon: BarChart2,       label: 'Analytics',     href: '/dashboard/mentor/analytics' },
