@@ -13,14 +13,15 @@ interface Message {
     content: string;
     created_at: string;
     edited_at?: string | null;
-    sender_id: string;
-    sender: {
+    user_id?: string;
+    sender_id?: string;
+    sender?: {
         id: string;
         full_name: string;
         avatar_url: string | null;
         role: string;
     };
-    message_reactions: Array<{
+    message_reactions?: Array<{
         id: string;
         reaction: string;
         user_id: string;
@@ -392,7 +393,8 @@ export function CommunityChat({
                         </div>
                     ) : (
                         filteredMessages.map(msg => {
-                            const isOwn = msg.sender_id === userId || msg.sender?.id === userId;
+                            const messageOwnerId = msg.user_id || msg.sender_id || msg.sender?.id;
+                            const isOwn = messageOwnerId === userId;
                             const isMentor = msg.sender?.role === 'mentor';
                             return (
                                 <div key={msg.id} className={`flex gap-3 group ${isOwn ? 'flex-row-reverse' : ''}`}>

@@ -272,27 +272,6 @@ export default async function StudentDashboard() {
             <div className="space-y-6">
               <RealCalendar userId={user.id} />
 
-              {/* Quick Links */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Quick Access</h3>
-                <nav className="space-y-2">
-                  {[
-                    { href: '/dashboard/student/courses', icon: '📚', label: 'My Courses' },
-                    { href: '/dashboard/student/communities', icon: '👥', label: 'Communities' },
-                    { href: '/dashboard/student/tests', icon: '📝', label: 'Tests & Quizzes' },
-                    { href: '/dashboard/student/sessions', icon: '🎥', label: 'Live Sessions' },
-                    { href: '/dashboard/student/roadmap', icon: '🗺️', label: 'Learning Roadmap' },
-                  ].map((item) => (
-                    <Link key={item.href} href={item.href}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition-all text-sm font-medium group">
-                      <span className="text-base">{item.icon}</span>
-                      {item.label}
-                      <span className="ml-auto text-slate-300 group-hover:text-purple-400">→</span>
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-
               {/* Profile Card */}
               <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-sm">
                 <div className="flex items-center gap-4 mb-4">

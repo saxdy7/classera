@@ -41,25 +41,38 @@ export function CreatePostModal({
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('community_posts')
-        .insert({
+      // Use API endpoint for proper validation and mention processing
+      const response = await fetch('/api/community-posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           community_id: communityId,
-          author_id: userId,
           title: title.trim() || null,
           content: content.trim(),
           type: postType,
           images: images.length > 0 ? images : null,
           files: files.length > 0 ? files : null
-        });
+        })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create post');
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating post:', error);
-      alert('Failed to create post. Please try again.');
+      alert(error.message || 'Failed to create post. Please try again.');
     } finally {
       setLoading(false);
     }

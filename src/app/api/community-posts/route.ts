@@ -13,12 +13,38 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const communityId = searchParams.get('communityId');
     const type = searchParams.get('type'); // 'normal', 'question', 'announcement'
-    const saved = searchParams.get('saved'); // 'true' for saved posts
 
     if (!communityId) {
       return NextResponse.json({ error: 'Community ID required' }, { status: 400 });
     }
 
+    // Verify user is member or mentor of the community
+    const { data: community } = await supabase
+      .from('communities')
+      .select('mentor_id')
+      .eq('id', communityId)
+      .single();
+
+    if (!community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const isMentor = community.mentor_id === user.id;
+
+    if (!isMentor) {
+      const { data: membership } = await supabase
+        .from('community_members')
+        .select('status')
+        .eq('community_id', communityId)
+        .eq('student_id', user.id)
+        .single();
+
+      if (!membership || membership.status !== 'approved') {
+        return NextResponse.json({ error: 'You are not a member of this community' }, { status: 403 });
+      }
+    }
+
+    // Fetch posts
     let query = supabase
       .from('community_posts')
       .select(`
@@ -109,12 +135,37 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error creating post:', error);
+      return NextResponse.json({
+        error: error.message || 'Failed to create post',
+        code: error.code,
+        details: error.details
+      }, { status: 500 });
+    }
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post creation returned no data' }, { status: 500 });
+    }
+
+    // Process mentions in the post content (non-blocking)
+    try {
+      await supabase.rpc('process_mentions', {
+        p_content: content,
+        p_post_id: post.id,
+        p_mentioned_by: user.id
+      });
+    } catch (mentionError) {
+      console.warn('Mention processing failed, continuing anyway:', mentionError);
+    }
 
     return NextResponse.json({ post }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating post:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({
+      error: error?.message || 'Failed to create post',
+      code: error?.code
+    }, { status: 500 });
   }
 }
 
@@ -146,13 +197,17 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Check if user is author or mentor
-    const { data: community } = await supabase
+    const { data: community, error: communityError } = await supabase
       .from('communities')
       .select('mentor_id')
       .eq('id', post.community_id)
       .single();
 
-    const canModerate = post.author_id === user.id || community?.mentor_id === user.id;
+    if (communityError || !community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const canModerate = post.author_id === user.id || community.mentor_id === user.id;
 
     if (!canModerate) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
@@ -200,13 +255,17 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if user is author or mentor
-    const { data: community } = await supabase
+    const { data: community, error: communityError } = await supabase
       .from('communities')
       .select('mentor_id')
       .eq('id', post.community_id)
       .single();
 
-    const canDelete = post.author_id === user.id || community?.mentor_id === user.id;
+    if (communityError || !community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const canDelete = post.author_id === user.id || community.mentor_id === user.id;
 
     if (!canDelete) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });

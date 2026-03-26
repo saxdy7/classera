@@ -1,11 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Mail, GraduationCap, BookOpen, ArrowLeft } from 'lucide-react';
+import { Mail, GraduationCap, BookOpen, ArrowLeft, Github, GitBranch, Users, TrendingUp, Linkedin, Briefcase, MapPin, ExternalLink, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { MentorActions } from '@/components/student/MentorActions';
+import { extractGithubUsername, getGithubUser } from '@/lib/github';
 
 function parseExpertise(expertise: any): string {
   if (!expertise) return '';
@@ -56,6 +58,60 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
   const yearsExperience = mentor.created_at 
     ? Math.max(1, new Date().getFullYear() - new Date(mentor.created_at).getFullYear())
     : 1;
+
+  // Get mentor's GitHub connection
+  const admin = createAdminClient();
+  const { data: githubConn } = await admin
+    .from('github_connections')
+    .select('github_username, github_avatar_url, public_repos, followers, following')
+    .eq('user_id', id)
+    .single();
+
+  // Fallback: fetch GitHub data from profile URL if not connected via OAuth
+  let githubUrlData = null;
+  if (!githubConn && mentor.github_url) {
+    const username = extractGithubUsername(mentor.github_url);
+    if (username) {
+      try {
+        githubUrlData = await getGithubUser(username);
+      } catch (err) {
+        console.error('Failed to fetch GitHub user from URL:', err);
+      }
+    }
+  }
+
+  // Get mentor's GitHub analytics if connected
+  let avgPlatformScore = null;
+  let totalPlatformCommits = 0;
+  let topLanguages: Record<string, number> = {};
+
+  if (githubConn) {
+    const { data: analyticsRows } = await admin
+      .from('repo_analytics')
+      .select('overall_score, languages, total_commits')
+      .eq('student_id', id)
+      .order('analyzed_at', { ascending: false })
+      .limit(10);
+
+    if (analyticsRows?.length) {
+      avgPlatformScore = Math.round(analyticsRows.reduce((s, r) => s + (r.overall_score ?? 0), 0) / analyticsRows.length);
+      totalPlatformCommits = analyticsRows.reduce((s, r) => s + (r.total_commits ?? 0), 0);
+
+      const langTotals: Record<string, number> = {};
+      analyticsRows.forEach((row) => {
+        if (row.languages && typeof row.languages === 'object') {
+          Object.entries(row.languages as Record<string, number>).forEach(([lang, bytes]) => {
+            langTotals[lang] = (langTotals[lang] ?? 0) + bytes;
+          });
+        }
+      });
+
+      const sortedLangs = Object.entries(langTotals)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 5);
+      topLanguages = Object.fromEntries(sortedLangs);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -157,6 +213,157 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                     <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Expertise</div>
                     <div className="text-sm text-slate-900 font-medium">{parseExpertise(mentor.expertise) || 'Various Subjects'}</div>
                   </div>
+                </div>
+
+                {/* GitHub & LinkedIn Profiles */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* GitHub */}
+                {(githubConn || githubUrlData) && (
+                  <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                      <Github className="w-5 h-5 text-slate-900" />
+                      GitHub Profile
+                    </h3>
+                    <div className="space-y-4">
+                      {/* Header */}
+                      <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
+                        {(githubConn?.github_avatar_url || githubUrlData?.avatar_url) ? (
+                          <Image
+                            src={githubConn?.github_avatar_url || githubUrlData?.avatar_url || ''}
+                            alt={githubConn?.github_username || githubUrlData?.login || 'GitHub'}
+                            className="w-12 h-12 rounded-full border border-slate-200"
+                            width={48}
+                            height={48}
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+                            <Github className="w-6 h-6 text-slate-400" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-semibold text-slate-900">@{githubConn?.github_username || githubUrlData?.login}</p>
+                          {githubUrlData?.name && <p className="text-xs text-slate-600">{githubUrlData.name}</p>}
+                          {githubUrlData?.bio && <p className="text-xs text-slate-500 mt-0.5 italic">&quot;{githubUrlData.bio}&quot;</p>}
+                        </div>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-slate-50 rounded-lg p-3 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.public_repos || githubUrlData?.public_repos || 0}</p>
+                          <p className="text-xs text-slate-600">Repos</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-lg p-3 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.followers || githubUrlData?.followers || 0}</p>
+                          <p className="text-xs text-slate-600">Followers</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-lg p-3 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.following || githubUrlData?.following || 0}</p>
+                          <p className="text-xs text-slate-600">Following</p>
+                        </div>
+                      </div>
+
+                      {/* Details */}
+                      <div className="space-y-2">
+                        {githubUrlData?.company && (
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Briefcase className="w-4 h-4 text-slate-400" />
+                            <span>{githubUrlData.company}</span>
+                          </div>
+                        )}
+                        {githubUrlData?.location && (
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <MapPin className="w-4 h-4 text-slate-400" />
+                            <span>{githubUrlData.location}</span>
+                          </div>
+                        )}
+                        {githubUrlData?.blog && (
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <ExternalLink className="w-4 h-4 text-slate-400" />
+                            <a href={githubUrlData.blog} target="_blank" rel="noreferrer" className="text-violet-600 hover:underline">
+                              Website
+                            </a>
+                          </div>
+                        )}
+                        {githubUrlData?.created_at && (
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Clock className="w-4 h-4 text-slate-400" />
+                            <span>Joined {new Date(githubUrlData.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Languages */}
+                      {Object.keys(topLanguages).length > 0 && (
+                        <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                          <p className="text-xs font-bold text-slate-600 mb-2 uppercase">Top Languages</p>
+                          <div className="flex flex-wrap gap-1">
+                            {Object.keys(topLanguages).slice(0, 5).map((lang) => (
+                              <span key={lang} className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full">
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* LinkedIn */}
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <Linkedin className="w-5 h-5 text-blue-700" />
+                    LinkedIn Profile
+                  </h3>
+
+                  {mentor.linkedin_url ? (
+                    <div className="space-y-4">
+                      {/* Header */}
+                      <div className="flex items-center gap-4 pb-4 border-b border-blue-200">
+                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Linkedin className="w-6 h-6 text-blue-700" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-slate-900">LinkedIn</p>
+                          <a 
+                            href={mentor.linkedin_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                          >
+                            View Profile <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <p className="text-sm text-slate-700">
+                          Connect with {mentor.full_name} on LinkedIn to view their detailed professional background, endorsements, and recommendations.
+                        </p>
+                      </div>
+
+                      {/* Action */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-slate-50 rounded-lg p-3 text-center border border-slate-200">
+                          <Users className="w-5 h-5 text-slate-400 mx-auto mb-1" />
+                          <p className="text-xs font-medium text-slate-600">Connect</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-lg p-3 text-center border border-slate-200">
+                          <Briefcase className="w-5 h-5 text-slate-400 mx-auto mb-1" />
+                          <p className="text-xs font-medium text-slate-600">Experience</p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-slate-400">
+                      <Linkedin className="w-10 h-10 mx-auto mb-2 opacity-30" />
+                      <p className="text-sm font-medium">LinkedIn not linked</p>
+                      <p className="text-xs text-slate-400 mt-1">Mentor hasn't added a LinkedIn profile</p>
+                    </div>
+                  )}
+                </div>
                 </div>
 
                 {/* About Section */}

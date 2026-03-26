@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Video, Calendar as CalendarIcon, Clock, Users, PlayCircle, ExternalLink, Shield, BookOpen, MessageSquare, Radio, ChevronRight, Download } from 'lucide-react';
 import Link from 'next/link';
 import { downloadICS } from '@/lib/calendar';
+import { VideoTransmissionRoom } from './VideoTransmissionRoom';
 
 interface Session {
     id: string;
@@ -99,16 +100,19 @@ function getTimeUntil(date: string) {
     return `${minutes}m`;
 }
 
-function SessionCard({ session, isLive = false }: { session: Session; isLive?: boolean }) {
+function SessionCard({ session, isLive = false, onJoinVideo }: { session: Session; isLive?: boolean; onJoinVideo?: (session: Session) => void }) {
     const config = sessionTypeConfig[session.session_type] ?? sessionTypeConfig['mentor_meeting'];
     const Icon = config.icon;
 
-
     const handleJoin = () => {
-        // Use room URL if available, otherwise fall back to a Jitsi Meet room
-        const url = session.room_url ||
-            `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`;
-        window.open(url, '_blank');
+        if (onJoinVideo) {
+            onJoinVideo(session);
+        } else {
+            // Fallback to opening in new window
+            const url = session.room_url ||
+                `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`;
+            window.open(url, '_blank');
+        }
     };
 
     const handleAddToCalendar = () => {
@@ -251,6 +255,7 @@ export function StudentSessionsClient({
     pastSessions
 }: StudentSessionsClientProps) {
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+    const [activeVideoRoom, setActiveVideoRoom] = useState<Session | null>(null);
 
     return (
         <div className="max-w-5xl mx-auto">
@@ -273,7 +278,7 @@ export function StudentSessionsClient({
 
                     <div className="space-y-4">
                         {liveSessions.map((session) => (
-                            <SessionCard key={session.id} session={session} isLive />
+                            <SessionCard key={session.id} session={session} isLive onJoinVideo={setActiveVideoRoom} />
                         ))}
                     </div>
                 </div>
@@ -307,7 +312,7 @@ export function StudentSessionsClient({
                     <>
                         {upcomingSessions.length > 0 ? (
                             upcomingSessions.map((session) => (
-                                <SessionCard key={session.id} session={session} />
+                                <SessionCard key={session.id} session={session} onJoinVideo={setActiveVideoRoom} />
                             ))
                         ) : (
                             <div className="text-center py-12">
@@ -327,7 +332,7 @@ export function StudentSessionsClient({
                     <>
                         {pastSessions.length > 0 ? (
                             pastSessions.map((session) => (
-                                <SessionCard key={session.id} session={session} />
+                                <SessionCard key={session.id} session={session} onJoinVideo={setActiveVideoRoom} />
                             ))
                         ) : (
                             <div className="text-center py-12">
@@ -374,6 +379,21 @@ export function StudentSessionsClient({
                     <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
                 </Link>
             </div>
+
+            {/* Active Video Room */}
+            {activeVideoRoom && (
+                <VideoTransmissionRoom
+                    roomUrl={activeVideoRoom.daily_room_url || activeVideoRoom.room_url}
+                    sessionTitle={activeVideoRoom.title}
+                    sessionId={activeVideoRoom.id}
+                    userId={profile.id}
+                    userName={profile.full_name}
+                    mentorName={activeVideoRoom.host?.full_name || 'Mentor'}
+                    mentorAvatar={activeVideoRoom.host?.avatar_url}
+                    onExit={() => setActiveVideoRoom(null)}
+                    settings={activeVideoRoom.settings}
+                />
+            )}
         </div>
     );
 }

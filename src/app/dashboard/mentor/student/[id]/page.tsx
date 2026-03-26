@@ -4,8 +4,9 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare, GitBranch } from 'lucide-react';
+import { Mail, GraduationCap, BookOpen, ArrowLeft, MessageSquare, GitBranch, Github, Linkedin, Briefcase, MapPin, ExternalLink, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { extractGithubUsername, getGithubUser, buildLinkedInProfileUrl } from '@/lib/github';
 
 export default async function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -78,6 +79,19 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     .select('github_username, github_avatar_url, public_repos')
     .eq('user_id', id)
     .single();
+
+  // Fallback: fetch GitHub data from profile URL if not connected via OAuth
+  let githubUrlData = null;
+  if (!githubConn && student.github_url) {
+    const username = extractGithubUsername(student.github_url);
+    if (username) {
+      try {
+        githubUrlData = await getGithubUser(username);
+      } catch (err) {
+        console.error('Failed to fetch GitHub user from URL:', err);
+      }
+    }
+  }
 
   const { data: analyticsRows } = githubConn
     ? await admin
@@ -283,92 +297,158 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
                 {/* GitHub Stats */}
                 <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                {/* GitHub & LinkedIn Profiles */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* GitHub */}
+                <div>
                   <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
                     <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
-                      <GitBranch className="w-4 h-4 text-white" />
+                      <Github className="w-4 h-4 text-white" />
                     </div>
-                    GitHub Activity
+                    GitHub Profile
                   </h2>
 
-                  {!githubConn ? (
+                {!githubConn && !githubUrlData ? (
                     <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <GitBranch className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                      <Github className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                       <p className="text-sm font-medium text-slate-600">GitHub not connected</p>
                       <p className="text-xs text-slate-400 mt-1">Student hasn't linked their GitHub account</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      {/* Profile row */}
-                      <div className="flex items-center gap-3">
-                        {githubConn.github_avatar_url && (
+                    <div className="space-y-4 bg-slate-50 rounded-xl p-4">
+                      {/* Profile header */}
+                      <div className="flex items-center gap-3 pb-3 border-b border-slate-200">
+                        {(githubConn?.github_avatar_url || githubUrlData?.avatar_url) && (
                           <Image
-                            src={githubConn.github_avatar_url}
-                            alt={githubConn.github_username}
+                            src={githubConn?.github_avatar_url || githubUrlData?.avatar_url || ''}
+                            alt={githubConn?.github_username || githubUrlData?.login || 'GitHub'}
                             width={40}
                             height={40}
                             className="w-10 h-10 rounded-full border border-slate-200"
                           />
                         )}
                         <div>
-                          <p className="text-sm font-semibold text-slate-800">@{githubConn.github_username}</p>
-                          {githubConn.public_repos !== null && (
-                            <p className="text-xs text-slate-500">{githubConn.public_repos} public repos</p>
-                          )}
-                        </div>
-                        <a
-                          href={`https://github.com/${githubConn.github_username}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="ml-auto text-xs text-violet-600 hover:underline"
-                        >
-                          View Profile
-                        </a>
-                      </div>
-
-                      {/* Stats grid */}
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-slate-50 rounded-xl p-3 text-center">
-                          <p className="text-xl font-bold text-slate-900">{totalPlatformCommits}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">Platform Commits</p>
-                        </div>
-                        <div className="bg-slate-50 rounded-xl p-3 text-center">
-                          <p className="text-xl font-bold text-slate-900">{analyticsRows?.length ?? 0}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">Repos Analyzed</p>
-                        </div>
-                        <div className="bg-slate-50 rounded-xl p-3 text-center">
-                          <p className="text-xl font-bold text-slate-900">
-                            {avgPlatformScore !== null ? `${avgPlatformScore}` : '—'}
+                          <p className="text-sm font-semibold text-slate-800">
+                            @{githubConn?.github_username || githubUrlData?.login}
                           </p>
-                          <p className="text-xs text-slate-500 mt-0.5">Avg Score</p>
+                          {githubUrlData?.name && <p className="text-xs text-slate-500">{githubUrlData.name}</p>}
                         </div>
                       </div>
 
-                      {/* Languages */}
+                      {/* Stats */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.public_repos || githubUrlData?.public_repos || 0}</p>
+                          <p className="text-xs text-slate-600">Repos</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.followers || githubUrlData?.followers || 0}</p>
+                          <p className="text-xs text-slate-600">Followers</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
+                          <p className="text-lg font-bold text-slate-900">{githubConn?.following || githubUrlData?.following || 0}</p>
+                          <p className="text-xs text-slate-600">Following</p>
+                        </div>
+                      </div>
+
+                      {/* Profile details */}
+                      <div className="space-y-2">
+                        {githubUrlData?.bio && (
+                          <p className="text-xs text-slate-600 italic">&quot;{githubUrlData.bio}&quot;</p>
+                        )}
+                        {githubUrlData?.company && (
+                          <div className="flex items-center gap-2 text-xs text-slate-600">
+                            <Briefcase className="w-3 h-3 text-slate-400" />
+                            <span>{githubUrlData.company}</span>
+                          </div>
+                        )}
+                        {githubUrlData?.location && (
+                          <div className="flex items-center gap-2 text-xs text-slate-600">
+                            <MapPin className="w-3 h-3 text-slate-400" />
+                            <span>{githubUrlData.location}</span>
+                          </div>
+                        )}
+                        {githubUrlData?.created_at && (
+                          <div className="flex items-center gap-2 text-xs text-slate-600">
+                            <Clock className="w-3 h-3 text-slate-400" />
+                            <span>Joined {new Date(githubUrlData.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Platform score */}
+                      {avgPlatformScore !== null && githubConn && (
+                        <div className="bg-white border border-slate-200 rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-bold text-slate-600">Consistency</span>
+                            <span className="text-sm font-bold text-violet-700">{avgPlatformScore}%</span>
+                          </div>
+                          <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-violet-500" style={{ width: `${avgPlatformScore}%` }} />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Top languages */}
                       {topLanguages.length > 0 && (
-                        <div>
-                          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Top Languages</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {topLanguages.map((lang) => (
-                              <span
-                                key={lang}
-                                className="text-xs bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full"
-                              >
+                        <div className="bg-white border border-slate-200 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-slate-600 mb-2">Top Languages</p>
+                          <div className="flex flex-wrap gap-1">
+                            {topLanguages.slice(0, 4).map((lang) => (
+                              <span key={lang} className="text-xs bg-violet-50 text-violet-700 px-2 py-0.5 rounded-full">
                                 {lang}
                               </span>
                             ))}
                           </div>
                         </div>
                       )}
-
-                      {/* Link to projects */}
-                      <Link
-                        href={`/dashboard/mentor/projects?student=${id}`}
-                        className="block text-center text-sm text-violet-600 hover:underline pt-1"
-                      >
-                        View Project Submissions
-                      </Link>
                     </div>
                   )}
+                </div>
+
+                {/* LinkedIn */}
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <Linkedin className="w-4 h-4 text-white" />
+                    </div>
+                    LinkedIn Profile
+                  </h2>
+
+                  {student.linkedin_url ? (
+                    <div className="space-y-4 bg-blue-50 rounded-xl p-4 border border-blue-100">
+                      <div className="flex items-center gap-3 pb-3 border-b border-blue-200">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Linkedin className="w-5 h-5 text-blue-700" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-slate-800">LinkedIn</p>
+                          <a 
+                            href={student.linkedin_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-0.5"
+                          >
+                            View Profile <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+
+                      <div className="bg-white rounded-lg p-3 border border-blue-200">
+                        <p className="text-sm text-slate-600">
+                          Connect on LinkedIn to see {student.full_name}'s detailed career information, recommendations, and professional network.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                      <Linkedin className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm font-medium text-slate-600">LinkedIn not added</p>
+                      <p className="text-xs text-slate-400 mt-1">Student hasn't linked their LinkedIn profile</p>
+                    </div>
+                  )}
+                </div>
+                </div>
                 </div>
               </div>
             </div>

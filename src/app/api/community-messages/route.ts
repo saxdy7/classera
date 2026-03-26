@@ -7,7 +7,6 @@ export async function GET(request: Request) {
         const supabase = await createClient();
         const { searchParams } = new URL(request.url);
         const channelId = searchParams.get('channelId');
-        const parentMessageId = searchParams.get('parentMessageId');
         const limit = parseInt(searchParams.get('limit') || '50');
         const offset = parseInt(searchParams.get('offset') || '0');
 
@@ -16,40 +15,64 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        if (!channelId && !parentMessageId) {
-            return NextResponse.json({ error: 'Channel ID or Parent Message ID required' }, { status: 400 });
+        if (!channelId) {
+            return NextResponse.json({ error: 'Channel ID required' }, { status: 400 });
         }
 
-        // Build query
-        let query = supabase
+        // Get channel and community info
+        const { data: channel } = await supabase
+            .from('community_channels')
+            .select('community_id')
+            .eq('id', channelId)
+            .single();
+
+        if (!channel) {
+            return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+        }
+
+        // Verify user is member or mentor of the community
+        const { data: community } = await supabase
+            .from('communities')
+            .select('mentor_id')
+            .eq('id', channel.community_id)
+            .single();
+
+        if (!community) {
+            return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+        }
+
+        const isMentor = community.mentor_id === user.id;
+        if (!isMentor) {
+            const { data: membership } = await supabase
+                .from('community_members')
+                .select('status')
+                .eq('community_id', channel.community_id)
+                .eq('student_id', user.id)
+                .single();
+
+            if (!membership || membership.status !== 'approved') {
+                return NextResponse.json({ error: 'You are not a member of this community' }, { status: 403 });
+            }
+        }
+
+        // Fetch messages for the channel
+        const { data: messages, error } = await supabase
             .from('community_messages')
             .select(`
-        *,
-        sender:users!community_messages_sender_id_fkey(
-          id,
-          full_name,
-          avatar_url,
-          role
-        ),
-        message_reactions(
-          id,
-          reaction,
-          user_id,
-          user:users(full_name)
-        ),
-        message_attachments(*),
-        message_read_receipts(count)
-      `)
-            .eq('is_deleted', false);
-
-        if (parentMessageId) {
-            query = query.eq('parent_message_id', parentMessageId);
-        } else {
-            query = query.eq('channel_id', channelId).is('parent_message_id', null);
-        }
-
-        // Fetch messages
-        const { data: messages, error } = await query
+                id,
+                channel_id,
+                user_id,
+                content,
+                created_at,
+                updated_at,
+                sender:users!community_messages_user_id_fkey(
+                    id,
+                    full_name,
+                    avatar_url,
+                    role
+                )
+            `)
+            .eq('channel_id', channelId)
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
 
@@ -73,62 +96,33 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { channelId, content, action } = body;
+        const { channelId, content } = body;
 
-        // Handle different actions
-        if (action === 'react') {
-            // Add reaction to message
-            const { messageId, reaction } = body;
-
-            const { data, error } = await supabase
-                .from('message_reactions')
-                .insert({
-                    message_id: messageId,
-                    user_id: user.id,
-                    reaction
-                })
-                .select()
-                .single();
-
-            if (error) {
-                if (error.code === '23505') {
-                    // Already reacted, remove reaction
-                    await supabase
-                        .from('message_reactions')
-                        .delete()
-                        .eq('message_id', messageId)
-                        .eq('user_id', user.id)
-                        .eq('reaction', reaction);
-
-                    return NextResponse.json({ success: true, action: 'removed' });
-                }
-                throw error;
-            }
-
-            return NextResponse.json({ success: true, data, action: 'added' });
-        }
-
-        // Send message
+        // Validate input
         if (!channelId || !content) {
-            // For now we still require content, but relax if needed later
             return NextResponse.json({ error: 'Channel ID and content required' }, { status: 400 });
         }
 
-        // Get channel info to check type and lock status
+        // Get channel info to verify it exists
         const { data: channel, error: channelError } = await supabase
             .from('community_channels')
-            .select('*')
+            .select('community_id, is_locked')
             .eq('id', channelId)
             .single();
 
         if (channelError || !channel) {
             console.error('Channel lookup error:', channelError, 'channelId:', channelId);
             return NextResponse.json({
-                error: `Channel not found. Debug: channelId=${channelId}, error=${channelError?.message || 'null'}, code=${channelError?.code || 'null'}`
+                error: 'Channel not found'
             }, { status: 404 });
         }
 
-        // Get community to check limits
+        // Check if channel is locked
+        if (channel.is_locked) {
+            return NextResponse.json({ error: 'Channel is locked' }, { status: 403 });
+        }
+
+        // Get community info
         const { data: community, error: commError } = await supabase
             .from('communities')
             .select('mentor_id, messaging_enabled')
@@ -139,29 +133,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Community not found' }, { status: 404 });
         }
 
-        // Check if channel is locked
-        if (channel.is_locked) {
-            return NextResponse.json({ error: 'Channel is locked' }, { status: 403 });
-        }
-
-        // Check if messaging is enabled
+        // Check if messaging is enabled (exception for mentor)
         if (community.messaging_enabled === false && user.id !== community.mentor_id) {
             return NextResponse.json({ error: 'Messaging is disabled for this community' }, { status: 403 });
-        }
-
-        // Check if user is muted
-        const { data: muteStatus } = await supabase
-            .from('community_muted_users')
-            .select('*')
-            .eq('community_id', channel.community_id)
-            .eq('user_id', user.id)
-            .maybeSingle();
-
-        if (muteStatus) {
-            // Check if mute is still active
-            if (!muteStatus.muted_until || new Date(muteStatus.muted_until) > new Date()) {
-                return NextResponse.json({ error: 'You are muted in this community' }, { status: 403 });
-            }
         }
 
         // Insert message
@@ -169,19 +143,27 @@ export async function POST(request: Request) {
             .from('community_messages')
             .insert({
                 channel_id: channelId,
-                sender_id: user.id,
-                content,
-                parent_message_id: body.parentMessageId || null
+                user_id: user.id,
+                content
             })
             .select()
             .single();
 
-        // Fetch the message with the sender info since the UI expects it
+        if (error || !message) {
+            throw error || new Error('Failed to insert message');
+        }
+
+        // Fetch the message with sender info
         const { data: populatedMessage, error: fetchError } = await supabase
             .from('community_messages')
             .select(`
-                *,
-                sender:users!community_messages_sender_id_fkey(
+                id,
+                channel_id,
+                user_id,
+                content,
+                created_at,
+                updated_at,
+                sender:users!community_messages_user_id_fkey(
                     id,
                     full_name,
                     avatar_url,
@@ -196,6 +178,18 @@ export async function POST(request: Request) {
             throw fetchError;
         }
 
+        // Process mentions in the message content (if RPC exists)
+        try {
+            await supabase.rpc('process_mentions', {
+                p_content: content,
+                p_message_id: message.id,
+                p_mentioned_by: user.id
+            });
+        } catch (mentionError) {
+            console.warn('Mention processing failed (may not be set up):', mentionError);
+            // Don't fail the whole request if mentions aren't set up
+        }
+
         return NextResponse.json({ success: true, message: populatedMessage });
     } catch (error: any) {
         console.error('Error sending message:', error);
@@ -203,8 +197,8 @@ export async function POST(request: Request) {
     }
 }
 
-// PATCH: Delete a message (mentor only)
-export async function PATCH(request: Request) {
+// DELETE: Delete a message
+export async function DELETE(request: Request) {
     try {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
@@ -213,13 +207,15 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { messageId, reason, content, action } = await request.json();
+        const { searchParams } = new URL(request.url);
+        const messageId = searchParams.get('messageId');
+        const reason = searchParams.get('reason');
 
         if (!messageId) {
             return NextResponse.json({ error: 'Message ID required' }, { status: 400 });
         }
 
-        // Get message to check permissions and time
+        // Get message to check permissions
         const { data: message, error: msgError } = await supabase
             .from('community_messages')
             .select('*')
@@ -227,9 +223,10 @@ export async function PATCH(request: Request) {
             .single();
 
         if (msgError || !message) {
-            return NextResponse.json({ error: 'Message not found or lookup failed' }, { status: 404 });
+            return NextResponse.json({ error: 'Message not found' }, { status: 404 });
         }
 
+        // Get community mentor info
         const { data: channel } = await supabase
             .from('community_channels')
             .select('community_id')
@@ -246,73 +243,25 @@ export async function PATCH(request: Request) {
             mentorId = community?.mentor_id;
         }
 
-        if (action === 'edit') {
-            if (message.sender_id !== user.id) {
-                return NextResponse.json({ error: 'You can only edit your own messages' }, { status: 403 });
-            }
+        // Check permissions: user can delete their own messages, mentors can delete any message
+        const isMentor = mentorId === user.id;
+        const isAuthor = message.user_id === user.id;
 
-            // Check 5-minute window
-            const created = new Date(message.created_at);
-            const now = new Date();
-            const diff = (now.getTime() - created.getTime()) / 1000 / 60; // minutes
-
-            if (diff > 5) {
-                return NextResponse.json({ error: 'Edit window (5 min) expired' }, { status: 400 });
-            }
-
-            // Save history
-            await supabase.from('message_edit_history').insert({
-                message_id: messageId,
-                old_content: message.content
-            });
-
-            const { error } = await supabase
-                .from('community_messages')
-                .update({
-                    content,
-                    edited_at: new Date().toISOString()
-                })
-                .eq('id', messageId);
-
-            if (error) throw error;
-            return NextResponse.json({ success: true });
-
-        } else {
-            // Default to Delete (soft delete)
-            const isMentor = mentorId === user.id;
-
-            if (!isMentor) {
-                return NextResponse.json({ error: 'Only mentors can delete messages' }, { status: 403 });
-            }
-
-            const { error } = await supabase
-                .from('community_messages')
-                .update({
-                    is_deleted: true,
-                    deleted_by: user.id,
-                    deleted_at: new Date().toISOString()
-                    // We could store reason in a separate audit log if needed
-                })
-                .eq('id', messageId);
-
-            if (error) throw error;
-
-            // Log moderation action
-            await supabase
-                .from('community_moderation_logs')
-                .insert({
-                    community_id: channel?.community_id || null,
-                    action_type: 'delete_message',
-                    performed_by: user.id,
-                    target_id: messageId,
-                    reason: reason || 'Mentor deletion'
-                });
-
-            return NextResponse.json({ success: true });
+        if (!isMentor && !isAuthor) {
+            return NextResponse.json({ error: 'Only message author or mentors can delete messages' }, { status: 403 });
         }
 
+        // Delete the message permanently
+        const { error: deleteError } = await supabase
+            .from('community_messages')
+            .delete()
+            .eq('id', messageId);
+
+        if (deleteError) throw deleteError;
+
+        return NextResponse.json({ success: true });
     } catch (error: any) {
-        console.error('Error updating message:', error);
+        console.error('Error deleting message:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

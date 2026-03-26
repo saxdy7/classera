@@ -28,14 +28,18 @@ export default async function StudentLiveSessionsPage() {
 
   const sessionIds = participantData?.map(p => p.session_id) ?? [];
 
-  const { data: sessions } = await supabase
-    .from('live_sessions')
-    .select(`
-      *,
-      host:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url)
-    `)
-    .in('id', sessionIds.length > 0 ? sessionIds : ['00000000-0000-0000-0000-000000000000'])
-    .order('scheduled_at', { ascending: true });
+  let sessions = [];
+  if (sessionIds.length > 0) {
+    const { data } = await supabase
+      .from('live_sessions')
+      .select(`
+        *,
+        host:live_sessions_mentor_id_fkey(id, full_name, avatar_url)
+      `)
+      .in('id', sessionIds)
+      .order('scheduled_at', { ascending: true });
+    sessions = data ?? [];
+  }
 
   // Map DB values to component-expected values:
   // - DB has no session_type column → default to 'mentor_meeting'

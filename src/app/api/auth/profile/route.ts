@@ -35,18 +35,29 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        if (!university_id && !university_name) {
+        // Use admin client to bypass RLS
+        const supabaseAdmin = createAdminClient();
+
+        // Get current user profile to check existing university
+        const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('university_id')
+            .eq('id', user.id)
+            .single();
+
+        // Only validate university if trying to update it or if user doesn't have one
+        const hasExistingUniversity = currentUser?.university_id;
+        const isProvidingUniversity = university_id || university_name;
+
+        if (!hasExistingUniversity && !isProvidingUniversity) {
             return NextResponse.json(
                 { error: 'University selection is required' },
                 { status: 400 }
             );
         }
 
-        // Use admin client to bypass RLS
-        const supabaseAdmin = createAdminClient();
-
         // Resolve university_id — auto-create if only a name was provided
-        let resolvedUniversityId = university_id || null;
+        let resolvedUniversityId = university_id || currentUser?.university_id || null;
 
         if (!resolvedUniversityId && university_name) {
             // Try to find existing university by name (case-insensitive)

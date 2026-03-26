@@ -17,6 +17,43 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Post ID required' }, { status: 400 });
     }
 
+    // Get the post and its community
+    const { data: post } = await supabase
+      .from('community_posts')
+      .select('community_id')
+      .eq('id', postId)
+      .single();
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    // Verify user is member or mentor
+    const { data: community } = await supabase
+      .from('communities')
+      .select('mentor_id')
+      .eq('id', post.community_id)
+      .single();
+
+    if (!community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const isMentor = community.mentor_id === user.id;
+    if (!isMentor) {
+      const { data: membership } = await supabase
+        .from('community_members')
+        .select('status')
+        .eq('community_id', post.community_id)
+        .eq('student_id', user.id)
+        .single();
+
+      if (!membership || membership.status !== 'approved') {
+        return NextResponse.json({ error: 'You are not a member of this community' }, { status: 403 });
+      }
+    }
+
+    // Fetch comments
     const { data: comments, error } = await supabase
       .from('community_comments')
       .select(`
@@ -124,12 +161,37 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error creating comment:', error);
+      return NextResponse.json({
+        error: error.message || 'Failed to create comment',
+        code: error.code,
+        details: error.details
+      }, { status: 500 });
+    }
+
+    if (!comment) {
+      return NextResponse.json({ error: 'Comment creation returned no data' }, { status: 500 });
+    }
+
+    // Process mentions in the comment content (non-blocking)
+    try {
+      await supabase.rpc('process_mentions', {
+        p_content: content,
+        p_comment_id: comment.id,
+        p_mentioned_by: user.id
+      });
+    } catch (mentionError) {
+      console.warn('Mention processing failed, continuing anyway:', mentionError);
+    }
 
     return NextResponse.json({ comment }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating comment:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({
+      error: error?.message || 'Failed to create comment',
+      code: error?.code
+    }, { status: 500 });
   }
 }
 
@@ -154,8 +216,7 @@ export async function PATCH(request: NextRequest) {
       .from('community_comments')
       .select(`
         author_id,
-        post_id,
-        community_posts!inner(community_id)
+        post_id
       `)
       .eq('id', commentId)
       .single();
@@ -164,21 +225,28 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
-    interface CommentWithPost {
-      author_id: string;
-      post_id: string;
-      community_posts: {
-        community_id: string;
-      };
-    }
-
-    const { data: community } = await supabase
-      .from('communities')
-      .select('mentor_id')
-      .eq('id', (comment as CommentWithPost).community_posts.community_id)
+    // Get the post to find the community
+    const { data: post } = await supabase
+      .from('community_posts')
+      .select('community_id')
+      .eq('id', comment.post_id)
       .single();
 
-    const canModerate = comment.author_id === user.id || community?.mentor_id === user.id;
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    const { data: community, error: communityError } = await supabase
+      .from('communities')
+      .select('mentor_id')
+      .eq('id', post.community_id)
+      .single();
+
+    if (communityError || !community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const canModerate = comment.author_id === user.id || community.mentor_id === user.id;
 
     if (!canModerate) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
@@ -219,8 +287,7 @@ export async function DELETE(request: NextRequest) {
       .from('community_comments')
       .select(`
         author_id,
-        post_id,
-        community_posts!inner(community_id)
+        post_id
       `)
       .eq('id', commentId)
       .single();
@@ -229,21 +296,28 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
-    interface CommentWithPost2 {
-      author_id: string;
-      post_id: string;
-      community_posts: {
-        community_id: string;
-      };
-    }
-
-    const { data: community } = await supabase
-      .from('communities')
-      .select('mentor_id')
-      .eq('id', (comment as CommentWithPost2).community_posts.community_id)
+    // Get the post to find the community
+    const { data: post } = await supabase
+      .from('community_posts')
+      .select('community_id')
+      .eq('id', comment.post_id)
       .single();
 
-    const canDelete = comment.author_id === user.id || community?.mentor_id === user.id;
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    const { data: community, error: communityError } = await supabase
+      .from('communities')
+      .select('mentor_id')
+      .eq('id', post.community_id)
+      .single();
+
+    if (communityError || !community) {
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
+    const canDelete = comment.author_id === user.id || community.mentor_id === user.id;
 
     if (!canDelete) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });

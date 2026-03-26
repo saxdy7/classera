@@ -24,12 +24,14 @@ export default async function MentorSettingsPage() {
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-14 p-4 md:p-8 max-w-screen-xl">
-          <div className="mb-8">
+        <main className="flex-1 md:ml-14 p-4 md:p-8 flex flex-col items-center">
+          <div className="mb-8 w-full max-w-2xl">
             <h1 className="text-3xl font-bold text-slate-900 mb-1">Settings</h1>
             <p className="text-slate-500">Manage your account and preferences</p>
           </div>
-          <SettingsClient profile={{ ...profile, universities: profile.universities }} />
+          <div className="w-full max-w-2xl">
+            <SettingsClient profile={{ ...profile, universities: profile.universities }} />
+          </div>
         </main>
       </div>
     </div>

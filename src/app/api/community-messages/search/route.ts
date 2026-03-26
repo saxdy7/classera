@@ -18,15 +18,19 @@ export async function GET(request: Request) {
         const { data: messages, error } = await supabase
             .from('community_messages')
             .select(`
-        *,
-        sender:users!community_messages_sender_id_fkey(
+        id,
+        channel_id,
+        user_id,
+        content,
+        created_at,
+        updated_at,
+        sender:users!community_messages_user_id_fkey(
           id,
           full_name,
           avatar_url
         )
       `)
             .eq('channel_id', channelId)
-            .eq('is_deleted', false)
             .textSearch('content', query, {
                 type: 'plain',
                 config: 'english'

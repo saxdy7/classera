@@ -4,9 +4,10 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
-import { BookOpen, Trophy, Users, Calendar, Star, CheckCircle, Clock, GitBranch } from 'lucide-react';
+import { BookOpen, Trophy, Users, Calendar, Star, CheckCircle, Clock, GitBranch, Briefcase, MapPin, Mail as MailIcon, ExternalLink, Github, Linkedin } from 'lucide-react';
 import GitHubConnectButton from '@/components/projects/GitHubConnectButton';
 import ActivityHeatmap from '@/components/projects/ActivityHeatmap';
+import { extractGithubUsername, getGithubUser, getTopRepositories, buildLinkedInProfileUrl } from '@/lib/github';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,6 +65,19 @@ export default async function StudentProfilePage() {
     .select('github_username, github_avatar_url, github_name, public_repos')
     .eq('user_id', user.id)
     .single();
+
+  // Fallback: fetch GitHub data from profile URL if not connected via OAuth
+  let githubUrlData = null;
+  if (!githubConnection && profile.github_url) {
+    const username = extractGithubUsername(profile.github_url);
+    if (username) {
+      try {
+        githubUrlData = await getGithubUser(username);
+      } catch (err) {
+        console.error('Failed to fetch GitHub user from URL:', err);
+      }
+    }
+  }
 
   // Aggregate daily activity from all analyzed repos belonging to this student
   const { data: analyticsRows } = await admin
@@ -344,23 +358,15 @@ export default async function StudentProfilePage() {
 
             </div>
 
-            {/* ── GitHub Activity ── */}
+            {/* ── GitHub & LinkedIn Profiles ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* GitHub Section */}
             <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                  <GitBranch className="w-4 h-4 text-slate-700" />
-                  GitHub Activity
+                  <Github className="w-4 h-4 text-slate-900" />
+                  GitHub Profile
                 </h2>
-                {githubConnection && (
-                  <a
-                    href={`https://github.com/${githubConnection.github_username}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-violet-600 hover:underline flex items-center gap-1"
-                  >
-                    @{githubConnection.github_username}
-                  </a>
-                )}
               </div>
 
               <GitHubConnectButton
@@ -369,110 +375,179 @@ export default async function StudentProfilePage() {
                 avatarUrl={githubConnection?.github_avatar_url ?? null}
               />
 
-              {githubConnection && (
-                <div className="mt-5 space-y-5">
+              {(githubConnection || githubUrlData) && (
+                <div className="mt-5 space-y-4">
+                  {/* Profile Header */}
+                  <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
+                    {(githubConnection?.github_avatar_url || githubUrlData?.avatar_url) && (
+                      <img 
+                        src={githubConnection?.github_avatar_url || githubUrlData?.avatar_url || ''} 
+                        alt="GitHub" 
+                        className="w-12 h-12 rounded-full border border-slate-200"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="font-bold text-slate-900 text-sm">@{githubConnection?.github_username || githubUrlData?.login}</p>
+                      {githubUrlData?.name && <p className="text-xs text-slate-600">{githubUrlData.name}</p>}
+                      {githubUrlData?.bio && <p className="text-xs text-slate-500 mt-0.5">{githubUrlData.bio}</p>}
+                    </div>
+                  </div>
 
-                  {/* Stats row */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {githubConnection.public_repos !== null && (
-                      <div className="bg-slate-50 rounded-2xl p-4 text-center">
-                        <p className="text-2xl font-black text-slate-900">{githubConnection.public_repos}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">Public Repos</p>
+                  {/* Key Stats */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-slate-50 rounded-lg p-3 text-center">
+                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.public_repos || 0}</p>
+                      <p className="text-xs text-slate-600">Public Repos</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-lg p-3 text-center">
+                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.followers || 0}</p>
+                      <p className="text-xs text-slate-600">Followers</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-lg p-3 text-center">
+                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.following || 0}</p>
+                      <p className="text-xs text-slate-600">Following</p>
+                    </div>
+                  </div>
+
+                  {/* Additional Info */}
+                  <div className="space-y-2">
+                    {githubUrlData?.company && (
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <Briefcase className="w-4 h-4 text-slate-400" />
+                        <span>{githubUrlData.company}</span>
                       </div>
                     )}
-                    {avgPlatformScore !== null && (
-                      <div className="bg-violet-50 rounded-2xl p-4 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <p className="text-2xl font-black text-violet-700">{avgPlatformScore}</p>
-                          <span className="text-sm text-slate-400 mt-1">/100</span>
-                        </div>
-                        <p className="text-xs text-slate-500 mt-0.5">Avg Platform Score</p>
+                    {githubUrlData?.location && (
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <MapPin className="w-4 h-4 text-slate-400" />
+                        <span>{githubUrlData.location}</span>
                       </div>
                     )}
-                    {analyticsRows && analyticsRows.length > 0 && (
-                      <div className="bg-emerald-50 rounded-2xl p-4 text-center">
-                        <p className="text-2xl font-black text-emerald-700">{analyticsRows.length}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">Projects Analyzed</p>
+                    {githubUrlData?.blog && (
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <ExternalLink className="w-4 h-4 text-slate-400" />
+                        <a href={githubUrlData.blog} target="_blank" rel="noreferrer" className="text-violet-600 hover:underline">
+                          Personal Website
+                        </a>
+                      </div>
+                    )}
+                    {githubUrlData?.created_at && (
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <Clock className="w-4 h-4 text-slate-400" />
+                        <span>Joined {new Date(githubUrlData.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                       </div>
                     )}
                   </div>
 
+                  {/* Platform stats */}
+                  {avgPlatformScore !== null && githubConnection && (
+                    <div className="pt-3 border-t border-slate-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-slate-600 uppercase">Consistency Score</span>
+                        <span className="text-sm font-bold text-violet-700">{avgPlatformScore}%</span>
+                      </div>
+                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-violet-500" style={{ width: `${avgPlatformScore}%` }} />
+                      </div>
+                    </div>
+                  )}
+
                   {/* Activity heatmap */}
-                  {Object.keys(mergedDailyActivity).length > 0 && (
+                  {githubConnection && Object.keys(mergedDailyActivity).length > 0 && (
                     <div>
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Coding Activity</p>
+                      <p className="text-xs font-bold text-slate-600 uppercase mb-2">Coding Activity (26 weeks)</p>
                       <ActivityHeatmap dailyActivity={mergedDailyActivity} weeks={26} />
                     </div>
                   )}
 
-                  {/* Language breakdown */}
+                  {/* Languages */}
                   {Object.keys(langTotals).length > 0 && (() => {
                     const topLangs = Object.entries(langTotals)
                       .sort(([, a], [, b]) => b - a)
-                      .slice(0, 6);
+                      .slice(0, 5);
                     const total = topLangs.reduce((s, [, v]) => s + v, 0);
                     const LANG_COLORS: Record<string, string> = {
-                      TypeScript: '#3178c6', JavaScript: '#f7df1e',
-                      Python: '#3572A5', Rust: '#dea584',
-                      Go: '#00ADD8', Java: '#b07219',
-                      CSS: '#563d7c', HTML: '#e34c26',
-                      'C++': '#f34b7d', C: '#555555', default: '#8b5cf6',
+                      TypeScript: '#3178c6', JavaScript: '#f7df1e', Python: '#3572A5',
+                      Rust: '#dea584', Go: '#00ADD8', Java: '#b07219',
+                      CSS: '#563d7c', HTML: '#e34c26', 'C++': '#f34b7d', C: '#555555',
+                      default: '#8b5cf6',
                     };
                     return (
-                      <div>
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Languages</p>
-                        {/* Segmented bar */}
-                        <div className="flex h-3 rounded-full overflow-hidden gap-0.5 mb-3">
+                      <div className="pt-3 border-t border-slate-200">
+                        <p className="text-xs font-bold text-slate-600 uppercase mb-2">Top Languages</p>
+                        <div className="space-y-2">
                           {topLangs.map(([lang, bytes]) => (
-                            <div
-                              key={lang}
-                              style={{
-                                width: `${(bytes / total) * 100}%`,
-                                background: LANG_COLORS[lang] ?? LANG_COLORS.default,
-                              }}
-                              title={`${lang}: ${Math.round((bytes / total) * 100)}%`}
-                            />
-                          ))}
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                          {topLangs.map(([lang, bytes]) => (
-                            <div key={lang} className="flex items-center gap-1.5 text-xs text-slate-600">
-                              <span
-                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                style={{ background: LANG_COLORS[lang] ?? LANG_COLORS.default }}
-                              />
-                              <span className="font-medium">{lang}</span>
-                              <span className="text-slate-400">{Math.round((bytes / total) * 100)}%</span>
+                            <div key={lang}>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-medium text-slate-700">{lang}</span>
+                                <span className="text-xs text-slate-500">{Math.round((bytes / total) * 100)}%</span>
+                              </div>
+                              <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                <div style={{ width: `${(bytes/total)*100}%`, backgroundColor: LANG_COLORS[lang] || LANG_COLORS.default }} className="h-full" />
+                              </div>
                             </div>
                           ))}
                         </div>
                       </div>
                     );
                   })()}
-
-                  {/* Consistency score */}
-                  {avgPlatformScore !== null && (
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">Consistency Meter</p>
-                        <span className="text-xs font-bold text-violet-700">{avgPlatformScore}%</span>
-                      </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-violet-400 to-violet-600 transition-all"
-                          style={{ width: `${avgPlatformScore}%` }}
-                        />
-                      </div>
-                      <p className="text-xs text-slate-400 mt-1.5">
-                        {avgPlatformScore >= 80 ? 'Excellent — very consistent coding habits' :
-                         avgPlatformScore >= 60 ? 'Good — keep building momentum' :
-                         avgPlatformScore >= 40 ? 'Fair — try to code more regularly' :
-                         'Getting started — commit daily to improve'}
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
+            </div>
+
+            {/* LinkedIn Section */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-bold text-slate-900 flex items-center gap-2">
+                  <Linkedin className="w-4 h-4 text-blue-700" />
+                  LinkedIn Profile
+                </h2>
+              </div>
+
+              {profile.linkedin_url ? (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                      <Linkedin className="w-6 h-6 text-blue-700" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-slate-900 text-sm">LinkedIn Profile</p>
+                      <a 
+                        href={profile.linkedin_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                      >
+                        View Profile <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                    <p className="text-sm text-slate-600">
+                      Connect with {profile.full_name} on LinkedIn to see detailed career information, endorsements, and recommendations.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-slate-50 rounded-lg p-3 text-center">
+                      <MailIcon className="w-4 h-4 text-slate-400 mx-auto mb-2" />
+                      <p className="text-xs font-medium text-slate-600">Connect</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-lg p-3 text-center">
+                      <Users className="w-4 h-4 text-slate-400 mx-auto mb-2" />
+                      <p className="text-xs font-medium text-slate-600">Network</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-slate-400">
+                  <Linkedin className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                  <p className="text-sm font-medium">LinkedIn not connected</p>
+                  <p className="text-xs mt-1">Add LinkedIn profile in settings to showcase professional experience</p>
+                </div>
+              )}
+            </div>
             </div>
 
           </div>

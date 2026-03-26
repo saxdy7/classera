@@ -8,7 +8,8 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UniversitySearch } from '@/components/ui/UniversitySearch';
 import { FieldOfStudySearch } from '@/components/ui/FieldOfStudySearch';
 import { YearDropdown } from '@/components/ui/year-dropdown';
-import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft } from 'lucide-react';
+import GitHubConnectButton from '@/components/projects/GitHubConnectButton';
+import { User, GraduationCap, BookOpen, Target, ArrowRight, ArrowLeft, Github } from 'lucide-react';
 
 const TOTAL_STEPS = 4;
 
@@ -199,7 +200,7 @@ export default function StudentOnboarding() {
                 Almost Done!
               </h2>
               <p className="text-slate-600">
-                Review your information
+                Connect your GitHub account (optional)
               </p>
             </div>
 
@@ -222,6 +223,36 @@ export default function StudentOnboarding() {
                   <p className="font-semibold text-black">{formData.current_semester}</p>
                 </div>
               )}
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 space-y-4">
+              <div className="flex items-start gap-3">
+                <Github className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-1">Connect GitHub</h3>
+                  <p className="text-sm text-blue-700 mb-4">
+                    Connect your GitHub account to showcase your projects and contributions. This helps mentors understand your coding experience.
+                  </p>
+                  <GitHubConnectButton
+                    isConnected={false}
+                    returnTo="/onboarding/student/quiz"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Input
+              label="LinkedIn Profile (Optional)"
+              placeholder="https://linkedin.com/in/yourprofile"
+              value={formData.linkedin_url}
+              onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+              type="url"
+            />
+
+            <div className="border-t border-slate-200 pt-4">
+              <p className="text-xs text-slate-600 text-center">
+                You can add or update your GitHub and LinkedIn profiles later in your profile settings
+              </p>
             </div>
           </div>
         );

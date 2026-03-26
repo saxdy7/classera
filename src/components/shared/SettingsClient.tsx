@@ -49,7 +49,7 @@ export default function StudentSettingsClient({ profile }: Props) {
     };
 
     return (
-        <div className="space-y-6 max-w-2xl">
+        <div className="space-y-6 w-full">
 
             {error && (
                 <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{error}</div>

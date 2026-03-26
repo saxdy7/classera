@@ -217,6 +217,19 @@ export interface GithubUser {
   followers: number;
   following: number;
   created_at: string;
+  company?: string | null;
+  location?: string | null;
+  blog?: string | null;
+  twitter_username?: string | null;
+  public_gists?: number;
+  updated_at?: string;
+}
+
+export interface LinkedInProfile {
+  username: string;
+  url: string;
+  fullName?: string;
+  headline?: string;
 }
 
 export function getGithubUser(username: string, token?: string | null) {
@@ -229,6 +242,20 @@ export function getGithubUser(username: string, token?: string | null) {
 
 export function getAuthenticatedUser(token: string) {
   return githubFetch<GithubUser>(`${GITHUB_API}/user`, token, 0);
+}
+
+export async function getTopRepositories(username: string, token?: string | null, limit = 6) {
+  const repos = await getUserRepos(username, token);
+  if (!repos) return [];
+  // Sort by stars, then by forks
+  return repos
+    .sort((a, b) => {
+      if (b.stargazers_count !== a.stargazers_count) {
+        return b.stargazers_count - a.stargazers_count;
+      }
+      return b.forks_count - a.forks_count;
+    })
+    .slice(0, limit);
 }
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -247,6 +274,44 @@ export function parseRepoUrl(
   } catch {
     return null;
   }
+}
+
+/** Extract GitHub username from GitHub profile URL */
+export function extractGithubUsername(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  try {
+    const cleaned = url.trim().toLowerCase();
+    // Handle: https://github.com/username, github.com/username, etc.
+    const match = cleaned.match(/github\.com\/([\w.-]+)\/?$/i);
+    if (match) return match[1];
+    // If it looks like just a username (no URL)
+    if (!cleaned.includes('/') && !cleaned.includes('.') && cleaned.length > 0) {
+      return cleaned;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Extract LinkedIn username from LinkedIn profile URL */
+export function extractLinkedInUsername(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  try {
+    const cleaned = url.trim().toLowerCase();
+    // Handle: https://linkedin.com/in/username, linkedin.com/in/username, etc.
+    const match = cleaned.match(/linkedin\.com\/in\/([\w.-]+)\/?/i);
+    if (match) return match[1];
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Build LinkedIn profile URL from username */
+export function buildLinkedInProfileUrl(username: string): string {
+  if (!username) return '';
+  return `https://linkedin.com/in/${username}`;
 }
 
 /** Build a date → commit-count map from commit list */

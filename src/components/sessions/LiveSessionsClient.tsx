@@ -710,26 +710,40 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
 
               {/* Invite Participants */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Invite Students ({formData.participant_ids.length} selected)
-                </label>
-                <div className="border border-slate-200 rounded-xl max-h-48 overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium text-slate-700">
+                    Invite Students ({formData.participant_ids.length} selected)
+                  </label>
+                  {students.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, participant_ids: formData.participant_ids.length === students.length ? [] : students.map(s => s.id) })}
+                      className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                    >
+                      {formData.participant_ids.length === students.length ? 'Deselect All' : 'Select All'}
+                    </button>
+                  )}
+                </div>
+                <div className="border border-slate-200 rounded-xl max-h-64 overflow-y-auto bg-slate-50">
                   {students.length === 0 ? (
-                    <p className="p-4 text-slate-500 text-center">No students available</p>
+                    <div className="p-8 text-center">
+                      <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="text-slate-500 text-sm">No students in your university yet</p>
+                    </div>
                   ) : (
                     students.map(student => (
                       <label
                         key={student.id}
-                        className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-slate-50 ${formData.participant_ids.includes(student.id) ? 'bg-indigo-50' : ''
+                        className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-slate-100 border-b border-slate-200 last:border-b-0 transition-colors ${formData.participant_ids.includes(student.id) ? 'bg-indigo-100' : ''
                           }`}
                       >
                         <input
                           type="checkbox"
                           checked={formData.participant_ids.includes(student.id)}
                           onChange={() => toggleParticipant(student.id)}
-                          className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                          className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                         />
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                           {student.full_name?.charAt(0) || '?'}
                         </div>
                         <div className="flex-1 min-w-0">

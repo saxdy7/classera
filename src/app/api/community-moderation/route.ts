@@ -32,14 +32,15 @@ export async function POST(request: Request) {
                 .single();
             community = data;
         } else if (reportId) {
+            // Use community_post_reports table (contains both post and comment reports)
             const { data: report } = await supabase
-                .from('community_reports')
+                .from('community_post_reports')
                 .select('community_id, communities!inner(mentor_id)')
                 .eq('id', reportId)
                 .single();
 
             if (report) {
-                community = { mentor_id: report.communities?.[0]?.mentor_id };
+                community = { mentor_id: report.communities?.mentor_id };
             }
         }
 
@@ -58,15 +59,15 @@ export async function POST(request: Request) {
                 // Delete content if requested
                 if (deleteContent) {
                     if (postId) {
-                        await supabase.from('community_posts').delete().eq('id', postId);
+                        await supabase.from('community_posts').update({ is_deleted: true, deleted_at: new Date().toISOString() }).eq('id', postId);
                     } else if (commentId) {
-                        await supabase.from('community_comments').delete().eq('id', commentId);
+                        await supabase.from('community_comments').update({ is_deleted: true, deleted_at: new Date().toISOString() }).eq('id', commentId);
                     }
                 }
 
-                // Update report status
+                // Update report status - use community_post_reports
                 await supabase
-                    .from('community_reports')
+                    .from('community_post_reports')
                     .update({
                         status: 'resolved',
                         resolved_at: new Date().toISOString(),
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
                 }
 
                 await supabase
-                    .from('community_reports')
+                    .from('community_post_reports')
                     .update({
                         status: 'dismissed',
                         resolved_at: new Date().toISOString(),

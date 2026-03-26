@@ -28,10 +28,10 @@ export function Sidebar({ role }: SidebarProps) {
 
   const studentNav = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard/student', exact: true },
+    { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
     { icon: BookOpen, label: 'My Courses', href: '/dashboard/student/courses' },
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/student/tests' },
     { icon: GitBranch, label: 'Projects', href: '/dashboard/student/projects' },
-    { icon: Users, label: 'Find Mentors', href: '/dashboard/student/find-mentors' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/student/communities' },
   ];

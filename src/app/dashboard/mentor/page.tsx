@@ -250,28 +250,6 @@ export default async function MentorDashboard() {
             <div className="space-y-6">
               <RealCalendar userId={user.id} />
 
-              {/* Quick Links */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Quick Access</h3>
-                <nav className="space-y-2">
-                  {[
-                    { href: '/dashboard/mentor/students',     icon: '🎓', label: 'My Students' },
-                    { href: '/dashboard/mentor/communities',  icon: '👥', label: 'Communities' },
-                    { href: '/dashboard/mentor/tests',        icon: '📝', label: 'Tests & Quizzes' },
-                    { href: '/dashboard/mentor/question-bank',icon: '📚', label: 'Question Bank' },
-                    { href: '/dashboard/mentor/analytics',    icon: '📊', label: 'Analytics' },
-                    { href: '/dashboard/mentor/live-sessions',icon: '🎥', label: 'Live Sessions' },
-                  ].map((item) => (
-                    <Link key={item.href} href={item.href}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all text-sm font-medium group">
-                      <span className="text-base">{item.icon}</span>
-                      {item.label}
-                      <span className="ml-auto text-slate-300 group-hover:text-indigo-400">→</span>
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-
               {/* Profile Card */}
               <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-sm">
                 <div className="flex items-center gap-4 mb-4">
