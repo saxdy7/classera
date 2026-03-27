@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 
@@ -7,6 +8,16 @@ const supabase = createClient();
 
 // Fetch token balance
 export function useAITokenBalance(userId: string) {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      queryClient.invalidateQueries({ queryKey: ['ai-tokens', userId] });
+    };
+    window.addEventListener('tokens-updated', handleUpdate);
+    return () => window.removeEventListener('tokens-updated', handleUpdate);
+  }, [queryClient, userId]);
+
   return useQuery({
     queryKey: ['ai-tokens', userId],
     queryFn: async () => {
@@ -26,7 +37,8 @@ export function useAITokenBalance(userId: string) {
       return data || { user_id: userId, balance: 5 }; // 5 free tokens initially
     },
     enabled: !!userId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Always consider stale to ensure fresh data
+    refetchOnWindowFocus: true,
   });
 }
 

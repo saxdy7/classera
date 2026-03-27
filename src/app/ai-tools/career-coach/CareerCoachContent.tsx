@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, ArrowLeft, Sparkles, RotateCcw, History, Trash2, MessageSquare } from 'lucide-react';
+import { Send, Bot, User, ArrowLeft, Sparkles, RotateCcw, History, Trash2, MessageSquare, Plus, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { MarkdownMessage } from '@/components/shared/MarkdownMessage';
 
@@ -37,6 +37,7 @@ export default function CareerCoachContent() {
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const [sessions, setSessions] = useState<SessionHistory[]>([]);
+    const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
     useEffect(() => { fetchSessions(); }, []);
 
@@ -52,16 +53,26 @@ export default function CareerCoachContent() {
         const firstUser = msgs.find(m => m.role === 'user');
         const title = firstUser ? firstUser.content.slice(0, 80) : 'Career Session';
         try {
-            await fetch('/api/history', {
+            const res = await fetch('/api/history', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'career_coach', title, data: { messages: msgs } }),
+                body: JSON.stringify({ 
+                    id: currentSessionId, 
+                    type: 'career_coach', 
+                    title, 
+                    data: { messages: msgs } 
+                }),
             });
+            if (res.ok) {
+                const data = await res.json();
+                if (!currentSessionId) setCurrentSessionId(data.id);
+            }
             fetchSessions();
         } catch { /* silent */ }
     };
 
     const deleteSession = async (id: string) => {
+        if (id === currentSessionId) setCurrentSessionId(null);
         setSessions(prev => prev.filter(s => s.id !== id));
         await fetch(`/api/history?id=${id}`, { method: 'DELETE' });
     };
@@ -69,6 +80,12 @@ export default function CareerCoachContent() {
     const handleNewChat = () => {
         if (messages.length > 0) saveSession(messages);
         setMessages([]);
+        setCurrentSessionId(null);
+    };
+
+    const loadSession = (session: SessionHistory) => {
+        setMessages(session.data.messages);
+        setCurrentSessionId(session.id);
     };
 
     useEffect(() => {
@@ -105,6 +122,13 @@ export default function CareerCoachContent() {
                 }),
             });
 
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: errorData.error || `Error: ${res.status} ${res.statusText}` } : m));
+                setLoading(false);
+                return;
+            }
+
             const reader = res.body?.getReader();
             const decoder = new TextDecoder();
             if (reader) {
@@ -115,6 +139,14 @@ export default function CareerCoachContent() {
                     accumulated += decoder.decode(value, { stream: true });
                     setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: accumulated } : m));
                 }
+                
+                // Save session after completion
+                setMessages(prev => {
+                    saveSession(prev);
+                    return prev;
+                });
+
+                window.dispatchEvent(new Event('tokens-updated'));
             }
         } catch {
             setMessages(prev => prev.map(m => m.id === aiId ? { ...m, content: 'Sorry, something went wrong. Please try again.' } : m));
@@ -124,136 +156,156 @@ export default function CareerCoachContent() {
     };
 
     return (
-        <div className="flex flex-col h-full">
-            {/* Top bar */}
-            <header className="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-10">
-                <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-                    <ArrowLeft size={18} className="text-slate-600" />
-                </Link>
-                <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-                    <Bot size={16} className="text-white" />
-                </div>
-                <div>
-                    <h1 className="text-sm font-bold text-slate-900">AI Career Coach</h1>
-                    <div className="flex items-center gap-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        <span className="text-xs text-slate-400">Powered by Groq · Llama 3</span>
-                    </div>
-                </div>
-                {messages.length > 0 && (
+        <div className="flex bg-slate-50 h-full overflow-hidden">
+            {/* ── Sidebar: History ── */}
+            <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 shadow-sm relative z-20 overflow-hidden">
+                <div className="p-4 border-b border-slate-100 bg-slate-50/50">
                     <button onClick={handleNewChat}
-                        className="ml-auto flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
-                        <RotateCcw size={13} /> New chat
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all active:scale-95 shadow-sm">
+                        <Plus size={14} /> New Career Chat
                     </button>
-                )}
-            </header>
+                </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-6 max-w-3xl mx-auto w-full">
-                {messages.length === 0 ? (
-                    <div className="text-center pt-8 pb-12">
-                        <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/20">
-                            <Sparkles size={28} className="text-white" />
+                <div className="flex-1 overflow-y-auto p-3 no-scrollbar space-y-1.5 font-bold uppercase tracking-tight text-[11px]">
+                    <div className="px-3 py-2 text-slate-400 font-black mb-1">Recent Sessions</div>
+                    {sessions.length === 0 ? (
+                        <div className="px-3 py-8 text-center text-slate-400 font-medium italic">
+                            No history yet. Start your first session!
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">AI Career Coach</h2>
-                        <p className="text-slate-500 text-sm mb-10 max-w-md mx-auto">
-                            Get personalized career guidance, skill roadmaps, interview tips, and industry insights — all powered by AI.
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-2xl mx-auto text-left">
-                            {SUGGESTIONS.map((s, i) => (
-                                <button key={i} onClick={() => send(s)}
-                                    className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700
-                                    hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-all text-left leading-snug">
-                                    {s}
-                                </button>
-                            ))}
-                        </div>
-
-                        {sessions.length > 0 && (
-                            <div className="mt-10 max-w-2xl mx-auto text-left">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <History size={14} className="text-slate-400" />
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Past Sessions</p>
+                    ) : (
+                        sessions.map(s => (
+                            <div key={s.id}
+                                onClick={() => loadSession(s)}
+                                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all border ${
+                                    currentSessionId === s.id 
+                                    ? 'bg-indigo-50 border-indigo-100 text-indigo-700' 
+                                    : 'border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900 shadow-sm hover:shadow-md'
+                                }`}>
+                                <MessageSquare size={14} className={currentSessionId === s.id ? 'text-indigo-500' : 'text-slate-400'} />
+                                <div className="flex-1 min-w-0">
+                                    <p className="truncate lowercase text-xs first-letter:uppercase">{s.title}</p>
                                 </div>
-                                <div className="space-y-2">
-                                    {sessions.map(s => (
-                                        <div key={s.id}
-                                            className="flex items-center gap-3 px-4 py-3 bg-white border border-slate-200 rounded-xl hover:border-indigo-300 hover:bg-indigo-50 transition-all group cursor-pointer"
-                                            onClick={() => setMessages(s.data.messages)}>
-                                            <MessageSquare size={14} className="text-indigo-400 flex-shrink-0" />
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm text-slate-800 font-medium truncate">{s.title}</p>
-                                                <p className="text-[10px] text-slate-400">{new Date(s.created_at).toLocaleDateString()} &middot; {s.data.messages.length} messages</p>
-                                            </div>
-                                            <button
-                                                onClick={e => { e.stopPropagation(); deleteSession(s.id); }}
-                                                className="flex-shrink-0 p-1.5 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg hover:bg-red-50">
-                                                <Trash2 size={13} />
-                                            </button>
-                                        </div>
+                                <button
+                                    onClick={e => { e.stopPropagation(); deleteSession(s.id); }}
+                                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-red-500 transition-all rounded-md">
+                                    <Trash2 size={12} />
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                <div className="p-4 border-t border-slate-100 text-center">
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-normal">Your Personal<br/>AI Journey</p>
+                </div>
+            </aside>
+
+            {/* ── Main Chat Area ── */}
+            <div className="flex-1 flex flex-col h-full bg-white relative">
+                {/* Top bar */}
+                <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 px-5 py-3.5 flex items-center gap-4 sticky top-0 z-10">
+                    <div className="flex items-center gap-3 flex-1">
+                        <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                            <Bot size={18} className="text-white" />
+                        </div>
+                        <div className="min-w-0">
+                            <h1 className="text-sm font-black text-slate-900 uppercase tracking-tight truncate leading-none mb-1">
+                                {currentSessionId ? sessions.find(s => s.id === currentSessionId)?.title : 'New Career Consultation'}
+                            </h1>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-[10px] text-slate-400 font-bold uppercase">llama-3.3-70b · Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto px-5 py-8 bg-slate-50/30">
+                    <div className="max-w-4xl mx-auto space-y-8">
+                        {messages.length === 0 ? (
+                            <div className="text-center py-12 flex flex-col items-center">
+                                <div className="w-20 h-20 rounded-3xl bg-indigo-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30 mb-6 rotate-3">
+                                    <Sparkles size={36} className="text-white" />
+                                </div>
+                                <h2 className="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">AI Career Coach</h2>
+                                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest max-w-sm mb-12 opacity-70">
+                                    Let's build your professional future together — fast, smart, and effective.
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl text-left">
+                                    {SUGGESTIONS.map((s, i) => (
+                                        <button key={i} onClick={() => send(s)}
+                                            className="group px-5 py-4 bg-white border border-slate-200 rounded-2xl text-[11px] font-bold text-slate-700
+                                            hover:border-indigo-400 hover:ring-4 hover:ring-indigo-500/5 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-between">
+                                            <span className="leading-snug">{s}</span>
+                                            <ArrowRight size={14} className="text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" />
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="space-y-6">
-                        {messages.map(msg => (
-                            <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                {msg.role === 'assistant' && (
-                                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                                        <Bot size={15} className="text-white" />
-                                    </div>
-                                )}
-                                <div className="max-w-[80%]">
-                                    <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                        ? 'bg-indigo-600 text-white rounded-br-sm'
-                                        : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm'
-                                        }`}>
-                                        {msg.content === '' && msg.role === 'assistant' ? (
-                                            <div className="flex gap-1 py-1">
-                                                {[0, 150, 300].map(d => (
-                                                    <span key={d} className="w-2 h-2 bg-slate-300 rounded-full animate-bounce"
-                                                        style={{ animationDelay: `${d}ms` }} />
-                                                ))}
+                        ) : (
+                            <div className="space-y-8 pb-12">
+                                {messages.map(msg => (
+                                    <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
+                                        {msg.role === 'assistant' && (
+                                            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-indigo-500/20">
+                                                <Bot size={18} className="text-white" />
                                             </div>
-                                        ) : (
-                                            <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
+                                        )}
+                                        <div className={`max-w-[85%] sm:max-w-[75%]`}>
+                                            <div className={`px-5 py-4 rounded-3xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
+                                                ? 'bg-indigo-600 text-white rounded-br-none shadow-indigo-500/10'
+                                                : 'bg-white border border-slate-100 text-slate-800 rounded-bl-none'
+                                                }`}>
+                                                {msg.content === '' && msg.role === 'assistant' ? (
+                                                    <div className="flex gap-1 py-1 px-2">
+                                                        {[0, 150, 300].map(d => (
+                                                            <span key={d} className="w-2 h-2 bg-indigo-400/50 rounded-full animate-bounce"
+                                                                style={{ animationDelay: `${d}ms` }} />
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
+                                                )}
+                                            </div>
+                                            <p className={`text-[10px] text-slate-300 mt-2 font-bold uppercase tracking-widest ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                                                {msg.role === 'user' ? 'You' : 'Classera Coach'} · Just Now
+                                            </p>
+                                        </div>
+                                        {msg.role === 'user' && (
+                                            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0 mt-1 text-white text-xs font-black shadow-lg shadow-slate-900/10">
+                                                U
+                                            </div>
                                         )}
                                     </div>
-                                </div>
-                                {msg.role === 'user' && (
-                                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                                        <User size={15} className="text-white" />
-                                    </div>
-                                )}
+                                ))}
+                                <div ref={bottomRef} className="h-4" />
                             </div>
-                        ))}
-                        <div ref={bottomRef} />
+                        )}
                     </div>
-                )}
-            </div>
-
-            {/* Input */}
-            <div className="bg-white border-t border-slate-200 px-4 py-3">
-                <div className="max-w-3xl mx-auto flex items-end gap-2">
-                    <textarea
-                        ref={inputRef}
-                        rows={1}
-                        value={input}
-                        onChange={e => setInput(e.target.value)}
-                        onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
-                        placeholder="Ask about career paths, skills, salary, interviews..."
-                        disabled={loading}
-                        className="flex-1 resize-none px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all bg-white text-slate-900 placeholder:text-slate-400 disabled:opacity-50"
-                        style={{ minHeight: 44, maxHeight: 120 }}
-                    />
-                    <button onClick={() => send()} disabled={loading || !input.trim()}
-                        className="p-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors disabled:opacity-40 flex-shrink-0 shadow-sm">
-                        <Send size={16} />
-                    </button>
                 </div>
-                <p className="text-center text-[10px] text-slate-300 mt-2 max-w-3xl mx-auto">AI may make mistakes. Verify with career professionals for important decisions.</p>
+
+                {/* Input Area */}
+                <div className="bg-white/80 backdrop-blur-md border-t border-slate-100 p-5 sticky bottom-0 z-10">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="flex items-end gap-3 bg-slate-50 border border-slate-200 rounded-[2rem] p-2 pr-3 pl-5 focus-within:bg-white focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-500/5 transition-all duration-300 shadow-sm">
+                            <textarea
+                                ref={inputRef}
+                                rows={1}
+                                value={input}
+                                onChange={e => setInput(e.target.value)}
+                                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+                                placeholder="Ask your expert coach anything..."
+                                disabled={loading}
+                                className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-bold text-slate-800 placeholder:text-slate-400 py-3 resize-none scroll-smooth min-h-[44px] max-h-[200px]"
+                            />
+                            <button onClick={() => send()} disabled={loading || !input.trim()}
+                                className="mb-1 p-3 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-300 disabled:opacity-40 flex-shrink-0 shadow-lg shadow-indigo-500/20 active:scale-90">
+                                <Send size={18} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

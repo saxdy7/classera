@@ -23,7 +23,7 @@ export async function GET(request: Request) {
         if (communityId) {
             const { data, error } = await supabase
                 .from('communities')
-                .select('*, mentor:users!communities_mentor_id_fkey(id, full_name, avatar_url), community_members(count)')
+            .select('*, mentor:users!mentor_id(id, full_name, avatar_url), community_members(count)')
                 .eq('id', communityId)
                 .single();
             if (error) throw error;

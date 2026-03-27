@@ -93,8 +93,8 @@ export default async function CommunityDetailPage({
             <div className="flex gap-2 mb-6 border-b border-slate-200">
               {[
                 { key: 'feed', label: 'Feed', icon: FileText },
-                { key: 'members', label: 'Members', icon: Users },
                 { key: 'chat', label: 'Chat', icon: MessageCircle },
+                { key: 'members', label: 'Members', icon: Users },
               ].map(({ key, label, icon: Icon }) => (
                 <Link key={key} href={`/dashboard/mentor/communities/${id}?tab=${key}`}
                   className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${tab === key ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}>

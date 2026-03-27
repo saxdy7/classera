@@ -12,7 +12,8 @@ import {
   LayoutDashboard, BookOpen, ClipboardCheck,
   Users, Video, UsersRound, MapIcon, FileText, User,
   ChevronDown, ChevronUp, Sparkles, GraduationCap, Bot,
-  MessageSquare, BarChart2, GitBranch, Wallet,
+  MessageSquare, BarChart2, GitBranch, Wallet, Search,
+  Briefcase, School, FileCheck, Target,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +29,12 @@ export function Sidebar({ role }: SidebarProps) {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user?.id || null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const { data: tokenData } = useAITokenBalance(userId || '');
@@ -47,6 +54,7 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: ClipboardCheck, label: 'Tests', href: '/dashboard/student/tests' },
     { icon: GitBranch, label: 'Projects', href: '/dashboard/student/projects' },
     { icon: Video, label: 'Live Sessions', href: '/dashboard/student/live-sessions' },
+    { icon: Briefcase, label: 'Job Portal', href: '/dashboard/student/jobs' },
     { icon: UsersRound, label: 'Communities', href: '/dashboard/student/communities' },
   ];
 
@@ -63,9 +71,11 @@ export function Sidebar({ role }: SidebarProps) {
 
   const aiTools = [
     { icon: Sparkles, label: 'AI Career Coach', href: '/ai-tools/career-coach' },
-    { icon: MapIcon, label: 'AI Roadmap', href: '/roadmaps' },
-    { icon: GraduationCap, label: 'AI Course', href: '/courses' },
-    { icon: FileText, label: 'AI Guide', href: '/guides' },
+    { icon: FileCheck, label: 'AI Resume Analysis', href: '/ai-tools/resume' },
+    { icon: School, label: 'College Matches', href: '/ai-tools/colleges' },
+    { icon: Target, label: 'Skill Roadmaps', href: '/roadmaps' },
+    { icon: GraduationCap, label: 'Course Recommender', href: '/courses' },
+    { icon: FileText, label: 'AI Study Guide', href: '/guides' },
   ];
 
   const navItems = isStudent ? studentNav : mentorNav;

@@ -36,12 +36,14 @@ ALTER TABLE public.ai_tool_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ai_token_transactions ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies - Users can only see their own token data
+DROP POLICY IF EXISTS "Users can view their own token balance" ON public.ai_tool_tokens;
 CREATE POLICY "Users can view their own token balance"
   ON public.ai_tool_tokens
   FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can view their own token transactions" ON public.ai_token_transactions;
 CREATE POLICY "Users can view their own token transactions"
   ON public.ai_token_transactions
   FOR SELECT
@@ -49,12 +51,14 @@ CREATE POLICY "Users can view their own token transactions"
   USING (auth.uid() = user_id);
 
 -- Service role can do anything (for webhooks)
+DROP POLICY IF EXISTS "Service role can manage token data" ON public.ai_tool_tokens;
 CREATE POLICY "Service role can manage token data"
   ON public.ai_tool_tokens
   FOR ALL
   TO service_role
   USING (true);
 
+DROP POLICY IF EXISTS "Service role can manage token transactions" ON public.ai_token_transactions;
 CREATE POLICY "Service role can manage token transactions"
   ON public.ai_token_transactions
   FOR ALL
@@ -99,7 +103,7 @@ BEGIN
     RETURN QUERY SELECT true, v_current_balance - p_amount, 'Tokens deducted successfully'::TEXT;
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Create function to add bonus tokens (for referrals, etc.)
 CREATE OR REPLACE FUNCTION add_bonus_tokens(
@@ -128,7 +132,7 @@ BEGIN
 
   RETURN QUERY SELECT true, (SELECT balance FROM ai_tool_tokens WHERE user_id = p_user_id);
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Grant execute permissions
 GRANT EXECUTE ON FUNCTION deduct_ai_tokens(UUID, INTEGER) TO authenticated;

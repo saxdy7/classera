@@ -87,6 +87,7 @@ export function GuidesContent() {
             if (!res.ok) throw new Error(data.error || 'Generation failed');
             setGuide(data);
             saveHistory(data);
+            window.dispatchEvent(new Event('tokens-updated'));
         } catch (e: any) {
             setError(e.message || 'Failed to generate guide. Please try again.');
         } finally {

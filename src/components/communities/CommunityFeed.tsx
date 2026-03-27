@@ -23,7 +23,8 @@ import {
   Download,
   Edit,
   Search,
-  BarChart3
+  BarChart3,
+  Plus
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
@@ -79,9 +80,10 @@ interface CommunityFeedProps {
   isMentor: boolean;
   /** Filter controlled by parent (e.g. CommunitySidebar). When provided the internal tabs are hidden. */
   activeFilter?: string;
+  onStartDiscussion?: () => void;
 }
 
-export function CommunityFeed({ communityId, userId, userRole, isMentor, activeFilter }: CommunityFeedProps) {
+export function CommunityFeed({ communityId, userId, userRole, isMentor, activeFilter, onStartDiscussion }: CommunityFeedProps) {
   const supabase = createClient();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,49 +108,23 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      let query = supabase
-        .from('community_posts')
-        .select(`
-          *,
-          author:users!community_posts_author_id_fkey(id, full_name, avatar_url, role)
-        `)
-        .eq('community_id', communityId)
-        .eq('is_deleted', false)
-        .order('is_pinned', { ascending: false })
-        .order('created_at', { ascending: false });
+      const res = await fetch(`/api/community-posts?communityId=${communityId}&filter=${filter}`);
+      if (!res.ok) throw new Error('API request failed');
+      const { posts: fetchedPosts } = await res.json();
 
-      if (filter === 'questions') {
-        query = query.eq('type', 'question');
-      } else if (filter === 'announcements') {
-        query = query.eq('type', 'announcement');
-      }
-
-      const { data, error } = await query;
-
-      if (error) throw error;
-
-      // Check if user has liked/saved each post
+      // For user tracking (likes/saves), we still use the client client for now to avoid session overhead on the API
+      // Or we can just trust the API if it's enhanced later.
       const postsWithUserData = await Promise.all(
-        (data || []).map(async (post) => {
-          const [{ data: liked }, { data: saved }] = await Promise.all([
-            supabase
-              .from('community_post_likes')
-              .select('id')
-              .eq('post_id', post.id)
-              .eq('user_id', userId)
-              .single(),
-            supabase
-              .from('community_saved_posts')
-              .select('id')
-              .eq('post_id', post.id)
-              .eq('user_id', userId)
-              .single()
+        (fetchedPosts || []).map(async (post: Post) => {
+          const [likedResult, savedResult] = await Promise.all([
+            supabase.from('community_post_likes').select('id').eq('post_id', post.id).eq('user_id', userId).maybeSingle(),
+            supabase.from('community_saved_posts').select('id').eq('post_id', post.id).eq('user_id', userId).maybeSingle()
           ]);
 
           return {
             ...post,
-            user_has_liked: !!liked,
-            user_has_saved: !!saved
+            user_has_liked: !!likedResult.data,
+            user_has_saved: !!savedResult.data
           };
         })
       );
@@ -336,34 +312,20 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
 
     try {
       setLoadingComments({ ...loadingComments, [postId]: true });
+      const res = await fetch(`/api/community-comments?postId=${postId}`);
+      if (!res.ok) throw new Error('Failed to fetch comments');
+      const { comments: fetchedComments } = await res.json();
 
-      const { data, error } = await supabase
-        .from('community_comments')
-        .select(`
-          *,
-          author:users!community_comments_author_id_fkey(id, full_name, avatar_url, role)
-        `)
-        .eq('post_id', postId)
-        .eq('is_deleted', false)
-        .order('is_best_answer', { ascending: false })
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      // Check if user has liked each comment
       const commentsWithUserData = await Promise.all(
-        (data || []).map(async (comment) => {
+        (fetchedComments || []).map(async (comment: Comment) => {
           const { data: liked } = await supabase
             .from('community_comment_likes')
             .select('id')
             .eq('comment_id', comment.id)
             .eq('user_id', userId)
-            .single();
+            .maybeSingle();
 
-          return {
-            ...comment,
-            user_has_liked: !!liked
-          };
+          return { ...comment, user_has_liked: !!liked };
         })
       );
 
@@ -498,29 +460,9 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
         />
       </div>
 
-      {/* Posts List */}
-      {posts.filter(post => {
-        if (!searchQuery) return true;
-        const query = searchQuery.toLowerCase();
-        return (
-          post.title?.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query) ||
-          post.author?.full_name?.toLowerCase().includes(query)
-        );
-      }).length === 0 ? (
-        <div className="bg-white rounded-2xl p-12 border border-slate-200 text-center">
-          <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MessageCircle className="w-10 h-10 text-indigo-600" />
-          </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">
-            {searchQuery ? 'No posts found' : 'No posts yet'}
-          </h3>
-          <p className="text-slate-600">
-            {searchQuery ? 'Try different search terms' : 'Be the first to start a discussion!'}
-          </p>
-        </div>
-      ) : (
-        (filter === 'saved' ? posts.filter(p => p.user_has_saved) : posts).filter(post => {
+      {/* Empty State / Posts List */}
+      {(() => {
+        const filteredPosts = (filter === 'saved' ? posts.filter(p => p.user_has_saved) : posts).filter(post => {
           if (!searchQuery) return true;
           const query = searchQuery.toLowerCase();
           return (
@@ -528,12 +470,43 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
             post.content.toLowerCase().includes(query) ||
             post.author?.full_name?.toLowerCase().includes(query)
           );
-        }).map((post) => (
+        });
+
+        if (filteredPosts.length === 0) {
+          return (
+            <div className="bg-white rounded-[2.5rem] p-20 border-2 border-dashed border-slate-100 flex flex-col items-center text-center">
+              <div className="w-24 h-24 bg-indigo-50 rounded-[2rem] flex items-center justify-center text-indigo-600 mb-8 shadow-inner group">
+                <MessageCircle className="w-12 h-12 group-hover:scale-110 transition-transform" />
+              </div>
+              <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight uppercase">
+                {searchQuery ? 'Nothing Found' : filter === 'saved' ? 'No Saved Posts' : 'No Discussions Yet'}
+              </h2>
+              <p className="text-slate-500 text-lg max-w-md mx-auto font-medium leading-relaxed mb-10">
+                {searchQuery
+                  ? 'Try broadening your search terms to find what you need.'
+                  : filter === 'saved'
+                    ? 'You haven\'t saved any posts to your library yet.'
+                    : 'Be the first to share your journey, ask a tough question, or just say hello to your fellow learners!'}
+              </p>
+              {!searchQuery && filter !== 'saved' && (
+                <button
+                  onClick={onStartDiscussion}
+                  className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-600/20 transition-all active:scale-95 flex items-center gap-3"
+                >
+                  <Plus size={20} />
+                  Start the conversation
+                </button>
+              )}
+            </div>
+          );
+        }
+
+        return filteredPosts.map((post) => (
           <div
             key={post.id}
-            className={`bg-white rounded-2xl p-6 border-2 transition-all ${post.is_pinned
-              ? 'border-indigo-200 bg-indigo-50/30'
-              : 'border-slate-200 hover:border-slate-300'
+            className={`bg-white rounded-[2rem] p-8 border-2 transition-all group ${post.is_pinned
+              ? 'border-indigo-100 bg-indigo-50/30'
+              : 'border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5'
               }`}
           >
             {/* Post Header */}
@@ -552,20 +525,20 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900">{post.author?.full_name || 'Unknown'}</span>
+                    <span className="font-black text-slate-800 tracking-tight">{post.author?.full_name || 'Unknown'}</span>
                     <span
-                      className={`px-2 py-0.5 text-xs font-semibold rounded-full ${post.author?.role === 'mentor'
-                        ? 'bg-purple-100 text-purple-700'
-                        : 'bg-blue-100 text-blue-700'
+                      className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-xl ${post.author?.role === 'mentor'
+                        ? 'bg-purple-100 text-purple-700 border border-purple-200'
+                        : 'bg-indigo-100 text-indigo-700 border border-indigo-200'
                         }`}
                     >
                       {post.author?.role}
                     </span>
                     {post.type !== 'normal' && (
                       <span
-                        className={`flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full ${post.type === 'announcement'
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-green-100 text-green-700'
+                        className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-xl ${post.type === 'announcement'
+                          ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                          : 'bg-green-100 text-green-700 border border-green-200'
                           }`}
                       >
                         {getPostIcon(post.type)}
@@ -573,14 +546,14 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
                       </span>
                     )}
                     {post.is_answered && post.type === 'question' && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                        <CheckCircle className="w-3 h-3" />
-                        Answered
+                      <span className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        Resolved
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-500">
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
                       {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                     </span>
                     {post.updated_at && post.updated_at !== post.created_at && (
@@ -593,14 +566,20 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
               {/* Post Actions Menu */}
               <div className="flex items-center gap-2">
                 {post.is_pinned && (
-                  <Pin className="w-5 h-5 text-indigo-600" />
+                   <div className="px-3 py-1 bg-indigo-600 text-white rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-600/20">
+                      <Pin className="w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Featured</span>
+                   </div>
                 )}
                 {post.is_locked && (
-                  <Lock className="w-5 h-5 text-slate-600" />
+                   <div className="px-3 py-1 bg-slate-100 text-slate-500 rounded-xl flex items-center gap-2 border border-slate-200">
+                      <Lock className="w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Closed</span>
+                   </div>
                 )}
                 {(isMentor || post.author_id === userId) && (
                   <div className="relative group">
-                    <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                    <button className="p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all border border-slate-200">
                       <MoreVertical className="w-5 h-5 text-slate-600" />
                     </button>
                     <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 hidden group-hover:block z-10">
@@ -647,11 +626,11 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
             </div>
 
             {/* Post Content */}
-            <div className="mb-4">
+            <div className="mb-6 mt-4">
               {post.title && (
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{post.title}</h3>
+                <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight leading-tight group-hover:text-indigo-600 transition-colors cursor-pointer">{post.title}</h3>
               )}
-              <p className="text-slate-700 whitespace-pre-wrap">{post.content}</p>
+              <p className="text-slate-600 text-lg leading-relaxed whitespace-pre-wrap font-medium">{post.content}</p>
 
               {/* Poll Display */}
               {post.type === 'poll' && (
@@ -699,44 +678,43 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
             </div>
 
             {/* Post Stats & Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between pt-6 mt-6 border-t border-slate-100">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => handleLike(post.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${post.user_has_liked
-                    ? 'bg-red-50 text-red-600'
-                    : 'hover:bg-slate-100 text-slate-600'
+                  className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl transition-all active:scale-95 ${post.user_has_liked
+                    ? 'bg-red-50 text-red-600 border border-red-100 shadow-sm'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-100'
                     }`}
                 >
                   <Heart className={`w-5 h-5 ${post.user_has_liked ? 'fill-current' : ''}`} />
-                  <span className="font-semibold">{post.likes_count}</span>
+                  <span className="font-black text-sm">{post.likes_count}</span>
                 </button>
 
                 <button
                   onClick={() => fetchComments(post.id)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                  className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-100 transition-all active:scale-95"
                 >
                   <MessageCircle className="w-5 h-5" />
-                  <span className="font-semibold">{post.comments_count}</span>
+                  <span className="font-black text-sm">{post.comments_count}</span>
                 </button>
               </div>
 
               <div className="flex items-center gap-2">
+                <div className="hidden sm:flex -space-x-3 mr-4 overflow-hidden py-1">
+                   {[1,2,3,4].map(i => (
+                     <div key={i} className={`inline-block h-8 w-8 rounded-full ring-4 ring-white bg-slate-${i*100 + 100} border border-slate-200`} />
+                   ))}
+                   <div className="flex items-center justify-center h-8 w-8 rounded-full ring-4 ring-white bg-indigo-50 text-[10px] font-black text-indigo-600 border border-indigo-100">+24</div>
+                </div>
                 <button
                   onClick={() => handleSave(post.id)}
-                  className={`p-2 rounded-lg transition-colors ${post.user_has_saved
-                    ? 'bg-indigo-50 text-indigo-600'
-                    : 'hover:bg-slate-100 text-slate-600'
+                  className={`p-3.5 rounded-2xl transition-all active:scale-95 ${post.user_has_saved
+                    ? 'bg-indigo-50 text-indigo-600 border border-indigo-100'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border border-slate-100'
                     }`}
                 >
                   <Bookmark className={`w-5 h-5 ${post.user_has_saved ? 'fill-current' : ''}`} />
-                </button>
-
-                <button
-                  onClick={() => handleReport(post.id)}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
-                >
-                  <Flag className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -754,50 +732,50 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
                     {comments[post.id]?.map((comment) => (
                       <div
                         key={comment.id}
-                        className={`flex gap-3 p-4 rounded-lg ${comment.is_best_answer
-                          ? 'bg-green-50 border-2 border-green-200'
-                          : 'bg-slate-50'
+                        className={`flex gap-4 p-5 rounded-3xl transition-all ${comment.is_best_answer
+                          ? 'bg-emerald-50 border-2 border-emerald-200 shadow-sm'
+                          : 'bg-slate-50 border border-slate-100'
                           }`}
                       >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black flex-shrink-0 shadow-lg shadow-indigo-500/10">
                           {comment.author?.avatar_url ? (
                             <img
                               src={comment.author.avatar_url}
                               alt={comment.author?.full_name || ''}
-                              className="w-full h-full rounded-full object-cover"
+                              className="w-full h-full rounded-2xl object-cover"
                             />
                           ) : (
                             (comment.author?.full_name || '?').charAt(0)
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-semibold text-slate-900">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="font-black text-slate-800 tracking-tight">
                               {comment.author?.full_name || 'Unknown'}
                             </span>
                             <span
-                              className={`px-2 py-0.5 text-xs font-semibold rounded-full ${comment.author?.role === 'mentor'
-                                ? 'bg-purple-100 text-purple-700'
-                                : 'bg-blue-100 text-blue-700'
+                              className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-xl ${comment.author?.role === 'mentor'
+                                ? 'bg-purple-100 text-purple-700 border border-purple-200'
+                                : 'bg-indigo-100 text-indigo-700 border border-indigo-200'
                                 }`}
                             >
                               {comment.author?.role}
                             </span>
                             {comment.is_best_answer && (
-                              <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                <CheckCircle className="w-3 h-3" />
-                                Best Answer
+                              <span className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                Solution
                               </span>
                             )}
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
                               {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                             </span>
                           </div>
-                          <p className="text-slate-700 mb-2">{comment.content}</p>
+                          <p className="text-slate-600 font-medium mb-3 leading-relaxed">{comment.content}</p>
                           <div className="flex items-center gap-3">
                             <button
-                              className={`flex items-center gap-1 text-sm ${comment.user_has_liked
-                                ? 'text-red-600'
+                              className={`flex items-center gap-1.5 text-xs font-black uppercase tracking-widest transition-colors ${comment.user_has_liked
+                                ? 'text-red-500'
                                 : 'text-slate-500 hover:text-red-600'
                                 }`}
                             >
@@ -855,7 +833,7 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
             )}
           </div>
         ))
-      )}
+      })()}
 
       {/* Edit Post Modal */}
       {editingPost && (

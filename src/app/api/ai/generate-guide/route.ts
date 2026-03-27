@@ -30,6 +30,18 @@ export async function POST(req: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+        // Deduct tokens (AI Guide costs 1 credit)
+        const { data: deduction, error: deductError } = await supabase.rpc('deduct_ai_tokens', {
+            p_user_id: user.id,
+            p_amount: 1
+        });
+
+        const status = Array.isArray(deduction) ? deduction[0] : deduction;
+
+        if (deductError || !status || !status.success) {
+            return NextResponse.json({ error: status?.message || 'Insufficient credits. Please Top Up.' }, { status: 403 });
+        }
+
         const { topic, difficulty = 'beginner' } = await req.json();
         if (!topic) return NextResponse.json({ error: 'topic is required' }, { status: 400 });
 

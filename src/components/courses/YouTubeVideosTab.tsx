@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Play, Sparkles } from 'lucide-react';
+import { Search, Play, Sparkles, X, Fullscreen, MessageSquare, List } from 'lucide-react';
 import { VideoCard } from './VideoCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Video {
   id: string;
@@ -12,6 +13,7 @@ interface Video {
   views: string;
   duration: string;
   uploadDate: string;
+  description?: string;
 }
 
 const TOPICS = [
@@ -30,6 +32,7 @@ export function YouTubeVideosTab() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeVideo, setActiveVideo] = useState<Video | null>(null);
 
   useEffect(() => {
     fetchVideos(selectedTopic);
@@ -48,7 +51,8 @@ export function YouTubeVideosTab() {
         channel: video.channel || 'YouTube',
         views: video.views || '0',
         duration: video.duration || '10:00',
-        uploadDate: video.uploadDate || 'Recently',
+        uploadDate: video.publishedAt ? new Date(video.publishedAt).toLocaleDateString() : 'Recently',
+        description: video.description
       }));
       
       setVideos(formattedVideos);
@@ -80,7 +84,8 @@ export function YouTubeVideosTab() {
         channel: video.channel || 'YouTube',
         views: video.views || '0',
         duration: video.duration || '10:00',
-        uploadDate: video.uploadDate || 'Recently',
+        uploadDate: video.publishedAt ? new Date(video.publishedAt).toLocaleDateString() : 'Recently',
+        description: video.description
       }));
       
       setVideos(formattedVideos);
@@ -93,7 +98,8 @@ export function YouTubeVideosTab() {
   };
 
   const handlePlay = (videoId: string) => {
-    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+    const video = videos.find(v => v.id === videoId);
+    if (video) setActiveVideo(video);
   };
 
   return (
@@ -191,6 +197,58 @@ export function YouTubeVideosTab() {
           ))}
         </div>
       )}
+
+      {/* Video Player Modal */}
+      <AnimatePresence>
+        {activeVideo && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+          >
+            <div 
+              className="absolute inset-0 bg-slate-900/90 backdrop-blur-md"
+              onClick={() => setActiveVideo(null)}
+            />
+            
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+            >
+              <button 
+                onClick={() => setActiveVideo(null)}
+                className="absolute top-4 right-4 z-10 p-2 bg-slate-800/80 hover:bg-red-500 text-white rounded-full transition-all group"
+              >
+                <X className="w-6 h-6 group-hover:rotate-90 transition-transform" />
+              </button>
+              
+              <iframe 
+                src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0`}
+                title={activeVideo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+              />
+              
+              <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pointer-events-none">
+                <div className="max-w-4xl">
+                  <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{activeVideo.title}</h2>
+                  <div className="flex items-center gap-4 text-xs md:text-sm text-slate-300">
+                    <span className="font-bold text-red-400">{activeVideo.channel}</span>
+                    <span className="w-1 h-1 bg-slate-500 rounded-full" />
+                    <span>{activeVideo.views} views</span>
+                    <span className="w-1 h-1 bg-slate-500 rounded-full" />
+                    <span>{activeVideo.uploadDate}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

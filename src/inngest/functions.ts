@@ -8,8 +8,7 @@ const supabase = createClient(
 
 // Send notification for @mentions
 export const mentionNotification = inngest.createFunction(
-  { id: 'mention-notification' },
-  { event: 'community/mention.created' },
+  { id: 'mention-notification', triggers: [{ event: 'community/mention.created' }] },
   async ({ event }) => {
     const { mentionedUserId, postId, commentId, mentionedByUserId } = event.data;
 
@@ -36,8 +35,7 @@ export const mentionNotification = inngest.createFunction(
 
 // Send notification for new posts in followed communities
 export const newPostNotification = inngest.createFunction(
-  { id: 'new-post-notification' },
-  { event: 'community/post.created' },
+  { id: 'new-post-notification', triggers: [{ event: 'community/post.created' }] },
   async ({ event }) => {
     const { communityId, postId, createdByUserId, title } = event.data;
 
@@ -83,8 +81,7 @@ export const newPostNotification = inngest.createFunction(
 
 // Send notification for new comments on user's posts
 export const newCommentNotification = inngest.createFunction(
-  { id: 'new-comment-notification' },
-  { event: 'community/comment.created' },
+  { id: 'new-comment-notification', triggers: [{ event: 'community/comment.created' }] },
   async ({ event }) => {
     const { postId, commentText, commentedByUserId } = event.data;
 

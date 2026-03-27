@@ -407,19 +407,19 @@ export function CommunityChat({
                                     {/* Bubble */}
                                     <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                                         {/* Meta */}
-                                        <div className={`flex items-center gap-2 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                                            <span className="font-semibold text-sm text-slate-900">{msg.sender?.full_name}</span>
+                                        <div className={`flex items-center gap-3 mb-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
+                                            <span className="font-black text-xs text-slate-800 tracking-tight uppercase">{msg.sender?.full_name}</span>
                                             {isMentor && (
-                                                <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">Mentor</span>
+                                                <span className="px-2.5 py-0.5 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm shadow-indigo-600/10">Mentor</span>
                                             )}
-                                            <span className="text-xs text-slate-400">{fmtTime(msg.created_at)}</span>
-                                            {msg.edited_at && <span className="text-xs text-slate-400 italic">(edited)</span>}
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{fmtTime(msg.created_at)}</span>
+                                            {msg.edited_at && <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter italic">(edited)</span>}
                                         </div>
 
                                         {/* Message */}
-                                        <div className={`relative px-4 py-3 rounded-2xl text-sm leading-relaxed ${isOwn
-                                            ? 'bg-indigo-600 text-white rounded-tr-sm'
-                                            : 'bg-slate-100 text-slate-900 rounded-tl-sm'
+                                        <div className={`relative px-5 py-4 rounded-[1.5rem] text-sm leading-relaxed font-medium shadow-sm border ${isOwn
+                                            ? 'bg-indigo-600 text-white border-indigo-700 rounded-tr-sm self-end'
+                                            : 'bg-white text-slate-700 border-slate-100 rounded-tl-sm self-start'
                                             }`}>
                                             {msg.content}
                                         </div>

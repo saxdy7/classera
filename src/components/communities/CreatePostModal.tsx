@@ -9,7 +9,8 @@ import {
   FileText,
   HelpCircle,
   Megaphone,
-  Loader2
+  Loader2,
+  Sparkles
 } from 'lucide-react';
 
 interface CreatePostModalProps {
@@ -79,117 +80,102 @@ export function CreatePostModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-[2.5rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-indigo-500/20 border border-slate-100">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white rounded-t-2xl">
-          <h2 className="text-2xl font-bold text-slate-900">Create Post</h2>
+        <div className="flex items-center justify-between p-8 border-b border-slate-100 sticky top-0 bg-white/80 backdrop-blur-md z-30">
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Create <span className="text-indigo-600">Post</span></h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-3 hover:bg-slate-100 text-slate-400 hover:text-slate-900 rounded-2xl transition-all"
           >
-            <X className="w-6 h-6 text-slate-600" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
           {/* Post Type Selection */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
+            <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
               Post Type
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className={`grid ${userRole === 'mentor' ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
               <button
                 type="button"
                 onClick={() => setPostType('normal')}
-                className={`p-4 rounded-xl border-2 transition-all ${postType === 'normal'
-                  ? 'border-indigo-500 bg-indigo-50'
-                  : 'border-slate-200 hover:border-slate-300'
+                className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'normal'
+                  ? 'border-indigo-600 bg-indigo-50/50 shadow-lg shadow-indigo-500/10'
+                  : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
                   }`}
               >
-                <FileText className={`w-6 h-6 mx-auto mb-2 ${postType === 'normal' ? 'text-indigo-600' : 'text-slate-600'
-                  }`} />
-                <div className="text-sm font-semibold text-slate-900">Normal</div>
-                <div className="text-xs text-slate-500">Share thoughts</div>
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'normal' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Normal</div>
+                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Share thoughts</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setPostType('question')}
-                className={`p-4 rounded-xl border-2 transition-all ${postType === 'question'
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-slate-200 hover:border-slate-300'
+                className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'question'
+                  ? 'border-emerald-600 bg-emerald-50/50 shadow-lg shadow-emerald-500/10'
+                  : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
                   }`}
               >
-                <HelpCircle className={`w-6 h-6 mx-auto mb-2 ${postType === 'question' ? 'text-green-600' : 'text-slate-600'
-                  }`} />
-                <div className="text-sm font-semibold text-slate-900">Question</div>
-                <div className="text-xs text-slate-500">Ask for help</div>
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'question' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                  <HelpCircle className="w-6 h-6" />
+                </div>
+                <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Question</div>
+                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Ask for help</div>
               </button>
 
               {userRole === 'mentor' && (
                 <button
                   type="button"
                   onClick={() => setPostType('announcement')}
-                  className={`p-4 rounded-xl border-2 transition-all ${postType === 'announcement'
-                    ? 'border-amber-500 bg-amber-50'
-                    : 'border-slate-200 hover:border-slate-300'
+                  className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'announcement'
+                    ? 'border-amber-600 bg-amber-50/50 shadow-lg shadow-amber-500/10'
+                    : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
                     }`}
                 >
-                  <Megaphone className={`w-6 h-6 mx-auto mb-2 ${postType === 'announcement' ? 'text-amber-600' : 'text-slate-600'
-                    }`} />
-                  <div className="text-sm font-semibold text-slate-900">Announcement</div>
-                  <div className="text-xs text-slate-500">Important info</div>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'announcement' ? 'bg-amber-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                    <Megaphone className="w-6 h-6" />
+                  </div>
+                  <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Alert</div>
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Official</div>
                 </button>
               )}
             </div>
           </div>
 
-          {/* Title (Optional for normal posts, required for questions) */}
-          {(postType === 'question' || postType === 'announcement') && (
-            <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
-                {postType === 'question' ? 'Question Title' : 'Announcement Title'}{' '}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={
-                  postType === 'question'
-                    ? 'e.g., How do I implement authentication in Next.js?'
-                    : 'e.g., Important: Class Schedule Update'
-                }
-                required={postType === 'question' || postType === 'announcement'}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-            </div>
-          )}
-
-          {postType === 'normal' && (
-            <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
-                Title <span className="text-slate-400">(Optional)</span>
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Give your post a title..."
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              />
-            </div>
-          )}
+          {/* Title */}
+          <div>
+            <label htmlFor="title" className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-3">
+              Title {(postType === 'question' || postType === 'announcement') ? <span className="text-red-500">*</span> : <span className="italic opacity-60">(Optional)</span>}
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={
+                postType === 'question'
+                  ? 'e.g., How do I implement authentication in Next.js?'
+                  : postType === 'announcement'
+                    ? 'e.g., Important: Class Schedule Update'
+                    : 'Give your post a catchy title...'
+              }
+              required={postType === 'question' || postType === 'announcement'}
+              className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-700 placeholder:text-slate-400"
+            />
+          </div>
 
           {/* Content */}
           <div>
-            <label htmlFor="content" className="block text-sm font-semibold text-slate-700 mb-2">
-              {postType === 'question' ? 'Question Details' : 'Content'}{' '}
-              <span className="text-red-500">*</span>
+            <label htmlFor="content" className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-3">
+              {postType === 'question' ? 'Question Details' : 'Description'} <span className="text-red-500">*</span>
             </label>
             <textarea
               id="content"
@@ -200,19 +186,19 @@ export function CreatePostModal({
                   ? 'Describe your question in detail. Include what you\'ve tried and any error messages...'
                   : postType === 'announcement'
                     ? 'Write your announcement here...'
-                    : 'What\'s on your mind?'
+                    : 'What\'s on your mind? Share something amazing...'
               }
               required
-              rows={8}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              rows={6}
+              className="w-full px-6 py-5 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-medium text-slate-700 placeholder:text-slate-400 leading-relaxed resize-none"
             />
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-slate-500">
-                {content.length} / 5000 characters
+            <div className="flex justify-between items-center mt-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                {content.length} / 5000
               </span>
               {postType === 'question' && (
-                <span className="text-xs text-slate-500">
-                  💡 Tip: Clear questions get better answers
+                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-1.5 bg-indigo-50 px-2 py-1 rounded-lg">
+                  <Sparkles size={10} /> Clear questions get better answers
                 </span>
               )}
             </div>
@@ -220,8 +206,8 @@ export function CreatePostModal({
 
           {/* Media Attachments */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
-              Attachments <span className="text-slate-400">(Optional)</span>
+            <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+              Attachments <span className="italic opacity-60">(Optional)</span>
             </label>
             <FileUpload 
               onFilesChange={(newImages, newFiles) => {
@@ -231,41 +217,17 @@ export function CreatePostModal({
             />
           </div>
 
-          {/* Guidelines */}
-          {postType === 'announcement' && (
-            <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-              <h4 className="font-semibold text-amber-900 mb-2">📢 Announcement Guidelines</h4>
-              <ul className="text-sm text-amber-800 space-y-1">
-                <li>• Keep it clear and concise</li>
-                <li>• Include important dates and deadlines</li>
-                <li>• Use announcements sparingly for important updates only</li>
-              </ul>
-            </div>
-          )}
-
-          {postType === 'question' && (
-            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-              <h4 className="font-semibold text-green-900 mb-2">❓ Question Tips</h4>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>• Be specific and provide context</li>
-                <li>• Include what you've already tried</li>
-                <li>• Share any error messages or code snippets</li>
-                <li>• Mark the best answer when you get help</li>
-              </ul>
-            </div>
-          )}
-
           {/* Actions */}
-          <div className="flex items-center gap-3 pt-4">
+          <div className="flex items-center gap-4 pt-4 sticky bottom-0 bg-white">
             <button
               type="submit"
               disabled={loading || !content.trim() || ((postType === 'question' || postType === 'announcement') && !title.trim())}
-              className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-8 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-indigo-600/20 active:scale-[0.98]"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating...
+                  Publishing...
                 </>
               ) : (
                 'Create Post'
@@ -275,7 +237,7 @@ export function CreatePostModal({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition-colors disabled:opacity-50"
+              className="px-8 py-5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 active:scale-[0.98]"
             >
               Cancel
             </button>

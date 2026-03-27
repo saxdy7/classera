@@ -64,6 +64,7 @@ export function CommunityFeedClient({ communityId, userId, userRole, isMentor }:
             userRole={userRole}
             isMentor={isMentor}
             activeFilter={sidebarFilter}
+            onStartDiscussion={() => setShowCreatePost(true)}
           />
         </div>
 

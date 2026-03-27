@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
+import { FloatingAI } from "@/components/shared/FloatingAI";
 
 export const metadata: Metadata = {
   title: "Classera - Learn & Connect Together",
@@ -17,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <FloatingAI />
+        </Providers>
       </body>
     </html>
   );

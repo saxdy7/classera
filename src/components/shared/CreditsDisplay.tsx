@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CreditCard, Plus, Zap } from 'lucide-react';
-import { tokenPackages } from '@/lib/razorpay';
+import { tokenPackages } from '@/lib/tokens';
 
 interface CreditsDisplayProps {
   balance?: number | null;
@@ -89,7 +89,11 @@ export function CreditsModal({ onClose }: { onClose: () => void }) {
     }
 
     try {
-      const token = localStorage.getItem('sb-access-token');
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      
       // Create Razorpay order
       const response = await fetch('/api/razorpay/checkout', {
         method: 'POST',

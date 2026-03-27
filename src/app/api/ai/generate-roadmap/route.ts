@@ -50,6 +50,18 @@ export async function POST(request: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+        // Deduct tokens (AI Roadmap costs 2 credits)
+        const { data: deduction, error: deductError } = await supabase.rpc('deduct_ai_tokens', {
+            p_user_id: user.id,
+            p_amount: 2
+        });
+
+        const status = Array.isArray(deduction) ? deduction[0] : deduction;
+
+        if (deductError || !status || !status.success) {
+            return NextResponse.json({ error: status?.message || 'Insufficient credits. Please Top Up.' }, { status: 403 });
+        }
+
         const body = await request.json();
         const {
             target_role,

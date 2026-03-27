@@ -25,23 +25,26 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data ?? []);
 }
 
-/* POST /api/history  body: { type, title, data } */
+/* POST /api/history  body: { id?, type, title, data } */
 export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { type, title, data } = body as { type: string; title: string; data: unknown };
+    const { id, type, title, data } = body as { id?: string; type: string; title: string; data: unknown };
 
     if (!type || !title || !data) {
         return NextResponse.json({ error: 'Missing type, title, or data' }, { status: 400 });
     }
 
+    const payload: any = { user_id: user.id, type, title, data };
+    if (id) payload.id = id;
+
     const { data: saved, error } = await supabase
         .from('ai_history')
-        .insert({ user_id: user.id, type, title, data })
-        .select('id')
+        .upsert(payload)
+        .select('id, created_at')
         .single();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });

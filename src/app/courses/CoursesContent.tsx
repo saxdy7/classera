@@ -119,6 +119,7 @@ export function CoursesContent() {
                 setActiveLesson({ moduleIdx: 0, lessonIdx: 0 });
             }
             saveHistory(data);
+            window.dispatchEvent(new Event('tokens-updated'));
         } catch (e: any) {
             setError(e.message || 'Failed to generate course.');
         } finally { setLoading(false); }

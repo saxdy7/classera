@@ -65,6 +65,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
             return newMessages;
           });
         }
+        window.dispatchEvent(new Event('tokens-updated'));
       }
 
     } catch (error) {

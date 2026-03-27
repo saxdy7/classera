@@ -14,6 +14,50 @@ async function safeInsertNotifications(admin: ReturnType<typeof createAdminClien
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 
+// Create a Daily.co room URL (requires API key)
+async function createDailyRoom(roomName: string, settings: any) {
+  try {
+    if (!DAILY_API_KEY) {
+      throw new Error('DAILY_API_KEY is not configured');
+    }
+
+    const response = await fetch('https://api.daily.co/v1/rooms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${DAILY_API_KEY}`,
+      },
+      body: JSON.stringify({
+        name: roomName,
+        privacy: 'public', // Change to 'private' and use tokens for gated access later
+        properties: {
+          enable_chat: settings.enable_chat !== false,
+          enable_screenshare: settings.allow_screen_share !== false,
+          start_video_off: !settings.require_camera,
+          start_audio_off: !settings.require_microphone,
+          exp: Math.floor(Date.now() / 1000) + 3600 * 2, // 2-hour expiry
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create Daily room');
+    }
+
+    const data = await response.json();
+    return { 
+      url: data.url, 
+      name: data.name,
+      room_name: data.name,
+      type: 'daily' 
+    };
+  } catch (error) {
+    console.error('Error creating Daily room:', error);
+    throw error;
+  }
+}
+
 // Create a Jitsi room URL (completely free)
 async function createJitsiRoom(roomName: string, settings: any) {
   try {
@@ -153,17 +197,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'title and scheduled_at are required' }, { status: 400 });
     }
 
-    // Create Jitsi room
-    let jitsiRoom = null;
+    // Create Jitsi room (Completely free and reliable)
+    let videoRoom = null;
     try {
       const roomName = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      jitsiRoom = await createJitsiRoom(roomName, settings);
-    } catch (jitsiError) {
-      console.error('Error creating Jitsi room:', jitsiError);
-      return NextResponse.json(
-        { error: `Failed to create video room: ${jitsiError instanceof Error ? jitsiError.message : 'Unknown error'}` },
-        { status: 500 }
-      );
+      videoRoom = await createJitsiRoom(roomName, settings);
+    } catch (videoError) {
+      console.error('Error creating Jitsi room:', videoError);
+      return NextResponse.json({ error: 'Failed to create video room' }, { status: 500 });
     }
 
     const admin = createAdminClient();
@@ -180,8 +221,8 @@ export async function POST(request: Request) {
         scheduled_at,
         duration_minutes: duration_minutes || 60,
         test_id: test_id || null,
-        meeting_url: jitsiRoom?.url || null,
-        daily_room_url: jitsiRoom?.url || null,
+        meeting_url: videoRoom?.url || null,
+        daily_room_url: videoRoom?.url || null,
         settings: settings || {},
         status: 'scheduled',
         max_participants: settings?.max_participants || 50,

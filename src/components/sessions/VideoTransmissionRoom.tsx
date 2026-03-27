@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, Share2, MessageSquare, Users, Settings, Copy, Check, X } from 'lucide-react';
+import { PhoneOff, Mic, MicOff, Video, VideoOff, Share2, MessageSquare, Users, Settings, Copy, Check, X, Shield, Lock } from 'lucide-react';
+import Image from 'next/image';
 
 declare global {
   interface Window {
@@ -23,8 +24,6 @@ interface VideoTransmissionRoomProps {
     require_microphone?: boolean;
     enable_chat?: boolean;
     allow_screen_share?: boolean;
-    waiting_room?: boolean;
-    record_session?: boolean;
   };
 }
 
@@ -46,7 +45,6 @@ export function VideoTransmissionRoom({
   const [isCameraOff, setIsCameraOff] = useState(settings.require_camera ? false : true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
-  const [showChat, setShowChat] = useState(false);
   const [copied, setCopied] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
 
@@ -59,8 +57,7 @@ export function VideoTransmissionRoom({
     script.onload = () => {
       if (!window.JitsiMeetExternalAPI) return;
 
-      // Extract room name from URL or generate
-      const roomName = `classera-${sessionId.replace(/-/g, '').slice(0, 16)}`;
+      const roomName = roomUrl.split('/').pop() || `classera-${sessionId.replace(/-/g, '').slice(0, 16)}`;
 
       const options = {
         roomName: roomName,
@@ -70,21 +67,29 @@ export function VideoTransmissionRoom({
         configOverwrite: {
           startWithAudioMuted: isMuted,
           startWithVideoMuted: isCameraOff,
-          disableSimulcast: false,
           enableWelcomePage: false,
           enableClosePage: false,
-          startAudioOnly: false,
           prejoinPageEnabled: false,
           hideConferenceTimer: true,
+          disableDeepLinking: true,
+          noticeMessage: 'Secure Classera connection established.',
+          doNotStoreRoom: true,
+          // Extra branding bypass attempts:
+          disableLogo: true,
+          brandingDataUrl: '',
         },
         interfaceConfigOverwrite: {
-          // Hide Jitsi default UI elements, show only video
+          // Hide as much Jitsi UI as possible, we use our own controls below
           TOOLBAR_BUTTONS: [],
-          FILMSTRIP_ENABLED: true,
           SHOW_JITSI_WATERMARK: false,
           SHOW_WATERMARK_FOR_GUESTS: false,
+          SHOW_BRAND_WATERMARK: false,
+          DEFAULT_REMOTE_DISPLAY_NAME: 'Member',
           MOBILE_APP_PROMO: false,
           HIDE_INVITE_MORE_HEADER: true,
+          DISPLAY_WELCOME_PAGE_CONTENT: false,
+          DISABLE_TRANSCRIPTION_SUBTITLES: true,
+          SUPPORT_URL: 'https://classera.demo',
         },
         userInfo: {
           displayName: userName,
@@ -95,26 +100,11 @@ export function VideoTransmissionRoom({
       const api = new (window as any).JitsiMeetExternalAPI('meet.jit.si', options);
       jitsiRef.current = api;
 
-      // Event listeners
-      api.on('videoConferenceJoined', () => {
-        console.log('Joined video conference');
-        setConnectionStatus('connected');
-      });
-
-      api.on('videoConferenceFailed', () => {
-        console.log('Video conference failed');
-        setConnectionStatus('disconnected');
-      });
-
-      api.on('readyToClose', () => {
-        handleLeaveCall();
-      });
-
-      api.on('participantJoined', (id: string) => {
-        api.setDisplayName(id, mentorName);
-      });
-
-      // Set control states
+      api.on('videoConferenceJoined', () => setConnectionStatus('connected'));
+      api.on('videoConferenceFailed', () => setConnectionStatus('disconnected'));
+      api.on('readyToClose', () => handleLeaveCall());
+      
+      // Force control sync
       api.executeCommand('toggleAudio', isMuted);
       api.executeCommand('toggleVideo', isCameraOff);
     };
@@ -130,7 +120,7 @@ export function VideoTransmissionRoom({
         script.parentNode.removeChild(script);
       }
     };
-  }, [sessionId, userName, userId, mentorName, isMuted, isCameraOff]);
+  }, [roomUrl, sessionId, userName, userId]);
 
   const handleLeaveCall = () => {
     if (jitsiRef.current) {
@@ -142,231 +132,153 @@ export function VideoTransmissionRoom({
 
   const toggleMic = () => {
     setIsMuted(!isMuted);
-    if (jitsiRef.current) {
-      jitsiRef.current.executeCommand('toggleAudio');
-    }
+    jitsiRef.current?.executeCommand('toggleAudio');
   };
 
   const toggleCamera = () => {
     setIsCameraOff(!isCameraOff);
-    if (jitsiRef.current) {
-      jitsiRef.current.executeCommand('toggleVideo');
-    }
+    jitsiRef.current?.executeCommand('toggleVideo');
   };
 
   const toggleScreenShare = () => {
     setIsScreenSharing(!isScreenSharing);
-    if (jitsiRef.current) {
-      jitsiRef.current.executeCommand('toggleShareScreen');
-    }
+    jitsiRef.current?.executeCommand('toggleShareScreen');
   };
 
   const handleCopyRoomUrl = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(roomUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex flex-col">
-      {/* Jitsi Video Container */}
-      <div ref={containerRef} className="flex-1 relative" />
+    <div className="fixed inset-0 bg-slate-950 z-[100] flex flex-col font-sans">
+      {/* Jitsi Engine Container */}
+      <div ref={containerRef} className="flex-1 relative bg-slate-900" />
 
-      {/* Classera Custom Overlay Controls */}
-      <div className="absolute inset-0 pointer-events-none flex flex-col justify-between">
-        {/* Header */}
-        <div className="pointer-events-auto p-4 bg-gradient-to-b from-black/90 to-transparent">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h2 className="text-white text-lg font-bold">{sessionTitle}</h2>
-                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium text-white ${
-                  connectionStatus === 'connected' ? 'bg-green-500/20 text-green-200' :
-                  connectionStatus === 'connecting' ? 'bg-yellow-500/20 text-yellow-200 animate-pulse' :
-                  'bg-red-500/20 text-red-200'
-                }`}>
-                  <span className="w-2 h-2 rounded-full bg-current"></span>
-                  {connectionStatus === 'connected' ? 'Connected' : 
-                   connectionStatus === 'connecting' ? 'Connecting...' : 
-                   'Disconnected'}
-                </span>
-              </div>
-              <button
-                onClick={() => setShowParticipants(!showParticipants)}
-                className="p-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-all"
-                title="Show participants"
-              >
-                <Users className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Mentor Info */}
-            <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-lg p-3 border border-white/20 mt-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                {mentorName?.charAt(0) || '?'}
-              </div>
-              <div className="flex-1">
-                <p className="text-white text-sm font-medium">Mentor: {mentorName}</p>
-                <p className="text-gray-300 text-xs">Session ID: {sessionId.slice(0, 12)}...</p>
-              </div>
-              <button
-                onClick={handleCopyRoomUrl}
-                className="p-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-all"
-                title="Copy session link"
-              >
-                {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-              </button>
-            </div>
+      {/* 🛡️ CLASSERA BRANDING OVERLAY - Hides Jitsi Logos */}
+      <div className="absolute inset-0 pointer-events-none z-10">
+        
+        {/* Top-Left: Classera Logo (Branding Overlay) */}
+        <div className="absolute top-0 left-0 w-64 h-24 bg-gradient-to-br from-slate-950 via-slate-950/80 to-transparent p-6 pointer-events-auto">
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20">
+                <span className="text-white font-black text-xl leading-none italic">C</span>
+             </div>
+             <div>
+                <h1 className="text-white text-base font-bold leading-none tracking-tight">Classera <span className="text-indigo-400">Live</span></h1>
+                <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest mt-1">E-Learning Hub</p>
+             </div>
           </div>
         </div>
 
-        {/* Bottom Controls */}
-        <div className="pointer-events-auto p-6 bg-gradient-to-t from-black/95 via-black/60 to-transparent">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-4">
-            {/* Microphone */}
-            <button
-              onClick={toggleMic}
-              className={`group relative p-4 rounded-full transition-all transform hover:scale-110 ${
-                isMuted
-                  ? 'bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/50'
-                  : 'bg-slate-600 hover:bg-slate-700'
-              }`}
-              title={isMuted ? 'Unmute' : 'Mute'}
-            >
-              {isMuted ? (
-                <MicOff className="w-6 h-6 text-white" />
-              ) : (
-                <Mic className="w-6 h-6 text-white" />
-              )}
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {isMuted ? 'Unmute' : 'Mute'}
-              </span>
-            </button>
-
-            {/* Camera */}
-            <button
-              onClick={toggleCamera}
-              className={`group relative p-4 rounded-full transition-all transform hover:scale-110 ${
-                isCameraOff
-                  ? 'bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/50'
-                  : 'bg-slate-600 hover:bg-slate-700'
-              }`}
-              title={isCameraOff ? 'Turn on camera' : 'Turn off camera'}
-            >
-              {isCameraOff ? (
-                <VideoOff className="w-6 h-6 text-white" />
-              ) : (
-                <Video className="w-6 h-6 text-white" />
-              )}
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {isCameraOff ? 'Turn on camera' : 'Turn off camera'}
-              </span>
-            </button>
-
-            {/* Screen Share - Only if allowed */}
-            {settings.allow_screen_share !== false && (
-              <button
-                onClick={toggleScreenShare}
-                className={`group relative p-4 rounded-full transition-all transform hover:scale-110 ${
-                  isScreenSharing
-                    ? 'bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/50'
-                    : 'bg-slate-600 hover:bg-slate-700'
-                }`}
-                title={isScreenSharing ? 'Stop sharing' : 'Share screen'}
-              >
-                <Share2 className="w-6 h-6 text-white" />
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  {isScreenSharing ? 'Stop sharing' : 'Share screen'}
-                </span>
-              </button>
-            )}
-
-            {/* Chat - Only if enabled */}
-            {settings.enable_chat !== false && (
-              <button
-                onClick={() => setShowChat(!showChat)}
-                className="group relative p-4 rounded-full bg-slate-600 hover:bg-slate-700 transition-all transform hover:scale-110"
-                title="Open chat"
-              >
-                <MessageSquare className="w-6 h-6 text-white" />
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Chat
-                </span>
-              </button>
-            )}
-
-            {/* Settings */}
-            <button
-              className="group relative p-4 rounded-full bg-slate-600 hover:bg-slate-700 transition-all transform hover:scale-110"
-              title="Settings"
-            >
-              <Settings className="w-6 h-6 text-white" />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Settings
-              </span>
-            </button>
-
-            {/* Divider */}
-            <div className="h-10 w-1 bg-white/20 rounded" />
-
-            {/* Leave Call */}
-            <button
-              onClick={handleLeaveCall}
-              className="group relative p-4 rounded-full bg-red-600 hover:bg-red-700 transition-all transform hover:scale-110 shadow-lg shadow-red-500/50"
-              title="Leave call"
-            >
-              <PhoneOff className="w-6 h-6 text-white" />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Leave Call
-              </span>
-            </button>
-          </div>
+        {/* Top-Center: Session Title */}
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-slate-950/60 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center gap-3">
+           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-[10px] font-bold border border-emerald-500/10">
+              <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+              SECURE
+           </div>
+           <span className="text-sm font-bold text-white tracking-wide">{sessionTitle}</span>
         </div>
 
-        {/* Participants Sidebar */}
+        {/* Bottom-Right: Participant Sidebar Toggle (Floating Overlay) */}
+        <div className="absolute bottom-32 right-6 flex flex-col gap-3 pointer-events-auto">
+           <button 
+             onClick={() => setShowParticipants(!showParticipants)}
+             className="w-12 h-12 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-2xl"
+           >
+              <Users size={20} />
+           </button>
+           <button className="w-12 h-12 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-slate-800 transition-all shadow-2xl">
+              <Settings size={20} />
+           </button>
+        </div>
+
+        {/* Custom Sidebar Overlay */}
         {showParticipants && (
-          <div className="pointer-events-auto absolute right-0 top-32 w-80 h-96 bg-slate-900/95 border-l border-slate-700 rounded-l-lg p-4 overflow-y-auto shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">Participants</h3>
-              <button
-                onClick={() => setShowParticipants(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="space-y-3">
-              {/* Mentor */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/40">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
-                    {mentorName?.charAt(0) || '?'}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-semibold">{mentorName}</p>
-                    <p className="text-indigo-300 text-xs">Mentor (Host)</p>
-                  </div>
-                  <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                </div>
+           <div className="absolute right-6 top-24 bottom-48 w-72 bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 pointer-events-auto shadow-2xl overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-white font-bold text-lg">Members</h3>
+                <button onClick={() => setShowParticipants(false)} className="text-slate-500 hover:text-white"><X size={20} /></button>
               </div>
-
-              {/* Current User */}
-              <div className="p-4 rounded-lg bg-slate-800 border border-slate-700">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold">
-                    {userName?.charAt(0) || '?'}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-semibold">{userName}</p>
-                    <p className="text-gray-400 text-xs">You</p>
-                  </div>
-                  <div className="w-3 h-3 rounded-full bg-blue-500" />
-                </div>
+              <div className="space-y-4">
+                 <div className="flex items-center gap-3 p-3 bg-indigo-600/10 border border-indigo-500/20 rounded-2xl">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black">{mentorName.charAt(0)}</div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{mentorName}</p>
+                      <p className="text-[10px] text-indigo-400 uppercase font-black tracking-widest">Mentor (Host)</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-2xl">
+                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white font-black">{userName.charAt(0)}</div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{userName}</p>
+                      <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">You</p>
+                    </div>
+                 </div>
               </div>
-            </div>
-          </div>
+           </div>
         )}
+      </div>
+
+      {/* 🎮 CLASSERA CONTROL CENTER */}
+      <div className="bg-slate-950/90 backdrop-blur-3xl px-8 py-6 border-t border-white/5 flex items-center justify-between z-20">
+        <div className="flex items-center gap-4 flex-1">
+           <div className="p-3 bg-white/5 rounded-2xl border border-white/5 text-slate-400 group hover:border-indigo-500/30 transition-all cursor-pointer" onClick={handleCopyRoomUrl}>
+              <div className="flex items-center gap-2">
+                 <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                 <span className="text-[10px] font-black uppercase tracking-widest">{copied ? 'Copied' : 'Session Info'}</span>
+                 {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+              </div>
+           </div>
+        </div>
+
+        <div className="flex items-center gap-4 bg-white/5 p-2 rounded-3xl border border-white/5">
+          <button
+            onClick={toggleMic}
+            className={`p-4 rounded-2xl transition-all transform active:scale-95 ${
+              isMuted ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'bg-slate-800 text-white hover:bg-slate-700'
+            }`}
+          >
+            {isMuted ? <MicOff size={22} /> : <Mic size={22} />}
+          </button>
+
+          <button
+            onClick={toggleCamera}
+            className={`p-4 rounded-2xl transition-all transform active:scale-95 ${
+              isCameraOff ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'bg-slate-800 text-white hover:bg-slate-700'
+            }`}
+          >
+            {isCameraOff ? <VideoOff size={22} /> : <Video size={22} />}
+          </button>
+
+          <div className="w-[1px] h-10 bg-white/10 mx-1" />
+
+          <button
+            onClick={toggleScreenShare}
+            className={`p-4 rounded-2xl transition-all transform active:scale-105 ${
+              isScreenSharing ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white hover:bg-slate-700'
+            }`}
+          >
+            <Share2 size={22} />
+          </button>
+
+          <div className="w-[1px] h-10 bg-white/10 mx-1" />
+
+          <button
+            onClick={handleLeaveCall}
+            className="p-4 bg-red-600 hover:bg-red-500 text-white rounded-2xl transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-red-600/30 flex items-center gap-2 group"
+          >
+            <PhoneOff size={22} />
+            <span className="text-xs font-bold font-sans pr-1 group-hover:block hidden">End</span>
+          </button>
+        </div>
+
+        <div className="flex-1 flex justify-end gap-3 text-xs">
+           <div className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 font-black uppercase tracking-widest text-[9px]">
+             Meeting ID: {sessionId.split('-')[0]}
+           </div>
+        </div>
       </div>
     </div>
   );

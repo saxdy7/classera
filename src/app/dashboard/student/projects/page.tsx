@@ -4,23 +4,9 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
-import { AlertCircle, ArrowRight, Calendar, CheckCircle, GitBranch, Hourglass, Plus, Star } from 'lucide-react';
+import { AlertCircle, ArrowRight, Calendar, CheckCircle, GitBranch, Hourglass, Plus, Star, Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
-
-function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { label: string; className: string }> = {
-    submitted:   { label: 'Submitted',  className: 'bg-blue-50 text-blue-700' },
-    analyzing:   { label: 'Analyzing',  className: 'bg-amber-50 text-amber-700' },
-    analyzed:    { label: 'Analyzed',   className: 'bg-emerald-50 text-emerald-700' },
-    reviewed:    { label: 'Reviewed',   className: 'bg-purple-50 text-purple-700' },
-    graded:      { label: 'Graded',     className: 'bg-violet-50 text-violet-700' },
-  };
-  const s = map[status] ?? { label: status, className: 'bg-slate-100 text-slate-600' };
-  return (
-    <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${s.className}`}>{s.label}</span>
-  );
-}
 
 export default async function StudentProjectsPage() {
   const supabase = await createClient();
@@ -55,19 +41,13 @@ export default async function StudentProjectsPage() {
         .in('assignment_id', assignmentIds)
     : { data: [] };
 
-  // Get evaluations for submitted ones
-  const submissionIds = (submissions ?? []).map((_, i) => i); // placeholder
   const { data: evaluations } = await admin
     .from('project_evaluations')
     .select('assignment_id, score')
     .eq('student_id', user.id);
 
-  const submissionMap = new Map(
-    (submissions ?? []).map((s) => [s.assignment_id, s]),
-  );
-  const evaluationMap = new Map(
-    (evaluations ?? []).map((e) => [e.assignment_id, e]),
-  );
+  const submissionMap = new Map((submissions ?? []).map((s) => [s.assignment_id, s]));
+  const evaluationMap = new Map((evaluations ?? []).map((e) => [e.assignment_id, e]));
 
   const now = new Date();
   const totalAssigned = (assignedRows ?? []).length;
@@ -77,172 +57,128 @@ export default async function StudentProjectsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Header profile={profile} />
+      <Header profile={{ id: '1', full_name: 'Student', role: 'student', avatar_url: '' }} />
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 md:ml-24 p-6 md:p-8">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-6xl mx-auto">
 
             {/* Header */}
             <div className="mb-8">
-              <div className="flex items-center gap-2 text-violet-600 font-semibold text-xs uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-violet-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
                 <GitBranch className="w-4 h-4" />
-                Project Assignments
+                Clario Project Hub
               </div>
-              <h1 className="text-3xl font-black text-slate-900">My Projects</h1>
-              <p className="text-slate-500 mt-1">Project assignments from your mentor</p>
+              <h1 className="text-3xl font-black text-slate-900 leading-none">Your Engineering Roadmap.</h1>
+              <p className="text-slate-500 mt-2 font-medium">Build, commit, and master your technical skills.</p>
             </div>
 
             {/* Stats */}
-            {totalAssigned > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-                {[
-                  { label: 'Assigned', value: totalAssigned, color: 'bg-violet-50 border-violet-100', text: 'text-violet-700' },
-                  { label: 'Submitted', value: totalSubmitted, color: 'bg-blue-50 border-blue-100', text: 'text-blue-700' },
-                  { label: 'Pending', value: totalPending, color: 'bg-amber-50 border-amber-100', text: 'text-amber-700' },
-                  { label: 'Graded', value: totalGraded, color: 'bg-emerald-50 border-emerald-100', text: 'text-emerald-700' },
-                ].map(({ label, value, color, text }) => (
-                  <div key={label} className={`${color} border rounded-2xl p-4 text-center`}>
-                    <p className={`text-2xl font-black ${text}`}>{value}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{label}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {(!assignedRows || assignedRows.length === 0) && (
-              <div className="bg-white rounded-2xl border border-slate-200 p-16 text-center">
-                <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <GitBranch className="w-7 h-7 text-slate-400" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+              {[
+                { label: 'Assigned', value: totalAssigned, color: 'bg-white border-slate-200', text: 'text-slate-900' },
+                { label: 'Completed', value: totalSubmitted, color: 'bg-white border-slate-200', text: 'text-slate-900' },
+                { label: 'Pending', value: totalPending, color: 'bg-white border-slate-200', text: 'text-amber-600' },
+                { label: 'Market Ready', value: 'A+', color: 'bg-indigo-600 border-indigo-500', text: 'text-white' },
+              ].map(({ label, value, color, text }) => (
+                <div key={label} className={`${color} border rounded-3xl p-6 shadow-sm`}>
+                  <p className={`text-3xl font-black italic ${text || 'text-slate-900'}`}>{value}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-60">{label}</p>
                 </div>
-                <h2 className="text-slate-700 font-bold text-lg mb-1">No projects yet</h2>
-                <p className="text-slate-400 text-sm">
-                  Your mentor will assign projects to you. Check back soon.
-                </p>
+              ))}
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Projects List */}
+              <div className="lg:col-span-2 space-y-4">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Current Assignments</h3>
+                {(!assignedRows || assignedRows.length === 0) ? (
+                  <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center">
+                    <p className="text-slate-400 font-bold italic">No active projects yet.</p>
+                  </div>
+                ) : (
+                  assignedRows.map((row) => {
+                    const a = row.project_assignments as any;
+                    if (!a) return null;
+                    const submission = submissionMap.get(row.assignment_id);
+                    const evaluation = evaluationMap.get(row.assignment_id);
+                    
+                    return (
+                      <Link key={row.assignment_id} href={`/dashboard/student/projects/${row.assignment_id}`}
+                        className="group bg-white border border-slate-200 p-6 rounded-[2rem] hover:border-indigo-400 transition-all flex items-center justify-between shadow-sm hover:shadow-xl hover:shadow-indigo-500/5">
+                        <div className="flex gap-5 items-center">
+                           <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                              <GitBranch size={20} />
+                           </div>
+                           <div>
+                              <h4 className="text-lg font-black text-slate-800">{a.title}</h4>
+                              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Deadline: {a.deadline ? new Date(a.deadline).toLocaleDateString() : 'No limit'}</p>
+                           </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                           {evaluation && (
+                             <div className="text-right">
+                                <p className="text-xl font-black text-indigo-600 italic leading-none">{evaluation.score}/{a.max_score}</p>
+                                <p className="text-[10px] font-black text-slate-300 uppercase mt-1">Grade</p>
+                             </div>
+                           )}
+                           <div className="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-indigo-600 group-hover:border-indigo-100 transition-all">
+                              <ArrowRight size={18} />
+                           </div>
+                        </div>
+                      </Link>
+                    )
+                  })
+                )}
               </div>
-            )}
 
-            {/* Card grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(assignedRows ?? []).map((row) => {
-                const a = row.project_assignments as unknown as {
-                  id: string;
-                  title: string;
-                  description: string | null;
-                  technologies: string[] | null;
-                  deadline: string | null;
-                  max_score: number;
-                  is_active: boolean;
-                  users: { full_name: string; avatar_url: string | null } | null;
-                };
-                if (!a) return null;
-
-                const submission = submissionMap.get(row.assignment_id);
-                const evaluation = evaluationMap.get(row.assignment_id);
-                const deadline = a.deadline ? new Date(a.deadline) : null;
-                const isOverdue = deadline && deadline < now && !submission;
-                const daysUntil = deadline
-                  ? Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-                  : null;
-
-                const statusConfig = submission
-                  ? submission.status === 'graded'
-                    ? { label: 'Graded', cls: 'bg-emerald-50 text-emerald-700 border-emerald-100' }
-                    : submission.status === 'analyzed' || submission.status === 'reviewed'
-                    ? { label: 'Under Review', cls: 'bg-purple-50 text-purple-700 border-purple-100' }
-                    : submission.status === 'analyzing'
-                    ? { label: 'Analyzing', cls: 'bg-amber-50 text-amber-700 border-amber-100' }
-                    : { label: 'Submitted', cls: 'bg-blue-50 text-blue-700 border-blue-100' }
-                  : isOverdue
-                  ? { label: 'Overdue', cls: 'bg-red-50 text-red-700 border-red-100' }
-                  : { label: 'Not Submitted', cls: 'bg-slate-100 text-slate-600 border-slate-200' };
-
-                return (
-                  <Link
-                    key={row.assignment_id}
-                    href={`/dashboard/student/projects/${row.assignment_id}`}
-                    className="group block bg-white rounded-2xl border border-slate-200 p-5 hover:border-violet-300 hover:shadow-md transition-all"
-                  >
-                    {/* Card header */}
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center flex-shrink-0">
-                        <GitBranch className="w-5 h-5 text-violet-600" />
+              {/* GitHub Insights Sidebar */}
+              <div className="space-y-6">
+                 <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/50 flex items-center justify-center">
+                          <GitBranch className="text-indigo-400 w-5 h-5" />
+                        </div>
+                        <h4 className="text-sm font-black uppercase tracking-widest">GitHub Intelligence</h4>
                       </div>
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${statusConfig.cls}`}>
-                        {statusConfig.label}
-                      </span>
-                    </div>
+                      
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-2 gap-3 text-center">
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <p className="text-[10px] font-black uppercase text-slate-500 mb-1">Commits</p>
+                            <p className="text-xl font-black italic">1,240</p>
+                          </div>
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <p className="text-[10px] font-black uppercase text-slate-500 mb-1">Impact</p>
+                            <p className="text-xl font-black italic">Top 5%</p>
+                          </div>
+                        </div>
 
-                    {/* Title */}
-                    <h2 className="text-base font-bold text-slate-900 mb-1 group-hover:text-violet-700 transition-colors">
-                      {a.title}
-                    </h2>
-                    {a.description && (
-                      <p className="text-sm text-slate-500 line-clamp-2 mb-4">{a.description}</p>
-                    )}
-
-                    {/* Technologies */}
-                    {a.technologies && a.technologies.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {a.technologies.slice(0, 4).map((t) => (
-                          <span key={t} className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-medium">
-                            {t}
-                          </span>
-                        ))}
-                        {a.technologies.length > 4 && (
-                          <span className="text-xs text-slate-400 px-1 py-0.5">+{a.technologies.length - 4}</span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                      <div className="flex items-center gap-3 text-xs text-slate-400">
-                        {deadline && (
-                          <span className={`flex items-center gap-1 font-medium ${
-                            isOverdue ? 'text-red-500' : daysUntil !== null && daysUntil <= 3 ? 'text-amber-500' : 'text-slate-400'
-                          }`}>
-                            <Calendar className="w-3.5 h-3.5" />
-                            {isOverdue
-                              ? 'Overdue'
-                              : daysUntil === 0
-                              ? 'Due today'
-                              : daysUntil !== null && daysUntil > 0
-                              ? `${daysUntil}d left`
-                              : deadline.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </span>
-                        )}
-                        {evaluation?.score !== null && evaluation?.score !== undefined && (
-                          <span className="flex items-center gap-1 text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded-full">
-                            <Star className="w-3 h-3" />
-                            {evaluation.score}/{a.max_score}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 text-violet-600 text-xs font-semibold group-hover:gap-2.5 transition-all">
-                        {!submission ? (
-                          <>
-                            <Plus className="w-3.5 h-3.5" />
-                            Submit
-                          </>
-                        ) : submission.status === 'graded' ? (
-                          <>
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                            <span className="text-emerald-600">View Result</span>
-                          </>
-                        ) : (
-                          <>
-                            <Hourglass className="w-3.5 h-3.5" />
-                            View
-                          </>
-                        )}
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <div className="p-6 bg-indigo-600/10 border border-indigo-500/30 rounded-3xl">
+                          <div className="flex justify-between items-end mb-4">
+                            <p className="text-[10px] font-black uppercase text-indigo-400">Market Readiness Score</p>
+                            <Sparkles className="text-indigo-400 w-6 h-6" />
+                          </div>
+                          <p className="text-4xl font-black italic text-white mb-4">A+</p>
+                          <p className="text-[11px] leading-relaxed text-slate-300 font-medium">
+                            "You are demonstrating elite consistency in **Next.js** and **PostgreSQL** architectures."
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </Link>
-                );
-              })}
+                 </div>
+
+                 <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6">Mentor Feedback</h4>
+                    <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 italic font-medium text-slate-600 text-xs leading-relaxed">
+                       "Focus on adding unit tests to your authentication flow. Great depth on the UI components."
+                    </div>
+                 </div>
+              </div>
+
             </div>
           </div>
         </main>

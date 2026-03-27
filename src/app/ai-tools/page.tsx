@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@supabase/auth-helpers-react';
+import { createClient } from '@/lib/supabase/client';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { Header } from '@/components/shared/Header';
 import { CreditsDisplay, CreditsModal } from '@/components/shared/CreditsDisplay';
@@ -67,7 +67,13 @@ const AI_TOOLS = [
 ];
 
 export default function AIToolsPage() {
-  const { session } = useAuth();
+  const [session, setSession] = useState<any>(null);
+  const supabase = createClient();
+  
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+  }, [supabase.auth]);
+  
   const { balance, loading: creditsLoading } = useCredits();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -89,12 +95,14 @@ export default function AIToolsPage() {
       }
 
       try {
-        const response = await fetch('/api/users/profile', {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setProfile(data);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase
+            .from('users')
+            .select('*, universities(name)')
+            .eq('id', user.id)
+            .single();
+          if (data) setProfile(data);
         }
       } catch (err) {
         console.error('Failed to fetch profile:', err);
@@ -104,7 +112,7 @@ export default function AIToolsPage() {
     };
 
     fetchProfile();
-  }, [session?.access_token]);
+  }, [session, supabase.auth]);
 
   const handleToolClick = (tool: (typeof AI_TOOLS)[0]) => {
     if (balance < tool.cost) {

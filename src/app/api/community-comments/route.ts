@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       .from('community_comments')
       .select(`
         *,
-        author:users!community_comments_author_id_fkey(id, full_name, avatar_url, role)
+        author:users!author_id(id, full_name, avatar_url, role)
       `)
       .eq('post_id', postId)
       .eq('is_deleted', false)
@@ -96,9 +96,9 @@ export async function POST(request: NextRequest) {
     // Verify post exists and is not locked
     const { data: post } = await supabase
       .from('community_posts')
-      .select('is_locked, is_deleted, community_id')
+      .select('community_id, is_locked, is_deleted')
       .eq('id', post_id)
-      .single();
+      .maybeSingle();
 
     if (!post || post.is_deleted) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });

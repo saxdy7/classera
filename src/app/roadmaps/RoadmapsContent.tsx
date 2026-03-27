@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -147,6 +147,10 @@ export function RoadmapsContent() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Generation failed');
+
+            // Dispatch event to update credits
+            window.dispatchEvent(new Event('tokens-updated'));
+            
             setRoadmap(data);
             saveHistory(data);
         } catch (e: any) {

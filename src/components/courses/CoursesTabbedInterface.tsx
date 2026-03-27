@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpen, ChevronDown, ChevronUp, Search, Bookmark, RefreshCw, PlayCircle } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronUp, Search, Bookmark, RefreshCw, PlayCircle, Globe, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CourseCard } from './CourseCard';
 import { YouTubeVideosTab } from './YouTubeVideosTab';
+import { ExternalCoursesTab } from './ExternalCoursesTab';
+import { HackathonsTab } from './HackathonsTab';
 
 interface Course {
   id: string;
@@ -24,7 +26,7 @@ interface Course {
 }
 
 export function CoursesTabbedInterface() {
-  const [activeTab, setActiveTab] = useState<'courses' | 'videos'>('courses');
+  const [activeTab, setActiveTab] = useState<'courses' | 'videos' | 'external-courses' | 'hackathons'>('courses');
   const [searchQuery, setSearchQuery] = useState('');
   const [courses, setCourses] = useState<Course[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
@@ -200,264 +202,291 @@ export function CoursesTabbedInterface() {
           </div>
         </div>
 
-        {/* Filters Section */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-bold text-lg text-slate-900">Filters</h3>
-            <button 
-              onClick={() => {
-                setSelectedSchedule(['full-time', 'part-time', 'self-paced', 'intensive']);
-                setSelectedTypes(['free', 'paid', 'certificate', 'project-based']);
-                setSelectedPlatforms([]);
-                setSelectedLevels([]);
-              }}
-              className="text-slate-500 hover:text-slate-700 transition-colors"
-              title="Reset filters"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Learning Schedule */}
-          <div className="mb-5 border-b border-slate-200 pb-5">
-            <button
-              onClick={() => setIsScheduleOpen(!isScheduleOpen)}
-              className="flex items-center justify-between w-full text-left group"
-            >
-              <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
-                Learning schedule
-              </h4>
-              <motion.div
-                animate={{ rotate: isScheduleOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+        {/* Filters Section (Only show for internal courses tab) */}
+        {activeTab === 'courses' && (
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-bold text-lg text-slate-900">Filters</h3>
+              <button 
+                onClick={() => {
+                  setSelectedSchedule(['full-time', 'part-time', 'self-paced', 'intensive']);
+                  setSelectedTypes(['free', 'paid', 'certificate', 'project-based']);
+                  setSelectedPlatforms([]);
+                  setSelectedLevels([]);
+                }}
+                className="text-slate-500 hover:text-slate-700 transition-colors"
+                title="Reset filters"
               >
-                <ChevronDown className="w-4 h-4 text-slate-500" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {isScheduleOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="space-y-2.5 mt-3">
-                    {scheduleOptions.map(option => (
-                      <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
-                        <div className="relative flex-shrink-0">
-                          <input
-                            type="checkbox"
-                            checked={selectedSchedule.includes(option.value)}
-                            onChange={() => toggleCheckbox(option.value, selectedSchedule, setSelectedSchedule)}
-                            className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
-                          />
-                          <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedSchedule.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{option.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </div>
 
-          {/* Course Type */}
-          <div className="mb-5 border-b border-slate-200 pb-5">
-            <button
-              onClick={() => setIsTypeOpen(!isTypeOpen)}
-              className="flex items-center justify-between w-full text-left group"
-            >
-              <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
-                Course type
-              </h4>
-              <motion.div
-                animate={{ rotate: isTypeOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+            {/* Learning Schedule */}
+            <div className="mb-5 border-b border-slate-200 pb-5">
+              <button
+                onClick={() => setIsScheduleOpen(!isScheduleOpen)}
+                className="flex items-center justify-between w-full text-left group"
               >
-                <ChevronDown className="w-4 h-4 text-slate-500" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {isTypeOpen && (
+                <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                  Learning schedule
+                </h4>
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
+                  animate={{ rotate: isScheduleOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
                 >
-                  <div className="space-y-2.5 mt-3">
-                    {typeOptions.map(option => (
-                      <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
-                        <div className="relative flex-shrink-0">
-                          <input
-                            type="checkbox"
-                            checked={selectedTypes.includes(option.value)}
-                            onChange={() => toggleCheckbox(option.value, selectedTypes, setSelectedTypes)}
-                            className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
-                          />
-                          <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedTypes.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{option.label}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              </button>
+              <AnimatePresence>
+                {isScheduleOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-2.5 mt-3">
+                      {scheduleOptions.map(option => (
+                        <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
+                          <div className="relative flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              checked={selectedSchedule.includes(option.value)}
+                              onChange={() => toggleCheckbox(option.value, selectedSchedule, setSelectedSchedule)}
+                              className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
+                            />
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedSchedule.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* Platform Filter */}
-          <div className="mb-5 border-b border-slate-200 pb-5">
-            <button
-              onClick={() => setIsPlatformOpen(!isPlatformOpen)}
-              className="flex items-center justify-between w-full text-left group"
-            >
-              <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
-                Platform
-              </h4>
-              <motion.div
-                animate={{ rotate: isPlatformOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+            {/* Course Type */}
+            <div className="mb-5 border-b border-slate-200 pb-5">
+              <button
+                onClick={() => setIsTypeOpen(!isTypeOpen)}
+                className="flex items-center justify-between w-full text-left group"
               >
-                <ChevronDown className="w-4 h-4 text-slate-500" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {isPlatformOpen && (
+                <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                  Course type
+                </h4>
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
+                  animate={{ rotate: isTypeOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
                 >
-                  <div className="space-y-2.5 mt-3 max-h-48 overflow-y-auto custom-scrollbar">
-                    {platformOptions.map(platform => (
-                      <label key={platform} className="flex items-center gap-3 cursor-pointer group/item">
-                        <div className="relative flex-shrink-0">
-                          <input
-                            type="checkbox"
-                            checked={selectedPlatforms.includes(platform)}
-                            onChange={() => toggleCheckbox(platform, selectedPlatforms, setSelectedPlatforms)}
-                            className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
-                          />
-                          <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedPlatforms.includes(platform) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{platform}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              </button>
+              <AnimatePresence>
+                {isTypeOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-2.5 mt-3">
+                      {typeOptions.map(option => (
+                        <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
+                          <div className="relative flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              checked={selectedTypes.includes(option.value)}
+                              onChange={() => toggleCheckbox(option.value, selectedTypes, setSelectedTypes)}
+                              className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
+                            />
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedTypes.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* Level Filter */}
-          <div>
-            <button
-              onClick={() => setIsLevelOpen(!isLevelOpen)}
-              className="flex items-center justify-between w-full text-left group"
-            >
-              <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
-                Difficulty level
-              </h4>
-              <motion.div
-                animate={{ rotate: isLevelOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+            {/* Platform Filter */}
+            <div className="mb-5 border-b border-slate-200 pb-5">
+              <button
+                onClick={() => setIsPlatformOpen(!isPlatformOpen)}
+                className="flex items-center justify-between w-full text-left group"
               >
-                <ChevronDown className="w-4 h-4 text-slate-500" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {isLevelOpen && (
+                <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                  Platform
+                </h4>
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
+                  animate={{ rotate: isPlatformOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
                 >
-                  <div className="space-y-2.5 mt-3">
-                    {levelOptions.map(level => (
-                      <label key={level} className="flex items-center gap-3 cursor-pointer group/item">
-                        <div className="relative flex-shrink-0">
-                          <input
-                            type="checkbox"
-                            checked={selectedLevels.includes(level)}
-                            onChange={() => toggleCheckbox(level, selectedLevels, setSelectedLevels)}
-                            className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
-                          />
-                          <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedLevels.includes(level) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{level}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </button>
+              <AnimatePresence>
+                {isPlatformOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-2.5 mt-3 max-h-48 overflow-y-auto custom-scrollbar">
+                      {platformOptions.map(platform => (
+                        <label key={platform} className="flex items-center gap-3 cursor-pointer group/item">
+                          <div className="relative flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              checked={selectedPlatforms.includes(platform)}
+                              onChange={() => toggleCheckbox(platform, selectedPlatforms, setSelectedPlatforms)}
+                              className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
+                            />
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedPlatforms.includes(platform) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{platform}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Level Filter */}
+            <div>
+              <button
+                onClick={() => setIsLevelOpen(!isLevelOpen)}
+                className="flex items-center justify-between w-full text-left group"
+              >
+                <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                  Difficulty level
+                </h4>
+                <motion.div
+                  animate={{ rotate: isLevelOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4 text-slate-500" />
+                </motion.div>
+              </button>
+              <AnimatePresence>
+                {isLevelOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-2.5 mt-3">
+                      {levelOptions.map(level => (
+                        <label key={level} className="flex items-center gap-3 cursor-pointer group/item">
+                          <div className="relative flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              checked={selectedLevels.includes(level)}
+                              onChange={() => toggleCheckbox(level, selectedLevels, setSelectedLevels)}
+                              className="appearance-none w-5 h-5 rounded border-2 border-slate-300 cursor-pointer transition-all checked:bg-slate-900 checked:border-slate-900 hover:border-slate-400 focus:ring-2 focus:ring-slate-400 focus:ring-offset-0"
+                            />
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedLevels.includes(level) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-slate-600 group-hover/item:text-slate-900 transition-colors select-none">{level}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Main Content */}
       <div className="flex-1">
         {/* Tab Navigation */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex flex-wrap items-center gap-3 mb-8">
           <button
             onClick={() => setActiveTab('courses')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
               activeTab === 'courses'
-                ? 'bg-slate-900 text-white shadow-lg'
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 scale-105'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm'
             }`}
           >
-            <BookOpen className="w-5 h-5" />
-            <span>Courses</span>
+            <BookOpen className="w-4 h-4" />
+            <span>Recommended</span>
           </button>
+          
+          <button
+            onClick={() => setActiveTab('external-courses')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
+              activeTab === 'external-courses'
+                ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30 scale-105'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm'
+            }`}
+          >
+            <Globe className="w-4 h-4" />
+            <span>Online Courses</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('hackathons')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
+              activeTab === 'hackathons'
+                ? 'bg-red-600 text-white shadow-xl shadow-red-500/30 scale-105'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm'
+            }`}
+          >
+            <Trophy className="w-4 h-4" />
+            <span>Hackathons</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('videos')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
               activeTab === 'videos'
-                ? 'bg-slate-900 text-white shadow-lg'
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                ? 'bg-rose-600 text-white shadow-xl shadow-rose-500/30 scale-105'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 shadow-sm'
             }`}
           >
-            <PlayCircle className="w-5 h-5" />
+            <PlayCircle className="w-4 h-4" />
             <span>YouTube Videos</span>
           </button>
         </div>
 
-        {activeTab === 'courses' ? (
+        {activeTab === 'courses' && (
           <>
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-slate-900">Recommended courses</h2>
-                <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-semibold">
+                <h2 className="text-2xl font-bold text-slate-900 border-l-4 border-slate-900 pl-4">Recommended courses</h2>
+                <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold ring-1 ring-slate-200">
                   {filteredCourses.length}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-600">Sort by:</span>
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Sort by:</span>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none bg-white border border-slate-200 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer"
+                    className="appearance-none bg-white border border-slate-200 rounded-lg px-4 py-2 pr-10 text-sm font-bold text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer shadow-sm"
                   >
                     <option value="updated">Last updated</option>
                     <option value="rating">Highest rated</option>
@@ -470,32 +499,32 @@ export function CoursesTabbedInterface() {
             </div>
 
             {/* Search Bar */}
-            <div className="mb-6 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <div className="mb-8 relative group">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-purple-500 transition-colors" />
               <input
                 type="text"
-                placeholder="Search courses by title, instructor, platform..."
+                placeholder="Search internal curated courses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 transition-colors text-slate-700"
+                className="w-full pl-14 pr-4 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-purple-500 transition-all text-slate-700 shadow-sm hover:shadow-md"
               />
             </div>
 
             {/* Courses Grid */}
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-slate-200 rounded-2xl h-96 animate-pulse"></div>
+                  <div key={i} className="bg-slate-200 rounded-3xl h-96 animate-pulse"></div>
                 ))}
               </div>
             ) : filteredCourses.length === 0 ? (
-              <div className="text-center py-16 bg-slate-50 rounded-2xl">
-                <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-500 text-lg">No courses found. Try adjusting your filters.</p>
+              <div className="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-100 shadow-inner">
+                <BookOpen className="w-20 h-20 text-slate-200 mx-auto mb-6" />
+                <p className="text-slate-400 font-medium text-lg">No matching courses found in our records.</p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {currentCourses.map((course) => (
                     <CourseCard
                       key={course.id}
@@ -508,47 +537,36 @@ export function CoursesTabbedInterface() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="mt-10 flex items-center justify-center gap-2">
-                    {/* Previous Button */}
+                  <div className="mt-16 flex items-center justify-center gap-3">
                     <button
                       onClick={() => goToPage(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-6 py-3 rounded-xl font-bold transition-all shadow-sm ${
                         currentPage === 1
-                          ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                          : 'bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200'
+                          ? 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                          : 'bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200 active:scale-95'
                       }`}
                     >
                       Previous
                     </button>
 
-                    {/* Page Numbers */}
                     <div className="flex items-center gap-2">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                        // Show first page, last page, current page, and pages around current page
                         const showPage = 
                           page === 1 || 
                           page === totalPages || 
                           (page >= currentPage - 1 && page <= currentPage + 1);
                         
-                        const showEllipsis = 
-                          (page === currentPage - 2 && currentPage > 3) ||
-                          (page === currentPage + 2 && currentPage < totalPages - 2);
-
-                        if (showEllipsis) {
-                          return <span key={page} className="px-2 text-slate-400">...</span>;
-                        }
-
                         if (!showPage) return null;
 
                         return (
                           <button
                             key={page}
                             onClick={() => goToPage(page)}
-                            className={`min-w-[40px] h-10 rounded-lg font-semibold transition-all ${
+                            className={`w-12 h-12 rounded-xl font-bold transition-all shadow-sm ${
                               currentPage === page
-                                ? 'bg-slate-900 text-white shadow-lg'
-                                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                                ? 'bg-slate-900 text-white shadow-slate-900/20'
+                                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 active:scale-95'
                             }`}
                           >
                             {page}
@@ -557,14 +575,13 @@ export function CoursesTabbedInterface() {
                       })}
                     </div>
 
-                    {/* Next Button */}
                     <button
                       onClick={() => goToPage(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      className={`px-6 py-3 rounded-xl font-bold transition-all shadow-sm ${
                         currentPage === totalPages
-                          ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                          : 'bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200'
+                          ? 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                          : 'bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200 active:scale-95'
                       }`}
                     >
                       Next
@@ -574,9 +591,11 @@ export function CoursesTabbedInterface() {
               </>
             )}
           </>
-        ) : (
-          <YouTubeVideosTab />
         )}
+
+        {activeTab === 'external-courses' && <ExternalCoursesTab />}
+        {activeTab === 'hackathons' && <HackathonsTab />}
+        {activeTab === 'videos' && <YouTubeVideosTab />}
       </div>
     </div>
   );

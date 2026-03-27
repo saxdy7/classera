@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@supabase/auth-helpers-react';
+import { createClient } from '@/lib/supabase/client';
 
 export interface CreditsData {
   balance: number;
@@ -14,7 +14,13 @@ export interface CreditsData {
 }
 
 export function useCredits() {
-  const { session } = useAuth();
+  const [session, setSession] = useState<any>(null);
+  
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+  }, []);
+  
   const [credits, setCredits] = useState<CreditsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +57,12 @@ export function useCredits() {
 
     fetchCredits();
   }, [session?.access_token, refetch]);
+
+  useEffect(() => {
+    const handleUpdate = () => setRefetch(prev => prev + 1);
+    window.addEventListener('tokens-updated', handleUpdate);
+    return () => window.removeEventListener('tokens-updated', handleUpdate);
+  }, []);
 
   return {
     credits,

@@ -25,6 +25,8 @@ export default function FindMentors() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedExpertise, setSelectedExpertise] = useState('All Expertise');
   const [loading, setLoading] = useState(true);
+  const [connections, setConnections] = useState<any[]>([]);
+  const [activeChatIds, setActiveChatIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +65,33 @@ export default function FindMentors() {
 
       setMentors(mentorsData || []);
       setFilteredMentors(mentorsData || []);
+
+      // Get current user's connections
+      const { data: connectionsData } = await supabase
+        .from('connection_requests')
+        .select('*')
+        .eq('student_id', user.id);
+      
+      setConnections(connectionsData || []);
+
+      // Get current user's active conversations/chats
+      const { data: myConversations } = await supabase
+        .from('conversation_participants')
+        .select('conversation_id');
+      
+      if (myConversations && myConversations.length > 0) {
+        const convIds = myConversations.map(c => c.conversation_id);
+        const { data: others } = await supabase
+          .from('conversation_participants')
+          .select('user_id')
+          .in('conversation_id', convIds)
+          .neq('user_id', user.id);
+        
+        if (others) {
+          setActiveChatIds(new Set(others.map(o => o.user_id)));
+        }
+      }
+
       setLoading(false);
     };
 
@@ -307,12 +336,42 @@ export default function FindMentors() {
                             <p className="text-xs text-gray-500">{mentor.email}</p>
                           </div>
 
-                          <Link
-                            href={`/dashboard/student/mentor/${mentor.id}`}
-                            className="ml-3 bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors whitespace-nowrap shadow-lg"
-                          >
-                            Connect
-                          </Link>
+                          {(() => {
+                            const connection = connections.find(c => c.mentor_id === mentor.id);
+                            const hasActiveChat = activeChatIds.has(mentor.id);
+                            
+                            if (connection?.status === 'accepted' || hasActiveChat) {
+                              return (
+                                <Link
+                                  href={`/dashboard/student/messages?mentorId=${mentor.id}`}
+                                  className="ml-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-purple-500/20 transition-all whitespace-nowrap flex items-center gap-2"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                  </svg>
+                                  Message
+                                </Link>
+                              );
+                            }
+                            if (connection?.status === 'pending') {
+                              return (
+                                <div className="ml-3 bg-slate-100 text-slate-500 px-5 py-2.5 rounded-full text-sm font-bold border border-slate-200 whitespace-nowrap flex items-center gap-2">
+                                  <svg className="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  Pending
+                                </div>
+                              );
+                            }
+                            return (
+                              <Link
+                                href={`/dashboard/student/mentor/${mentor.id}`}
+                                className="ml-3 bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors whitespace-nowrap shadow-lg"
+                              >
+                                Connect
+                              </Link>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>

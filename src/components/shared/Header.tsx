@@ -83,20 +83,6 @@ export function Header({ profile }: HeaderProps) {
               </span>
             </Link>
 
-            {/* AI Assistant (only for students) */}
-            {profile.role === 'student' && (
-              <Link
-                href="/dashboard/student/ai-assistant"
-                className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-125 hover:translate-y-1"
-              >
-                <Bot className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
-                {/* Tooltip */}
-                <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
-                  AI Assistant
-                </span>
-              </Link>
-            )}
-
             {/* Notifications - Realtime Bell */}
             {profile.id && <NotificationBell userId={profile.id} />}
           </div>

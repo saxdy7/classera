@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, Plus, RotateCcw, Bot } from 'lucide-react';
+import { Sparkles, Send, Plus, RotateCcw, Bot, GraduationCap, MapIcon, User, Layers, ArrowRight } from 'lucide-react';
 import { MarkdownMessage } from '@/components/shared/MarkdownMessage';
+import Link from 'next/link';
 
 interface Message {
   id: string;
@@ -12,10 +13,10 @@ interface Message {
 }
 
 const QUICK_PROMPTS = [
-  { icon: '💡', text: 'Explain a concept to me' },
-  { icon: '🧮', text: 'Help me solve a problem step by step' },
-  { icon: '💻', text: 'Review and explain this code' },
-  { icon: '📝', text: 'Summarize this topic' },
+  { icon: '🚀', text: 'Find a Startup Team (Developer/Designer)', category: 'matching' },
+  { icon: '🗺️', text: 'Build my dynamic Career Roadmap', category: 'roadmap' },
+  { icon: '📊', text: 'How many mentors/students in Classera?', category: 'data' },
+  { icon: '💡', text: 'Ask me anything about your studies', category: 'default' },
 ];
 
 export function AIChatInterface({ userName }: { userName: string }) {
@@ -100,27 +101,43 @@ export function AIChatInterface({ userName }: { userName: string }) {
     <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-white">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-sm">
-            <Bot className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold text-slate-900">AI Learning Assistant</h2>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-xs text-slate-400">Powered by Groq</span>
+      <div className="border-b border-slate-100 bg-white">
+        <div className="flex items-center justify-between px-5 py-3.5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-sm">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">Classera AI Copilot</h2>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs text-slate-400 font-medium">llama-3.3-70b · Online</span>
+              </div>
             </div>
           </div>
+          {messages.length > 0 && (
+            <button
+              onClick={clearChat}
+              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-50 font-bold uppercase tracking-wider"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Reset
+            </button>
+          )}
         </div>
-        {messages.length > 0 && (
-          <button
-            onClick={clearChat}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-50"
-          >
-            <RotateCcw className="w-3.5 h-3.5" /> Clear
-          </button>
-        )}
+
+        {/* ── Quick Chips ── */}
+        <div className="px-5 pb-3.5 flex gap-2 overflow-x-auto no-scrollbar">
+          {QUICK_PROMPTS.map((p, i) => (
+            <button
+              key={i}
+              onClick={() => sendMessage(p.text)}
+              className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-slate-600 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-600 transition-all active:scale-95 shadow-sm"
+            >
+              <span>{p.icon}</span>
+              {p.text.split('(')[0].trim()}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Messages ── */}
@@ -171,7 +188,71 @@ export function AIChatInterface({ userName }: { userName: string }) {
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   ) : (
-                    <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
+                    <>
+                      <MarkdownMessage content={msg.content.replace(/\[(TALENT_MATCHING|ROADMAP):.*?\]/g, '')} isUser={msg.role === 'user'} />
+                      
+                      {/* Specialized Interactive Cards */}
+                      {msg.role === 'assistant' && msg.content.includes('[TALENT_MATCHING:') && (
+                        <div className="mt-4 space-y-3">
+                          {(() => {
+                            try {
+                              const match = msg.content.match(/\[TALENT_MATCHING:\s*(.*?)\]/);
+                              const data = JSON.parse(match![1]);
+                              return data.profiles.map((p: any, idx: number) => (
+                                <div key={idx} className="bg-white border border-violet-100 rounded-xl p-3 shadow-sm flex items-center gap-3 animate-in slide-in-from-bottom-2 duration-300">
+                                  <div className="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 font-bold">
+                                    {p.name.charAt(0)}
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="text-sm font-black text-slate-900">{p.name}</h4>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">{p.role} · {p.year}</p>
+                                  </div>
+                                  <button className="px-3 py-1.5 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-violet-700 transition-all active:scale-95">
+                                    Connect
+                                  </button>
+                                </div>
+                              ));
+                            } catch(e) { return null; }
+                          })()}
+                        </div>
+                      )}
+
+                      {msg.role === 'assistant' && msg.content.includes('[ROADMAP:') && (
+                        <div className="mt-4 bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-xl overflow-hidden relative group">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-violet-600/10 blur-3xl -mr-16 -mt-16" />
+                          {(() => {
+                            try {
+                              const match = msg.content.match(/\[ROADMAP:\s*(.*?)\]/);
+                              const data = JSON.parse(match![1]);
+                              return (
+                                <>
+                                  <div className="flex items-center gap-2 mb-4">
+                                    <Layers className="w-4 h-4 text-violet-400" />
+                                    <h4 className="text-sm font-black text-white uppercase tracking-widest italic">{data.title}</h4>
+                                  </div>
+                                  <div className="space-y-4">
+                                    {data.steps.map((s: any, idx: number) => (
+                                      <div key={idx} className="flex gap-3 relative">
+                                        {idx !== data.steps.length - 1 && <div className="absolute left-2 top-5 bottom-0 w-px bg-slate-700" />}
+                                        <div className="w-4 h-4 rounded-full bg-violet-600 border-4 border-slate-900 z-10" />
+                                        <div>
+                                          <p className="text-xs font-black text-white leading-none mb-1">{s.title}</p>
+                                          <p className="text-[10px] text-slate-400 font-medium">{s.desc}</p>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <Link href="/roadmaps" className="mt-6 flex items-center justify-between group/btn w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
+                                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Go to Full Roadmap</span>
+                                    <ArrowRight className="w-4 h-4 text-violet-400 group-hover/btn:translate-x-1 transition-transform" />
+                                  </Link>
+                                </>
+                              );
+                            } catch(e) { return null; }
+                          })()}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 <p className={`text-[10px] text-slate-400 mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>

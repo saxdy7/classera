@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const communityId = searchParams.get('communityId');
     const type = searchParams.get('type'); // 'normal', 'question', 'announcement'
+    const filter = searchParams.get('filter'); // 'all', 'trending', 'questions', 'announcements', 'saved'
 
     if (!communityId) {
       return NextResponse.json({ error: 'Community ID required' }, { status: 400 });
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       .from('community_posts')
       .select(`
         *,
-        author:users!community_posts_author_id_fkey(id, full_name, avatar_url, role)
+        author:users!author_id(id, full_name, avatar_url, role)
       `)
       .eq('community_id', communityId)
       .eq('is_deleted', false)
@@ -58,6 +59,10 @@ export async function GET(request: NextRequest) {
 
     if (type) {
       query = query.eq('type', type);
+    } else if (filter === 'questions') {
+      query = query.eq('type', 'question');
+    } else if (filter === 'announcements') {
+      query = query.eq('type', 'announcement');
     }
 
     const { data: posts, error } = await query;
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest) {
       .from('communities')
       .select('mentor_id')
       .eq('id', community_id)
-      .single();
+      .maybeSingle();
 
     const isMentor = community?.mentor_id === user.id;
     const isMember = membership?.status === 'approved';
