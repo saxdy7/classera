@@ -2,12 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+
+const supabase = createClient();
+import { useAITokenBalance } from '@/hooks/useAITokens';
+import { CreditsModal } from '@/components/shared/CreditsDisplay';
 import {
   LayoutDashboard, BookOpen, ClipboardCheck,
   Users, Video, UsersRound, MapIcon, FileText, User,
   ChevronDown, ChevronUp, Sparkles, GraduationCap, Bot,
-  MessageSquare, BarChart2, GitBranch,
+  MessageSquare, BarChart2, GitBranch, Wallet,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -18,6 +23,15 @@ export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
   const [aiOpen, setAiOpen] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id || null));
+  }, []);
+
+  const { data: tokenData } = useAITokenBalance(userId || '');
+  const credits = tokenData?.balance || 0;
 
   const isStudent = role === 'student';
 
@@ -185,6 +199,56 @@ export function Sidebar({ role }: SidebarProps) {
                   );
                 })}
               </div>
+
+              {/* Credits Wallet Card */}
+              <div className="px-3 mt-4 transition-all duration-300">
+                <div 
+                  className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#e8f2fc] to-[#a1ccfb] transition-all duration-300 ${expanded ? 'p-3' : 'p-2 flex flex-col items-center'}`}
+                  style={{ minHeight: expanded ? '90px' : 'auto' }}
+                >
+                  <div className="flex items-center gap-2 z-10 relative">
+                    <Wallet className="text-blue-600 w-5 h-5 flex-shrink-0" />
+                    {expanded && <span className="font-semibold text-slate-900 text-sm">Credits: {credits}</span>}
+                  </div>
+                  
+                  {expanded && (
+                    <div className="mt-3 z-10 relative">
+                      <button 
+                         onClick={() => setShowCreditsModal(true)}
+                         className="bg-blue-50 hover:bg-white text-blue-600 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors border border-blue-100/50"
+                      >
+                        Top Up <Sparkles className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+
+                  {!expanded && (
+                    <>
+                      <span className="text-xs font-bold text-slate-900 mt-1">{credits}</span>
+                      <button 
+                         onClick={() => setShowCreditsModal(true)}
+                         className="mt-2 bg-blue-50 p-1.5 rounded-md text-blue-600 hover:bg-white transition-colors border border-blue-100/50"
+                         title="Top Up Credits"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                      </button>
+                    </>
+                  )}
+                  
+                  {expanded && (
+                    <div className="absolute right-[-25%] bottom-[-15%] w-32 h-20 bg-slate-700/90 rounded-xl rotate-[-12deg] shadow-lg flex flex-col px-3 py-3 pointer-events-none border border-slate-600/50 backdrop-blur-sm">
+                       <div className="w-3 h-2 rounded-sm bg-[#e7a33a] mb-2 opacity-80"></div>
+                       <div className="mt-auto space-y-1.5">
+                         <div className="text-[6px] text-slate-300 tracking-[0.2em] font-mono opacity-60">0000 0000 0000 0000</div>
+                         <div className="flex gap-1.5">
+                           <div className="w-2 h-0.5 bg-slate-400 rounded opacity-50"></div>
+                           <div className="w-3 h-0.5 bg-slate-400 rounded opacity-50"></div>
+                         </div>
+                       </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -245,6 +309,15 @@ export function Sidebar({ role }: SidebarProps) {
           </Link>
         )}
       </nav>
+
+      {/* Credits Modal Overlay */}
+      {showCreditsModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+           <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
+              <CreditsModal onClose={() => setShowCreditsModal(false)} />
+           </div>
+        </div>
+      )}
     </>
   );
 }
