@@ -118,7 +118,8 @@ export default async function StudentDashboard() {
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 md:ml-24 p-4 md:p-8 max-w-screen-xl">
+        <main className="flex-1 md:ml-24 p-4 md:p-8">
+          <div className="w-full max-w-9xl mx-auto">
 
           {/* ── Welcome Banner ── */}
           <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 rounded-3xl p-8 mb-8 text-white shadow-xl shadow-purple-200">
@@ -128,17 +129,17 @@ export default async function StudentDashboard() {
 
             <div className="relative flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm font-medium mb-1">Welcome back 👋</p>
-                <h1 className="text-3xl md:text-4xl font-bold mb-3">Hello, {firstName}!</h1>
-                <p className="text-purple-100 text-sm md:text-base max-w-md leading-relaxed">
-                  You're studying at <span className="font-semibold text-white">{universityName}</span>.
+                <p className="text-purple-200 text-sm font-bold mb-1">Welcome back 👋</p>
+                <h1 className="text-3xl md:text-4xl font-black mb-3">Hello, {firstName}!</h1>
+                <p className="text-purple-100 text-sm md:text-base max-w-md leading-relaxed font-bold font-semibold">
+                  You're studying at <span className="font-black text-white">{universityName}</span>.
                   Keep up the great work — your mentors are ready to help!
                 </p>
                 <div className="flex flex-wrap gap-3 mt-6">
-                  <Link href="/dashboard/student/courses" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-purple-700 font-semibold rounded-xl text-sm hover:bg-purple-50 transition-colors shadow-sm">
+                  <Link href="/dashboard/student/courses" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-purple-700 font-bold rounded-xl text-sm hover:bg-purple-50 transition-colors shadow-sm">
                     📚 My Courses
                   </Link>
-                  <Link href="/dashboard/student/messages" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 text-white font-semibold rounded-xl text-sm hover:bg-white/30 transition-colors border border-white/30">
+                  <Link href="/dashboard/student/messages" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 text-white font-bold rounded-xl text-sm hover:bg-white/30 transition-colors border border-white/30">
                     💬 Messages
                   </Link>
                 </div>
@@ -155,6 +156,45 @@ export default async function StudentDashboard() {
             </div>
           </div>
 
+          {/* ── Quick Actions ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* AI Career Coach */}
+            <Link href="/ai-tools/career-coach" className="group">
+              <div className="bg-white rounded-2xl p-6 border-l-4 border-blue-400 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-3xl">👨‍💼</div>
+                  <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">AI Tool</span>
+                </div>
+                <h3 className="font-black text-slate-900 text-lg mb-2">AI Career Coach</h3>
+                <p className="text-sm text-slate-600 leading-relaxed font-bold">Unlock your potential with AI-guided career wisdom.</p>
+              </div>
+            </Link>
+
+            {/* AI Roadmap Maker */}
+            <Link href="/roadmaps" className="group">
+              <div className="bg-white rounded-2xl p-6 border-l-4 border-yellow-400 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-3xl">📊</div>
+                  <span className="text-xs font-semibold text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">AI Tool</span>
+                </div>
+                <h3 className="font-black text-slate-900 text-lg mb-2">AI Roadmap Maker</h3>
+                <p className="text-sm text-slate-600 leading-relaxed font-bold">Chart your journey with a clear, personalized path.</p>
+              </div>
+            </Link>
+
+            {/* Connect Mentors */}
+            <Link href="/dashboard/student/find-mentors" className="group">
+              <div className="bg-white rounded-2xl p-6 border-l-4 border-pink-400 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-3xl">👥</div>
+                  <span className="text-xs font-semibold text-pink-600 bg-pink-50 px-2 py-1 rounded-full">Mentors</span>
+                </div>
+                <h3 className="font-black text-slate-900 text-lg mb-2">Connect Mentors</h3>
+                <p className="text-sm text-slate-600 leading-relaxed font-bold">Learn from mentors who've walked the path before you.</p>
+              </div>
+            </Link>
+          </div>
+
           {/* ── Main Grid ── */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
 
@@ -164,17 +204,18 @@ export default async function StudentDashboard() {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                  { label: 'Courses', value: courseCount, icon: '📚', color: 'bg-blue-50 text-blue-700', border: 'border-blue-100' },
-                  { label: 'Mentors', value: mentors.length || '—', icon: '👨‍🏫', color: 'bg-purple-50 text-purple-700', border: 'border-purple-100' },
-                  { label: 'Messages', value: conversations.length || '—', icon: '💬', color: 'bg-emerald-50 text-emerald-700', border: 'border-emerald-100' },
-                  { label: 'Sessions', value: sessionCount, icon: '🎯', color: 'bg-amber-50 text-amber-700', border: 'border-amber-100' },
+                  { label: 'Courses', value: courseCount, icon: '📚', gradient: 'from-blue-400 to-blue-600', textColor: 'text-blue-700' },
+                  { label: 'Mentors', value: mentors.length || '—', icon: '👨‍🏫', gradient: 'from-purple-400 to-purple-600', textColor: 'text-purple-700' },
+                  { label: 'Messages', value: conversations.length || '—', icon: '💬', gradient: 'from-emerald-400 to-emerald-600', textColor: 'text-emerald-700' },
+                  { label: 'Sessions', value: sessionCount, icon: '🎯', gradient: 'from-amber-400 to-amber-600', textColor: 'text-amber-700' },
                 ].map((stat) => (
-                  <div key={stat.label} className={`bg-white rounded-2xl p-5 border ${stat.border} shadow-sm hover:shadow-md transition-shadow`}>
-                    <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg ${stat.color} mb-3`}>
-                      {stat.icon}
+                  <div key={stat.label} className="bg-white rounded-2xl p-5 border-l-4 border-slate-100 shadow-sm hover:shadow-md transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-2xl">{stat.icon}</span>
+                      <span className={`text-xs font-bold ${stat.textColor} bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>+0%</span>
                     </div>
-                    <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">{stat.label}</p>
+                    <p className="text-2xl font-black text-slate-900">{stat.value}</p>
+                    <p className="text-xs text-slate-500 font-bold mt-2">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -183,10 +224,10 @@ export default async function StudentDashboard() {
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900">Recommended Mentors</h2>
-                    <p className="text-sm text-slate-500 mt-0.5">From {universityName}</p>
+                    <h2 className="text-xl font-black text-slate-900">Recommended Mentors</h2>
+                    <p className="text-sm text-slate-500 mt-0.5 font-bold">From {universityName}</p>
                   </div>
-                  <Link href="/dashboard/student/mentors" className="text-sm font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1">
+                  <Link href="/dashboard/student/mentors" className="text-sm font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1">
                     View all <span>→</span>
                   </Link>
                 </div>
@@ -194,24 +235,25 @@ export default async function StudentDashboard() {
                 {mentors.length > 0 ? (
                   <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
                     {mentors.map((mentor: any, i: number) => (
-                      <div key={mentor.id} className="flex-shrink-0 w-56 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
-                        {/* Color bar */}
-                        <div className={`h-16 bg-gradient-to-br ${gradients[i % gradients.length]}`} />
-                        <div className="p-4 -mt-8">
+                      <div key={mentor.id} className="flex-shrink-0 w-56 bg-white rounded-2xl overflow-hidden border-l-4 border-purple-400 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 shadow-sm">
+                        {/* Color accent bar */}
+                        <div className={`h-2 bg-gradient-to-r ${gradients[i % gradients.length]}`} />
+                        <div className="p-5">
                           {mentor.avatar_url ? (
-                            <img src={mentor.avatar_url} alt={mentor.full_name} className="w-14 h-14 rounded-full border-3 border-white object-cover shadow-md mb-3" />
+                            <img src={mentor.avatar_url} alt={mentor.full_name} className="w-12 h-12 rounded-full border-2 border-slate-200 object-cover shadow-md mb-3" />
                           ) : (
-                            <div className={`w-14 h-14 rounded-full border-3 border-white bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center text-white text-lg font-bold shadow-md mb-3`}>
+                            <div className={`w-12 h-12 rounded-full border-2 border-slate-200 bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center text-white text-sm font-bold shadow-md mb-3`}>
                               {mentor.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                             </div>
                           )}
-                          <h3 className="font-bold text-slate-900 text-sm leading-tight">{mentor.full_name}</h3>
-                          <p className="text-xs text-purple-600 font-medium mt-0.5 truncate">{mentor.specialization_board || 'Mentor'}</p>
-                          <div className="flex items-center gap-1 mt-1 mb-3">
-                            <span className="text-amber-400 text-xs">★</span>
-                            <span className="text-xs font-semibold text-slate-700">{ratings[i % ratings.length]}</span>
+                          <h3 className="font-black text-slate-900 text-sm leading-tight">{mentor.full_name}</h3>
+                          <p className="text-xs text-purple-600 font-bold mt-1 truncate">{mentor.specialization_board || 'Mentor'}</p>
+                          <div className="flex items-center gap-1 mt-2 mb-4">
+                            <span className="text-yellow-400 text-xs">★</span>
+                            <span className="text-xs font-bold text-slate-700">{ratings[i % ratings.length]}</span>
+                            <span className="text-xs text-slate-500">(Top Rated)</span>
                           </div>
-                          <Link href={`/dashboard/student/messages?userId=${mentor.id}`} className="block w-full text-center py-1.5 px-3 bg-purple-600 text-white text-xs font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                          <Link href={`/dashboard/student/messages?userId=${mentor.id}`} className="block w-full text-center py-2 px-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all">
                             Connect
                           </Link>
                         </div>
@@ -230,31 +272,34 @@ export default async function StudentDashboard() {
               {/* Recent Messages */}
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-slate-900">Recent Messages</h2>
-                  <Link href="/dashboard/student/messages" className="text-sm font-semibold text-purple-600 hover:text-purple-700">
+                  <h2 className="text-xl font-black text-slate-900">Recent Messages</h2>
+                  <Link href="/dashboard/student/messages" className="text-sm font-bold text-purple-600 hover:text-purple-700">
                     View all →
                   </Link>
                 </div>
                 {conversations.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {conversations.map((conv: any) => (
                       <Link key={conv.id} href={`/dashboard/student/messages?userId=${conv.user?.id}`}
-                        className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                        className="flex items-center gap-3 p-4 rounded-xl bg-white border-l-4 border-purple-400 border border-slate-100 hover:shadow-md hover:bg-purple-50 transition-all group">
                         <div className="relative flex-shrink-0">
                           {conv.user?.avatar_url ? (
-                            <img src={conv.user.avatar_url} alt={conv.user.full_name} className="w-11 h-11 rounded-full object-cover" />
+                            <img src={conv.user.avatar_url} alt={conv.user.full_name} className="w-12 h-12 rounded-full object-cover border-2 border-slate-200" />
                           ) : (
-                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold border-2 border-slate-200">
                               {conv.user?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
                             </div>
                           )}
-                          {conv.unread && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-purple-500 rounded-full border-2 border-white" />}
+                          {conv.unread && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-slate-900 text-sm truncate group-hover:text-purple-700 transition-colors">{conv.user?.full_name}</p>
-                          <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                          <p className="font-bold text-slate-900 text-sm truncate group-hover:text-purple-700 transition-colors">{conv.user?.full_name}</p>
+                          <p className="text-xs text-slate-500 truncate mt-0.5 font-bold">{conv.lastMessage}</p>
                         </div>
-                        <span className="text-xs text-slate-400 flex-shrink-0">{conv.time}</span>
+                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                          <span className="text-xs text-slate-400">{conv.time}</span>
+                          {conv.unread && <span className="text-xs font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">New</span>}
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -279,8 +324,8 @@ export default async function StudentDashboard() {
                     {firstName[0]?.toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-bold">{profile.full_name}</p>
-                    <p className="text-slate-400 text-xs">{profile.specialization_board || 'Student'}</p>
+                    <p className="font-black">{profile.full_name}</p>
+                    <p className="text-slate-400 text-xs font-semibold">{profile.specialization_board || 'Student'}</p>
                   </div>
                 </div>
                 <p className="text-slate-400 text-xs leading-relaxed">{universityName}</p>
@@ -289,6 +334,7 @@ export default async function StudentDashboard() {
                 </Link>
               </div>
             </div>
+          </div>
           </div>
         </main>
       </div>

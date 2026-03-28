@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
 
-const TAVILY_API_KEY = process.env.TAVILY_API_KEY;
-
 export async function POST(req: Request) {
     console.log('[AI Chat] Request received');
 
@@ -37,37 +35,67 @@ export async function POST(req: Request) {
 
         if (!messages.length) return NextResponse.json({ error: 'No messages' }, { status: 400 });
 
-        const lastMessage = messages[messages.length - 1];
-        const lastContent = lastContentString(lastMessage.content);
-        
-        // Stats
+        // Fetch Stats and actual Mentor Names for better RAG
         const [mentors, students, universities] = await Promise.all([
-            supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'mentor'),
+            supabase.from('users').select('full_name').eq('role', 'mentor').limit(10),
             supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'student'),
             supabase.from('universities').select('*', { count: 'exact', head: true })
         ]);
 
+        const mentorNames = (mentors.data ?? []).map(m => m.full_name).join(', ');
+
         const platformContext = `
-[CLARIO PLATFORM LIVE STATS]:
-- Mentors: ${mentors.count || 0}
-- Students: ${students.count || 0}
-- Institutions: ${universities.count || 0}
+[CLASSERA PLATFORM LIVE DATA]:
+- Total Mentors: ${mentors.data?.length || 0}
+- Total Students Enrolled: ${students.count || 0}
+- Partnered Universities: ${universities.count || 0}
 - Current User: ${user.user_metadata?.full_name || 'Student'}
 `;
 
-        const finalSystemPrompt = `${systemPromptFromClient || 'You are Clario, the world-class AI Career Copilot for students.'}
+        const finalSystemPrompt = `${systemPromptFromClient || 'You are Classera AI, your mission is to help students achieve their goals intelligently.'}
 
-You are an advanced Agentic Al built on the Gemini Pro architecture, optimized for LPU (Language Processing Unit) inference. 
+You are an advanced Agentic AI. Your identity is **Classera AI** - the smart learning assistant.
 
-Your objective: Solve career confusion, increase platform awareness, and guide students with RAG-enhanced intelligence.
+IMPORTANT: When users ask to CREATE content (roadmaps, courses, guides), return STRUCTURED DATA in these formats:
 
+For ROADMAP requests:
+[ROADMAP: {
+  "goal": "The learning goal",
+  "description": "2-3 sentence overview",
+  "steps": ["Step 1", "Step 2", "Step 3"],
+  "recommended_courses": ["Course 1", "Course 2"],
+  "recommended_mentor": "Mentor Name",
+  "action_item": "What to do next"
+}]
+
+For COURSE requests:
+[COURSE: {
+  "title": "Course Title",
+  "description": "What you'll learn",
+  "modules": ["Module 1", "Module 2"],
+  "difficulty": "beginner/intermediate/advanced",
+  "duration_hours": 20,
+  "action_item": "Next step"
+}]
+
+For GUIDE requests:
+[GUIDE: {
+  "title": "Study Guide Title",
+  "topics": ["Topic 1", "Topic 2"],
+  "key_concepts": ["Concept 1", "Concept 2"],
+  "resources": ["Resource 1", "Resource 2"],
+  "action_item": "Next step"
+}]
+
+[CLASSERA PLATFORM LIVE DATA]:
 ${platformContext}
 
-[CAPABILITIES]:
-1. Smart Q&A: Use the live stats provided.
-2. Talent Matching: Output profiles in [TALENT_MATCHING: {...}] format if requested.
-3. Roadmap Builder: Output [ROADMAP: {...}] format if requested.
-`;
+[MENTORS AVAILABLE]:
+${mentorNames || 'Our expert mentors are ready to assist'}
+
+When users ask creation questions, ALWAYS output using the [FORMAT: {...}] structure.
+When users ask general questions, answer naturally and helpfully.`;
+
 
         const completion = await groq.chat.completions.create({
             messages: [
@@ -75,7 +103,7 @@ ${platformContext}
                 ...messages.map((m: any) => ({ role: m.role, content: m.content }))
             ],
             model: 'llama-3.3-70b-versatile',
-            temperature: 0.7,
+            temperature: 0.5,
             max_tokens: 1024,
             stream: true,
         });
@@ -88,6 +116,8 @@ ${platformContext}
                         const content = chunk.choices[0]?.delta?.content || '';
                         if (content) controller.enqueue(encoder.encode(content));
                     }
+                } catch (err) {
+                    console.error('[AI Chat] Stream Chunk Error:', err);
                 } finally {
                     controller.close();
                 }
@@ -99,12 +129,7 @@ ${platformContext}
         });
 
     } catch (error: any) {
+        console.error('AI Chat Global Error:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-}
-
-function lastContentString(content: any): string {
-    if (typeof content === 'string') return content;
-    if (Array.isArray(content)) return content.map(c => c.text || '').join(' ');
-    return '';
 }

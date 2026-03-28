@@ -114,7 +114,15 @@ export function FloatingAI() {
                   <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-xs leading-relaxed ${
                     m.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none shadow-sm'
                   }`}>
-                    <MarkdownMessage content={m.content} isUser={m.role === 'user'} />
+                    {m.role === 'assistant' && !m.content ? (
+                      <div className="flex gap-1 py-1">
+                        <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1 h-1 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    ) : (
+                      <MarkdownMessage content={m.content} isUser={m.role === 'user'} />
+                    )}
                   </div>
                 </div>
               ))
