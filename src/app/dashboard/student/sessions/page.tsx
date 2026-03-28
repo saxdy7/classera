@@ -46,8 +46,7 @@ export default async function StudentSessionsPage() {
     const { data: sessions, error: sessionsError } = await admin
         .from('live_sessions')
         .select(`
-            *,
-            mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url)
+            *
         `)
         .in('id', sessionIds.length > 0 ? sessionIds : ['00000000-0000-0000-0000-000000000000'])
         .in('status', ['scheduled', 'ongoing', 'live', 'completed', 'cancelled'])
@@ -56,14 +55,27 @@ export default async function StudentSessionsPage() {
     console.log('Sessions found:', sessions?.length || 0);
     console.log('Sessions error:', sessionsError);
 
+    // Get mentor data for each session
+    const sessionsWithMentor = await Promise.all(
+        (sessions || []).map(async (session) => {
+            const { data: mentor } = await admin
+                .from('users')
+                .select('id, full_name, avatar_url')
+                .eq('id', (session as any).mentor_id)
+                .single();
+
+            return {
+                ...session,
+                host: mentor,
+                room_url: (session as any).daily_room_url ?? (session as any).meeting_url ?? null,
+                linked_test_id: (session as any).test_id ?? null,
+            };
+        })
+    );
+
     // Map sessions — rename `mentor` relation to `host` for StudentSessionsClient,
     // and alias daily_room_url / test_id to the names the client expects
-    const mappedSessions = (sessions || []).map(session => ({
-        ...session,
-        host: (session as any).mentor,
-        room_url: (session as any).daily_room_url ?? (session as any).meeting_url ?? null,
-        linked_test_id: (session as any).test_id ?? null,
-    }));
+    const mappedSessions = sessionsWithMentor;
 
     // Get upcoming sessions
     const now = new Date().toISOString();

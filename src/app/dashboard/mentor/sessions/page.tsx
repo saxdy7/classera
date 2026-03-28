@@ -31,7 +31,6 @@ export default async function LiveSessionsPage() {
     .from('live_sessions')
     .select(`
       *,
-      mentor:users!live_sessions_mentor_id_fkey(id, full_name, avatar_url),
       test:tests(id, title),
       participants:session_participants(
         id,

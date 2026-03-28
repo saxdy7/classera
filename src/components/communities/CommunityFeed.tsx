@@ -109,7 +109,17 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
     try {
       setLoading(true);
       const res = await fetch(`/api/community-posts?communityId=${communityId}&filter=${filter}`);
-      if (!res.ok) throw new Error('API request failed');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error('❌ Community posts API error:', {
+          status: res.status,
+          statusText: res.statusText,
+          error: errorData.error,
+          communityId,
+          filter
+        });
+        throw new Error(`API request failed: ${res.status} ${res.statusText} - ${errorData.error || 'Unknown error'}`);
+      }
       const { posts: fetchedPosts } = await res.json();
 
       // For user tracking (likes/saves), we still use the client client for now to avoid session overhead on the API
@@ -131,7 +141,13 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
 
       setPosts(postsWithUserData);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('❌ Error fetching posts:', {
+        error: error instanceof Error ? error.message : String(error),
+        communityId,
+        filter,
+        stack: error instanceof Error ? error.stack : 'No stack trace'
+      });
+      setPosts([]); // Reset to empty on error
     } finally {
       setLoading(false);
     }

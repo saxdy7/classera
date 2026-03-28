@@ -67,12 +67,30 @@ export async function GET(request: NextRequest) {
 
     const { data: posts, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      console.error('❌ Supabase error fetching posts:', {
+        error: error.message,
+        code: error.code,
+        details: error.details,
+        communityId,
+        filter
+      });
+      throw error;
+    }
 
     return NextResponse.json({ posts: posts || [] });
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('❌ Error fetching posts:', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    return NextResponse.json(
+      { 
+        error: error instanceof Error ? error.message : 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined
+      }, 
+      { status: 500 }
+    );
   }
 }
 

@@ -16,7 +16,7 @@ export default async function MentorDashboard() {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) redirect('/signin');
 
-  // Profile — non-fatal
+  // Profile — check if properly completed
   let profile: any = null;
   let students: any[] = [];
   let conversations: any[] = [];
@@ -30,7 +30,19 @@ export default async function MentorDashboard() {
     profile = data;
   } catch (_) { }
 
-  if (!profile || !profile.full_name || !profile.university_id) {
+  // If profile is incomplete, redirect to onboarding
+  // Check: full_name AND university_id must be set
+  if (!profile) {
+    redirect('/onboarding/mentor');
+  }
+
+  if (!profile.full_name?.trim() || !profile.university_id) {
+    console.log('⚠️ Mentor profile incomplete:', {
+      id: profile.id,
+      full_name: profile.full_name,
+      university_id: profile.university_id,
+      email: profile.email
+    });
     redirect('/onboarding/mentor');
   }
 

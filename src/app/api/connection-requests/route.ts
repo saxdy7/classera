@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-// POST - Create a connection request
+// POST - Create a connection request (mentor or student)
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const { mentorId } = await request.json();
+    const { mentorId, targetUserId, type = 'mentor' } = await request.json();
 
     // Get current user
     const {
@@ -16,12 +16,29 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if request already exists
+    const recipientId = mentorId || targetUserId;
+
+    if (!recipientId) {
+      return NextResponse.json(
+        { error: 'Recipient ID required' },
+        { status: 400 }
+      );
+    }
+
+    if (recipientId === user.id) {
+      return NextResponse.json(
+        { error: 'Cannot connect with yourself' },
+        { status: 400 }
+      );
+    }
+
+    // Check if request already exists (both directions for student-student)
     const { data: existing } = await supabase
       .from('connection_requests')
       .select('*')
-      .eq('student_id', user.id)
-      .eq('mentor_id', mentorId)
+      .or(
+        `and(requester_id.eq.${user.id},receiver_id.eq.${recipientId}),and(requester_id.eq.${recipientId},receiver_id.eq.${user.id})`
+      )
       .single();
 
     if (existing) {
@@ -31,14 +48,24 @@ export async function POST(request: Request) {
       );
     }
 
+    // For backward compatibility: mentor-student uses student_id, mentor_id
+    // For new: student-student uses requester_id, receiver_id
+    let insertData: any = { status: 'pending' };
+
+    if (type === 'mentor') {
+      // Old format: student requesting mentor
+      insertData.student_id = user.id;
+      insertData.mentor_id = recipientId;
+    } else {
+      // New format: student-to-student mutual connection
+      insertData.requester_id = user.id;
+      insertData.receiver_id = recipientId;
+    }
+
     // Create connection request
     const { data, error } = await supabase
       .from('connection_requests')
-      .insert({
-        student_id: user.id,
-        mentor_id: mentorId,
-        status: 'pending',
-      })
+      .insert(insertData)
       .select()
       .single();
 

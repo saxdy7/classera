@@ -138,7 +138,32 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        return NextResponse.json({ success: true });
+        // Verify the update was successful by fetching the updated profile
+        const { data: verifyProfile, error: verifyError } = await supabaseAdmin
+            .from('users')
+            .select('full_name, university_id, expertise, bio')
+            .eq('id', user.id)
+            .single();
+
+        if (verifyError || !verifyProfile?.full_name || !verifyProfile?.university_id) {
+            console.error('Profile verification failed:', {
+                verifyError,
+                profile: verifyProfile,
+                updateData
+            });
+            return NextResponse.json(
+                { error: 'Profile update verification failed' },
+                { status: 500 }
+            );
+        }
+
+        console.log('✅ Profile updated successfully:', {
+            userId: user.id,
+            full_name: verifyProfile.full_name,
+            university_id: verifyProfile.university_id
+        });
+
+        return NextResponse.json({ success: true, profile: verifyProfile });
 
     } catch (error: any) {
         console.error('Profile update error:', error);

@@ -63,6 +63,11 @@ export default function MentorOnboarding() {
     setError('');
 
     try {
+      // Validate that we have the minimum required fields
+      if (!formData.full_name || !formData.university || !formData.university_id) {
+        throw new Error('Please complete all required fields');
+      }
+
       const response = await fetch('/api/auth/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -84,7 +89,10 @@ export default function MentorOnboarding() {
         throw new Error(data.error || 'Failed to update profile');
       }
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait longer to ensure database updates are applied
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Use router for client-side navigation instead of hard redirect
       window.location.href = '/dashboard/mentor';
     } catch (err: unknown) {
       setError((err as Error)?.message || 'Failed to complete onboarding');

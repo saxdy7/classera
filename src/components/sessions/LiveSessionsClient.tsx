@@ -18,6 +18,7 @@ import {
   MonitorPlay,
   Search
 } from 'lucide-react';
+import { MentorSessionPlayer } from './MentorSessionPlayer';
 
 interface Session {
   id: string;
@@ -47,6 +48,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
   const [editingSession, setEditingSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeSession, setActiveSession] = useState<Session | null>(null);
+  const [activeSessionInPlayer, setActiveSessionInPlayer] = useState<Session | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
 
@@ -891,6 +893,20 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
           </div>
         </div>
       )}
+
+      {/* Mentor Session Player */}
+      {activeSessionInPlayer && (
+        <MentorSessionPlayer
+          sessionId={activeSessionInPlayer.id}
+          roomUrl={
+            activeSessionInPlayer.daily_room_url ||
+            `https://meet.jit.si/classera-${activeSessionInPlayer.id.replace(/-/g, '').slice(0, 16)}`
+          }
+          sessionTitle={activeSessionInPlayer.title}
+          participants={activeSessionInPlayer.participants?.length || 1}
+          onClose={() => setActiveSessionInPlayer(null)}
+        />
+      )}
     </div>
   );
 }
@@ -969,18 +985,13 @@ function SessionCard({
         <div className="flex flex-col gap-2 ml-4">
           {isLive ? (
             <>
-              <a
-                href={
-                  session.daily_room_url ||
-                  `https://meet.jit.si/classera-${session.id.replace(/-/g, '').slice(0, 16)}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => setActiveSessionInPlayer(session)}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
               >
                 <Video className="w-4 h-4" />
                 Join
-              </a>
+              </button>
               <button
                 onClick={() => onEnd(session)}
                 className="px-4 py-2 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-50 transition-colors"
