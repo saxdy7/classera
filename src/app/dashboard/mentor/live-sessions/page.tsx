@@ -18,7 +18,7 @@ export default async function MentorLiveSessionsPage() {
     .eq('id', user.id)
     .single();
 
-  if (!profile?.role !== 'mentor' || !profile?.university_id || !profile?.full_name) {
+  if (profile?.role !== 'mentor' || !profile?.university_id || !profile?.full_name) {
     redirect('/onboarding/mentor');
   }
 
