@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Paperclip, X, FileIcon, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export interface FileUploadProps {
     // Single file mode
@@ -24,6 +25,7 @@ export function FileUpload({
     const [images, setImages] = useState<string[]>([]);
     const [files, setFiles] = useState<any[]>([]);
     const [uploading, setUploading] = useState(false);
+    const supabase = createClient();
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -43,22 +45,37 @@ export function FileUpload({
             if (onFilesChange) {
                 setUploading(true);
                 try {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+                    const filePath = `${fileName}`;
+
+                    const { error: uploadError } = await supabase.storage
+                        .from('community_uploads')
+                        .upload(filePath, file);
+
+                    if (uploadError) {
+                        console.error('Error uploading file:', uploadError);
+                        alert('Upload failed!');
+                        return;
+                    }
+
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('community_uploads')
+                        .getPublicUrl(filePath);
+
                     // Check if it's an image
                     if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            const newImages = [...images, reader.result as string];
-                            setImages(newImages);
-                            onFilesChange(newImages, files);
-                        };
-                        reader.readAsDataURL(file);
+                        const newImages = [...images, publicUrl];
+                        setImages(newImages);
+                        onFilesChange(newImages, files);
                     } else {
                         // It's a regular file
                         const newFile = {
                             name: file.name,
                             size: file.size,
                             type: file.type,
-                            url: URL.createObjectURL(file)
+                            url: publicUrl,
+                            path: filePath
                         };
                         const newFiles = [...files, newFile];
                         setFiles(newFiles);

@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { community_id, title, content, type = 'normal', images = null } = body;
+    const { community_id, title, content, type = 'normal', images = null, files = null } = body;
 
     if (!community_id || !content) {
       return NextResponse.json(
@@ -153,7 +153,8 @@ export async function POST(request: NextRequest) {
         title: title || null,
         content,
         type,
-        images
+        images,
+        files
       })
       .select()
       .single();
