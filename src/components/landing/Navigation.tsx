@@ -25,6 +25,7 @@ export default function Navigation() {
       >
         {/* Logo */}
         <a href="#" className="text-2xl font-semibold tracking-tighter flex items-center gap-2">
+          
           Classera
         </a>
 
