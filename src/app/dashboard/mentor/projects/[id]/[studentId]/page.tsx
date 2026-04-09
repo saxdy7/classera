@@ -130,7 +130,7 @@ export default async function StudentProjectReviewPage({
                       <span className="font-mono">{submission.repo_full_name}</span>
                     </div>
                     <a
-                      href={submission.repo_url}
+                      href={`https://github.com/${submission.repo_full_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-sm text-violet-600 hover:text-violet-800 transition-colors"
@@ -168,7 +168,7 @@ export default async function StudentProjectReviewPage({
               submissionId={submission.id}
               studentId={studentId}
               maxScore={assignment.max_score}
-              repoUrl={submission.repo_url}
+              repoUrl={`https://github.com/${submission.repo_full_name}`}
               repoFullName={submission.repo_full_name}
               status={submission.status}
               analytics={analytics ?? null}

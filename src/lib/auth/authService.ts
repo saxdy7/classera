@@ -257,6 +257,7 @@ export async function signInWithOAuth(
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback?role=${role}`,
+        scopes: provider === 'github' ? 'user:email repo read:user read:org' : undefined,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',

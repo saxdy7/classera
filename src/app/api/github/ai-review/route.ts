@@ -73,7 +73,7 @@ async function callAI(prompt: string): Promise<AIReviewResult> {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user, session } } = await supabase.auth.getSession();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json() as {
@@ -126,23 +126,24 @@ export async function POST(request: NextRequest) {
       .eq('user_id', submission.student_id)
       .single();
 
-    let token = studentConn?.access_token ?? null;
-    if (!token) {
-      const mentorId = (submission.assignment as any)?.mentor_id;
-      if (mentorId) {
-        const { data: mentorConn } = await admin
-          .from('github_connections')
-          .select('access_token')
-          .eq('user_id', mentorId)
-          .single();
-        token = mentorConn?.access_token ?? null;
-      }
+    const isStudent = user.id === submission.student_id;
+    let token = (isStudent ? session?.provider_token : null) || studentConn?.access_token || null;
+    
+    if (!token && mentorId) {
+      const { data: mentorConn } = await admin
+        .from('github_connections')
+        .select('access_token')
+        .eq('user_id', mentorId)
+        .single();
+      const isMentor = user.id === mentorId;
+      token = (isMentor ? session?.provider_token : null) || mentorConn?.access_token || null;
     }
+    
     token = token ?? process.env.GITHUB_TOKEN ?? null;
     const headers: HeadersInit = {
       Accept: 'application/vnd.github.v3.raw',
       'X-GitHub-Api-Version': '2022-11-28',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token && typeof token === 'string' ? { Authorization: `Bearer ${token}` } : {}),
     };
 
     let prompt: string;

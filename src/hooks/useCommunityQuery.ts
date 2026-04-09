@@ -19,9 +19,9 @@ export function useCommunityPostsFeed(communityId: string, pageSize = 20) {
         .select(
           `
           id, content, title, created_at, updated_at,
-          created_by,
-          community_posts_attachments(id, url, type),
-          profiles:created_by(id, display_name, avatar_url)
+          author_id,
+          files,
+          author:users!author_id(id, full_name, avatar_url, role)
         `,
         )
         .eq('community_id', communityId)
@@ -95,9 +95,8 @@ export function useCommunityPostComments(postId: string) {
         .select(
           `
           id, content, created_at, updated_at,
-          created_by,
-          community_posts_comments_attachments(id, url, type),
-          profiles:created_by(id, display_name, avatar_url)
+          author_id,
+          author:users!author_id(id, full_name, avatar_url, role)
         `,
         )
         .eq('post_id', postId)
@@ -123,11 +122,16 @@ export function useCreatePost(communityId: string) {
 
   return useMutation({
     mutationFn: async (postData: { title: string; content: string }) => {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
       const { data, error } = await supabase.from('community_posts').insert({
         community_id: communityId,
+        author_id: user.id,
         title: postData.title,
         content: postData.content,
-      });
+      }).select().single();
 
       if (error) throw error;
       return data;
@@ -147,10 +151,15 @@ export function useCreateComment(postId: string) {
 
   return useMutation({
     mutationFn: async (commentData: { content: string }) => {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
       const { data, error } = await supabase.from('community_comments').insert({
         post_id: postId,
+        author_id: user.id,
         content: commentData.content,
-      });
+      }).select().single();
 
       if (error) throw error;
       return data;

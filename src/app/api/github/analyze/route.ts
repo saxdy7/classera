@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user, session } } = await supabase.auth.getSession();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json() as { submission_id: string };
@@ -64,7 +64,10 @@ export async function POST(request: NextRequest) {
       .select('access_token')
       .eq('user_id', submission.student_id)
       .single();
-    const token = conn?.access_token ?? null;
+    
+    // Check if the caller is the student submitting, use their session token if available
+    const isOwner = user.id === submission.student_id;
+    const token = (isOwner ? session?.provider_token : null) || conn?.access_token || null;
 
     // Parallel fetch all repo data
     const [repoInfo, commits, weeklyActivity, contributors, languages, branches, treeItems] =

@@ -99,6 +99,18 @@ export default async function StudentProjectDetailPage({
     .eq('user_id', user.id)
     .single();
 
+  const { data: { session } } = await supabase.auth.getSession();
+  const githubIdentity = user?.identities?.find((id) => id.provider === 'github');
+
+  const isGithubConnected = !!githubIdentity || !!session?.provider_token || !!githubConnection;
+
+  const githubUsername = githubIdentity?.identity_data?.preferred_username 
+                      || githubIdentity?.identity_data?.user_name
+                      || githubConnection?.github_username;
+  
+  const githubAvatarUrl = githubIdentity?.identity_data?.avatar_url
+                       || githubConnection?.github_avatar_url;
+
   const now = new Date();
   const deadline = assignment.deadline ? new Date(assignment.deadline) : null;
   const isOverdue = deadline && deadline < now && !submission;
@@ -147,7 +159,7 @@ export default async function StudentProjectDetailPage({
                     Repository Connection
                   </h2>
 
-                  {!githubConnection ? (
+                  {!isGithubConnected ? (
                     <div className="border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 p-8 flex flex-col items-center text-center">
                       <div className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center mb-4">
                         <GitBranch className="w-6 h-6" />
@@ -166,8 +178,8 @@ export default async function StudentProjectDetailPage({
                   ) : (
                     <div className="bg-violet-50 border border-violet-100 rounded-2xl p-5 mb-5">
                       <div className="flex items-center gap-3">
-                        {githubConnection.github_avatar_url ? (
-                          <img src={githubConnection.github_avatar_url} alt={githubConnection.github_username} className="w-10 h-10 rounded-full border-2 border-violet-200" />
+                        {githubAvatarUrl ? (
+                          <img src={githubAvatarUrl} alt={githubUsername || "GitHub User"} className="w-10 h-10 rounded-full border-2 border-violet-200" />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
                             <GitBranch className="w-5 h-5 text-white" />
@@ -178,12 +190,12 @@ export default async function StudentProjectDetailPage({
                             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                             <p className="text-sm font-bold text-slate-900">GitHub Connected</p>
                           </div>
-                          <p className="text-xs text-slate-500">@{githubConnection.github_username}</p>
+                          <p className="text-xs text-slate-500">@{githubUsername}</p>
                         </div>
                         <GitHubConnectButton
                           connected={true}
-                          username={githubConnection.github_username}
-                          avatarUrl={githubConnection.github_avatar_url}
+                          username={githubUsername}
+                          avatarUrl={githubAvatarUrl}
                         />
                       </div>
                     </div>
@@ -204,7 +216,7 @@ export default async function StudentProjectDetailPage({
                             {submission.repo_full_name}
                           </span>
                           <a
-                            href={submission.repo_url}
+                            href={`https://github.com/${submission.repo_full_name}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 text-sm text-violet-400 hover:text-violet-300 flex-shrink-0"

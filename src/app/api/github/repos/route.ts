@@ -11,7 +11,7 @@ import { getUserRepos } from '@/lib/github';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session, user } } = await supabase.auth.getSession();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const admin = createAdminClient();
@@ -21,11 +21,17 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
 
-    if (!conn) {
+    const githubIdentity = user?.identities?.find((id) => id.provider === 'github');
+    const token = session?.provider_token || conn?.access_token;
+    const username = githubIdentity?.identity_data?.preferred_username 
+                  || githubIdentity?.identity_data?.user_name
+                  || conn?.github_username;
+
+    if (!token || !username) {
       return NextResponse.json({ error: 'GitHub account not connected', repos: [] }, { status: 200 });
     }
 
-    const repos = await getUserRepos(conn.github_username, conn.access_token);
+    const repos = await getUserRepos(username, token);
     const search = request.nextUrl.searchParams.get('search')?.toLowerCase();
 
     const filtered = search

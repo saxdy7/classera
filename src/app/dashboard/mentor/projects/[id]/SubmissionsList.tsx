@@ -88,7 +88,7 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                       )}
                     </div>
                     <a
-                      href={sub.repo_url}
+                      href={`https://github.com/${sub.repo_full_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-violet-600 hover:underline truncate block mt-0.5"
