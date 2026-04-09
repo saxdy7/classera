@@ -11,7 +11,7 @@ import Footer from '@/components/landing/Footer';
 
 export default function Home() {
   return (
-    <div className="scroll-smooth bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900 pb-6">
+    <div className="bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900 pb-6">
       <Navigation />
       <HeroSection />
       <MarqueeSection />
