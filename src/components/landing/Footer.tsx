@@ -16,7 +16,7 @@ export default function Footer() {
             <div className="inline-flex items-center gap-2 px-3 md:px-5 py-2 md:py-2.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs md:text-sm font-semibold mb-4 md:mb-6 lg:mb-8 hover:bg-fuchsia-500/20 transition-all animate-bounce">
               <Sparkles className="w-3 md:w-4 h-3 md:h-4" />
               <span className="hidden sm:inline">Join 10,000+ Educators</span>
-              <span className="sm:hidden">10,000+ Educators</span>
+              <span className="sm:hidden">10,000++ Educators</span>
             </div>
             
             <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1] mb-4 md:mb-6 px-2">
