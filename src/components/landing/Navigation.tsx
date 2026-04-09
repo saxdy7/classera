@@ -20,12 +20,12 @@ export default function Navigation() {
         }`}
       >
         {/* Logo */}
-        <a href="#" className="text-2xl font-semibold tracking-tighter flex items-center gap-2">
+        {/* <a href="#" className="text-2xl font-semibold tracking-tighter flex items-center gap-2">
           <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white text-sm font-bold">
             C
           </div>
           Classera
-        </a>
+        </a> */}
 
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 items-center">
