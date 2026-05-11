@@ -231,16 +231,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Comment creation returned no data' }, { status: 500 });
     }
 
-    // Process mentions in the comment content (non-blocking)
-    try {
-      await supabase.rpc('process_mentions', {
-        p_content: content,
-        p_comment_id: comment.id,
-        p_mentioned_by: user.id
-      });
-    } catch (mentionError) {
-      console.warn('Mention processing failed, continuing anyway:', mentionError);
-    }
+    // Process mentions in the comment content (non-blocking, optional)
+    // Temporarily disabled due to database function ambiguity
+    // TODO: Fix create_notification() function signature in database
+    // try {
+    //   await supabase.rpc('process_mentions', {
+    //     p_content: content,
+    //     p_comment_id: comment.id,
+    //     p_mentioned_by: user.id
+    //   });
+    // } catch (mentionError) {
+    //   console.warn('Mention processing failed, continuing anyway:', mentionError);
+    // }
 
     return NextResponse.json({ comment }, { status: 201 });
   } catch (error: any) {
