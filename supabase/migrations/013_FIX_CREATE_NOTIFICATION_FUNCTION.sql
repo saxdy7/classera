@@ -6,7 +6,6 @@
 -- Disable the problematic triggers temporarily
 DROP TRIGGER IF EXISTS comment_notification_trigger ON community_comments;
 DROP TRIGGER IF EXISTS post_notification_trigger ON community_posts;
-DROP TRIGGER IF EXISTS mention_notification_trigger ON mentions;
 
 -- Recreate notify_on_new_comment with explicit type casts
 CREATE OR REPLACE FUNCTION notify_on_new_comment()
