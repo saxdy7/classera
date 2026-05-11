@@ -117,7 +117,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { post_id, content, parent_comment_id = null } = body;
 
+    console.log('POST /api/community-comments - Request:', {
+      userId: user.id,
+      post_id,
+      contentLength: content?.length,
+      parent_comment_id
+    });
+
     if (!post_id || !content) {
+      console.warn('Validation failed: missing post_id or content', {
+        post_id: !!post_id,
+        content: !!content,
+        received: { post_id, content }
+      });
       return NextResponse.json(
         { error: 'Post ID and content are required' },
         { status: 400 }
@@ -143,21 +155,35 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user is member or mentor and not muted
-    const { data: membership } = await supabase
+    const { data: membership, error: memberError } = await supabase
       .from('community_members')
       .select('status')
       .eq('community_id', post.community_id)
       .eq('student_id', user.id)
-      .single();
+      .maybeSingle();
 
-    const { data: community } = await supabase
+    const { data: community, error: communityError } = await supabase
       .from('communities')
       .select('mentor_id')
       .eq('id', post.community_id)
       .single();
 
+    if (communityError) {
+      console.error('Error fetching community:', communityError);
+      return NextResponse.json({ error: 'Community not found' }, { status: 404 });
+    }
+
     const isMentor = community?.mentor_id === user.id;
     const isMember = membership?.status === 'approved';
+
+    console.log('Comment submission - Membership check:', {
+      userId: user.id,
+      communityId: post.community_id,
+      isMentor,
+      isMember,
+      membershipStatus: membership?.status,
+      membershipData: membership
+    });
 
     if (!isMentor && !isMember) {
       return NextResponse.json(

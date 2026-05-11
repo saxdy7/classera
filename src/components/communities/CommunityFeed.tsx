@@ -359,15 +359,27 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
     if (!content) return;
 
     try {
-      const { error } = await supabase
-        .from('community_comments')
-        .insert({
-          post_id: postId,
-          author_id: userId,
-          content
-        });
+      const response = await fetch('/api/community-comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ post_id: postId, content })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Comment API error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData.error,
+          postId,
+          userId,
+          content: content.substring(0, 50)
+        });
+        throw new Error(errorData.error || `API returned ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Comment created successfully:', result.comment?.id);
 
       setNewComment({ ...newComment, [postId]: '' });
       // Refresh comments
@@ -377,7 +389,8 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
       fetchComments(postId);
     } catch (error) {
       console.error('Error adding comment:', error);
-      alert('Failed to add comment. Please try again.');
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      alert(`Failed to add comment: ${errorMsg}`);
     }
   };
 
