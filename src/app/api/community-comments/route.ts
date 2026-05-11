@@ -57,8 +57,21 @@ export async function GET(request: NextRequest) {
     const { data: comments, error } = await supabase
       .from('community_comments')
       .select(`
-        *,
-        author:users!author_id(id, full_name, avatar_url, role)
+        id,
+        post_id,
+        author_id,
+        parent_comment_id,
+        content,
+        images,
+        likes_count,
+        is_best_answer,
+        marked_as_best_by,
+        marked_as_best_at,
+        is_deleted,
+        deleted_by,
+        deleted_at,
+        created_at,
+        updated_at
       `)
       .eq('post_id', postId)
       .eq('is_deleted', false)
@@ -66,6 +79,24 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (error) throw error;
+
+    // Fetch author details for each comment
+    if (comments && comments.length > 0) {
+      const authorIds = [...new Set(comments.map(c => c.author_id))];
+      const { data: authors, error: authError } = await supabase
+        .from('users')
+        .select('id, full_name, avatar_url, role')
+        .in('id', authorIds);
+
+      if (!authError && authors) {
+        const authorMap = Object.fromEntries(authors.map(a => [a.id, a]));
+        const commentsWithAuthor = comments.map(c => ({
+          ...c,
+          author: authorMap[c.author_id] || null
+        }));
+        return NextResponse.json({ comments: commentsWithAuthor });
+      }
+    }
 
     return NextResponse.json({ comments: comments || [] });
   } catch (error) {

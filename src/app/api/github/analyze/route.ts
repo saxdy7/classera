@@ -67,7 +67,25 @@ export async function POST(request: NextRequest) {
     
     // Check if the caller is the student submitting, use their session token if available
     const isOwner = user.id === submission.student_id;
-    const token = (isOwner ? session?.provider_token : null) || conn?.access_token || null;
+    const studentToken = (isOwner && session?.provider_token) ? session.provider_token : (conn?.access_token ?? null);
+    
+    // Also try mentor's token if student doesn't have one
+    let token = studentToken;
+    if (!token && submission.assignment) {
+      const mentorId = (submission.assignment as { mentor_id?: string })?.mentor_id;
+      if (mentorId) {
+        const { data: mentorConn } = await admin
+          .from('github_connections')
+          .select('access_token')
+          .eq('user_id', mentorId)
+          .single();
+        const isMentor = user.id === mentorId;
+        token = (isMentor && session?.provider_token) ? session.provider_token : (mentorConn?.access_token ?? null);
+      }
+    }
+    
+    // Final fallback to environment token
+    token = token ?? process.env.GITHUB_TOKEN ?? null;
 
     // Parallel fetch all repo data
     const [repoInfo, commits, weeklyActivity, contributors, languages, branches, treeItems] =

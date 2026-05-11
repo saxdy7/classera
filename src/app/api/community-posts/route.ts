@@ -49,8 +49,33 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('community_posts')
       .select(`
-        *,
-        author:users!author_id(id, full_name, avatar_url, role)
+        id,
+        community_id,
+        author_id,
+        title,
+        content,
+        type,
+        images,
+        files,
+        is_answered,
+        best_answer_id,
+        likes_count,
+        comments_count,
+        views_count,
+        is_pinned,
+        pinned_by,
+        pinned_at,
+        is_deleted,
+        deleted_by,
+        deleted_at,
+        deleted_reason,
+        is_locked,
+        locked_by,
+        locked_at,
+        tags,
+        metadata,
+        created_at,
+        updated_at
       `)
       .eq('community_id', communityId)
       .eq('is_deleted', false)
@@ -76,6 +101,24 @@ export async function GET(request: NextRequest) {
         filter
       });
       throw error;
+    }
+
+    // Fetch author details for each post
+    if (posts && posts.length > 0) {
+      const authorIds = [...new Set(posts.map(p => p.author_id))];
+      const { data: authors, error: authError } = await supabase
+        .from('users')
+        .select('id, full_name, avatar_url, role')
+        .in('id', authorIds);
+
+      if (!authError && authors) {
+        const authorMap = Object.fromEntries(authors.map(a => [a.id, a]));
+        const postsWithAuthor = posts.map(p => ({
+          ...p,
+          author: authorMap[p.author_id] || null
+        }));
+        return NextResponse.json({ posts: postsWithAuthor });
+      }
     }
 
     return NextResponse.json({ posts: posts || [] });

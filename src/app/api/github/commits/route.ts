@@ -37,7 +37,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Try student token → mentor token → env fallback (in that priority order)
+    // Try to get GitHub token (in priority order):
+    // 1. Session provider_token (if current user is student)
+    // 2. Student's stored GitHub connection token
+    // 3. Session provider_token (if current user is mentor)
+    // 4. Mentor's stored GitHub connection token
+    // 5. Environment GITHUB_TOKEN
+    // 6. null (will work for public repos)
+    
     const { data: studentConn } = await admin
       .from('github_connections')
       .select('access_token')
@@ -45,7 +52,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     const isStudent = user.id === submission.student_id;
-    let token = (isStudent ? session?.provider_token : null) || studentConn?.access_token || null;
+    let token = (isStudent && session?.provider_token) ? session.provider_token : (studentConn?.access_token ?? null);
     
     if (!token && mentorId) {
       const { data: mentorConn } = await admin
@@ -54,9 +61,10 @@ export async function GET(request: NextRequest) {
         .eq('user_id', mentorId)
         .single();
       const isMentor = user.id === mentorId;
-      token = (isMentor ? session?.provider_token : null) || mentorConn?.access_token || null;
+      token = (isMentor && session?.provider_token) ? session.provider_token : (mentorConn?.access_token ?? null);
     }
     
+    // Final fallback to environment token
     token = token ?? process.env.GITHUB_TOKEN ?? null;
     const headers: HeadersInit = {
       Accept: 'application/vnd.github.v3+json',
@@ -72,10 +80,21 @@ export async function GET(request: NextRequest) {
     if (!res.ok) {
       const err = await res.json().catch(() => ({})) as { message?: string };
       const isRateLimit = res.status === 403 || res.status === 429;
-      const friendlyMsg = isRateLimit
-        ? 'GitHub API rate limit reached. Ask the student to connect their GitHub account, or add a GITHUB_TOKEN to the server environment.'
-        : (err.message ?? 'GitHub API error');
-      return NextResponse.json({ error: friendlyMsg }, { status: res.status });
+      const isUnauthorized = res.status === 401;
+      const isNotFound = res.status === 404;
+      
+      let friendlyMsg = err.message ?? 'GitHub API error';
+      
+      if (isRateLimit) {
+        friendlyMsg = 'GitHub API rate limit reached. Please ask the student to connect their GitHub account for higher rate limits, or add a GITHUB_TOKEN to the server environment.';
+      } else if (isUnauthorized) {
+        friendlyMsg = 'GitHub authentication failed. The repository may be private. Please connect your GitHub account (via /api/github/connect) or ask your mentor to add a GITHUB_TOKEN to the server environment.';
+      } else if (isNotFound) {
+        friendlyMsg = 'Repository not found or is not accessible. Verify the repository name is correct and that it exists.';
+      }
+      
+      console.log(`GitHub API error [${res.status}]:`, err.message, 'for repo:', submission.repo_full_name);
+      return NextResponse.json({ error: friendlyMsg, repo: submission.repo_full_name }, { status: res.status });
     }
 
     const raw = await res.json() as Array<{

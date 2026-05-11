@@ -64,19 +64,31 @@ export async function GET(request: Request) {
                 user_id,
                 content,
                 created_at,
-                updated_at,
-                sender:users!community_messages_user_id_fkey(
-                    id,
-                    full_name,
-                    avatar_url,
-                    role
-                )
+                updated_at
             `)
             .eq('channel_id', channelId)
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
 
         if (error) throw error;
+
+        // Fetch sender details for each message
+        if (messages && messages.length > 0) {
+            const senderIds = [...new Set(messages.map(m => m.user_id))];
+            const { data: senders, error: senderError } = await supabase
+                .from('users')
+                .select('id, full_name, avatar_url, role')
+                .in('id', senderIds);
+
+            if (!senderError && senders) {
+                const senderMap = Object.fromEntries(senders.map(s => [s.id, s]));
+                const messagesWithSender = messages.map(m => ({
+                    ...m,
+                    sender: senderMap[m.user_id] || null
+                }));
+                return NextResponse.json({ messages: messagesWithSender });
+            }
+        }
 
         return NextResponse.json({ messages: messages || [] });
     } catch (error: any) {
@@ -154,22 +166,9 @@ export async function POST(request: Request) {
         }
 
         // Fetch the message with sender info
-        const { data: populatedMessage, error: fetchError } = await supabase
+        const { data: fetchedMessage, error: fetchError } = await supabase
             .from('community_messages')
-            .select(`
-                id,
-                channel_id,
-                user_id,
-                content,
-                created_at,
-                updated_at,
-                sender:users!community_messages_user_id_fkey(
-                    id,
-                    full_name,
-                    avatar_url,
-                    role
-                )
-            `)
+            .select('id, channel_id, user_id, content, created_at, updated_at')
             .eq('id', message.id)
             .single();
 
@@ -177,6 +176,18 @@ export async function POST(request: Request) {
             console.error('Fetch inserted message error:', fetchError);
             throw fetchError;
         }
+
+        // Get sender details
+        const { data: sender } = await supabase
+            .from('users')
+            .select('id, full_name, avatar_url, role')
+            .eq('id', user.id)
+            .single();
+
+        const populatedMessage = {
+            ...fetchedMessage,
+            sender: sender || null
+        };
 
         // Process mentions in the message content (if RPC exists)
         try {
