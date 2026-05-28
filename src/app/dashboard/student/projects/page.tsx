@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
-import { AlertCircle, ArrowRight, Calendar, CheckCircle, GitBranch, Hourglass, Plus, Star, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowRight, Calendar, CheckCircle, GitBranch, Hourglass, Plus, Star, Sparkles, Code, ExternalLink, Eye, Edit, Trash2, FileText, MapPin } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -179,6 +179,91 @@ export default async function StudentProjectsPage() {
                  </div>
               </div>
 
+            </div>
+
+            {/* Repository Explorer Section */}
+            <div className="mt-16 pt-8 border-t border-slate-200">
+              <div className="mb-8">
+                <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em] mb-2">
+                  <Code className="w-4 h-4" />
+                  Source Code & Repository
+                </div>
+                <h2 className="text-2xl font-black text-slate-900">Explore Your Project Code</h2>
+                <p className="text-slate-500 mt-2 font-medium">Browse repository structures, source code roadmap, and view files directly from GitHub.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {assignedRows && assignedRows.length > 0 ? (
+                  assignedRows
+                    .filter((row) => {
+                      const a = row.project_assignments as any;
+                      return a && a.github_repo_url;
+                    })
+                    .slice(0, 6)
+                    .map((row) => {
+                      const a = row.project_assignments as any;
+                      if (!a || !a.github_repo_url) return null;
+
+                      const urlParts = a.github_repo_url
+                        .replace('https://github.com/', '')
+                        .replace('.git', '')
+                        .split('/');
+
+                      if (urlParts.length < 2) return null;
+
+                      return (
+                        <div
+                          key={row.assignment_id}
+                          className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden"
+                        >
+                          {/* Header */}
+                          <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+                                <Code className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-bold text-slate-900 text-sm truncate">{a.title}</h4>
+                                <p className="text-xs text-slate-500 mt-1 truncate">
+                                  {urlParts[0]}/{urlParts[1]}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Description */}
+                          <div className="px-6 py-3 text-xs text-slate-600 line-clamp-2 border-b border-slate-100">
+                            {a.description || 'View source code and explore repository structure'}
+                          </div>
+
+                          {/* Actions */}
+                          <div className="p-4 flex gap-2">
+                            <Link
+                              href={`/dashboard/student/projects/${row.assignment_id}/src`}
+                              className="flex-1 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs font-bold text-center flex items-center justify-center gap-1"
+                            >
+                              <MapPin className="w-3 h-3" />
+                              Src Roadmap
+                            </Link>
+                            <Link
+                              href={`/dashboard/student/projects/${row.assignment_id}/repository`}
+                              className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-xs font-bold text-center flex items-center justify-center gap-1"
+                            >
+                              <Code className="w-3 h-3" />
+                              Full Explorer
+                            </Link>
+                          </div>
+                        </div>
+                      );
+                    })
+                ) : (
+                  <div className="col-span-full bg-white rounded-2xl border border-slate-200 p-12 text-center">
+                    <Code className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-500 font-medium">No projects with repositories yet</p>
+                    <p className="text-xs text-slate-400 mt-1">Link a GitHub repository to any project to explore its source code</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </main>
