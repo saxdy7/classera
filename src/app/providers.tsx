@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createClient } from '@/lib/supabase/client';
 
 // Create a client for each user request to avoid cross-request state pollution
 // https://tanstack.com/query/latest/docs/framework/react/ssr
@@ -30,6 +31,30 @@ function getQueryClient() {
     if (!clientQueryClientInstance) clientQueryClientInstance = createQueryClient();
     return clientQueryClientInstance;
   }
+}
+
+// Simple hook to get the current user from Supabase
+export function useSession() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Failed to get user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  return { user, loading };
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
