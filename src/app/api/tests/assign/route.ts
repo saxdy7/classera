@@ -72,7 +72,8 @@ export async function POST(request: Request) {
             test_id,
             student_id,
             status: 'pending',
-            invited_at: new Date().toISOString()
+            invited_at: new Date().toISOString(),
+            invited_by: user.id
         }));
 
         let { data: created, error } = await admin
@@ -108,18 +109,27 @@ export async function POST(request: Request) {
                 type: 'test_assigned',
                 title: 'New Test Assigned',
                 message: `You have been assigned to take: ${test.title}`,
-                data: { test_id, test_title: test.title },
-                is_read: false
+                related_id: test_id,
+                related_type: 'test',
+                action_url: `/dashboard/student/tests/${test_id}`,
+                metadata: { test_id, test_title: test.title, duration: body.duration_minutes },
+                read: false
             }));
 
             await admin.from('notifications').insert(notifications);
         }
 
         // Update test to go live if needed
-        await admin
+        const { data: updatedTest, error: updateError } = await admin
             .from('tests')
-            .update({ is_live: true })
-            .eq('id', test_id);
+            .update({ is_live: true, scheduled_at: new Date().toISOString() })
+            .eq('id', test_id)
+            .select()
+            .single();
+
+        if (updateError) {
+            console.error('Error updating test to live:', updateError);
+        }
 
         return NextResponse.json({
             success: true,

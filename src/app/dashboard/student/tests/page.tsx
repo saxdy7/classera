@@ -133,7 +133,7 @@ export default async function StudentTestsPage() {
                           </div>
                         </div>
                         <Link
-                          href={`/dashboard/student/tests/${inv.test.id}/take`}
+                          href={`/dashboard/student/tests/${inv.test.id}/take-secure`}
                           className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
                         >
                           <Play className="w-5 h-5" />
