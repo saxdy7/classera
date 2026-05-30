@@ -28,6 +28,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { test_id, student_ids, community_id, send_notification } = body;
 
+        console.log('📌 Assign test API called:', { test_id, student_ids, community_id, mentor_id: user.id });
+
         if (!test_id) {
             return NextResponse.json({ error: 'Test ID required' }, { status: 400 });
         }
@@ -56,11 +58,13 @@ export async function POST(request: Request) {
                 .neq('student_id', user.id); // Exclude mentor
 
             studentsToAssign = members?.map((m: any) => m.student_id) || [];
+            console.log('👥 Community members found:', studentsToAssign.length);
         }
 
         // Add individual students
         if (student_ids && Array.isArray(student_ids)) {
             studentsToAssign = [...new Set([...studentsToAssign, ...student_ids])];
+            console.log('📝 Individual students added:', student_ids.length, 'Total now:', studentsToAssign.length);
         }
 
         if (studentsToAssign.length === 0) {
@@ -76,6 +80,8 @@ export async function POST(request: Request) {
             invited_by: user.id
         }));
 
+        console.log('✍️  Creating', invitations.length, 'invitations...');
+
         let { data: created, error } = await admin
             .from('test_invitations')
             .upsert(invitations, {
@@ -84,23 +90,15 @@ export async function POST(request: Request) {
             })
             .select();
 
-        // If the column set is missing something, try a stripped payload
         if (error) {
-            console.error('Error creating invitations (attempt 1):', error.message);
-            // Retry — sometimes the schema cache needs a moment
-            const retried = await admin
-                .from('test_invitations')
-                .upsert(invitations, {
-                    onConflict: 'test_id,student_id',
-                    ignoreDuplicates: true
-                })
-                .select();
-            if (retried.error) {
-                console.error('Error creating invitations (attempt 2):', retried.error);
-                return NextResponse.json({ error: retried.error.message }, { status: 400 });
-            }
-            created = retried.data;
+            console.error('❌ Error creating invitations:', error);
+            return NextResponse.json({
+              error: `Failed to create invitations: ${error.message}`,
+              details: error
+            }, { status: 400 });
         }
+
+        console.log('✅ Invitations created:', created?.length);
 
         // Create notifications for students via admin client
         if (send_notification !== false) {
@@ -117,6 +115,7 @@ export async function POST(request: Request) {
             }));
 
             await admin.from('notifications').insert(notifications);
+            console.log('🔔 Notifications sent:', notifications.length);
         }
 
         // Update test to go live if needed
@@ -128,7 +127,9 @@ export async function POST(request: Request) {
             .single();
 
         if (updateError) {
-            console.error('Error updating test to live:', updateError);
+            console.error('⚠️  Error updating test to live:', updateError);
+        } else {
+            console.log('🚀 Test marked as live');
         }
 
         return NextResponse.json({

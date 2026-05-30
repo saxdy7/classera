@@ -26,22 +26,29 @@ export default async function StudentTestsPage() {
     redirect('/onboarding/student');
   }
 
-  //Get test invitations
+  //Get test invitations - simplified query to diagnose issues
   const { data: invitations, error: invError } = await supabase
     .from('test_invitations')
-    .select(`
-      *,
-      test:tests(
-        *,
-        mentor:users(full_name, avatar_url)
-      )
-    `)
+    .select('*')
     .eq('student_id', user.id)
     .order('invited_at', { ascending: false });
 
   if (invError) {
     console.error('Failed to load test invitations:', invError);
   }
+
+  // Fetch test details separately for each invitation
+  const invitationsWithTests = await Promise.all(
+    (invitations || []).map(async (inv) => {
+      const { data: test } = await supabase
+        .from('tests')
+        .select('*')
+        .eq('id', inv.test_id)
+        .single();
+
+      return { ...inv, test };
+    })
+  );
 
   // Get submissions
   const { data: submissions } = await supabase
@@ -57,14 +64,14 @@ export default async function StudentTestsPage() {
   const completedTestIds = new Set(submissions?.map(s => s.test_id) || []);
 
   // Live tests: tests that are live AND student hasn't completed yet
-  const liveTests = invitations?.filter(inv =>
+  const liveTests = invitationsWithTests?.filter(inv =>
     inv.test?.is_live &&
     !completedTestIds.has(inv.test.id) &&
     inv.status !== 'declined'
   ) || [];
 
   // Pending tests: not live yet, not completed, and upcoming schedule
-  const pendingTests = invitations?.filter(inv =>
+  const pendingTests = invitationsWithTests?.filter(inv =>
     inv.status === 'pending' &&
     !inv.test?.is_live &&
     !completedTestIds.has(inv.test?.id) &&
@@ -250,7 +257,7 @@ export default async function StudentTestsPage() {
               </div>
             )}
 
-            {invitations?.length === 0 && submissions?.length === 0 && (
+            {invitationsWithTests?.length === 0 && submissions?.length === 0 && (
               <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
                 <AlertCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-slate-900 mb-2">No tests yet</h3>

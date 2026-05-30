@@ -42,64 +42,29 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     redirect('/dashboard/mentor/tests');
   }
 
-  // Get submissions via admin — try full column set first, fall back to base columns
-  // if extended columns (from ADD_PROCTORING.sql) haven't been migrated yet
-  let submissions: any[] | null = null;
-  let subError: any = null;
-
-  const fullSelect = `
+  // Get submissions via admin
+  const { data: submissions, error: subError } = await admin
+    .from('test_submissions')
+    .select(`
       id,
       score,
       max_score,
       percentage,
       submitted_at,
       ai_evaluated_at,
-      manual_grades,
       warnings_count,
-      is_disqualified,
-      screen_recording_url,
-      student:users!student_id(id, full_name, avatar_url)
-    `;
-
-  const baseSelect = `
-      id,
-      score,
-      max_score,
-      percentage,
-      submitted_at,
-      student:users!student_id(id, full_name, avatar_url)
-    `;
-
-  const fullResult = await admin
-    .from('test_submissions')
-    .select(fullSelect)
+      is_disqualified
+    `)
     .eq('test_id', id);
 
-  if (fullResult.error) {
-    // Extended columns not yet migrated — use base columns
-    console.warn('Submissions full query failed, falling back to base columns:', fullResult.error.message);
-    const baseResult = await admin
-      .from('test_submissions')
-      .select(baseSelect)
-      .eq('test_id', id);
-    submissions = baseResult.data;
-    subError = baseResult.error;
-  } else {
-    submissions = fullResult.data;
+  if (subError) {
+    console.error('Error fetching submissions:', subError);
   }
 
-  if (subError) console.error('Error fetching submissions:', subError);
-
-  // Get invitations via admin to bypass RLS and avoid FK hint issues
+  // Get invitations via admin
   const { data: invitations, error: invError } = await admin
     .from('test_invitations')
-    .select(`
-      id,
-      student_id,
-      status,
-      invited_at,
-      student:users!student_id(id, full_name, avatar_url, email)
-    `)
+    .select('id, student_id, status, invited_at')
     .eq('test_id', id);
 
   if (invError) console.error('Error fetching invitations:', invError);

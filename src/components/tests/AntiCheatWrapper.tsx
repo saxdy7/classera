@@ -16,6 +16,7 @@ interface AntiCheatConfig {
 interface AntiCheatProps {
     testId: string;
     studentId: string;
+    sessionId?: string;
     config?: Partial<AntiCheatConfig>;
     onViolation: (violation: { type: string; count: number; timestamp: string }) => void;
     onMaxViolations: () => void;
@@ -32,13 +33,14 @@ const defaultConfig: AntiCheatConfig = {
     maxWarnings: 5,
 };
 
-export function AntiCheatWrapper({ 
-    testId, 
-    studentId, 
-    config: userConfig, 
-    onViolation, 
+export function AntiCheatWrapper({
+    testId,
+    studentId,
+    sessionId,
+    config: userConfig,
+    onViolation,
     onMaxViolations,
-    children 
+    children
 }: AntiCheatProps) {
     const config = { ...defaultConfig, ...userConfig };
     const [warnings, setWarnings] = useState<{ type: string; timestamp: string }[]>([]);
@@ -75,15 +77,19 @@ export function AntiCheatWrapper({
 
     const logViolation = async (type: string, timestamp: string) => {
         try {
-            await fetch('/api/proctoring/violations', {
+            const body: Record<string, any> = {
+                violation_type: type,
+                timestamp,
+            };
+
+            if (sessionId) {
+                body.session_id = sessionId;
+            }
+
+            await fetch(`/api/tests/${testId}/violations-secure`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    test_id: testId,
-                    student_id: studentId,
-                    violation_type: type,
-                    timestamp,
-                }),
+                body: JSON.stringify(body),
             });
         } catch (error) {
             console.error('Failed to log violation:', error);

@@ -391,6 +391,7 @@ export default function TakeTestPageSecure() {
       <AntiCheatWrapper
         testId={testId}
         studentId={userId}
+        sessionId={sessionData.sessionId}
         config={{
           preventCopyPaste: true,
           detectTabSwitch: true,
