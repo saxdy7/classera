@@ -8,6 +8,8 @@ export async function POST(request: Request) {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
 
+        console.log('📌 Assign test API called for user:', user?.id);
+
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -15,63 +17,71 @@ export async function POST(request: Request) {
         const admin = createAdminClient();
 
         // Verify mentor role via admin client (avoids RLS recursion on users table)
-        const { data: profile } = await admin
+        const { data: profile, error: profileError } = await admin
             .from('users')
             .select('role')
             .eq('id', user.id)
             .single();
 
+        console.log('👤 Profile lookup:', { profile, error: profileError?.message });
+
+        if (profileError || !profile) {
+            return NextResponse.json({ error: 'Failed to verify profile: ' + profileError?.message }, { status: 500 });
+        }
+
         if (profile?.role !== 'mentor') {
-            return NextResponse.json({ error: 'Only mentors can assign tests' }, { status: 403 });
+            return NextResponse.json({ error: `Only mentors can assign tests. Your role: ${profile?.role}` }, { status: 403 });
         }
 
         const body = await request.json();
         const { test_id, student_ids, community_id, send_notification } = body;
 
-        console.log('📌 Assign test API called:', { test_id, student_ids, community_id, mentor_id: user.id });
+        console.log('📌 Request body:', { test_id, student_ids: student_ids?.length, community_id });
 
         if (!test_id) {
             return NextResponse.json({ error: 'Test ID required' }, { status: 400 });
         }
 
         // Verify test belongs to this mentor
-        const { data: test } = await admin
+        const { data: test, error: testError } = await admin
             .from('tests')
             .select('id, title, mentor_id')
             .eq('id', test_id)
             .eq('mentor_id', user.id)
             .single();
 
-        if (!test) {
-            return NextResponse.json({ error: 'Test not found or unauthorized' }, { status: 404 });
+        console.log('🧪 Test lookup:', { test: test?.id, mentor_id: test?.mentor_id, error: testError?.message });
+
+        if (testError || !test) {
+            return NextResponse.json({ error: `Test not found or unauthorized: ${testError?.message}` }, { status: 404 });
         }
 
         let studentsToAssign: string[] = [];
 
         // If community_id provided, get all members via admin (bypasses RLS on community_members)
-        // Real schema from CREATE_COMMUNITIES.sql: student_id (not user_id)
         if (community_id) {
-            const { data: members } = await admin
+            const { data: members, error: membersError } = await admin
                 .from('community_members')
                 .select('student_id')
                 .eq('community_id', community_id)
-                .neq('student_id', user.id); // Exclude mentor
+                .neq('student_id', user.id);
+
+            console.log('👥 Community members:', { count: members?.length, error: membersError?.message });
 
             studentsToAssign = members?.map((m: any) => m.student_id) || [];
-            console.log('👥 Community members found:', studentsToAssign.length);
         }
 
         // Add individual students
         if (student_ids && Array.isArray(student_ids)) {
             studentsToAssign = [...new Set([...studentsToAssign, ...student_ids])];
-            console.log('📝 Individual students added:', student_ids.length, 'Total now:', studentsToAssign.length);
+            console.log('📝 Students to assign:', studentsToAssign.length);
         }
 
         if (studentsToAssign.length === 0) {
             return NextResponse.json({ error: 'No students to assign' }, { status: 400 });
         }
 
-        // Create invitations (upsert to avoid duplicates) via admin client
+        // Create invitations via admin client
         const invitations = studentsToAssign.map(student_id => ({
             test_id,
             student_id,
@@ -80,18 +90,16 @@ export async function POST(request: Request) {
             invited_by: user.id
         }));
 
-        console.log('✍️  Creating', invitations.length, 'invitations...');
+        console.log('✍️  Inserting invitations:', invitations.length);
 
-        let { data: created, error } = await admin
+        // Use insert instead of upsert to avoid duplicate key issues
+        const { data: created, error } = await admin
             .from('test_invitations')
-            .upsert(invitations, {
-                onConflict: 'test_id,student_id',
-                ignoreDuplicates: true
-            })
+            .insert(invitations, { ignoreDuplicates: true })
             .select();
 
         if (error) {
-            console.error('❌ Error creating invitations:', error);
+            console.error('❌ Insert error:', error);
             return NextResponse.json({
               error: `Failed to create invitations: ${error.message}`,
               details: error
@@ -139,7 +147,7 @@ export async function POST(request: Request) {
         }, { status: 201 });
 
     } catch (error: any) {
-        console.error('Error assigning test:', error);
+        console.error('❌ Error assigning test:', error);
         return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
     }
 }
