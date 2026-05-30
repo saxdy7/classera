@@ -69,11 +69,24 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
 
   if (invError) console.error('Error fetching invitations:', invError);
 
+  // Fetch student details for invitations
+  const invitationsWithStudents = await Promise.all(
+    (invitations || []).map(async (inv) => {
+      const { data: student } = await admin
+        .from('users')
+        .select('id, full_name, email, avatar_url')
+        .eq('id', inv.student_id)
+        .single();
+
+      return { ...inv, student };
+    })
+  );
+
   // Combine data
   const testWithRelations = {
     ...test,
     submissions: submissions || [],
-    invitations: invitations || [],
+    invitations: invitationsWithStudents || [],
   };
 
   const submissionCount = testWithRelations.submissions?.length || 0;

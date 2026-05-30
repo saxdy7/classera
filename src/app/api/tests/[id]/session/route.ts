@@ -31,11 +31,12 @@ export async function POST(request: Request, { params }: { params: { id: string 
     // Verify test exists and is live
     const { data: test, error: testError } = await admin
       .from('tests')
-      .select('id, title, description, duration_minutes, total_marks, questions, is_live, mentor_id, enable_screen_recording, enable_face_monitoring')
+      .select('id, title, description, duration_minutes, total_marks, questions, is_live, mentor_id')
       .eq('id', testId)
       .single();
 
     if (testError || !test) {
+      console.error('Test fetch error:', testError?.message, 'testId:', testId);
       return NextResponse.json({ error: 'Test not found' }, { status: 404 });
     }
 
@@ -149,8 +150,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
         security: {
           expiresAt: expiresAt.toISOString(),
           timeRemainingSeconds: timeRemaining,
-          screenRecordingEnabled: test.enable_screen_recording ?? false,
-          faceMonitoringEnabled: test.enable_face_monitoring ?? false,
+          screenRecordingEnabled: false,
+          faceMonitoringEnabled: false,
           antiCheatEnabled: true,
           verificationRequired: true,
         },
