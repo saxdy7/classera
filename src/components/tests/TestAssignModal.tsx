@@ -278,7 +278,7 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                     <p className="text-xs text-slate-600">
                         {mode === 'students'
                             ? `${selectedStudents.size} selected`
-                            : selectedCommunity ? '1 selected' : 'None'
+                            : selectedCommunity ? '1 selected' : 'None selected'
                         }
                     </p>
                     <div className="flex gap-2">
@@ -291,10 +291,26 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                         <button
                             onClick={handleAssign}
                             disabled={submitting || (mode === 'students' && selectedStudents.size === 0) || (mode === 'community' && !selectedCommunity)}
+                            title={
+                              (mode === 'students' && selectedStudents.size === 0)
+                                ? 'Select at least one student'
+                                : (mode === 'community' && !selectedCommunity)
+                                ? 'Select a community'
+                                : `Assign to ${mode === 'students' ? selectedStudents.size : 1} recipient${mode === 'students' && selectedStudents.size !== 1 ? 's' : ''}`
+                            }
                             className="px-4 py-1.5 text-sm bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
                         >
-                            {submitting && <Loader className="w-3 h-3 animate-spin" />}
-                            Assign
+                            {submitting ? (
+                              <>
+                                <Loader className="w-3 h-3 animate-spin" />
+                                Assigning...
+                              </>
+                            ) : (
+                              <>
+                                <Check className="w-4 h-4" />
+                                Assign
+                              </>
+                            )}
                         </button>
                     </div>
                 </div>

@@ -5,42 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Clock, AlertCircle, ChevronLeft, ChevronRight, Shield, Lock } from 'lucide-react';
 import { AntiCheatWrapper } from '@/components/tests/AntiCheatWrapper';
-
-interface Question {
-  id: string;
-  question: string;
-  type: 'mcq' | 'descriptive' | 'short_answer';
-  options?: string[];
-  correct_answer?: string;
-  marks: number;
-}
-
-interface Test {
-  id: string;
-  title: string;
-  description: string | null;
-  test_type: string;
-  duration_minutes: number;
-  questions: Question[];
-  total_marks: number;
-  mentor_id: string;
-  university_id: string;
-  scheduled_at: string;
-}
-
-interface SessionData {
-  sessionId: string;
-  sessionToken: string;
-  test: Test;
-  security: {
-    expiresAt: string;
-    timeRemainingSeconds: number;
-    screenRecordingEnabled: boolean;
-    faceMonitoringEnabled: boolean;
-    antiCheatEnabled: boolean;
-    verificationRequired: boolean;
-  };
-}
+import { MCQQuestion } from '@/components/tests/MCQQuestionDisplay';
+import type { Question, Test, TestSession } from '@/lib/test-types';
 
 export default function TakeTestPageSecure() {
   const params = useParams();
@@ -331,48 +297,13 @@ export default function TakeTestPageSecure() {
           </div>
 
           {/* Answer Options */}
-          <div className={question.type === 'mcq' ? 'grid grid-cols-1 md:grid-cols-2 gap-3' : 'space-y-4'}>
-            {question.type === 'mcq' && question.options ? (
-              (() => {
-                const optionStyles = [
-                  { letter: 'A', badge: 'bg-blue-500', selected: 'border-blue-400 bg-blue-50', text: 'text-blue-700' },
-                  { letter: 'B', badge: 'bg-rose-500', selected: 'border-rose-400 bg-rose-50', text: 'text-rose-700' },
-                  { letter: 'C', badge: 'bg-amber-500', selected: 'border-amber-400 bg-amber-50', text: 'text-amber-700' },
-                  { letter: 'D', badge: 'bg-emerald-500', selected: 'border-emerald-400 bg-emerald-50', text: 'text-emerald-700' },
-                  { letter: 'E', badge: 'bg-purple-500', selected: 'border-purple-400 bg-purple-50', text: 'text-purple-700' },
-                  { letter: 'F', badge: 'bg-pink-500', selected: 'border-pink-400 bg-pink-50', text: 'text-pink-700' },
-                ];
-                return question.options.map((option: string, index: number) => {
-                  const style = optionStyles[index % optionStyles.length];
-                  const isSelected = answers[question.id] === option;
-                  return (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => handleAnswerChange(question.id, option)}
-                      className={`flex items-center gap-4 p-4 border-2 rounded-xl text-left transition-all duration-150 w-full group ${
-                        isSelected
-                          ? `${style.selected} border-current scale-[1.02] shadow-lg`
-                          : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-md hover:scale-[1.01]'
-                      }`}
-                    >
-                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0 text-sm ${style.badge}`}>
-                        {style.letter}
-                      </span>
-                      <span className={`font-medium text-sm md:text-base ${isSelected ? style.text : 'text-slate-800'}`}>
-                        {option}
-                      </span>
-                      {isSelected && (
-                        <span className="ml-auto w-6 h-6 rounded-full bg-white/80 flex items-center justify-center flex-shrink-0">
-                          <svg className={`w-4 h-4 ${style.text}`} fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        </span>
-                      )}
-                    </button>
-                  );
-                });
-              })()
+          <div className={question.type === 'mcq' ? 'space-y-3' : 'space-y-4'}>
+            {question.type === 'mcq' ? (
+              <MCQQuestion
+                question={question}
+                selectedAnswer={answers[question.id]}
+                onSelect={(answer) => handleAnswerChange(question.id, answer)}
+              />
             ) : question.type === 'short_answer' ? (
               <input
                 type="text"
