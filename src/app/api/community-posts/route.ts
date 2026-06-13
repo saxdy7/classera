@@ -252,10 +252,10 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Post ID required' }, { status: 400 });
     }
 
-    // Get post to verify ownership
+    // Get post to verify ownership and check edit time window
     const { data: post } = await supabase
       .from('community_posts')
-      .select('author_id, community_id')
+      .select('author_id, community_id, created_at')
       .eq('id', postId)
       .single();
 
@@ -275,9 +275,27 @@ export async function PATCH(request: NextRequest) {
     }
 
     const canModerate = post.author_id === user.id || community.mentor_id === user.id;
+    const isAuthor = post.author_id === user.id;
 
     if (!canModerate) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    // SERVER-SIDE: Enforce 3-hour edit window for post authors
+    // Mentors (community moderators) can always edit posts
+    if (isAuthor && !action) {
+      const createdAt = new Date(post.created_at);
+      const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+      
+      if (createdAt < threeHoursAgo) {
+        return NextResponse.json(
+          { 
+            error: 'Posts can only be edited within 3 hours of creation. Contact a mentor if you need to modify this post.',
+            code: 'EDIT_WINDOW_EXPIRED'
+          }, 
+          { status: 403 }
+        );
+      }
     }
 
     const { error } = await supabase

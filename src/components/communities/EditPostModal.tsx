@@ -39,22 +39,27 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('community_posts')
-        .update({
+      const response = await fetch('/api/community-posts', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: post.id,
           title: title.trim() || null,
           content: content.trim(),
           updated_at: new Date().toISOString()
         })
-        .eq('id', post.id);
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update post');
+      }
 
       onSuccess();
       onClose();
     } catch (error) {
       console.error('Error updating post:', error);
-      alert('Failed to update post. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to update post. Please try again.');
     } finally {
       setLoading(false);
     }
