@@ -9,7 +9,7 @@ interface CollaborationRequest {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -24,7 +24,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = params.id;
+    const { id: projectId } = await params;
     const body: CollaborationRequest = await request.json();
 
     // Verify user owns the project
@@ -83,7 +83,7 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -98,7 +98,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = params.id;
+    const { id: projectId } = await params;
 
     // Get all collaborators for this project
     const { data: collaborators, error: collabError } = await supabase
@@ -142,7 +142,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
@@ -159,7 +159,7 @@ export async function DELETE(
 
     const { searchParams } = new URL(request.url);
     const collaboratorId = searchParams.get('collaboratorId');
-    const projectId = params.id;
+    const { id: projectId } = await params;
 
     if (!collaboratorId) {
       return NextResponse.json(

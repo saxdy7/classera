@@ -29,7 +29,7 @@ const MAX_WARNINGS = 5;
  * POST /api/tests/[id]/violations
  * Log a proctoring violation for current session
  */
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const admin = createAdminClient();
@@ -39,7 +39,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const testId = params.id;
+    const { id: testId } = await params;
     const body = await request.json();
     const {
       violationType,
@@ -182,7 +182,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
  * GET /api/tests/[id]/violations
  * Get violations for a test (mentor only)
  */
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const admin = createAdminClient();
@@ -192,7 +192,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const testId = params.id;
+    const { id: testId } = await params;
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('session_id');
 

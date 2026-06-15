@@ -62,7 +62,9 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                 question: string;
                 type: string;
                 options?: string[];
-                correctAnswer?: string | string[];
+                correctAnswer?: string | string[] | number;
+                correct_answer?: string | string[];
+                marks?: number;
                 points?: number;
             }
             interface StudentAnswers {
@@ -87,9 +89,10 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                     
                     if (typeof q.correctAnswer === 'number' && q.options) {
                         correctAnswer = q.options[q.correctAnswer];
-                        isCorrect = studentAnswer === correctAnswer || studentAnswer === q.correctAnswer;
+                        isCorrect = studentAnswer === correctAnswer;
                     } else {
-                        correctAnswer = q.correctAnswer || q.correct_answer || '';
+                        const rawAnswer = (q.correctAnswer ?? q.correct_answer) ?? '';
+                        correctAnswer = Array.isArray(rawAnswer) ? rawAnswer.join(', ') : String(rawAnswer);
                         isCorrect = studentAnswer === correctAnswer;
                     }
                     
@@ -171,7 +174,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
         .order('time_taken_seconds', { ascending: true })
         .limit(50);
 
-    const leaderboardEntries = (classLeaderboard || []) as Array<{
+    const leaderboardEntries = (classLeaderboard || []) as unknown as Array<{
         student_id: string;
         score: number;
         percentage: number;
@@ -445,7 +448,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         )}
 
                         {/* Study Recommendations */}
-                        {aiAnalysis?.study_recommendations?.length > 0 && (
+                        {(aiAnalysis?.study_recommendations?.length ?? 0) > 0 && (
                             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -454,7 +457,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                     <h3 className="text-lg font-bold text-blue-800">Study Recommendations</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {aiAnalysis.study_recommendations.map((rec: string, idx: number) => (
+                                    {aiAnalysis!.study_recommendations.map((rec: string, idx: number) => (
                                         <div key={idx} className="flex items-start gap-2 p-3 bg-white/60 rounded-lg text-blue-700">
                                             <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium text-blue-600">
                                                 {idx + 1}
