@@ -42,45 +42,37 @@ export default async function TestDetailPage({ params }: { params: Promise<{ id:
     redirect('/dashboard/mentor/tests');
   }
 
-  // Get submissions via admin
+  // Get submissions via admin (include student profile for display)
   const { data: submissions, error: subError } = await admin
     .from('test_submissions')
     .select(`
       id,
+      student_id,
       score,
       max_score,
       percentage,
       submitted_at,
       ai_evaluated_at,
       warnings_count,
-      is_disqualified
+      is_disqualified,
+      screen_recording_url,
+      manual_grades,
+      student:users!test_submissions_student_id_fkey(id, full_name, email, avatar_url)
     `)
-    .eq('test_id', id);
+    .eq('test_id', id)
+    .order('percentage', { ascending: false });
 
   if (subError) {
     console.error('Error fetching submissions:', subError);
   }
 
-  // Get invitations via admin
-  const { data: invitations, error: invError } = await admin
+  // Get invitations with student details via admin — single join query, no N+1
+  const { data: invitationsWithStudents, error: invError } = await admin
     .from('test_invitations')
-    .select('id, student_id, status, invited_at')
+    .select('id, student_id, status, invited_at, student:users!test_invitations_student_id_fkey(id, full_name, email, avatar_url)')
     .eq('test_id', id);
 
   if (invError) console.error('Error fetching invitations:', invError);
-
-  // Fetch student details for invitations
-  const invitationsWithStudents = await Promise.all(
-    (invitations || []).map(async (inv) => {
-      const { data: student } = await admin
-        .from('users')
-        .select('id, full_name, email, avatar_url')
-        .eq('id', inv.student_id)
-        .single();
-
-      return { ...inv, student };
-    })
-  );
 
   // Combine data
   const testWithRelations = {

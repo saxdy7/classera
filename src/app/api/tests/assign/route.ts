@@ -126,24 +126,10 @@ export async function POST(request: Request) {
             console.log('🔔 Notifications sent:', notifications.length);
         }
 
-        // Update test to go live if needed
-        const { data: updatedTest, error: updateError } = await admin
-            .from('tests')
-            .update({ is_live: true, scheduled_at: new Date().toISOString() })
-            .eq('id', test_id)
-            .select()
-            .single();
-
-        if (updateError) {
-            console.error('⚠️  Error updating test to live:', updateError);
-        } else {
-            console.log('🚀 Test marked as live');
-        }
-
         return NextResponse.json({
             success: true,
             assigned_count: studentsToAssign.length,
-            message: `Test assigned to ${studentsToAssign.length} students`
+            message: `Test assigned to ${studentsToAssign.length} student${studentsToAssign.length !== 1 ? 's' : ''}. Use "Go Live" to make it available to students.`
         }, { status: 201 });
 
     } catch (error: any) {

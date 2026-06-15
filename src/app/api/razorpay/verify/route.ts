@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const secret = process.env.RAZORPAY_KEY_SECRET || '2YxWmjow6x17AdLTnyH7g42b';
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!secret) {
+      throw new Error('RAZORPAY_KEY_SECRET environment variable is required');
+    }
     
     const body = razorpay_order_id + '|' + razorpay_payment_id;
     const expectedSignature = crypto

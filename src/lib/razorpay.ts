@@ -1,6 +1,13 @@
 import Razorpay from 'razorpay';
 
+const keyId = process.env.RAZORPAY_KEY_ID;
+const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+if (!keyId || !keySecret) {
+  throw new Error('RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables are required');
+}
+
 export const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_SVkKpvA0gfDTu1',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '2YxWmjow6x17AdLTnyH7g42b',
+  key_id: keyId,
+  key_secret: keySecret,
 });

@@ -1,9 +1,11 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { CheckCircle, XCircle, Clock, Award, ArrowLeft, FileText, Sparkles, Lightbulb, TrendingUp, AlertCircle, BookOpen, Trophy } from 'lucide-react';
 import Link from 'next/link';
+import type { AIAnalysis } from '@/lib/test-types';
 
 export default async function TestResultsPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createClient();
@@ -153,19 +155,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
         }
     }
 
-    interface AIAnalysis {
-        overallFeedback?: string;
-        strengths?: string[];
-        improvements?: string[];
-        score?: number;
-    }
     const aiAnalysis = submission.ai_analysis as AIAnalysis | null;
-    const percentage = aiAnalysis?.percentage || submission.percentage || 0;
+    const percentage = aiAnalysis?.percentage ?? submission.percentage ?? 0;
     const passed = percentage >= 40;
-    const grade = aiAnalysis?.grade || (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');
+    const grade = aiAnalysis?.grade ?? (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');
 
-    // Fetch per-test leaderboard
-    const { data: classLeaderboard } = await supabase
+    // Fetch per-test leaderboard — admin client needed so RLS doesn't hide other students' rows
+    const admin = createAdminClient();
+    const { data: classLeaderboard } = await admin
         .from('test_submissions')
         .select('student_id, score, percentage, time_taken_seconds, users!test_submissions_student_id_fkey(id, full_name, avatar_url)')
         .eq('test_id', testId)
@@ -406,7 +403,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         {aiAnalysis && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Strengths */}
-                                {aiAnalysis.strengths?.length > 0 && (
+                                {(aiAnalysis.strengths?.length ?? 0) > 0 && (
                                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
                                         <div className="flex items-center gap-3 mb-4">
                                             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -426,7 +423,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                 )}
 
                                 {/* Areas for Improvement */}
-                                {aiAnalysis.weaknesses?.length > 0 && (
+                                {(aiAnalysis.weaknesses?.length ?? 0) > 0 && (
                                     <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-6">
                                         <div className="flex items-center gap-3 mb-4">
                                             <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">

@@ -6,7 +6,28 @@ import { createClient } from '@/lib/supabase/client';
 import { Clock, AlertCircle, ChevronLeft, ChevronRight, Shield, Lock } from 'lucide-react';
 import { AntiCheatWrapper } from '@/components/tests/AntiCheatWrapper';
 import { MCQQuestion } from '@/components/tests/MCQQuestionDisplay';
-import type { Question, Test, TestSession } from '@/lib/test-types';
+import type { Question } from '@/lib/test-types';
+
+interface SessionData {
+  sessionId: string;
+  sessionToken: string;
+  test: {
+    id: string;
+    title: string;
+    description: string | null;
+    durationMinutes: number;
+    totalMarks: number;
+    questions: Question[];
+  };
+  security: {
+    expiresAt: string;
+    timeRemainingSeconds: number;
+    screenRecordingEnabled: boolean;
+    faceMonitoringEnabled: boolean;
+    antiCheatEnabled: boolean;
+    verificationRequired: boolean;
+  };
+}
 
 export default function TakeTestPageSecure() {
   const params = useParams();
@@ -26,6 +47,7 @@ export default function TakeTestPageSecure() {
   const [violations, setViolations] = useState<{ type: string; count: number; timestamp: string }[]>([]);
   const sessionTokenRef = useRef<string | null>(null);
   const sessionStartTimeRef = useRef<number>(0);
+  const handleSubmitRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
   // Initialize session
   useEffect(() => {
@@ -77,14 +99,14 @@ export default function TakeTestPageSecure() {
     initializeTestSession();
   }, [testId, router, supabase]);
 
-  // Timer countdown
+  // Timer countdown — uses ref so the callback always calls the latest handleSubmit
   useEffect(() => {
     if (!sessionData || timeRemaining <= 0) return;
 
     const interval = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          handleSubmit();
+          handleSubmitRef.current();
           return 0;
         }
         return prev - 1;
@@ -120,7 +142,7 @@ export default function TakeTestPageSecure() {
   // Max violations handler - auto submit
   const handleMaxViolations = useCallback(() => {
     alert('Maximum violations reached. Your test will be auto-submitted.');
-    handleSubmit();
+    handleSubmitRef.current();
   }, []);
 
   const formatTime = (seconds: number) => {
@@ -137,7 +159,7 @@ export default function TakeTestPageSecure() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (submitting || !sessionData || !sessionTokenRef.current) return;
     setSubmitting(true);
 
@@ -167,15 +189,18 @@ export default function TakeTestPageSecure() {
         return;
       }
 
-      // Success - redirect to results
       router.push(`/dashboard/student/tests/${testId}/results`);
-
     } catch (err) {
       console.error('Error submitting test:', err);
       setError('An error occurred. Please try again.');
       setSubmitting(false);
     }
-  };
+  }, [submitting, sessionData, testId, answers, violations, timeRemaining, router]);
+
+  // Keep ref current so the timer always calls the latest version
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmit;
+  }, [handleSubmit]);
 
   if (loading) {
     return (

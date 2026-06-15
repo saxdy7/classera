@@ -163,6 +163,11 @@ export async function POST(request: Request) {
 
     const percentage = (score / maxScore) * 100;
 
+    // Calculate time taken from session start
+    const timeTakenSeconds = Math.floor(
+      (Date.now() - new Date(session.started_at).getTime()) / 1000
+    );
+
     // Generate submission hash for integrity
     const submissionHash = generateSubmissionHash(answers, testIdValue, user.id);
 
@@ -184,6 +189,7 @@ export async function POST(request: Request) {
         risk_reasons: suspiciousCheck.reasons,
       },
       submitted_at: new Date().toISOString(),
+      time_taken_seconds: timeTakenSeconds,
       warnings_count: session.total_violations,
       is_disqualified: session.is_flagged || suspiciousCheck.riskScore > 80,
       student_device_info: {

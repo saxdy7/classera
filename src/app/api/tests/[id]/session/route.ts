@@ -16,7 +16,7 @@ import {
  * Creates a secure session for taking a test
  * Returns session token, test details, and security configuration
  */
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const admin = createAdminClient();
@@ -26,7 +26,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const testId = params.id;
+    const { id: testId } = await params;
 
     // Verify test exists and is live
     const { data: test, error: testError } = await admin
@@ -86,7 +86,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 
     // Collect security info
-    const ipAddress = getClientIP(request);
+    const rawIP = getClientIP(request);
+    const ipAddress = rawIP && rawIP !== 'unknown' ? rawIP : null;
     const userAgent = getUserAgent(request);
     const browserFingerprint = generateBrowserFingerprint(userAgent);
     const sessionToken = generateTestSessionToken();
@@ -168,7 +169,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
  * GET /api/tests/[id]/session
  * Validates and retrieves active session info
  */
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const admin = createAdminClient();
@@ -178,7 +179,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const testId = params.id;
+    const { id: testId } = await params;
     const { searchParams } = new URL(request.url);
     const sessionToken = searchParams.get('token');
 

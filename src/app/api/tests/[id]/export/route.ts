@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
         const format = searchParams.get('format') || 'csv';
 
         const supabase = await createClient();
+        const admin = createAdminClient();
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
@@ -18,7 +20,7 @@ export async function GET(
         }
 
         // Verify test belongs to this mentor
-        const { data: test } = await supabase
+        const { data: test } = await admin
             .from('tests')
             .select('id, title, mentor_id, questions, total_marks')
             .eq('id', id)
@@ -26,77 +28,95 @@ export async function GET(
             .single();
 
         if (!test) {
-            return NextResponse.json({ error: 'Test not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Test not found or access denied' }, { status: 404 });
         }
 
-        // Get all submissions with student info
-        const { data: submissions } = await supabase
+        // Fetch submissions via admin client (bypasses RLS), ordered by score desc
+        const { data: submissions, error: subError } = await admin
             .from('test_submissions')
             .select(`
-                *,
-                student:users(id, full_name, email)
+                id,
+                student_id,
+                score,
+                max_score,
+                percentage,
+                submitted_at,
+                warnings_count,
+                is_disqualified,
+                ai_evaluated_at,
+                answers,
+                student:users!test_submissions_student_id_fkey(full_name, email)
             `)
             .eq('test_id', id)
-            .order('submitted_at', { ascending: true });
+            .order('percentage', { ascending: false });
+
+        if (subError) {
+            console.error('Export fetch error:', subError);
+            return NextResponse.json({ error: 'Failed to fetch submissions' }, { status: 500 });
+        }
+
+        const getGrade = (pct: number) => {
+            if (pct >= 90) return 'A+';
+            if (pct >= 80) return 'A';
+            if (pct >= 70) return 'B';
+            if (pct >= 60) return 'C';
+            if (pct >= 50) return 'D';
+            return 'F';
+        };
+
+        const escapeCell = (value: unknown) =>
+            `"${String(value ?? '').replace(/"/g, '""')}"`;
 
         if (format === 'csv') {
-            // Generate CSV content
-            const questions = test.questions || [];
-            
-            // CSV Headers
+            const questions = (test.questions as any[]) || [];
+
             const headers = [
+                'Rank',
                 'Student Name',
                 'Email',
                 'Score',
+                'Total Marks',
                 'Percentage',
-                'Status',
-                'Started At',
+                'Grade',
                 'Submitted At',
-                'Time Taken (min)',
-                ...questions.map((_: any, i: number) => `Q${i + 1}`)
+                'Warnings',
+                'Disqualified',
+                'AI Evaluated',
+                ...questions.map((_: any, i: number) => `Q${i + 1} Answer`),
             ];
 
-            // CSV Rows
-            const rows = submissions?.map(sub => {
+            const rows = (submissions || []).map((sub: any, idx: number) => {
                 const answers = sub.answers || {};
-                const startTime = sub.started_at ? new Date(sub.started_at) : null;
-                const endTime = sub.submitted_at ? new Date(sub.submitted_at) : null;
-                const timeTaken = startTime && endTime 
-                    ? Math.round((endTime.getTime() - startTime.getTime()) / 60000) 
-                    : '';
-
                 const questionAnswers = questions.map((q: any, i: number) => {
-                    const answer = answers[q.id || `q_${i}`];
-                    if (q.type === 'mcq' && q.options && typeof answer === 'number') {
-                        return q.options[answer] || answer;
-                    }
-                    return answer || '';
+                    return answers[q.id || `q_${i}`] || '';
                 });
 
                 return [
+                    idx + 1,
                     sub.student?.full_name || 'Unknown',
                     sub.student?.email || '',
-                    sub.score || 0,
-                    `${(sub.percentage || 0).toFixed(1)}%`,
-                    sub.status || 'completed',
-                    sub.started_at ? new Date(sub.started_at).toLocaleString() : '',
+                    sub.score ?? 0,
+                    sub.max_score ?? test.total_marks,
+                    `${(sub.percentage ?? 0).toFixed(1)}%`,
+                    getGrade(sub.percentage ?? 0),
                     sub.submitted_at ? new Date(sub.submitted_at).toLocaleString() : '',
-                    timeTaken,
-                    ...questionAnswers
+                    sub.warnings_count ?? 0,
+                    sub.is_disqualified ? 'Yes' : 'No',
+                    sub.ai_evaluated_at ? 'Yes' : 'No',
+                    ...questionAnswers,
                 ];
-            }) || [];
+            });
 
-            // Combine headers and rows
-            const csvContent = [
-                headers.join(','),
-                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-            ].join('\n');
+            const csv = [headers, ...rows]
+                .map(row => row.map(escapeCell).join(','))
+                .join('\n');
 
-            // Return CSV file
-            return new Response(csvContent, {
+            const filename = `${test.title.replace(/[^a-z0-9]/gi, '_')}_results.csv`;
+
+            return new Response(csv, {
                 headers: {
-                    'Content-Type': 'text/csv',
-                    'Content-Disposition': `attachment; filename="test-results-${test.title.replace(/[^a-z0-9]/gi, '-')}.csv"`,
+                    'Content-Type': 'text/csv; charset=utf-8',
+                    'Content-Disposition': `attachment; filename="${filename}"`,
                 },
             });
         }
@@ -107,24 +127,24 @@ export async function GET(
                     id: test.id,
                     title: test.title,
                     total_marks: test.total_marks,
-                    questions: test.questions,
                 },
-                submissions: submissions?.map(sub => ({
+                submissions: (submissions || []).map((sub: any, idx: number) => ({
+                    rank: idx + 1,
                     student: sub.student,
                     score: sub.score,
                     percentage: sub.percentage,
-                    status: sub.status,
-                    answers: sub.answers,
-                    started_at: sub.started_at,
+                    grade: getGrade(sub.percentage ?? 0),
                     submitted_at: sub.submitted_at,
-                    ai_analysis: sub.ai_analysis,
+                    warnings_count: sub.warnings_count,
+                    is_disqualified: sub.is_disqualified,
+                    ai_evaluated_at: sub.ai_evaluated_at,
                 })),
             });
         }
 
-        return NextResponse.json({ error: 'Invalid format' }, { status: 400 });
-    } catch (error) {
+        return NextResponse.json({ error: 'Invalid format. Use ?format=csv or ?format=json' }, { status: 400 });
+    } catch (error: any) {
         console.error('Error exporting results:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
     }
 }

@@ -16,12 +16,10 @@ import path from 'path';
  */
 export async function POST(request: Request) {
     try {
-        // Verify this is an admin request (check authorization header or session)
         const authHeader = request.headers.get('authorization');
-        const adminToken = process.env.ADMIN_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-        
-        // Basic auth check - in production, implement proper auth
-        if (!authHeader?.includes(adminToken || '')) {
+        const adminToken = process.env.ADMIN_API_KEY;
+
+        if (!adminToken || !authHeader || authHeader !== `Bearer ${adminToken}`) {
             return NextResponse.json(
                 { error: 'Unauthorized. Admin access required.' },
                 { status: 401 }
