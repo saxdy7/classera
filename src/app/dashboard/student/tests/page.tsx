@@ -26,29 +26,16 @@ export default async function StudentTestsPage() {
     redirect('/onboarding/student');
   }
 
-  //Get test invitations - simplified query to diagnose issues
-  const { data: invitations, error: invError } = await supabase
+  // Single query — join test details directly onto each invitation
+  const { data: invitationsWithTests, error: invError } = await supabase
     .from('test_invitations')
-    .select('*')
+    .select('*, test:tests(*)')
     .eq('student_id', user.id)
     .order('invited_at', { ascending: false });
 
   if (invError) {
     console.error('Failed to load test invitations:', invError);
   }
-
-  // Fetch test details separately for each invitation
-  const invitationsWithTests = await Promise.all(
-    (invitations || []).map(async (inv) => {
-      const { data: test } = await supabase
-        .from('tests')
-        .select('*')
-        .eq('id', inv.test_id)
-        .single();
-
-      return { ...inv, test };
-    })
-  );
 
   // Get submissions
   const { data: submissions } = await supabase
