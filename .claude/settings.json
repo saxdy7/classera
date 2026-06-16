@@ -8,7 +8,10 @@
       "PowerShell(Stop-Process -Id 86808 -Force -ErrorAction SilentlyContinue)",
       "PowerShell(Stop-Process -Id 48776 -Force -ErrorAction SilentlyContinue)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
