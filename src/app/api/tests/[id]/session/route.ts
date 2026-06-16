@@ -75,14 +75,48 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // Check for active session (only one session per test per student at a time)
     const { data: activeSession } = await admin
       .from('test_sessions')
-      .select('id')
+      .select('*')
       .eq('test_id', testId)
       .eq('student_id', user.id)
       .eq('is_active', true)
       .single();
 
     if (activeSession) {
-      return NextResponse.json({ error: 'You already have an active session for this test' }, { status: 409 });
+      const activeExpiresAt = new Date(activeSession.expires_at);
+
+      if (activeExpiresAt < new Date()) {
+        // Stale/expired session left over from an interrupted attempt — clear it and continue below to create a fresh one
+        await admin
+          .from('test_sessions')
+          .update({ is_active: false, was_interrupted: true })
+          .eq('id', activeSession.id);
+      } else {
+        // Still valid — resume it instead of blocking the student out
+        const timeRemaining = getRemainingSeconds(activeExpiresAt);
+        return NextResponse.json({
+          success: true,
+          session: {
+            sessionId: activeSession.id,
+            sessionToken: activeSession.session_token,
+            test: {
+              id: test.id,
+              title: test.title,
+              description: test.description,
+              durationMinutes: test.duration_minutes,
+              totalMarks: test.total_marks,
+              questions: test.questions,
+            },
+            security: {
+              expiresAt: activeExpiresAt.toISOString(),
+              timeRemainingSeconds: timeRemaining,
+              screenRecordingEnabled: false,
+              faceMonitoringEnabled: false,
+              antiCheatEnabled: true,
+              verificationRequired: true,
+            },
+          },
+        }, { status: 200 });
+      }
     }
 
     // Collect security info
