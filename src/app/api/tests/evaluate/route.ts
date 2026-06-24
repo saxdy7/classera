@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 
@@ -19,7 +20,9 @@ interface QuestionAnalysis {
 
 export async function POST(request: Request) {
     try {
-        const supabase = await createClient();
+        // Use admin client — this endpoint is triggered server-to-server (no auth cookies
+        // are forwarded), so RLS-scoped writes via the cookie client would silently fail.
+        const admin = createAdminClient();
         const body = await request.json();
         const { submission_id, test_id, answers, questions, force_reevaluate } = body;
 
@@ -32,7 +35,7 @@ export async function POST(request: Request) {
         let answersToEvaluate = answers;
 
         if (!questionsToEvaluate || !answersToEvaluate) {
-            const { data: submission, error: subError } = await supabase
+            const { data: submission, error: subError } = await admin
                 .from('test_submissions')
                 .select(`*, test:tests(questions, total_marks, title)`)
                 .eq('id', submission_id)
@@ -47,7 +50,7 @@ export async function POST(request: Request) {
         }
 
         // Check if already evaluated
-        const { data: existingSubmission } = await supabase
+        const { data: existingSubmission } = await admin
             .from('test_submissions')
             .select('ai_analysis, ai_evaluated_at')
             .eq('id', submission_id)
@@ -232,7 +235,7 @@ Evaluate each answer and respond with ONLY valid JSON:
         };
 
         // Update submission
-        const { error: updateError } = await supabase
+        const { error: updateError } = await admin
             .from('test_submissions')
             .update({
                 ai_analysis: finalAnalysis,

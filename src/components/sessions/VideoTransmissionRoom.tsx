@@ -11,7 +11,7 @@ declare global {
 }
 
 interface VideoTransmissionRoomProps {
-  roomUrl: string;
+  roomUrl?: string | null;
   sessionTitle: string;
   sessionId: string;
   userId: string;
@@ -40,7 +40,10 @@ export function VideoTransmissionRoom({
 }: VideoTransmissionRoomProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const jitsiRef = useRef<any>(null);
-  
+
+  // Always have a usable URL — fall back to a deterministic Jitsi room
+  const resolvedRoomUrl = roomUrl || `https://meet.jit.si/classera-${sessionId.replace(/-/g, '').slice(0, 16)}`;
+
   const [isMuted, setIsMuted] = useState(settings.require_microphone ? false : true);
   const [isCameraOff, setIsCameraOff] = useState(settings.require_camera ? false : true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
@@ -57,7 +60,7 @@ export function VideoTransmissionRoom({
     script.onload = () => {
       if (!window.JitsiMeetExternalAPI) return;
 
-      const roomName = roomUrl.split('/').pop() || `classera-${sessionId.replace(/-/g, '').slice(0, 16)}`;
+      const roomName = resolvedRoomUrl.split('/').pop() || `classera-${sessionId.replace(/-/g, '').slice(0, 16)}`;
 
       const options = {
         roomName: roomName,
@@ -146,7 +149,7 @@ export function VideoTransmissionRoom({
   };
 
   const handleCopyRoomUrl = () => {
-    navigator.clipboard.writeText(roomUrl);
+    navigator.clipboard.writeText(resolvedRoomUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

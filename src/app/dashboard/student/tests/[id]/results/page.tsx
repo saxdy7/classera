@@ -42,14 +42,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
         redirect('/dashboard/student/tests');
     }
 
+    // Admin client — used for evaluation persistence (RLS would block a student
+    // writing their own score) and for reading the class leaderboard.
+    const admin = createAdminClient();
+
     // Trigger AI evaluation if not done yet (server-side)
     if (!submission.ai_evaluated_at) {
-        // Import the evaluate function directly instead of making HTTP call
-        const { createClient: createServerClient } = await import('@/lib/supabase/server');
-        const serverSupabase = await createServerClient();
-        
         // Get test data
-        const { data: testData } = await serverSupabase
+        const { data: testData } = await admin
             .from('tests')
             .select('questions, total_marks')
             .eq('id', testId)
@@ -140,7 +140,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
             };
             
             // Update submission with analysis
-            await serverSupabase
+            await admin
                 .from('test_submissions')
                 .update({
                     ai_analysis: aiAnalysisData,
@@ -164,7 +164,6 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
     const grade = aiAnalysis?.grade ?? (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');
 
     // Fetch per-test leaderboard — admin client needed so RLS doesn't hide other students' rows
-    const admin = createAdminClient();
     const { data: classLeaderboard } = await admin
         .from('test_submissions')
         .select('student_id, score, percentage, time_taken_seconds, users!test_submissions_student_id_fkey(id, full_name, avatar_url)')

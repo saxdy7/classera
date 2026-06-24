@@ -110,7 +110,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
 
             const totalScore = mcqScore + totalManualScore;
             const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
-            const percentage = (totalScore / totalMarks) * 100;
+            const percentage = totalMarks > 0 ? (totalScore / totalMarks) * 100 : 0;
 
             await fetch(`/api/tests/${testId}/grade`, {
                 method: 'POST',

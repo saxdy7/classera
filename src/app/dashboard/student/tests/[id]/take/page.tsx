@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Clock, AlertCircle, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
@@ -50,6 +50,7 @@ export default function TakeTestPage() {
   const [submitting, setSubmitting] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [violations, setViolations] = useState<{ type: string; count: number; timestamp: string }[]>([]);
+  const handleSubmitRef = useRef<() => void>(() => {});
 
   // Anti-cheat violation handler
   const handleViolation = useCallback((violation: { type: string; count: number; timestamp: string }) => {
@@ -62,10 +63,53 @@ export default function TakeTestPage() {
     }).catch(console.error);
   }, [testId, userId]);
 
+  const handleSubmit = useCallback(async () => {
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      const response = await fetch('/api/tests/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          test_id: testId,
+          answers,
+          violations: violations.length > 0 ? violations : null,
+          time_taken_minutes: test ? (test.duration_minutes * 60 - timeRemaining) / 60 : 0,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Submission error:', data);
+        alert(data.error || 'Failed to submit test. Please try again.');
+        setSubmitting(false);
+        return;
+      }
+
+      // Show results immediately if enabled
+      if (test?.settings?.show_results_immediately) {
+        router.push(`/dashboard/student/tests/${testId}/results`);
+      } else {
+        router.push('/dashboard/student/tests');
+      }
+    } catch (error) {
+      console.error('Error submitting test:', error);
+      alert('An error occurred. Please try again.');
+      setSubmitting(false);
+    }
+  }, [submitting, answers, violations, test, timeRemaining, testId, router]);
+
+  // Keep ref current so timer/violation callbacks always call the latest handleSubmit
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmit;
+  }, [handleSubmit]);
+
   // Max violations handler - auto submit
   const handleMaxViolations = useCallback(() => {
     alert('Maximum violations reached. Your test will be auto-submitted.');
-    handleSubmit();
+    handleSubmitRef.current();
   }, []);
 
   useEffect(() => {
@@ -115,7 +159,7 @@ export default function TakeTestPage() {
     const interval = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          handleSubmit();
+          handleSubmitRef.current();
           return 0;
         }
         return prev - 1;
@@ -137,44 +181,6 @@ export default function TakeTestPage() {
       ...prev,
       [questionId]: answer,
     }));
-  };
-
-  const handleSubmit = async () => {
-    if (submitting) return;
-    setSubmitting(true);
-
-    try {
-      const response = await fetch('/api/tests/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          test_id: testId,
-          answers,
-          violations: violations.length > 0 ? violations : null,
-          time_taken_minutes: test ? (test.duration_minutes * 60 - timeRemaining) / 60 : 0,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error('Submission error:', data);
-        alert(data.error || 'Failed to submit test. Please try again.');
-        setSubmitting(false);
-        return;
-      }
-
-      // Show results immediately if enabled
-      if (test?.settings?.show_results_immediately) {
-        router.push(`/dashboard/student/tests/${testId}/results`);
-      } else {
-        router.push('/dashboard/student/tests');
-      }
-    } catch (error) {
-      console.error('Error submitting test:', error);
-      alert('An error occurred. Please try again.');
-      setSubmitting(false);
-    }
   };
 
   if (loading) {

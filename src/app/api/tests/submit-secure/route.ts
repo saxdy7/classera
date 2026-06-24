@@ -161,7 +161,7 @@ export async function POST(request: Request) {
       }
     });
 
-    const percentage = (score / maxScore) * 100;
+    const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
 
     // Calculate time taken from session start
     const timeTakenSeconds = Math.floor(

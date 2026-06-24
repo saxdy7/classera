@@ -95,7 +95,7 @@ export async function POST(request: Request) {
 
         console.log('Score calculated:', { score, maxScore });
 
-        const percentage = (score / maxScore) * 100;
+        const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
 
         // Update or create submission
         // First check if submission exists

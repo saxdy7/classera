@@ -507,6 +507,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                 typeInfo={sessionTypeLabels[session.session_type] || sessionTypeLabels['mentor_meeting']}
                 onStart={handleStartSession}
                 onEnd={handleEndSession}
+                onJoin={setActiveSessionInPlayer}
                 isLive
               />
             ))}
@@ -919,6 +920,7 @@ function SessionCard({
   onEnd,
   onEdit,
   onCancel,
+  onJoin,
   isLive = false,
   isPast = false
 }: {
@@ -928,6 +930,7 @@ function SessionCard({
   onEnd: (session: Session) => void;
   onEdit?: (session: Session) => void;
   onCancel?: (session: Session) => void;
+  onJoin?: (session: Session) => void;
   isLive?: boolean;
   isPast?: boolean;
 }) {
@@ -986,7 +989,7 @@ function SessionCard({
           {isLive ? (
             <>
               <button
-                onClick={() => setActiveSessionInPlayer(session)}
+                onClick={() => onJoin?.(session)}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
               >
                 <Video className="w-4 h-4" />
