@@ -248,8 +248,8 @@ function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, 
   return (
     <Link
       href={`/dashboard/mentor/tests/${test.id}`}
-      className={`block bg-white rounded-xl p-6 border hover:shadow-lg transition-all ${
-        isDraft ? 'border-amber-300 hover:border-amber-400 bg-amber-50/30' : 
+      className={`block bg-white rounded-2xl p-6 border hover:shadow-xl hover:-translate-y-0.5 transition-all ${
+        isDraft ? 'border-amber-300 hover:border-amber-400 bg-amber-50/30' :
         isLive ? 'border-green-300 hover:border-green-400' :
         isReady ? 'border-blue-300 hover:border-blue-400 bg-blue-50/30' :
         isCompleted ? 'border-slate-300 hover:border-slate-400' :

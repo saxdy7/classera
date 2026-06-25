@@ -216,19 +216,25 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         </div>
 
                         {/* Result Card */}
-                        <div className={`rounded-3xl p-8 mb-8 ${passed ? 'bg-gradient-to-br from-green-500 to-emerald-600' : 'bg-gradient-to-br from-red-500 to-rose-600'}`}>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h1 className="text-3xl font-bold text-white mb-2">{test?.title}</h1>
-                                    <p className="text-white/80">Your test results</p>
+                        <div className={`relative rounded-3xl p-8 mb-8 overflow-hidden shadow-xl ${passed ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-emerald-500/20' : 'bg-gradient-to-br from-red-500 to-rose-600 shadow-rose-500/20'}`}>
+                            {/* decorative rings */}
+                            <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10" />
+                            <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-white/5" />
+                            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="text-center md:text-left">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur text-white rounded-full text-xs font-bold uppercase tracking-wide mb-3">
+                                        {passed ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                                        {passed ? 'Passed' : 'Keep practicing'}
+                                    </span>
+                                    <h1 className="text-3xl font-bold text-white mb-1">{test?.title}</h1>
+                                    <p className="text-white/80">
+                                        Score: {submission.score ?? 0}/{test?.total_marks ?? 0} · Grade {grade}
+                                    </p>
                                 </div>
-                                <div className="text-center">
-                                    {passed ? (
-                                        <CheckCircle className="w-16 h-16 text-white mx-auto mb-2" />
-                                    ) : (
-                                        <XCircle className="w-16 h-16 text-white mx-auto mb-2" />
-                                    )}
-                                    <p className="text-white font-bold text-lg">{passed ? 'PASSED' : 'FAILED'}</p>
+                                {/* Big score ring */}
+                                <div className="flex-shrink-0 w-32 h-32 rounded-full bg-white/15 backdrop-blur flex flex-col items-center justify-center border-4 border-white/30">
+                                    <span className="text-4xl font-extrabold text-white leading-none">{Math.round(percentage)}%</span>
+                                    <span className="text-white/80 text-xs font-semibold mt-1">SCORE</span>
                                 </div>
                             </div>
                         </div>

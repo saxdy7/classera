@@ -134,28 +134,32 @@ export default async function StudentTestsPage() {
               {liveTests.length > 0 ? (
                 <div className="space-y-3">
                   {liveTests.map((inv) => (
-                    <div key={inv.id} className="bg-white rounded-lg p-6 border-2 border-green-500 shadow-sm hover:shadow-md transition-all">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
+                    <div key={inv.id} className="relative bg-white rounded-2xl p-6 border-2 border-green-400 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all overflow-hidden">
+                      <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-500 to-emerald-500" />
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-3">
                             <h3 className="text-lg font-bold text-slate-900">{inv.test.title}</h3>
-                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">Live</span>
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                              LIVE
+                            </span>
                           </div>
                           <p className="text-sm text-slate-600 mb-4">{inv.test.description}</p>
-                          <div className="flex items-center gap-4 text-sm text-slate-600">
-                            <span className="flex items-center gap-1">
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-lg font-medium">
                               <Clock className="w-4 h-4" />
                               {inv.test.duration_minutes} min
                             </span>
-                            <span className="flex items-center gap-1">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-700 rounded-lg font-medium">
                               <Zap className="w-4 h-4" />
-                              {inv.test.total_marks} marks
+                              {inv.test.total_marks} pts
                             </span>
                           </div>
                         </div>
                         <Link
                           href={`/dashboard/student/tests/${inv.test.id}/take-secure`}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors whitespace-nowrap"
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-600/25 transition-all whitespace-nowrap"
                         >
                           <Play className="w-5 h-5" />
                           Start Test
