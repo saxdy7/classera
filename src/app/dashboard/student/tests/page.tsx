@@ -301,11 +301,11 @@ export default async function StudentTestsPage() {
                               View Results
                             </Link>
                             <Link
-                              href={`/dashboard/student/tests/${sub.test_id}/results`}
+                              href={`/dashboard/student/tests/${sub.test_id}/review`}
                               className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors"
                             >
                               <BarChart3 className="w-4 h-4" />
-                              Analytics
+                              Review Answers
                             </Link>
                           </div>
                         </div>

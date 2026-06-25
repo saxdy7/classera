@@ -215,28 +215,27 @@ export default function TestDetailClient({
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-200">
-                {/* Go Live / End Test Button */}
+              {/* Primary actions */}
+              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-200">
                 <button
                   onClick={handleToggleLive}
                   disabled={togglingLive}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 ${
-                    test.is_live 
-                      ? 'bg-red-100 text-red-700 hover:bg-red-200' 
-                      : 'bg-green-600 text-white hover:bg-green-700'
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all disabled:opacity-50 ${
+                    test.is_live
+                      ? 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
+                      : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-600/20'
                   }`}
                 >
                   {togglingLive ? (
                     'Updating...'
                   ) : test.is_live ? (
                     <>
-                      <span className="w-2 h-2 bg-red-500 rounded-full" />
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                       End Test
                     </>
                   ) : (
                     <>
-                      <span className="w-2 h-2 bg-green-300 rounded-full" />
+                      <span className="w-2 h-2 bg-white/80 rounded-full" />
                       Go Live
                     </>
                   )}
@@ -244,46 +243,88 @@ export default function TestDetailClient({
 
                 <Link
                   href={`/dashboard/mentor/tests/${test.id}/edit`}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg font-medium hover:border-indigo-300 hover:text-indigo-600 transition-all"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Test
                 </Link>
 
                 <button
-                  onClick={() => setShowAnalytics(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  <BarChart3 className="w-4 h-4" />
-                  Analytics
-                </button>
-
-                <button
                   onClick={() => setShowBulkInvite(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg font-medium hover:border-blue-300 hover:text-blue-600 transition-all"
                 >
                   <UserPlus className="w-4 h-4" />
                   Invite Students
                 </button>
 
-                {hasDescriptiveQuestions && submissionCount > 0 && (
-                  <button
-                    onClick={() => setShowManualGrading(true)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
-                  >
-                    <Pencil className="w-4 h-4" />
-                    Manual Grading
-                  </button>
-                )}
-
                 <button
                   onClick={handleExportCSV}
                   disabled={exporting || submissionCount === 0}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg font-medium hover:border-green-300 hover:text-green-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:text-slate-700"
                 >
                   <Download className="w-4 h-4" />
                   {exporting ? 'Exporting...' : 'Export Results'}
                 </button>
+              </div>
+
+              {/* Manage — each links to its own dedicated page/action */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                <Link
+                  href={`/dashboard/mentor/tests/${test.id}/analytics`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/40 transition-all"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <BarChart3 className="w-5 h-5" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">Analytics</span>
+                  <span className="text-xs text-slate-500">Scores, pass rate & per-question stats</span>
+                </Link>
+
+                <Link
+                  href={`/dashboard/mentor/tests/${test.id}/monitor`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-slate-800 text-white flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Eye className="w-5 h-5" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">Live Monitor</span>
+                  <span className="text-xs text-slate-500">Watch active sessions & violations</span>
+                </Link>
+
+                {hasDescriptiveQuestions && submissionCount > 0 ? (
+                  <button
+                    onClick={() => setShowManualGrading(true)}
+                    className="group flex flex-col gap-2 p-4 rounded-xl border border-slate-200 hover:border-amber-300 hover:bg-amber-50/40 transition-all text-left"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Pencil className="w-5 h-5" />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">Manual Grading</span>
+                    <span className="text-xs text-slate-500">Grade descriptive answers</span>
+                  </button>
+                ) : (
+                  <Link
+                    href="/dashboard/mentor/question-bank"
+                    className="group flex flex-col gap-2 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/40 transition-all"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <FileSpreadsheet className="w-5 h-5" />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">Question Bank</span>
+                    <span className="text-xs text-slate-500">Reuse saved questions</span>
+                  </Link>
+                )}
+
+                <Link
+                  href={`/dashboard/mentor/tests/${test.id}/edit`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/40 transition-all"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Shield className="w-5 h-5" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">Settings & Security</span>
+                  <span className="text-xs text-slate-500">Proctoring, anti-cheat & timing</span>
+                </Link>
               </div>
 
               {/* Test Info Grid */}

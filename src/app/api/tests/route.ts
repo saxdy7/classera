@@ -123,11 +123,12 @@ export async function POST(request: Request) {
                 total_marks,
                 scheduled_at: scheduled_at || null,
                 questions,
-                // enable_screen_recording and enable_face_monitoring exist in actual tests table
                 enable_screen_recording: enable_screen_recording ?? proctoring_settings?.screen_recording ?? true,
                 enable_face_monitoring: enable_face_monitoring ?? proctoring_settings?.face_monitoring ?? true,
-                // settings and proctoring_settings columns don't exist in the actual DB (archive 102 never ran)
-                // those values are accepted from frontend but not stored as separate columns
+                // settings and proctoring_settings columns DO exist — persist them so
+                // anti-cheat / randomize / show-results / passing config survives.
+                settings: settings ?? {},
+                proctoring_settings: proctoring_settings ?? {},
                 is_live: false
             })
             .select()
@@ -155,13 +156,13 @@ export async function PATCH(request: Request) {
         }
 
         const body = await request.json();
-        const { id, settings: _settings, proctoring_settings: _proctoring, ...updates } = body;
+        const { id, ...updates } = body;
 
         if (!id) {
             return NextResponse.json({ error: 'Test ID required' }, { status: 400 });
         }
 
-        // Update test — strip settings/proctoring_settings which don't exist in actual DB schema
+        // settings/proctoring_settings columns exist — allow them through.
         const { data: test, error } = await supabase
             .from('tests')
             .update({ ...updates, updated_at: new Date().toISOString() })

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
-import { Plus, Clock, Users, CheckCircle, Rocket } from 'lucide-react';
+import { Plus, Clock, Users, CheckCircle, Rocket, BookMarked } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,13 +80,22 @@ export default async function TestsPage() {
                 <h1 className="text-3xl font-bold text-slate-900 mb-2">Tests</h1>
                 <p className="text-slate-600">Create and manage your tests</p>
               </div>
-              <Link
-                href="/dashboard/mentor/tests/create"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
-              >
-                <Plus className="w-5 h-5" />
-                Create Test
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard/mentor/question-bank"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-medium hover:border-indigo-300 hover:text-indigo-600 transition-all"
+                >
+                  <BookMarked className="w-5 h-5" />
+                  Question Bank
+                </Link>
+                <Link
+                  href="/dashboard/mentor/tests/create"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create Test
+                </Link>
+              </div>
             </div>
 
             {/* Stats Cards */}

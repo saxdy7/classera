@@ -31,7 +31,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // Verify test exists and is live
     const { data: test, error: testError } = await admin
       .from('tests')
-      .select('id, title, description, duration_minutes, total_marks, questions, is_live, mentor_id')
+      .select('id, title, description, duration_minutes, total_marks, questions, is_live, mentor_id, enable_screen_recording, enable_face_monitoring, enable_proctoring, settings')
       .eq('id', testId)
       .single();
 
@@ -43,6 +43,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (!test.is_live) {
       return NextResponse.json({ error: 'Test is not live yet' }, { status: 403 });
     }
+
+    // Derive the security config from the mentor's saved test settings so the
+    // anti-cheat / recording / face-monitoring toggles actually take effect.
+    const testSettings = (test.settings as any) || {};
+    const securityConfig = {
+      screenRecordingEnabled: !!test.enable_screen_recording,
+      faceMonitoringEnabled: !!test.enable_face_monitoring,
+      antiCheatEnabled: testSettings.enable_anti_cheat !== false, // default on
+      verificationRequired: !!test.enable_proctoring,
+    };
 
     // Verify student is invited to test
     const { data: invitation, error: invError } = await admin
@@ -109,10 +119,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             security: {
               expiresAt: activeExpiresAt.toISOString(),
               timeRemainingSeconds: timeRemaining,
-              screenRecordingEnabled: false,
-              faceMonitoringEnabled: false,
-              antiCheatEnabled: true,
-              verificationRequired: true,
+              ...securityConfig,
             },
           },
         }, { status: 200 });
@@ -185,10 +192,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         security: {
           expiresAt: expiresAt.toISOString(),
           timeRemainingSeconds: timeRemaining,
-          screenRecordingEnabled: false,
-          faceMonitoringEnabled: false,
-          antiCheatEnabled: true,
-          verificationRequired: true,
+          ...securityConfig,
         },
       },
     }, { status: 201 });

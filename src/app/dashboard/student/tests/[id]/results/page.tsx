@@ -198,13 +198,22 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                 <Sidebar role="student" />
                 <main className="flex-1 p-4 md:p-8 md:ml-24">
                     <div className="max-w-4xl mx-auto">
-                        <Link
-                            href="/dashboard/student/tests"
-                            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            Back to Tests
-                        </Link>
+                        <div className="flex items-center justify-between mb-6">
+                            <Link
+                                href="/dashboard/student/tests"
+                                className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900"
+                            >
+                                <ArrowLeft className="w-4 h-4" />
+                                Back to Tests
+                            </Link>
+                            <Link
+                                href={`/dashboard/student/tests/${testId}/review`}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                            >
+                                <FileText className="w-4 h-4" />
+                                Review Answers
+                            </Link>
+                        </div>
 
                         {/* Result Card */}
                         <div className={`rounded-3xl p-8 mb-8 ${passed ? 'bg-gradient-to-br from-green-500 to-emerald-600' : 'bg-gradient-to-br from-red-500 to-rose-600'}`}>

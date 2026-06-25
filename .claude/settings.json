@@ -15,7 +15,14 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/dashboard/student)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/dashboard/mentor)",
-      "Bash(awk -F/ '{print $1}')"
+      "Bash(awk -F/ '{print $1}')",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(grep -rl \"question_bank\" src/app src/components)",
+      "Bash(ls src/app/dashboard/mentor/question-bank)",
+      "Bash(ls src/app/api/question-bank)",
+      "Bash(grep -rln \"TestTemplates\\\\|QuestionBankManager\\\\|QuestionBankSelector\" src/app src/components)",
+      "Bash(ls src/app/api/proctoring)",
+      "Bash(ls src/app/dashboard/mentor/tests/\\\\[id\\\\]/analytics)"
     ]
   }
 }
