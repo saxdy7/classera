@@ -99,8 +99,8 @@ export default async function TestsPage() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Total Tests</span>
                   <CheckCircle className="w-5 h-5 text-blue-500" />
@@ -108,7 +108,7 @@ export default async function TestsPage() {
                 <p className="text-3xl font-bold text-slate-900">{tests?.length || 0}</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Live Now</span>
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
@@ -116,7 +116,7 @@ export default async function TestsPage() {
                 <p className="text-3xl font-bold text-green-600">{liveTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Ready</span>
                   <Rocket className="w-5 h-5 text-blue-500" />
@@ -124,7 +124,7 @@ export default async function TestsPage() {
                 <p className="text-3xl font-bold text-blue-600">{readyTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Drafts</span>
                   <div className="w-5 h-5 text-amber-500">📝</div>
@@ -132,7 +132,7 @@ export default async function TestsPage() {
                 <p className="text-3xl font-bold text-amber-600">{draftTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Scheduled</span>
                   <Clock className="w-5 h-5 text-orange-500" />
@@ -140,7 +140,7 @@ export default async function TestsPage() {
                 <p className="text-3xl font-bold text-orange-600">{scheduledTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-slate-600">Completed</span>
                   <Users className="w-5 h-5 text-slate-400" />

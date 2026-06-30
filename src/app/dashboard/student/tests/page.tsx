@@ -97,7 +97,7 @@ export default async function StudentTestsPage() {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-slate-600">Live Tests</span>
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
@@ -106,7 +106,7 @@ export default async function StudentTestsPage() {
                 <p className="text-xs text-slate-500 mt-2">Ready to take now</p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-slate-600">Pending</span>
                   <AlertCircle className="w-5 h-5 text-orange-500" />
@@ -115,7 +115,7 @@ export default async function StudentTestsPage() {
                 <p className="text-xs text-slate-500 mt-2">Scheduled for later</p>
               </div>
 
-              <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-slate-600">Completed</span>
                   <CheckCircle className="w-5 h-5 text-blue-500" />
@@ -189,7 +189,7 @@ export default async function StudentTestsPage() {
                     const daysUntil = scheduledDate ? Math.ceil((scheduledDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null;
 
                     return (
-                      <div key={inv.id} className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                      <div key={inv.id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-3">
@@ -249,7 +249,7 @@ export default async function StudentTestsPage() {
                     const gradeColor = getGradeColor(percentage);
 
                     return (
-                      <div key={sub.id} className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                      <div key={sub.id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-3">
