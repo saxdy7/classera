@@ -27,7 +27,9 @@
       "mcp__claude_ai_Supabase__get_advisors",
       "Bash(python -c ' *)",
       "mcp__claude_ai_Supabase__get_logs",
-      "Bash(grep -rnE '\\(bg|text|border|ring|from|to|via|shadow\\)-\\\\$\\\\{' src/components/tests src/app/dashboard/mentor/tests src/app/dashboard/student/tests)"
+      "Bash(grep -rnE '\\(bg|text|border|ring|from|to|via|shadow\\)-\\\\$\\\\{' src/components/tests src/app/dashboard/mentor/tests src/app/dashboard/student/tests)",
+      "Bash(npx next *)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

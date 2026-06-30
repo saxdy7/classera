@@ -115,7 +115,7 @@ export function TestCreateClient({ profile }: Props) {
             <div className="flex">
                 <Sidebar role="mentor" />
                 <main className="flex-1 p-4 md:p-8 md:ml-24">
-                    <div className="max-w-4xl mx-auto">
+                    <div className="max-w-6xl mx-auto">
                         {/* Header */}
                         <Link
                             href="/dashboard/mentor/tests"

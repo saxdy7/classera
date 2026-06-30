@@ -163,6 +163,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
     const passed = percentage >= 40;
     const grade = aiAnalysis?.grade ?? (percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F');
 
+    // Quiz-summary tile counts
+    const questionAnalysis = aiAnalysis?.question_analysis || [];
+    const totalQuestions = (test?.questions?.length as number) || questionAnalysis.length || 0;
+    const correctCount = questionAnalysis.filter((q: any) => q.is_correct).length;
+    const wrongCount = Math.max(0, totalQuestions - correctCount);
+    const pointsScored = submission.score ?? aiAnalysis?.overall_score ?? 0;
+    const pad2 = (n: number) => String(n).padStart(2, '0');
+
     // Fetch per-test leaderboard — admin client needed so RLS doesn't hide other students' rows
     const { data: classLeaderboard } = await admin
         .from('test_submissions')
@@ -215,206 +223,147 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                             </Link>
                         </div>
 
-                        {/* Result Card */}
-                        <div className={`relative rounded-3xl p-8 mb-8 overflow-hidden shadow-xl ${passed ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-emerald-500/20' : 'bg-gradient-to-br from-red-500 to-rose-600 shadow-rose-500/20'}`}>
-                            {/* decorative rings */}
-                            <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/10" />
-                            <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-white/5" />
-                            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                                <div className="text-center md:text-left">
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur text-white rounded-full text-xs font-bold uppercase tracking-wide mb-3">
-                                        {passed ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                                        {passed ? 'Passed' : 'Keep practicing'}
-                                    </span>
-                                    <h1 className="text-3xl font-bold text-white mb-1">{test?.title}</h1>
-                                    <p className="text-white/80">
-                                        Score: {submission.score ?? 0}/{test?.total_marks ?? 0} · Grade {grade}
-                                    </p>
+                        {/* ── Quiz Summary Hero (Wayground/Quizizz style) ── */}
+                        <div className="rounded-3xl overflow-hidden mb-8 shadow-xl shadow-violet-500/10 border border-slate-100 bg-white">
+                            {/* Gradient top with trophy */}
+                            <div className={`relative px-6 pt-10 pb-20 text-center ${passed ? 'bg-gradient-to-br from-violet-600 via-indigo-600 to-violet-700' : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'}`}>
+                                <div
+                                    className="absolute inset-0 opacity-[0.12]"
+                                    style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '22px 22px' }}
+                                />
+                                <div className="relative">
+                                    <div className="text-6xl mb-2 drop-shadow-lg">{passed ? '🏆' : '📚'}</div>
+                                    <h1 className="text-xl font-bold text-white/95">{test?.title}</h1>
                                 </div>
-                                {/* Big score ring */}
-                                <div className="flex-shrink-0 w-32 h-32 rounded-full bg-white/15 backdrop-blur flex flex-col items-center justify-center border-4 border-white/30">
-                                    <span className="text-4xl font-extrabold text-white leading-none">{Math.round(percentage)}%</span>
-                                    <span className="text-white/80 text-xs font-semibold mt-1">SCORE</span>
+                            </div>
+
+                            {/* Overlapping congratulations card */}
+                            <div className="relative z-10 -mt-12 mx-4 md:mx-8 rounded-2xl bg-white shadow-lg border border-slate-100 px-6 py-6 text-center">
+                                <h2 className="text-2xl font-extrabold text-slate-900">
+                                    {passed ? 'Congratulations!' : 'Keep practicing!'}
+                                </h2>
+                                <p className="text-slate-500 mt-1">
+                                    You&apos;ve scored{' '}
+                                    <span className={`font-bold ${passed ? 'text-emerald-500' : 'text-amber-500'}`}>+{pointsScored}</span>{' '}
+                                    points
+                                </p>
+                            </div>
+
+                            {/* Stat tiles: Total / Correct / Wrong */}
+                            <div className="px-4 md:px-8 pt-6 pb-7">
+                                <div className="grid grid-cols-3 divide-x divide-slate-100 rounded-2xl border border-slate-100">
+                                    <div className="flex flex-col items-center py-5">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-7 h-7 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-extrabold text-sm">Q</span>
+                                            <span className="text-2xl font-extrabold text-slate-900">{totalQuestions}</span>
+                                        </div>
+                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Total Questions</span>
+                                    </div>
+                                    <div className="flex flex-col items-center py-5">
+                                        <div className="flex items-center gap-2">
+                                            <CheckCircle className="w-6 h-6 text-emerald-500" />
+                                            <span className="text-2xl font-extrabold text-slate-900">{pad2(correctCount)}</span>
+                                        </div>
+                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Correct</span>
+                                    </div>
+                                    <div className="flex flex-col items-center py-5">
+                                        <div className="flex items-center gap-2">
+                                            <XCircle className="w-6 h-6 text-red-500" />
+                                            <span className="text-2xl font-extrabold text-slate-900">{pad2(wrongCount)}</span>
+                                        </div>
+                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Wrong</span>
+                                    </div>
+                                </div>
+
+                                {/* Score / grade / percentage summary */}
+                                <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-5 text-sm">
+                                    <span className="text-slate-500">Score: <span className="font-bold text-slate-900">{pointsScored}/{test?.total_marks ?? 0}</span></span>
+                                    <span className="text-slate-500">Grade: <span className="font-bold text-slate-900">{grade}</span></span>
+                                    <span className="text-slate-500">Percentage: <span className={`font-bold ${passed ? 'text-emerald-500' : 'text-amber-500'}`}>{Math.round(percentage)}%</span></span>
                                 </div>
                             </div>
                         </div>
 
                         {/* ── Per-Test Class Leaderboard ── */}
                         {myRankDisplay !== null && totalParticipants >= 1 && (
-                            <div className="bg-gradient-to-br from-slate-900 via-violet-950 to-slate-900 rounded-2xl p-6 mb-8 border border-violet-800/40 shadow-xl">
+                            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-8 overflow-hidden">
                                 {/* Header */}
-                                <div className="flex items-center justify-between mb-5">
+                                <div className="flex items-center justify-between p-6 pb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-yellow-400/20 rounded-xl flex items-center justify-center">
-                                            <Trophy className="w-5 h-5 text-yellow-400" />
+                                        <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                                            <Trophy className="w-5 h-5 text-amber-500" />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-bold text-white">Class Leaderboard</h3>
-                                            <p className="text-slate-400 text-xs">{totalParticipants} student{totalParticipants !== 1 ? 's' : ''} completed this test</p>
+                                            <h3 className="text-lg font-bold text-slate-900">Standings</h3>
+                                            <p className="text-slate-500 text-xs">{totalParticipants} player{totalParticipants !== 1 ? 's' : ''} completed this test</p>
                                         </div>
                                     </div>
-                                    {/* Your rank badge */}
-                                    <div className={`px-4 py-2 rounded-xl text-center ${
-                                        myRankDisplay === 1 ? 'bg-yellow-400/20 border border-yellow-400/40' :
-                                        myRankDisplay === 2 ? 'bg-slate-400/20 border border-slate-400/40' :
-                                        myRankDisplay === 3 ? 'bg-amber-700/30 border border-amber-700/40' :
-                                        'bg-violet-600/20 border border-violet-600/40'
-                                    }`}>
-                                        <p className="text-xs text-slate-400 font-medium">Your Rank</p>
-                                        <p className={`text-2xl font-bold ${
-                                            myRankDisplay === 1 ? 'text-yellow-400' :
-                                            myRankDisplay === 2 ? 'text-slate-300' :
-                                            myRankDisplay === 3 ? 'text-amber-500' :
-                                            'text-violet-400'
-                                        }`}>
-                                            #{myRankDisplay}
+                                    <div className="text-right">
+                                        <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide">Your Rank</p>
+                                        <p className="text-2xl font-extrabold text-violet-600">
+                                            #{myRankDisplay}<span className="text-sm text-slate-400 font-medium"> / {totalParticipants}</span>
                                         </p>
-                                        <p className="text-xs text-slate-500">of {totalParticipants}</p>
                                     </div>
                                 </div>
 
-                                {/* Top 5 list */}
-                                <div className="space-y-2">
-                                    {leaderboardEntries.slice(0, 5).map((entry, idx) => {
+                                {/* Column labels */}
+                                <div className="grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 px-6 py-2.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wide bg-slate-50 border-y border-slate-100">
+                                    <span>Rank</span>
+                                    <span>Player</span>
+                                    <span className="text-right">Correct</span>
+                                </div>
+
+                                {/* Rows */}
+                                <div>
+                                    {leaderboardEntries.slice(0, 10).map((entry, idx) => {
                                         const isMe = entry.student_id === user.id;
                                         const rank = idx + 1;
-                                        const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
+                                        const ordinal = rank === 1 ? '1st' : rank === 2 ? '2nd' : rank === 3 ? '3rd' : `${rank}th`;
                                         const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
-
+                                        const avatarColors = ['bg-violet-200 text-violet-700', 'bg-amber-200 text-amber-700', 'bg-emerald-200 text-emerald-700', 'bg-sky-200 text-sky-700', 'bg-rose-200 text-rose-700'];
+                                        const ac = avatarColors[idx % avatarColors.length];
+                                        const pct = entry.percentage || 0;
                                         return (
                                             <div
                                                 key={entry.student_id}
-                                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                                                    isMe
-                                                        ? 'bg-violet-600/25 border border-violet-500/50 shadow-lg shadow-violet-900/30'
-                                                        : 'bg-white/5 border border-white/5 hover:bg-white/10'
+                                                className={`grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 items-center px-6 py-3 border-b border-slate-50 last:border-0 ${
+                                                    rank === 1 ? 'bg-emerald-50/70' : isMe ? 'bg-violet-50' : 'hover:bg-slate-50'
                                                 }`}
                                             >
                                                 {/* Rank */}
-                                                <div className="w-8 text-center flex-shrink-0">
-                                                    {rankIcon ? (
-                                                        <span className="text-xl leading-none">{rankIcon}</span>
+                                                <div className="flex items-center gap-1 font-bold text-slate-700 text-sm">
+                                                    {rank === 1 && <span className="text-base leading-none">👑</span>}
+                                                    {ordinal}
+                                                </div>
+
+                                                {/* Player */}
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    {entry.users?.avatar_url ? (
+                                                        // eslint-disable-next-line @next/next/no-img-element
+                                                        <img src={entry.users.avatar_url} alt="" className="w-9 h-9 rounded-xl object-cover flex-shrink-0" />
                                                     ) : (
-                                                        <span className="text-slate-500 font-bold text-sm">#{rank}</span>
+                                                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm ${ac}`}>
+                                                            {initials}
+                                                        </div>
                                                     )}
-                                                </div>
-
-                                                {/* Avatar */}
-                                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm ${
-                                                    isMe ? 'bg-violet-500 text-white' : 'bg-slate-700 text-slate-300'
-                                                }`}>
-                                                    {initials}
-                                                </div>
-
-                                                {/* Name */}
-                                                <div className="flex-1 min-w-0">
-                                                    <p className={`font-semibold text-sm truncate ${isMe ? 'text-violet-200' : 'text-white'}`}>
-                                                        {entry.users?.full_name || 'Student'}
-                                                        {isMe && <span className="ml-2 text-xs text-violet-400 font-normal">(You)</span>}
-                                                    </p>
-                                                    <p className="text-slate-500 text-xs">{formatTimeTaken(entry.time_taken_seconds)}</p>
-                                                </div>
-
-                                                {/* Score bar + % */}
-                                                <div className="flex items-center gap-3 flex-shrink-0">
-                                                    <div className="hidden sm:flex w-20 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                                        <div
-                                                            className={`h-full rounded-full ${
-                                                                entry.percentage >= 80 ? 'bg-emerald-400' :
-                                                                entry.percentage >= 60 ? 'bg-sky-400' :
-                                                                entry.percentage >= 40 ? 'bg-amber-400' : 'bg-red-400'
-                                                            }`}
-                                                            style={{ width: `${Math.min(100, entry.percentage || 0)}%` }}
-                                                        />
+                                                    <div className="min-w-0">
+                                                        <p className="font-semibold text-sm text-slate-900 truncate">
+                                                            {entry.users?.full_name || 'Student'}
+                                                            {isMe && <span className="ml-1.5 text-xs text-violet-500 font-normal">(You)</span>}
+                                                        </p>
+                                                        <p className="text-xs text-slate-400">{formatTimeTaken(entry.time_taken_seconds)}</p>
                                                     </div>
-                                                    <span className={`font-bold text-sm w-12 text-right ${
-                                                        entry.percentage >= 80 ? 'text-emerald-400' :
-                                                        entry.percentage >= 60 ? 'text-sky-400' :
-                                                        entry.percentage >= 40 ? 'text-amber-400' : 'text-red-400'
-                                                    }`}>
-                                                        {(entry.percentage || 0).toFixed(0)}%
-                                                    </span>
                                                 </div>
+
+                                                {/* Correct % */}
+                                                <span className="text-right font-extrabold text-sm text-slate-900">{pct.toFixed(0)}%</span>
                                             </div>
                                         );
                                     })}
-
-                                    {/* Show student's row if outside top 5 */}
-                                    {myRankDisplay !== null && myRankDisplay > 5 && (
-                                        <>
-                                            <div className="flex items-center gap-2 py-1">
-                                                <div className="flex-1 border-t border-dashed border-slate-700" />
-                                                <span className="text-slate-600 text-xs px-2">···</span>
-                                                <div className="flex-1 border-t border-dashed border-slate-700" />
-                                            </div>
-                                            {leaderboardEntries[myRankDisplay - 1] && (() => {
-                                                const entry = leaderboardEntries[myRankDisplay - 1];
-                                                const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
-                                                return (
-                                                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-600/25 border border-violet-500/50">
-                                                        <div className="w-8 text-center flex-shrink-0">
-                                                            <span className="text-slate-400 font-bold text-sm">#{myRankDisplay}</span>
-                                                        </div>
-                                                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm bg-violet-500 text-white">
-                                                            {initials}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className="font-semibold text-sm truncate text-violet-200">
-                                                                {entry.users?.full_name || 'You'}
-                                                                <span className="ml-2 text-xs text-violet-400 font-normal">(You)</span>
-                                                            </p>
-                                                            <p className="text-slate-500 text-xs">{formatTimeTaken(entry.time_taken_seconds)}</p>
-                                                        </div>
-                                                        <span className={`font-bold text-sm w-12 text-right ${
-                                                            (entry.percentage || 0) >= 80 ? 'text-emerald-400' :
-                                                            (entry.percentage || 0) >= 60 ? 'text-sky-400' :
-                                                            (entry.percentage || 0) >= 40 ? 'text-amber-400' : 'text-red-400'
-                                                        }`}>
-                                                            {(entry.percentage || 0).toFixed(0)}%
-                                                        </span>
-                                                    </div>
-                                                );
-                                            })()}
-                                        </>
-                                    )}
                                 </div>
                             </div>
                         )}
 
-                        {/* Score Details */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                            <div className="bg-white rounded-xl p-6 border border-slate-200 text-center">
-                                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <Award className="w-6 h-6 text-purple-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-slate-900">{submission.score || 0}</p>
-                                <p className="text-slate-600 text-sm">Score</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-6 border border-slate-200 text-center">
-                                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <FileText className="w-6 h-6 text-blue-600" />
-                                </div>
-                                <p className="text-3xl font-bold text-slate-900">{test?.total_marks || 0}</p>
-                                <p className="text-slate-600 text-sm">Total Marks</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-6 border border-slate-200 text-center">
-                                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <span className="text-2xl font-bold text-green-600">{percentage.toFixed(0)}%</span>
-                                </div>
-                                <p className="text-3xl font-bold text-slate-900">{percentage.toFixed(1)}%</p>
-                                <p className="text-slate-600 text-sm">Percentage</p>
-                            </div>
-
-                            <div className="bg-white rounded-xl p-6 border border-slate-200 text-center">
-                                <div className="w-12 h-12 bg-fuchsia-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <span className="text-xl font-bold text-fuchsia-600">{grade}</span>
-                                </div>
-                                <p className="text-3xl font-bold text-slate-900">{grade}</p>
-                                <p className="text-slate-600 text-sm">Grade</p>
-                            </div>
-                        </div>
 
                         {/* AI Analysis Summary */}
                         {aiAnalysis && (

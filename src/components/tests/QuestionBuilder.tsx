@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Trash2, Check, GripVertical, FileText, CircleDot, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Check, GripVertical, FileText, CircleDot, Sparkles, Eye } from 'lucide-react';
 import { AIQuestionGenerator } from './AIQuestionGenerator';
 
 export interface TestQuestion {
@@ -115,7 +115,9 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
     };
 
     return (
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+          {/* ── Editor column ── */}
+          <div className="lg:col-span-3 space-y-6">
             {questions.map((question, qIndex) => (
                 <div
                     key={question.id}
@@ -301,6 +303,80 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
                     onChange([...questions, ...convertedQuestions]);
                 }}
             />
+          </div>
+
+          {/* ── Live preview column ── */}
+          <div className="lg:col-span-2">
+            <div className="lg:sticky lg:top-6">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <Eye className="w-4 h-4 text-indigo-500" />
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Live Preview</h3>
+                </div>
+                <p className="text-xs text-slate-500 mb-5">How students will see your test</p>
+
+                {questions.length === 0 ? (
+                  <div className="text-center py-12 text-slate-400 text-sm border border-dashed border-slate-200 rounded-xl">
+                    Add a question to see the preview
+                  </div>
+                ) : (
+                  <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-1">
+                    {questions.map((q, i) => (
+                      <div key={q.id} className="pb-5 border-b border-slate-100 last:border-0 last:pb-0">
+                        <div className="flex items-start gap-2 mb-3">
+                          <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center justify-center">
+                            {i + 1}
+                          </span>
+                          <p className="text-sm font-semibold text-slate-900 leading-snug">
+                            {q.question || <span className="text-slate-400 italic font-normal">Untitled question</span>}
+                          </p>
+                        </div>
+
+                        {q.type === 'mcq' ? (
+                          <div className="space-y-2 pl-8">
+                            {(q.options || []).map((opt, oi) => {
+                              const isCorrect = q.correctAnswer === oi;
+                              return (
+                                <div
+                                  key={oi}
+                                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm transition-colors ${
+                                    isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200'
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                                      isCorrect ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300'
+                                    }`}
+                                  >
+                                    {isCorrect && <Check className="w-2.5 h-2.5 text-white" />}
+                                  </span>
+                                  <span className={isCorrect ? 'text-emerald-800 font-medium' : 'text-slate-700'}>
+                                    {opt || `Option ${oi + 1}`}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="pl-8">
+                            <div className="w-full px-4 py-3 rounded-xl border border-dashed border-slate-200 text-sm text-slate-400">
+                              {q.type === 'short_answer' ? 'Short answer response…' : 'Long answer response…'}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="pl-8 mt-2">
+                          <span className="text-[11px] font-medium text-slate-400">
+                            {q.marks} {q.marks === 1 ? 'point' : 'points'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
     );
 }
