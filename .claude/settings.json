@@ -23,7 +23,8 @@
       "Bash(grep -rln \"TestTemplates\\\\|QuestionBankManager\\\\|QuestionBankSelector\" src/app src/components)",
       "Bash(ls src/app/api/proctoring)",
       "Bash(ls src/app/dashboard/mentor/tests/\\\\[id\\\\]/analytics)",
-      "Bash(grep -rnE \"id:\\\\s*\\(\\\\`q|crypto|Date\\\\.now|Math\\\\.random|uuid|\\\\`question|nanoid\\)\" src/components/tests/MCQBuilder.tsx src/components/tests/QuestionBuilder.tsx src/components/tests/TestCreateClient.tsx src/components/tests/AIQuestionGenerator.tsx)"
+      "Bash(grep -rnE \"id:\\\\s*\\(\\\\`q|crypto|Date\\\\.now|Math\\\\.random|uuid|\\\\`question|nanoid\\)\" src/components/tests/MCQBuilder.tsx src/components/tests/QuestionBuilder.tsx src/components/tests/TestCreateClient.tsx src/components/tests/AIQuestionGenerator.tsx)",
+      "mcp__claude_ai_Supabase__get_advisors"
     ]
   }
 }
