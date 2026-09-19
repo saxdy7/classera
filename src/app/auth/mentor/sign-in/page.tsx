@@ -54,7 +54,7 @@ export default function SignInPage() {
       <div className="w-full max-w-md">
         <div className="bg-black/40 backdrop-blur-xl border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               Welcome Back
             </h1>
             <p className="text-[var(--cl-muted)] mt-2">Sign in to continue your journey</p>

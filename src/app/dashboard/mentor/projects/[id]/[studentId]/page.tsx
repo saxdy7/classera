@@ -119,7 +119,7 @@ export default async function StudentProjectReviewPage({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h1 className="text-xl font-semibold text-[var(--cl-ink)]">{student.full_name}</h1>
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground">{student.full_name}</h1>
                     {evaluation?.score !== null && evaluation?.score !== undefined && (
                       <span className="text-sm font-semibold px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full">
                         {evaluation.score}/{assignment.max_score}

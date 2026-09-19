@@ -59,7 +59,7 @@ export default function JobPortalPage() {
                   <Briefcase size={14} />
                   Clario Job Portal
                 </div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] leading-tight">Your Career starts here.</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">Your Career starts here.</h1>
                 <p className="text-[var(--cl-muted)] mt-2 font-medium">Personalized job matches based on your skills and project progress.</p>
               </div>
               <div className="flex items-center bg-[var(--cl-primary)] text-[var(--cl-on-dark)] px-4 py-2 rounded-[var(--cl-r-xl)] text-xs font-semibold uppercase tracking-widest gap-2 animate-bounce">

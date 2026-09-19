@@ -266,7 +266,7 @@ export default function TakeTestPageSecure() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="text-xl md:text-2xl font-semibold text-[var(--cl-ink)] truncate">{test.title}</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-2xl truncate">{test.title}</h1>
               <p className="text-[var(--cl-muted)] text-sm font-medium">
                 Question {currentQuestion + 1} of {test.questions.length}
               </p>

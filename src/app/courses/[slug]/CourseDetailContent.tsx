@@ -158,7 +158,7 @@ export function CourseDetailContent() {
                                 <ArrowLeft className="w-4 h-4 mr-2" />
                                 Back
                             </Button>
-                            <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">{activeLesson.title}</h1>
+                            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">{activeLesson.title}</h1>
                             {activeLesson.duration_minutes > 0 && (
                                 <div className="flex items-center text-[var(--cl-muted)] text-sm">
                                     <Clock className="w-4 h-4 mr-1" />
@@ -212,7 +212,7 @@ export function CourseDetailContent() {
             <div className="mb-6">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
-                        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                             {course.title}
                         </h1>
                         <div className="flex items-center gap-4 text-sm text-[var(--cl-body)] mb-3">

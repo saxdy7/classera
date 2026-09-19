@@ -67,7 +67,7 @@ export function GuideDetailContent() {
             </Button>
 
             <div className="mb-6">
-                <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-4">
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-4">
                     {guide.title}
                 </h1>
 

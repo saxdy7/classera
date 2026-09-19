@@ -159,7 +159,7 @@ export function CoursesContent() {
                             <GraduationCap size={16} className="text-[var(--cl-on-dark)]" />
                         </div>
                         <div>
-                            <h1 className="text-sm font-semibold text-[var(--cl-ink)]">AI Course Generator</h1>
+                            <h1 className="text-sm font-semibold text-foreground">AI Course Generator</h1>
                             <p className="text-xs text-[var(--cl-muted-soft)]">Enter a topic — AI builds a full structured course</p>
                         </div>
                     </div>
@@ -285,7 +285,7 @@ export function CoursesContent() {
                         <GraduationCap size={15} className="text-[var(--cl-on-dark)]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-sm font-semibold text-[var(--cl-ink)] truncate">{course.course_title}</h1>
+                        <h1 className="text-sm font-semibold text-foreground truncate">{course.course_title}</h1>
                         <p className="text-xs text-[var(--cl-muted-soft)] capitalize">{course.difficulty} &middot; {course.modules.length} chapters &middot; {totalLessons} lessons</p>
                     </div>
                     <div className="hidden md:flex items-center gap-3">

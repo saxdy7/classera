@@ -77,7 +77,7 @@ export default async function TestsPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Tests</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Tests</h1>
                 <p className="text-[var(--cl-body)]">Create and manage your tests</p>
               </div>
               <div className="flex items-center gap-3">

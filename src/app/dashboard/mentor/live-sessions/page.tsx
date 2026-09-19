@@ -60,7 +60,7 @@ export default async function MentorLiveSessionsPage() {
             {/* Header */}
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Live Sessions</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Live Sessions</h1>
                 <p className="text-[var(--cl-body)]">Manage and monitor your teaching sessions</p>
               </div>
               <a

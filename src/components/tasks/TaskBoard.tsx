@@ -170,7 +170,7 @@ export default function TaskBoard() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Task Board
         </h1>
         <p className="text-[var(--cl-body)] mt-2">Organize and track your tasks</p>

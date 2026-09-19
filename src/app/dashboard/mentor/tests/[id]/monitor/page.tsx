@@ -48,7 +48,7 @@ export default async function MentorTestMonitorPage({ params }: { params: Promis
             </Link>
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">{test.title}</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
                 <p className="text-[var(--cl-body)] mt-1">Live monitoring &amp; proctoring</p>
               </div>
               {test.is_live ? (

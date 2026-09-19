@@ -132,7 +132,7 @@ export function RoadmapDetailContent() {
                             </Badge>
                             <Badge variant="outline">{roadmap.type}</Badge>
                         </div>
-                        <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-3">
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-3">
                             {roadmap.title}
                         </h1>
                         <p className="text-lg text-[var(--cl-body)] mb-4">

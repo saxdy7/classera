@@ -269,7 +269,7 @@ export function StudentSessionsClient({
     return (
         <div className="max-w-5xl mx-auto">
             <div className="mb-8">
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">Live Sessions</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">Live Sessions</h1>
                 <p className="text-[var(--cl-body)] mt-2">Join live sessions, webinars, and proctored tests</p>
             </div>
 

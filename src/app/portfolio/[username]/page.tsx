@@ -93,7 +93,7 @@ export default async function PortfolioPage({
         <div className="bg-[var(--cl-surface-card)] rounded-lg p-12 mb-12">
           <div className="flex items-start justify-between gap-8 mb-8">
             <div>
-              <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-2">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 {user.full_name}
               </h1>
               <p className="text-lg text-[var(--cl-body)] mb-4">

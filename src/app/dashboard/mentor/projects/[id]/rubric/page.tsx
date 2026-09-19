@@ -60,7 +60,7 @@ export default async function AssignmentRubricPage({
                 <BookOpen className="w-5 h-5 text-[var(--cl-primary)]" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-[var(--cl-ink)]">Grading Rubric</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">Grading Rubric</h1>
                 <p className="text-sm text-[var(--cl-muted)]">{assignment.title}</p>
               </div>
             </div>

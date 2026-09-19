@@ -87,7 +87,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                   <ArrowLeft className="w-4 h-4" />
                   Back to Students
                 </Link>
-                <h1 className="text-3xl font-semibold text-black">{student.full_name}</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">{student.full_name}</h1>
               </div>
               
               {/* More Options Menu */}

@@ -84,7 +84,7 @@ export default async function StudentLiveSessionsPage() {
           <div className="max-w-5xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">Mentor Sessions</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">Mentor Sessions</h1>
               <p className="text-[var(--cl-body)] mt-2">Your scheduled learning sessions</p>
             </div>
 

@@ -37,7 +37,7 @@ export default async function QuestionBankPage() {
               Back to Tests
             </Link>
             <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">Question Bank</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">Question Bank</h1>
               <p className="text-[var(--cl-body)] mt-1">Build a reusable library of questions for your tests</p>
             </div>
             <QuestionBankManager />

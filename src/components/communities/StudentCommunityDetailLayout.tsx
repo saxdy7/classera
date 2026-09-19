@@ -152,7 +152,7 @@ export function StudentCommunityDetailLayout({
         <div className="bg-[var(--cl-surface-card)] border-b border-[var(--cl-hairline)] px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">{communityName}</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-1">{communityName}</h1>
               <p className="text-[var(--cl-body)] font-medium">{communityDescription}</p>
             </div>
             <Link

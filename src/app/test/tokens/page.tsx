@@ -49,7 +49,7 @@ export default function GrantTokensPage() {
     return (
       <div className="min-h-screen p-8 bg-[rgba(239,68,68,0.12)]">
         <div className="max-w-md mx-auto bg-[var(--cl-surface-card)] rounded-lg p-8 text-center">
-          <h1 className="text-2xl font-semibold text-[var(--cl-error)] mb-4">❌ Access Denied</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground text-[var(--cl-error)] mb-4">❌ Access Denied</h1>
           <p className="text-[var(--cl-body)]">Test endpoints are not available in production.</p>
           <Link
             href="/"
@@ -67,7 +67,7 @@ export default function GrantTokensPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="bg-[var(--cl-surface-card)] rounded-lg p-8 mb-6">
-          <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">⚡ AI Token Grant Tool</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">⚡ AI Token Grant Tool</h1>
           <p className="text-[var(--cl-body)]">Development/Testing Mode - Grant yourself AI tokens for testing</p>
         </div>
 

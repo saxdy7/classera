@@ -159,7 +159,7 @@ export default async function StudentProjectDetailPage({
             </div>
             <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
               <div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] leading-tight">{assignment.title}</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">{assignment.title}</h1>
                 <p className="text-[var(--cl-muted)] mt-1">
                   By {(assignment.users as { full_name: string } | null)?.full_name ?? 'Mentor'}
                   {!assignment.is_active && (

@@ -125,7 +125,7 @@ export function TestCreateClient({ profile }: Props) {
                             Back to Tests
                         </Link>
 
-                        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Create New Test</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Create New Test</h1>
                         <p className="text-[var(--cl-body)] mb-4">Build your test and configure settings</p>
 
                         {/* Quick Actions */}

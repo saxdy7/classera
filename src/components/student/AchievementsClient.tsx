@@ -124,7 +124,7 @@ export function AchievementsClient() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2 flex items-center gap-3">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2 flex items-center gap-3">
             <Trophy size={32} className="text-[var(--cl-warning)]" />
             Achievements & Badges
           </h1>

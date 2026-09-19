@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="max-w-md w-full text-center">
         {/* 404 Number */}
         <div className="mb-8">
-          <h1 className="text-9xl font-semibold text-[var(--cl-ink)]">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground text-9xl">
             404
           </h1>
         </div>

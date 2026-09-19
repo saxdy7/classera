@@ -154,7 +154,7 @@ export default async function StudentProfilePage() {
                       </div>
                     )}
                     <div className="pb-1">
-                      <h1 className="text-2xl font-semibold text-[var(--cl-ink)]">{profile.full_name}</h1>
+                      <h1 className="text-3xl font-semibold tracking-tight text-foreground">{profile.full_name}</h1>
                       <p className="text-[var(--cl-muted)] text-sm mt-0.5">
                         {profile.specialization_board || 'Student'} · {(profile.universities as any)?.name || 'University'}
                       </p>

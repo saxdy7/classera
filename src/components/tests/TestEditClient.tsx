@@ -211,7 +211,7 @@ export function TestEditClient({ profile, test: initialTest }: Props) {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Edit Test</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Edit Test</h1>
                         <p className="text-[var(--cl-body)] mb-8">Modify your test settings and questions</p>
 
                         <form onSubmit={handleSubmit} className="space-y-8">

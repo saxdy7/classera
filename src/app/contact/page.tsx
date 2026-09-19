@@ -62,7 +62,7 @@ export default function ContactPage() {
               We'd Love to Hear From You
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-tight mb-6">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl md:text-7xl mb-6">
               Get in <span className="text-[var(--cl-ink)]">Touch</span>
             </h1>
 

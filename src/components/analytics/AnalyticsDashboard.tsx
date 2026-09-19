@@ -104,7 +104,7 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
     return (
       <div className="p-6 space-y-6">
         <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Your Analytics
           </h1>
           <p className="text-[var(--cl-body)] mt-2">Track your learning progress and performance</p>
@@ -249,7 +249,7 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
   return (
     <div className="p-6 space-y-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Mentor Analytics
         </h1>
         <p className="text-[var(--cl-body)] mt-2">Overview of your teaching impact</p>

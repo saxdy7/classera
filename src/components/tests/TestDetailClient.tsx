@@ -198,7 +198,7 @@ export default function TestDetailClient({
             <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)] mb-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">{test.title}</h1>
+                  <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">{test.title}</h1>
                   <p className="text-[var(--cl-body)]">{test.description || 'No description'}</p>
                 </div>
                 <div className="flex items-center gap-2">

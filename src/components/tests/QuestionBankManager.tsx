@@ -193,7 +193,7 @@ export default function QuestionBankManager() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Question Bank
           </h1>
           <p className="text-[var(--cl-body)] mt-2">

@@ -125,7 +125,7 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
             </div>
 
             <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">{test.title}</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
               <p className="text-[var(--cl-body)] mt-1">Answer review</p>
             </div>
 

@@ -91,7 +91,7 @@ export default async function StudentProjectsPage() {
                 <GitBranch className="w-4 h-4" />
                 Clario Project Hub
               </div>
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)] leading-none">Your Engineering Roadmap.</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-none">Your Engineering Roadmap.</h1>
               <p className="text-[var(--cl-muted)] mt-2 font-medium">Build, commit, and master your technical skills.</p>
             </div>
 

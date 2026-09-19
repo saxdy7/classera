@@ -159,7 +159,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                     </div>
 
                     {/* Name & Title */}
-                    <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mb-1">{mentor.full_name}</h1>
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-1">{mentor.full_name}</h1>
                     <p className="text-[var(--cl-primary)] font-medium mb-4">{parseExpertise(mentor.expertise) || 'Mentor'}</p>
                     
                     {/* Action Buttons */}

@@ -145,7 +145,7 @@ export default function StudentAuth() {
                 {error}
               </div>
             )}
-            <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-3">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-3">
               {isSignIn ? 'Welcome back!' : 'Create your account'}
             </h1>
             <p className="text-[var(--cl-muted)]">

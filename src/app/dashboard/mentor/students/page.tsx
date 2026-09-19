@@ -60,7 +60,7 @@ export default async function Students() {
 
             {/* Page Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">My Students</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-1">My Students</h1>
               <p className="text-[var(--cl-muted)] text-sm">Students from <span className="font-semibold text-[var(--cl-body)]">{profile.universities?.name}</span></p>
             </div>
 

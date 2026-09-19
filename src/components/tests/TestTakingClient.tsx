@@ -354,7 +354,7 @@ export function TestTakingClient({ testId }: Props) {
                 <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
                     {/* Title + progress */}
                     <div className="min-w-0">
-                        <h1 className="font-semibold text-base truncate">{test.title}</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground text-base truncate">{test.title}</h1>
                         <div className="flex items-center gap-3 mt-0.5">
                             <span className="text-[var(--cl-muted-soft)] text-xs">
                                 {currentQuestion + 1} / {questions.length}

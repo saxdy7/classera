@@ -176,7 +176,7 @@ export function CourseBuilderClient({ profile }: Props) {
                             Back to Courses
                         </Link>
 
-                        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Create New Course</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Create New Course</h1>
                         <p className="text-[var(--cl-body)] mb-8">Build your course content and curriculum</p>
 
                         {/* Progress Steps */}

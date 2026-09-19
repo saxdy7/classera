@@ -233,7 +233,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                 />
                                 <div className="relative">
                                     <div className="text-6xl mb-2 drop-shadow-lg">{passed ? '🏆' : '📚'}</div>
-                                    <h1 className="text-xl font-semibold text-[rgba(255,255,255,0.95)]">{test?.title}</h1>
+                                    <h1 className="text-3xl font-semibold tracking-tight text-foreground text-[rgba(255,255,255,0.95)]">{test?.title}</h1>
                                 </div>
                             </div>
 

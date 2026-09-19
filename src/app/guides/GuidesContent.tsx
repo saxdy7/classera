@@ -118,7 +118,7 @@ export function GuidesContent() {
                         <BookText size={15} className="text-[var(--cl-on-dark)]" />
                     </div>
                     <div>
-                        <h1 className="text-sm font-semibold text-[var(--cl-ink)]">AI Guide Generator</h1>
+                        <h1 className="text-sm font-semibold text-foreground">AI Guide Generator</h1>
                         <p className="text-xs text-[var(--cl-muted)]">Generate focused learning guides on any topic</p>
                     </div>
                     {guide && (
@@ -219,7 +219,7 @@ export function GuidesContent() {
                                 <Clock size={11} /> {guide.estimated_read_minutes} min read
                             </span>
                         </div>
-                        <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mb-3">{guide.guide_title}</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-3">{guide.guide_title}</h1>
                         <p className="text-[var(--cl-body)] leading-relaxed">{guide.introduction}</p>
                     </div>
 

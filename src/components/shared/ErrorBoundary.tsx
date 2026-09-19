@@ -73,7 +73,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl font-semibold text-center text-[var(--cl-ink)] mb-4">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground text-center mb-4">
               Oops! Something went wrong
             </h1>
 

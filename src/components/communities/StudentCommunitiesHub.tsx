@@ -106,7 +106,7 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-5xl font-semibold mb-3 tracking-tight">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl mb-3">
                 Communities
               </h1>
               <p className="text-[var(--cl-primary)] text-lg font-medium">
@@ -201,19 +201,20 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
         {/* Tabs */}
         <div className="flex gap-4 mb-8 border-b border-[var(--cl-hairline)]">
           {[
-            { id: 'all', label: '📚 All Communities', icon: BookOpen },
-            { id: 'joined', label: '💚 My Communities', icon: Heart },
-            { id: 'trending', label: '🔥 Trending', icon: TrendingUp },
+            { id: 'all', label: 'All Communities', icon: BookOpen },
+            { id: 'joined', label: 'My Communities', icon: Heart },
+            { id: 'trending', label: 'Trending', icon: TrendingUp },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`px-6 py-3 font-semibold transition-all flex items-center gap-2 ${
+              className={`flex cursor-pointer items-center gap-2 rounded-sm px-4 py-1.5 text-sm font-medium transition-colors sm:px-6 ${
                 activeTab === tab.id
-                  ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
-                  : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
+              <tab.icon className="size-4" />
               {tab.label}
             </button>
           ))}

@@ -107,7 +107,7 @@ export function StudentAnalyticsClient({
     return (
       <div className="max-w-7xl mx-auto text-center py-20">
         <div className="text-5xl mb-4">👤</div>
-        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">No Students Available</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">No Students Available</h1>
         <p className="text-[var(--cl-muted)] font-medium">You don't have any students at {universityName} yet</p>
       </div>
     );
@@ -121,7 +121,7 @@ export function StudentAnalyticsClient({
     <div className="max-w-7xl mx-auto">
       {/* Header Section */}
       <div className="mb-8">
-        <h1 className="text-5xl font-semibold text-[var(--cl-ink)] leading-tight tracking-tight mb-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl mb-2">
           Student Analytics
         </h1>
         <p className="text-xl text-[var(--cl-muted)] font-medium">

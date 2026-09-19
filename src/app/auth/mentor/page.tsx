@@ -145,7 +145,7 @@ export default function MentorAuth() {
                 {error}
               </div>
             )}
-            <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-3">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-3">
               {isSignIn ? 'Welcome back!' : 'Join as a Mentor'}
             </h1>
             <p className="text-[var(--cl-muted)]">

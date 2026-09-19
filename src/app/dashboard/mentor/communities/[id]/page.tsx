@@ -65,7 +65,7 @@ export default async function CommunityDetailPage({
                     {community.name.charAt(0)}
                   </div>
                   <div>
-                    <h1 className="text-3xl font-semibold mb-2 text-[var(--cl-ink)]">
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                       {community.name}
                     </h1>
                     <p className="text-[var(--cl-body)] mb-3">{community.description}</p>

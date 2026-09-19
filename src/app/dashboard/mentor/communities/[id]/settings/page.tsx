@@ -56,7 +56,7 @@ export default async function CommunitySettingsPage({
 
                         {/* Header */}
                         <div className="mb-8">
-                            <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
+                            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                                 Community Settings
                             </h1>
                             <p className="text-[var(--cl-body)]">Manage your community details and settings</p>

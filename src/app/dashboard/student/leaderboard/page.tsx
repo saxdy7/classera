@@ -56,7 +56,7 @@ export default async function StudentLeaderboardPage() {
         <main className="flex-1 cl-main p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 Leaderboard
               </h1>
               <p className="text-[var(--cl-body)]">{profile.universities?.name} • {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>

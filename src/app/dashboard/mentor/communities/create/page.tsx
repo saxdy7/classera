@@ -92,7 +92,7 @@ export default function CreateCommunityPage() {
               <Users className="w-8 h-8 text-[var(--cl-on-dark)]" />
             </div>
             <div>
-              <h1 className="text-3xl font-semibold text-black">Create Community</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">Create Community</h1>
               <p className="text-[var(--cl-body)]">Build a learning space for your students</p>
             </div>
           </div>

@@ -32,7 +32,7 @@ export default async function StudentTasksPage() {
         <main className="flex-1 cl-main p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 My Tasks
               </h1>
               <p className="text-[var(--cl-body)]">Manage your tasks with Kanban board</p>

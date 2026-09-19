@@ -139,7 +139,7 @@ export default function AIToolsPage() {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground flex items-center gap-2">
                   <Sparkles className="w-8 h-8 text-[var(--cl-info)]" />
                   AI Learning Tools
                 </h1>

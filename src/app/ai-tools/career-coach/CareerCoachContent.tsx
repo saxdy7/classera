@@ -209,7 +209,7 @@ export default function CareerCoachContent() {
                             <Bot size={18} className="text-[var(--cl-on-dark)]" />
                         </div>
                         <div className="min-w-0">
-                            <h1 className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight truncate leading-none mb-1">
+                            <h1 className="text-sm font-semibold text-foreground uppercase truncate leading-none mb-1">
                                 {currentSessionId ? sessions.find(s => s.id === currentSessionId)?.title : 'New Career Consultation'}
                             </h1>
                             <div className="flex items-center gap-1.5">

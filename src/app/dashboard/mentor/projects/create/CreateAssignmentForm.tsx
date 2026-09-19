@@ -97,7 +97,7 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
       </Link>
 
       <div>
-        <h1 className="text-2xl font-semibold text-[var(--cl-ink)]">Create Project Assignment</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Create Project Assignment</h1>
         <p className="text-[var(--cl-muted)] text-sm mt-1">
           Assign a coding project and track student GitHub repositories
         </p>

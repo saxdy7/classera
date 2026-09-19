@@ -77,7 +77,7 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
             <div className="bg-[var(--cl-surface-inverse)] border-b border-[var(--cl-hairline-strong)] p-4">
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <div>
-                        <h1 className="text-xl font-semibold">{test.title}</h1>
+                        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
                         <p className="text-sm text-[var(--cl-muted-soft)]">{answeredCount}/{questions.length} answered</p>
                     </div>
 

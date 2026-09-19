@@ -83,7 +83,7 @@ export default async function CommunityModerationPage({
               <Flag className="w-6 h-6 text-[var(--cl-warning)]" />
             </div>
             <div>
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">Moderation Dashboard</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">Moderation Dashboard</h1>
               <p className="text-[var(--cl-body)]">{community.name}</p>
             </div>
           </div>

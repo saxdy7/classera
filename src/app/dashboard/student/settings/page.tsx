@@ -26,7 +26,7 @@ export default async function StudentSettingsPage() {
         <Sidebar role="student" />
         <main className="flex-1 cl-main p-4 md:p-8 flex flex-col items-center">
           <div className="mb-8 w-full max-w-2xl">
-            <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">Settings</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-1">Settings</h1>
             <p className="text-[var(--cl-muted)]">Manage your account and preferences</p>
           </div>
           <div className="w-full max-w-2xl">

@@ -419,7 +419,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Live Sessions</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Live Sessions</h1>
           <p className="text-[var(--cl-body)]">Schedule and manage live meetings, proctored tests, and more</p>
         </div>
         <button

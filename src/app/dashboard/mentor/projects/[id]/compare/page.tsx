@@ -90,7 +90,7 @@ export default async function CompareSubmissionsPage({
                 <BarChart2 className="w-5 h-5 text-[var(--cl-primary)]" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-[var(--cl-ink)]">Compare Submissions</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">Compare Submissions</h1>
                 <p className="text-sm text-[var(--cl-muted)]">{assignment.title}</p>
               </div>
             </div>

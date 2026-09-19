@@ -113,7 +113,7 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
             {/* Header / Hero Section (Image 1 Style) */}
             <div className="mb-12">
                 <div className="max-w-3xl mb-10">
-                    <h1 className="text-5xl font-semibold text-[var(--cl-ink)] leading-tight tracking-tight mb-4">
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl mb-4">
                         Explore, Share & <span className="text-[var(--cl-ink)]">Connect</span> with Fellow Learners
                     </h1>
                     <p className="text-xl text-[var(--cl-muted)] font-medium">
@@ -171,19 +171,19 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                     </div>
 
                     {/* Discussions List */}
-                    <div className="bg-[var(--cl-surface-card)] rounded-[2.5rem] p-8 border border-[var(--cl-hairline)] mb-8">
+                    <div className="bg-card rounded-xl p-6 border mb-8">
                         <div className="flex items-center justify-between mb-8">
-                            <h2 className="text-2xl font-semibold text-[var(--cl-ink)] tracking-tight">Community Groups</h2>
-                            <div className="flex bg-[var(--cl-surface-strong)] p-1 rounded-[var(--cl-r-lg)]">
+                            <h2 className="text-xl font-semibold tracking-tight text-foreground">Community Groups</h2>
+                            <div className="flex w-fit items-center gap-1 rounded border border-border/40 bg-muted p-1">
                                 <button 
                                     onClick={() => setActiveTab('all')}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'all' ? 'bg-[var(--cl-surface-card)] text-[var(--cl-primary)]' : 'text-[var(--cl-muted)]'}`}
+                                    className={`flex cursor-pointer items-center gap-2 rounded-sm px-6 py-1.5 text-sm font-medium transition-colors ${activeTab === 'all' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                                 >
                                     All Groups
                                 </button>
                                 <button 
                                     onClick={() => setActiveTab('my')}
-                                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'my' ? 'bg-[var(--cl-surface-card)] text-[var(--cl-primary)]' : 'text-[var(--cl-muted)]'}`}
+                                    className={`flex cursor-pointer items-center gap-2 rounded-sm px-6 py-1.5 text-sm font-medium transition-colors ${activeTab === 'my' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                                 >
                                     My Joined
                                 </button>

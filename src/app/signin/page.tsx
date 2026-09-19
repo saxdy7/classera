@@ -21,7 +21,7 @@ export default function SignIn() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 text-black">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-5xl mb-4">
             Welcome Back!
           </h1>
           <p className="text-lg text-[var(--cl-body)]">

@@ -150,7 +150,7 @@ export default async function AssignmentDetailPage({
                     <GitBranch className="w-6 h-6 text-[var(--cl-primary)]" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-semibold text-[var(--cl-ink)]">{assignment.title}</h1>
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground">{assignment.title}</h1>
                     {assignment.description && (
                       <p className="text-[var(--cl-muted)] text-sm mt-1">{assignment.description}</p>
                     )}

@@ -3,13 +3,13 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import RealCalendar from '@/components/shared/RealCalendar';
-import { StatCard } from '@/components/dashboard/StatCard';
+import { StatCard, SectionHeader, GradientCard, EmptyState, getGreeting, gradientFor, primaryButton, outlineButton } from '@/components/shell';
 import { ActivityBarChart } from '@/components/dashboard/ActivityBarChart';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
   Users, ClipboardCheck, MessageSquare, Trophy,
-  ArrowUpRight, GraduationCap, Target, UsersRound,
+  GraduationCap, Target, UsersRound, GitBranch, Video, Plus,
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -124,7 +124,6 @@ export default async function MentorDashboard() {
 
   const firstName = profile.full_name?.split(' ')[0] || 'Mentor';
   const universityName = profile.universities?.name || 'your university';
-  const gradients = ['', '', '', ''];
 
   // ── Derived metrics ──
   const liveTestsCount = tests.filter((t) => t.is_live).length;
@@ -156,271 +155,207 @@ export default async function MentorDashboard() {
     .sort((a, b) => b.avg - a.avg)
     .slice(0, 5);
 
+  const quickActions = [
+    { href: '/dashboard/mentor/tests/create', icon: ClipboardCheck, title: 'Create a test', subtitle: 'Design an assessment' },
+    { href: '/dashboard/mentor/projects/create', icon: GitBranch, title: 'Assign a project', subtitle: 'Set a build brief with a rubric' },
+    { href: '/dashboard/mentor/communities/create', icon: UsersRound, title: 'Start a community', subtitle: 'Create a learning space' },
+    { href: '/dashboard/mentor/live-sessions', icon: Video, title: 'Host a live session', subtitle: 'Schedule a class or office hours' },
+  ];
+
+  const initials = (name?: string) =>
+    name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?';
+
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-background">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 cl-main p-4 md:p-8">
-          <div className="w-full max-w-9xl mx-auto">
+        <main className="flex-1 cl-main p-6">
+          <div className="mx-auto w-full max-w-7xl space-y-10">
 
-            {/* ── Welcome header ──
-                Same defect as the student dashboard: body copy inside a solid
-                colour banner used text-[var(--cl-primary)] (near-black), which
-                was unreadable on the fill. Replaced with the light greeting the
-                reference dashboards use. */}
-            <div className="cl-rise mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            {/* ── Greeting — aria home page ── */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
-                <span className="cl-eyebrow">Dashboard</span>
-                <h1 className="mt-2 text-[32px] font-semibold leading-[1.15] tracking-[-0.5px] text-[var(--cl-ink)] md:text-[40px] md:tracking-[-1px]">
-                  Hello, {firstName}
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+                  {getGreeting()}, {firstName}
                 </h1>
-                <p className="mt-3 max-w-xl text-[15px] leading-[1.6] text-[var(--cl-muted)]">
-                  You&rsquo;re mentoring at{' '}
-                  <span className="font-semibold text-[var(--cl-ink)]">{universityName}</span>.
-                  Guide your students, manage sessions and build communities.
+                <p className="mt-1 text-sm text-muted-foreground">
+                  You&rsquo;re mentoring at <span className="font-medium text-foreground">{universityName}</span>. Guide your students, manage sessions and build communities.
                 </p>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href="/dashboard/mentor/communities"
-                    className="inline-flex h-11 items-center gap-2 rounded-[var(--cl-r-md)] bg-[var(--cl-primary)] px-5 text-sm font-semibold text-[var(--cl-on-primary)] transition-colors hover:bg-[var(--cl-primary-active)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)]"
-                  >
-                    <UsersRound className="h-4 w-4" /> Communities
-                  </Link>
-                  <Link
-                    href="/dashboard/mentor/messages"
-                    className="inline-flex h-11 items-center gap-2 rounded-[var(--cl-r-md)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-5 text-sm font-semibold text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
-                  >
-                    <MessageSquare className="h-4 w-4" /> Messages
-                  </Link>
-                </div>
               </div>
-
-              <div className="hidden flex-shrink-0 lg:block">
-                <Image
-                  src="https://illustrations.popsy.co/amber/man-riding-a-rocket.svg"
-                  alt=""
-                  width={200}
-                  height={200}
-                  className="h-44 w-44 object-contain"
-                />
+              <div className="flex shrink-0 items-center gap-2">
+                <Link href="/dashboard/mentor/messages" className={outlineButton}>
+                  <MessageSquare className="size-3.5" /> Messages
+                </Link>
+                <Link href="/dashboard/mentor/tests/create" className={primaryButton}>
+                  <Plus className="size-4" /> New test
+                </Link>
               </div>
             </div>
 
-            {/* ── Quick Actions ── */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <Link href="/dashboard/mentor/communities" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[rgba(13,116,206,0.12)] flex items-center justify-center flex-shrink-0">
-                  <UsersRound className="w-5 h-5 text-[var(--cl-info)]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Build Communities</h3>
-                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Create learning communities</p>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
-              </Link>
-
-              <Link href="/dashboard/mentor/tests" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-warning)] transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[rgba(171,100,0,0.12)] flex items-center justify-center flex-shrink-0">
-                  <ClipboardCheck className="w-5 h-5 text-[var(--cl-warning)]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Create Tests</h3>
-                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Design assessments</p>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
-              </Link>
-
-              <Link href="/dashboard/mentor/students" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary-soft)] flex items-center justify-center flex-shrink-0">
-                  <GraduationCap className="w-5 h-5 text-[var(--cl-primary)]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Manage Students</h3>
-                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Guide their learning journey</p>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
-              </Link>
+            {/* ── Stats ── */}
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+              <StatCard label="Students" value={students.length || 0} icon={Users} href="/dashboard/mentor/students" />
+              <StatCard label="Live tests" value={liveTestsCount} icon={ClipboardCheck} href="/dashboard/mentor/tests" hint={`${tests.length} total`} />
+              <StatCard label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Trophy} href="/dashboard/mentor/analytics" />
+              <StatCard label="Conversations" value={conversations.length || 0} icon={MessageSquare} href="/dashboard/mentor/messages" />
             </div>
 
-            {/* ── Main Grid ── */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* ── Quick actions — looma gradient grid + dashed create tile ── */}
+            <section className="space-y-4">
+              <SectionHeader icon={Target} title="Quick actions" description="Create something for your students." />
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {quickActions.map((a, i) => (
+                  <GradientCard key={a.href} href={a.href} index={i + 4} icon={a.icon} title={a.title} subtitle={a.subtitle} footerLeft="Open" footerRight="→" />
+                ))}
+              </div>
+            </section>
 
-              {/* ── Left Column (2/3) ── */}
-              <div className="xl:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
+              <div className="space-y-8 xl:col-span-2">
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <StatCard icon={Users} label="Students" value={students.length || 0} iconBg="bg-[var(--cl-primary-soft)]" iconColor="text-[var(--cl-primary)]" />
-                  <StatCard icon={ClipboardCheck} label="Live Tests" value={liveTestsCount} iconBg="bg-[rgba(171,100,0,0.12)]" iconColor="text-[var(--cl-warning)]" />
-                  <StatCard icon={Trophy} label="Avg Score" value={avgScore !== null ? `${avgScore}%` : '—'} iconBg="bg-[rgba(22,163,74,0.12)]" iconColor="text-[var(--cl-success)]" />
-                  <StatCard icon={MessageSquare} label="Messages" value={conversations.length || 0} iconBg="bg-[var(--cl-primary-soft)]" iconColor="text-[var(--cl-primary)]" />
-                </div>
-
-                {/* Submissions Chart + Leaderboard */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
-                    <div className="flex items-center justify-between mb-2">
-                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Submissions This Week</h2>
-                    </div>
-                    <p className="text-xs text-[var(--cl-muted)] mb-4">Across all your tests</p>
+                {/* ── Submissions chart + Top students ── */}
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  <div className="rounded-xl border bg-card p-5">
+                    <h2 className="text-lg font-semibold tracking-tight text-foreground">Submissions this week</h2>
+                    <p className="mb-4 text-xs text-muted-foreground">Across all your tests</p>
                     {submissions.length > 0 ? (
-                      <ActivityBarChart data={submissionsByDay} color="#6366f1" />
+                      <ActivityBarChart data={submissionsByDay} color="#a855f7" />
                     ) : (
-                      <div className="h-[180px] flex items-center justify-center text-sm text-[var(--cl-muted-soft)]">
-                        No submissions yet
-                      </div>
+                      <div className="flex h-[180px] items-center justify-center rounded-md border border-dashed bg-muted/40 text-sm text-muted-foreground">No submissions yet</div>
                     )}
                   </div>
 
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Trophy className="w-4 h-4 text-[var(--cl-warning)]" />
-                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Top Students</h2>
+                  <div className="rounded-xl border bg-card p-5">
+                    <div className="mb-4 flex items-center gap-2">
+                      <Trophy className="size-4 text-amber-500" />
+                      <h2 className="text-lg font-semibold tracking-tight text-foreground">Top students</h2>
                     </div>
                     {topStudents.length > 0 ? (
-                      <div className="space-y-3">
+                      <div className="divide-y overflow-hidden rounded-lg border">
                         {topStudents.map((entry, i) => (
-                          <div key={entry.student?.id || i} className="flex items-center gap-3">
-                            <span className="w-5 text-xs font-semibold text-[var(--cl-muted)]">{i + 1}</span>
+                          <Link key={entry.student?.id || i} href={entry.student?.id ? `/dashboard/mentor/student/${entry.student.id}` : '#'} className="group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/40">
+                            <span className="w-5 text-xs font-semibold tabular-nums text-muted-foreground">{i + 1}</span>
                             {entry.student?.avatar_url ? (
-                              <img src={entry.student.avatar_url} alt={entry.student.full_name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                              <Image src={entry.student.avatar_url} alt="" width={32} height={32} className="size-8 shrink-0 rounded-full border object-cover" />
                             ) : (
-                              <div className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-xs font-semibold flex-shrink-0 bg-[var(--cl-primary)]">
-                                {entry.student?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
-                              </div>
+                              <div className="flex size-8 shrink-0 items-center justify-center rounded-full border bg-primary/10 text-xs font-semibold text-primary">{initials(entry.student?.full_name)}</div>
                             )}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{entry.student?.full_name || 'Student'}</p>
-                              <p className="text-xs text-[var(--cl-muted)]">{entry.count} test{entry.count !== 1 ? 's' : ''}</p>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium text-foreground group-hover:text-accent-purple">{entry.student?.full_name || 'Student'}</p>
+                              <p className="text-xs text-muted-foreground">{entry.count} test{entry.count !== 1 ? 's' : ''}</p>
                             </div>
-                            <span className="text-sm font-semibold text-[var(--cl-success)]">{entry.avg}%</span>
-                          </div>
+                            <span className="text-sm font-semibold tabular-nums text-green-600">{entry.avg}%</span>
+                          </Link>
                         ))}
                       </div>
                     ) : (
-                      <div className="h-[180px] flex items-center justify-center text-sm text-[var(--cl-muted-soft)]">
-                        No graded submissions yet
-                      </div>
+                      <div className="flex h-[180px] items-center justify-center rounded-md border border-dashed bg-muted/40 text-sm text-muted-foreground">No graded submissions yet</div>
                     )}
                   </div>
                 </div>
 
-                {/* Students at University */}
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Students at Your University</h2>
-                      <p className="text-xs text-[var(--cl-muted)] mt-0.5">{universityName}</p>
-                    </div>
-                    <Link href="/dashboard/mentor/students" className="text-sm font-medium text-[var(--cl-primary)] hover:text-[var(--cl-primary)] flex items-center gap-1">
-                      View all →
-                    </Link>
-                  </div>
-
+                {/* ── Students at university — looma gradient cards ── */}
+                <section className="space-y-4">
+                  <SectionHeader
+                    icon={GraduationCap}
+                    title="Students at your university"
+                    description={universityName}
+                    action={<Link href="/dashboard/mentor/students" className={outlineButton}>View all</Link>}
+                  />
                   {students.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {students.slice(0, 6).map((student: any, i: number) => (
-                        <div key={student.id} className="flex items-center gap-3 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all group">
-                          {student.avatar_url ? (
-                            <img src={student.avatar_url} alt={student.full_name} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
-                          ) : (
-                            <div className={`w-11 h-11 rounded-full ${gradients[i % gradients.length]} flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold flex-shrink-0`}>
-                              {student.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-[var(--cl-ink)] text-sm truncate group-hover:text-[var(--cl-primary)] transition-colors">{student.full_name}</p>
-                            <p className="text-xs text-[var(--cl-muted)] truncate mt-0.5">{student.specialization_board || 'Student'}</p>
-                            {student.current_semester && (
-                              <span className="inline-block mt-1 px-2 py-0.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-medium rounded-full">
-                                Sem {student.current_semester}
-                              </span>
-                            )}
-                          </div>
-                          <Link href={`/dashboard/mentor/messages?userId=${student.id}`}
-                              className="flex-shrink-0 px-3 py-1.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-xs font-semibold rounded-lg hover:bg-[var(--cl-primary)] transition-colors">
-                            Message
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-[var(--cl-muted-soft)]">
-                      <GraduationCap className="w-10 h-10 mx-auto mb-3 text-[var(--cl-muted-soft)]" />
-                      <p className="font-medium">No students at your university yet</p>
-                      <p className="text-sm mt-1">Students will appear here once they join</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Recent Messages */}
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-base font-semibold text-[var(--cl-ink)]">Recent Messages</h2>
-                    <Link href="/dashboard/mentor/messages" className="text-sm font-medium text-[var(--cl-primary)] hover:text-[var(--cl-primary)]">
-                      View all →
-                    </Link>
-                  </div>
-                  {conversations.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {conversations.map((conv: any) => (
-                        <Link key={conv.id} href={`/dashboard/mentor/messages?userId=${conv.user?.id}`}
-                          className="flex items-center gap-3 p-4 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all group">
-                          <div className="relative flex-shrink-0">
-                            {conv.user?.avatar_url ? (
-                              <img src={conv.user.avatar_url} alt={conv.user.full_name} className="w-11 h-11 rounded-full object-cover" />
+                        <Link
+                          key={student.id}
+                          href={`/dashboard/mentor/student/${student.id}`}
+                          className={`group relative block h-[180px] overflow-hidden rounded-xl border bg-linear-to-br p-4 transition-transform hover:scale-[1.02] ${gradientFor(i + 1)}`}
+                        >
+                          <div className="pointer-events-none absolute -top-8 -right-8 size-32 rounded-full bg-white/40 blur-2xl" />
+                          <div className="relative flex items-start gap-3">
+                            {student.avatar_url ? (
+                              <Image src={student.avatar_url} alt="" width={44} height={44} className="size-11 rounded-full border-2 border-white/70 object-cover shadow-xs" />
                             ) : (
-                              <div className="w-11 h-11 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold bg-[var(--cl-info)]">
-                                {conv.user?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
+                              <div className="flex size-11 items-center justify-center rounded-full border-2 border-white/70 bg-white/60 text-sm font-semibold text-foreground shadow-xs">
+                                {initials(student.full_name)}
                               </div>
                             )}
-                            {conv.unread && <span className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--cl-error)] rounded-full border-2 border-[var(--cl-on-dark)]" />}
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold text-foreground">{student.full_name}</p>
+                              <p className="truncate text-xs text-foreground/70">{student.specialization_board || 'Student'}</p>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-[var(--cl-ink)] text-sm truncate group-hover:text-[var(--cl-primary)] transition-colors">{conv.user?.full_name}</p>
-                            <p className="text-xs text-[var(--cl-muted)] truncate mt-0.5">{conv.lastMessage}</p>
-                          </div>
-                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                            <span className="text-xs text-[var(--cl-muted)]">{conv.time}</span>
-                            {conv.unread && <span className="text-xs font-medium text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-0.5 rounded-full">New</span>}
+                          {student.current_semester && (
+                            <span className="relative mt-3 inline-block rounded-full border border-white/40 bg-white/60 px-2 py-0.5 text-[10px] font-semibold text-foreground">
+                              Semester {student.current_semester}
+                            </span>
+                          )}
+                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/10 bg-black/10 px-3 py-2.5 text-[11px] font-medium text-foreground/80 backdrop-blur-xs">
+                            <span>Student</span>
+                            <span className="text-accent-purple group-hover:underline">View profile →</span>
                           </div>
                         </Link>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-10 text-[var(--cl-muted-soft)]">
-                      <MessageSquare className="w-10 h-10 mx-auto mb-3 text-[var(--cl-muted-soft)]" />
-                      <p className="font-medium">No messages yet</p>
-                      <p className="text-sm mt-1">Your students will reach out soon</p>
-                    </div>
+                    <EmptyState icon={GraduationCap} title="No students at your university yet" description="Students will appear here once they join." />
                   )}
-                </div>
+                </section>
+
+                {/* ── Recent messages ── */}
+                <section className="space-y-4">
+                  <SectionHeader
+                    icon={MessageSquare}
+                    title="Recent messages"
+                    action={<Link href="/dashboard/mentor/messages" className={outlineButton}>View all</Link>}
+                  />
+                  {conversations.length > 0 ? (
+                    <div className="divide-y overflow-hidden rounded-lg border bg-card">
+                      {conversations.map((conv: any) => (
+                        <Link key={conv.id} href={`/dashboard/mentor/messages?userId=${conv.user?.id}`} className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40">
+                          <div className="relative shrink-0">
+                            {conv.user?.avatar_url ? (
+                              <Image src={conv.user.avatar_url} alt="" width={36} height={36} className="size-9 rounded-full border object-cover" />
+                            ) : (
+                              <div className="flex size-9 items-center justify-center rounded-full border bg-primary/10 text-xs font-semibold text-primary">{initials(conv.user?.full_name)}</div>
+                            )}
+                            {conv.unread && <span className="absolute -top-0.5 -right-0.5 size-2.5 rounded-full bg-accent-purple ring-2 ring-card" />}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-foreground group-hover:text-accent-purple">{conv.user?.full_name}</p>
+                            <p className="truncate text-xs text-muted-foreground">{conv.lastMessage}</p>
+                          </div>
+                          <span className="shrink-0 text-xs text-muted-foreground">{conv.time}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState icon={MessageSquare} title="No messages yet" description="Your students will reach out soon." />
+                  )}
+                </section>
               </div>
 
-              {/* ── Right Column (1/3) ── */}
+              {/* ── Right column ── */}
               <div className="space-y-6">
                 <RealCalendar userId={user.id} />
 
-                {/* Profile Card */}
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold text-[var(--cl-on-dark)] bg-[var(--cl-info)]">
+                <div className="rounded-xl border bg-card p-5">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex size-11 items-center justify-center rounded-full border bg-primary/10 text-base font-semibold text-primary">
                       {firstName[0]?.toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-[var(--cl-ink)] truncate">{profile.full_name}</p>
-                      <p className="text-[var(--cl-muted)] text-xs truncate">
+                      <p className="truncate text-sm font-semibold text-foreground">{profile.full_name}</p>
+                      <p className="truncate text-xs text-muted-foreground">
                         {Array.isArray(profile.expertise) ? profile.expertise.slice(0, 2).join(', ') : (profile.expertise || 'Mentor')}
                       </p>
                     </div>
                   </div>
-                  <p className="text-[var(--cl-muted)] text-xs leading-relaxed flex items-center gap-1.5">
-                    <Target className="w-3.5 h-3.5" /> {universityName}
+                  <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Target className="size-3.5" /> {universityName}
                   </p>
-                  <Link href="/dashboard/mentor/profile" className="mt-4 block text-center py-2 px-4 bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] transition-colors border border-[var(--cl-hairline)]">
-                    Edit Profile
+                  <Link href="/dashboard/mentor/settings" className={`${outlineButton} mt-4 w-full justify-center`}>
+                    Edit profile
                   </Link>
                 </div>
               </div>

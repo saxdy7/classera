@@ -213,7 +213,7 @@ export function RoadmapsContent() {
                     <MapIcon size={16} />
                 </div>
                 <div>
-                    <h1 className="text-sm font-semibold text-[var(--cl-ink)]">AI Roadmap Generator</h1>
+                    <h1 className="text-sm font-semibold text-foreground">AI Roadmap Generator</h1>
                     <p className="text-xs text-[var(--cl-muted)]">Click a node to explore · AI-powered path</p>
                 </div>
                 {roadmap && (

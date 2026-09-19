@@ -91,7 +91,7 @@ export default async function StudentTestsPage() {
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-2">Tests</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Tests</h1>
               <p className="text-[var(--cl-body)]">Track your upcoming tests and review your performance</p>
             </div>
 

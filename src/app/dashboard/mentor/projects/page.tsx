@@ -67,7 +67,7 @@ export default async function MentorProjectsPage() {
             {/* Page header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div>
-                <h1 className="text-2xl font-semibold text-[var(--cl-ink)]">Project Assignments</h1>
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground">Project Assignments</h1>
                 <p className="text-[var(--cl-muted)] text-sm mt-1">Assign coding projects and track student GitHub activity</p>
               </div>
               <Link

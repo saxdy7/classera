@@ -195,7 +195,7 @@ export function MentorCommunitiesLayout({
                       {selectedCommunity.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h1 className="text-2xl font-semibold text-[var(--cl-ink)]">
+                      <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                         {selectedCommunity.name}
                       </h1>
                       <p className="text-sm text-[var(--cl-body)]">

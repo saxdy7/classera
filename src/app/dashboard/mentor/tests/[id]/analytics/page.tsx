@@ -48,7 +48,7 @@ export default async function MentorTestAnalyticsPage({ params }: { params: Prom
               Back to Test
             </Link>
             <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">{test.title}</h1>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
               <p className="text-[var(--cl-body)] mt-1">Test analytics &amp; performance insights</p>
             </div>
             <TestAnalytics testId={id} />

@@ -208,7 +208,7 @@ export default function ConnectStudents() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 00-6-6 6 6 0 00-6 6z" />
                       </svg>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-semibold text-[var(--cl-ink)]">
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                       Connect with Students
                     </h1>
                   </div>

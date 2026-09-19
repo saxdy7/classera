@@ -97,7 +97,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
 
                     // Headings
                     h1({ children }) {
-                        return <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mt-6 mb-4">{children}</h1>;
+                        return <h1 className="text-3xl font-semibold tracking-tight text-foreground mt-6 mb-4">{children}</h1>;
                     },
 
                     h2({ children }) {

@@ -66,10 +66,10 @@ export default async function StudentCoursesPage() {
                   
                   {/* Main Heading */}
                   <div>
-                    <h1 className="text-3xl md:text-4xl font-semibold mb-1 leading-tight text-[var(--cl-ink)]">
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-1">
                       Elevate Your
                     </h1>
-                    <h1 className="text-3xl md:text-4xl font-semibold leading-tight text-[var(--cl-ink)]">
+                    <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                       Learning Journey
                     </h1>
                   </div>
