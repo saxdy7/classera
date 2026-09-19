@@ -95,7 +95,7 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
         if (loading) {
             return (
                 <div className="flex items-center justify-center py-12">
-                    <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-8 h-8 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin" />
                 </div>
             );
         }
@@ -103,11 +103,11 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
         if (error || !analytics) {
             return (
                 <div className="text-center py-12">
-                    <AlertCircle className="w-12 h-12 mx-auto text-red-400 mb-4" />
-                    <p className="text-slate-500">{error || 'No analytics available'}</p>
+                    <AlertCircle className="w-12 h-12 mx-auto text-[var(--cl-error)] mb-4" />
+                    <p className="text-[var(--cl-muted)]">{error || 'No analytics available'}</p>
                     <button
                         onClick={fetchAnalytics}
-                        className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                        className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] rounded-lg transition-colors"
                     >
                         <RefreshCw className="w-4 h-4" />
                         Retry
@@ -122,90 +122,90 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
             <div className="space-y-6">
                 {/* Summary Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-slate-50 rounded-xl p-5">
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-slate-600">Completion Rate</span>
-                            <Users className="w-5 h-5 text-blue-500" />
+                            <span className="text-sm font-medium text-[var(--cl-body)]">Completion Rate</span>
+                            <Users className="w-5 h-5 text-[var(--cl-info)]" />
                         </div>
-                        <p className="text-3xl font-bold text-slate-900">
+                        <p className="text-3xl font-semibold text-[var(--cl-ink)]">
                             {summary.completion_rate.toFixed(0)}%
                         </p>
-                        <p className="text-sm text-slate-500 mt-1">
+                        <p className="text-sm text-[var(--cl-muted)] mt-1">
                             {summary.total_submitted}/{summary.total_invited} submitted
                         </p>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl p-5">
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-slate-600">Average Score</span>
-                            <Target className="w-5 h-5 text-indigo-500" />
+                            <span className="text-sm font-medium text-[var(--cl-body)]">Average Score</span>
+                            <Target className="w-5 h-5 text-[var(--cl-primary)]" />
                         </div>
-                        <p className="text-3xl font-bold text-indigo-600">
+                        <p className="text-3xl font-semibold text-[var(--cl-primary)]">
                             {summary.average_score.toFixed(1)}%
                         </p>
-                        <p className="text-sm text-slate-500 mt-1">
+                        <p className="text-sm text-[var(--cl-muted)] mt-1">
                             High: {summary.highest_score}% | Low: {summary.lowest_score}%
                         </p>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl p-5">
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-slate-600">Pass Rate</span>
-                            <Award className="w-5 h-5 text-green-500" />
+                            <span className="text-sm font-medium text-[var(--cl-body)]">Pass Rate</span>
+                            <Award className="w-5 h-5 text-[var(--cl-success)]" />
                         </div>
-                        <p className="text-3xl font-bold text-green-600">
+                        <p className="text-3xl font-semibold text-[var(--cl-success)]">
                             {summary.pass_rate.toFixed(0)}%
                         </p>
                         <div className="flex items-center gap-1 mt-1">
                             {summary.pass_rate >= 70 ? (
-                                <TrendingUp className="w-4 h-4 text-green-500" />
+                                <TrendingUp className="w-4 h-4 text-[var(--cl-success)]" />
                             ) : (
-                                <TrendingDown className="w-4 h-4 text-red-500" />
+                                <TrendingDown className="w-4 h-4 text-[var(--cl-error)]" />
                             )}
-                            <span className="text-sm text-slate-500">
+                            <span className="text-sm text-[var(--cl-muted)]">
                                 {summary.pass_rate >= 70 ? 'Good' : 'Needs attention'}
                             </span>
                         </div>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl p-5">
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-slate-600">Avg Time</span>
-                            <Clock className="w-5 h-5 text-orange-500" />
+                            <span className="text-sm font-medium text-[var(--cl-body)]">Avg Time</span>
+                            <Clock className="w-5 h-5 text-[var(--cl-warning)]" />
                         </div>
-                        <p className="text-3xl font-bold text-slate-900">
+                        <p className="text-3xl font-semibold text-[var(--cl-ink)]">
                             {summary.average_time_minutes.toFixed(0)}
                         </p>
-                        <p className="text-sm text-slate-500 mt-1">minutes</p>
+                        <p className="text-sm text-[var(--cl-muted)] mt-1">minutes</p>
                     </div>
                 </div>
 
                 {/* Grade Distribution */}
-                <div className="bg-slate-50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Grade Distribution</h3>
+                <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6">
+                    <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">Grade Distribution</h3>
                     <div className="space-y-3">
                         {grade_distribution.map((grade) => (
                             <div key={grade.grade} className="flex items-center gap-4">
-                                <div className="w-12 text-sm font-medium text-slate-600">
+                                <div className="w-12 text-sm font-medium text-[var(--cl-body)]">
                                     {grade.grade}
                                 </div>
-                                <div className="flex-1 h-8 bg-slate-200 rounded-lg overflow-hidden">
+                                <div className="flex-1 h-8 bg-[var(--cl-surface-strong)] rounded-lg overflow-hidden">
                                     <div
                                         className={`h-full rounded-lg transition-all ${
-                                            grade.grade === 'A' ? 'bg-green-500' :
-                                            grade.grade === 'B' ? 'bg-blue-500' :
-                                            grade.grade === 'C' ? 'bg-yellow-500' :
-                                            grade.grade === 'D' ? 'bg-orange-500' :
-                                            'bg-red-500'
+                                            grade.grade === 'A' ? 'bg-[var(--cl-success)]' :
+                                            grade.grade === 'B' ? 'bg-[var(--cl-info)]' :
+                                            grade.grade === 'C' ? 'bg-[var(--cl-warning)]' :
+                                            grade.grade === 'D' ? 'bg-[var(--cl-warning)]' :
+                                            'bg-[var(--cl-error)]'
                                         }`}
                                         style={{ width: `${grade.percentage}%` }}
                                     />
                                 </div>
                                 <div className="w-20 text-right">
-                                    <span className="text-sm font-medium text-slate-900">
+                                    <span className="text-sm font-medium text-[var(--cl-ink)]">
                                         {grade.count}
                                     </span>
-                                    <span className="text-sm text-slate-500 ml-1">
+                                    <span className="text-sm text-[var(--cl-muted)] ml-1">
                                         ({grade.percentage.toFixed(0)}%)
                                     </span>
                                 </div>
@@ -215,49 +215,49 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
                 </div>
 
                 {/* Question Analysis */}
-                <div className="bg-slate-50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Question Performance</h3>
+                <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6">
+                    <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">Question Performance</h3>
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b border-slate-200">
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-slate-600">Question</th>
-                                    <th className="text-center py-3 px-4 text-sm font-medium text-slate-600">Correct</th>
-                                    <th className="text-center py-3 px-4 text-sm font-medium text-slate-600">Incorrect</th>
-                                    <th className="text-center py-3 px-4 text-sm font-medium text-slate-600">Skipped</th>
-                                    <th className="text-center py-3 px-4 text-sm font-medium text-slate-600">Difficulty</th>
+                                <tr className="border-b border-[var(--cl-hairline)]">
+                                    <th className="text-left py-3 px-4 text-sm font-medium text-[var(--cl-body)]">Question</th>
+                                    <th className="text-center py-3 px-4 text-sm font-medium text-[var(--cl-body)]">Correct</th>
+                                    <th className="text-center py-3 px-4 text-sm font-medium text-[var(--cl-body)]">Incorrect</th>
+                                    <th className="text-center py-3 px-4 text-sm font-medium text-[var(--cl-body)]">Skipped</th>
+                                    <th className="text-center py-3 px-4 text-sm font-medium text-[var(--cl-body)]">Difficulty</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {question_analysis.map((q, index) => {
                                     return (
-                                        <tr key={q.question_id} className="border-b border-slate-100">
+                                        <tr key={q.question_id} className="border-b border-[var(--cl-hairline)]">
                                             <td className="py-3 px-4">
-                                                <p className="text-sm text-slate-900 font-medium">Q{index + 1}</p>
-                                                <p className="text-xs text-slate-500 truncate max-w-xs">
+                                                <p className="text-sm text-[var(--cl-ink)] font-medium">Q{index + 1}</p>
+                                                <p className="text-xs text-[var(--cl-muted)] truncate max-w-xs">
                                                     {q.question_text}
                                                 </p>
                                             </td>
                                             <td className="text-center py-3 px-4">
-                                                <span className="inline-flex items-center gap-1 text-sm text-green-600">
+                                                <span className="inline-flex items-center gap-1 text-sm text-[var(--cl-success)]">
                                                     <CheckCircle className="w-4 h-4" />
                                                     {q.correct_count}
                                                 </span>
                                             </td>
                                             <td className="text-center py-3 px-4">
-                                                <span className="inline-flex items-center gap-1 text-sm text-red-600">
+                                                <span className="inline-flex items-center gap-1 text-sm text-[var(--cl-error)]">
                                                     <XCircle className="w-4 h-4" />
                                                     {q.incorrect_count}
                                                 </span>
                                             </td>
                                             <td className="text-center py-3 px-4">
-                                                <span className="text-sm text-slate-500">{q.skip_count}</span>
+                                                <span className="text-sm text-[var(--cl-muted)]">{q.skip_count}</span>
                                             </td>
                                             <td className="text-center py-3 px-4">
                                                 <span className={`text-xs px-2 py-1 rounded-full ${
-                                                    q.difficulty_rating === 'easy' ? 'bg-green-100 text-green-700' :
-                                                    q.difficulty_rating === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                                                    'bg-red-100 text-red-700'
+                                                    q.difficulty_rating === 'easy' ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' :
+                                                    q.difficulty_rating === 'medium' ? 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]' :
+                                                    'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
                                                 }`}>
                                                     {q.difficulty_rating}
                                                 </span>
@@ -271,8 +271,8 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
                 </div>
 
                 {/* Time Distribution */}
-                <div className="bg-slate-50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Time Distribution</h3>
+                <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6">
+                    <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">Time Distribution</h3>
                     <div className="flex items-end gap-2 h-40">
                         {time_distribution.map((item, index) => {
                             const maxCount = Math.max(...time_distribution.map(t => t.count));
@@ -281,11 +281,11 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
                             return (
                                 <div key={index} className="flex-1 flex flex-col items-center gap-2">
                                     <div
-                                        className="w-full bg-indigo-500 rounded-t-lg transition-all"
+                                        className="w-full bg-[var(--cl-primary)] rounded-t-lg transition-all"
                                         style={{ height: `${height}%`, minHeight: item.count > 0 ? '8px' : '0' }}
                                     />
-                                    <span className="text-xs text-slate-500">{item.range}</span>
-                                    <span className="text-xs font-medium text-slate-700">{item.count}</span>
+                                    <span className="text-xs text-[var(--cl-muted)]">{item.range}</span>
+                                    <span className="text-xs font-medium text-[var(--cl-body)]">{item.count}</span>
                                 </div>
                             );
                         })}
@@ -299,26 +299,26 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
     if (onClose) {
         return (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
-                    <div className="flex items-center justify-between p-6 border-b border-slate-200">
-                        <h2 className="text-2xl font-bold text-slate-900">Test Analytics</h2>
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+                    <div className="flex items-center justify-between p-6 border-b border-[var(--cl-hairline)]">
+                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Test Analytics</h2>
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={fetchAnalytics}
-                                className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                className="p-2 text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                             >
                                 <RefreshCw className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={exportToCsv}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors"
                             >
                                 <Download className="w-4 h-4" />
                                 Export CSV
                             </button>
                             <button
                                 onClick={onClose}
-                                className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                className="p-2 text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -336,17 +336,17 @@ export function TestAnalytics({ testId, onClose }: TestAnalyticsProps) {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-slate-900">Test Analytics</h2>
+                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Test Analytics</h2>
                 <div className="flex items-center gap-3">
                     <button
                         onClick={fetchAnalytics}
-                        className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-2 text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                     >
                         <RefreshCw className="w-5 h-5" />
                     </button>
                     <button
                         onClick={exportToCsv}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors"
                     >
                         <Download className="w-4 h-4" />
                         Export CSV

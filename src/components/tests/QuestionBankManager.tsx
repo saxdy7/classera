@@ -178,13 +178,13 @@ export default function QuestionBankManager() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return 'bg-green-100 text-green-700';
+        return 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]';
       case 'hard':
-        return 'bg-red-100 text-red-700';
+        return 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]';
     }
   };
 
@@ -193,10 +193,10 @@ export default function QuestionBankManager() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
             Question Bank
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-[var(--cl-body)] mt-2">
             Create and manage your test questions
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function QuestionBankManager() {
       <Card className="p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
             <input
               type="text"
               placeholder="Search questions..."
@@ -263,14 +263,14 @@ export default function QuestionBankManager() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-32 bg-[var(--cl-surface-strong)] rounded-lg animate-pulse" />
           ))}
         </div>
       ) : questions.length === 0 ? (
         <div className="text-center py-12">
-          <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-          <p className="text-gray-500 text-lg">No questions yet</p>
-          <p className="text-gray-400 text-sm mt-2">
+          <FileText className="w-16 h-16 mx-auto text-[var(--cl-muted-soft)] mb-4" />
+          <p className="text-[var(--cl-muted)] text-lg">No questions yet</p>
+          <p className="text-[var(--cl-muted-soft)] text-sm mt-2">
             Create your first question to get started
           </p>
         </div>
@@ -281,7 +281,7 @@ export default function QuestionBankManager() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="text-purple-600">
+                    <div className="text-[var(--cl-primary)]">
                       {getQuestionTypeIcon(question.question_type)}
                     </div>
                     <span
@@ -291,20 +291,20 @@ export default function QuestionBankManager() {
                     >
                       {question.difficulty}
                     </span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-[var(--cl-body)]">
                       {question.marks} {question.marks === 1 ? 'mark' : 'marks'}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-[var(--cl-muted)]">
                       Used {question.usage_count} times
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">
                     {question.question_text}
                   </h3>
 
                   {question.subject && (
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-[var(--cl-body)] mb-2">
                       Subject: {question.subject}
                       {question.topic && ` • Topic: ${question.topic}`}
                     </p>
@@ -315,7 +315,7 @@ export default function QuestionBankManager() {
                       {question.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
+                          className="text-xs bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-1 rounded"
                         >
                           {tag}
                         </span>
@@ -336,7 +336,7 @@ export default function QuestionBankManager() {
                     size="sm"
                     variant="ghost"
                     onClick={() => handleDelete(question.id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-[var(--cl-error)] hover:text-[var(--cl-error)]"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -351,13 +351,13 @@ export default function QuestionBankManager() {
       {showAddModal && (
         <>
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-[var(--cl-scrim)] z-40"
             onClick={() => setShowAddModal(false)}
           />
           <div className="fixed inset-x-0 top-10 z-50 mx-auto max-w-3xl px-4 max-h-screen overflow-y-auto">
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">
                   {editingQuestion ? 'Edit Question' : 'Add New Question'}
                 </h2>
                 <Button

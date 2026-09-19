@@ -10,11 +10,11 @@ export const RoadmapNode = memo(({ data }: NodeProps) => {
 
     return (
         <div
-            className={`px-4 py-3 rounded-lg border-2 shadow-lg min-w-[200px] max-w-[250px] transition-all ${isCompleted
-                    ? 'bg-green-50 border-green-400'
+            className={`px-4 py-3 rounded-lg border-2 min-w-[200px] max-w-[250px] transition-all ${isCompleted
+                    ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
                     : isInProgress
-                        ? 'bg-blue-50 border-blue-400'
-                        : 'bg-white border-purple-300 hover:border-purple-500'
+                        ? 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]'
+                        : 'bg-[var(--cl-surface-card)] border-[var(--cl-primary)] hover:border-[var(--cl-primary)]'
                 }`}
             style={{
                 borderColor: data.color || '#9333ea',
@@ -29,27 +29,27 @@ export const RoadmapNode = memo(({ data }: NodeProps) => {
             <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 mt-0.5">
                     {isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        <CheckCircle2 className="h-5 w-5 text-[var(--cl-success)]" />
                     ) : isInProgress ? (
-                        <Circle className="h-5 w-5 text-blue-600 animate-pulse" />
+                        <Circle className="h-5 w-5 text-[var(--cl-info)] animate-pulse" />
                     ) : (
-                        <Circle className="h-5 w-5 text-gray-400" />
+                        <Circle className="h-5 w-5 text-[var(--cl-muted-soft)]" />
                     )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2">
+                    <h4 className="font-semibold text-sm text-[var(--cl-ink)] mb-1 line-clamp-2">
                         {data.title}
                     </h4>
                     {data.description && (
-                        <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+                        <p className="text-xs text-[var(--cl-body)] line-clamp-2 mb-2">
                             {data.description}
                         </p>
                     )}
 
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                    <div className="flex items-center gap-3 text-xs text-[var(--cl-muted)]">
                         {data.node_type && (
-                            <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded">
+                            <span className="px-2 py-0.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded">
                                 {data.node_type}
                             </span>
                         )}

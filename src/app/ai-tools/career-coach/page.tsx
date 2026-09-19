@@ -22,11 +22,11 @@ export default async function CareerCoachPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
             <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
                 <Sidebar role="student" />
-                <main className="flex-1 md:ml-[68px] flex flex-col" style={{ height: 'calc(100vh - 56px)' }}>
+                <main className="flex-1 cl-main flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
                     {profile?.quiz_completed ? (
                         <CareerCoachContent />
                     ) : (

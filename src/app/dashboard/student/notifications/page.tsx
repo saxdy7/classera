@@ -26,11 +26,11 @@ export default async function StudentNotificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-14">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <NotificationsClient userId={user.id} />
         </main>
       </div>

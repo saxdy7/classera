@@ -106,17 +106,17 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
     return (
         <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-4">
-                <h2 className="text-xl font-bold text-slate-900">Chats</h2>
+            <div className="p-4 border-b border-[var(--cl-hairline)] flex items-center justify-between gap-4">
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Chats</h2>
                 <div className="flex gap-2">
                     <button
                         onClick={() => setShowNewConversationModal(true)}
-                        className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors"
+                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg text-[var(--cl-body)] transition-colors"
                         title="Start new conversation"
                     >
                         <Plus className="w-5 h-5" />
                     </button>
-                    <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                    <button className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg text-[var(--cl-body)]">
                         <MoreVertical className="w-5 h-5" />
                     </button>
                 </div>
@@ -134,32 +134,32 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
             {/* Search */}
             <div className="px-4 pb-3 pt-3">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
                     <input
                         type="text"
                         placeholder="Search messages..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 text-slate-900 placeholder:text-slate-400"
+                        className="w-full pl-9 pr-4 py-2.5 bg-[var(--cl-canvas-soft)] border-none rounded-[var(--cl-r-lg)] text-sm focus:ring-2 focus:ring-[var(--cl-primary)] text-[var(--cl-ink)] placeholder:text-[var(--cl-muted-soft)]"
                     />
                 </div>
             </div>
 
             {/* Filters Section */}
-            <div className="px-4 pb-3 border-b border-slate-100">
+            <div className="px-4 pb-3 border-b border-[var(--cl-hairline)]">
                 {/* Filter Toggle */}
                 <button
                     onClick={() => setIsFilterOpen(!isFilterOpen)}
                     className="flex items-center justify-between w-full text-left group py-2"
                 >
-                    <h4 className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+                    <h4 className="text-sm font-semibold text-[var(--cl-body)] group-hover:text-[var(--cl-ink)] transition-colors">
                         Filters
                     </h4>
                     <motion.div
                         animate={{ rotate: isFilterOpen ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <ChevronDown className="w-4 h-4 text-slate-500" />
+                        <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
                     </motion.div>
                 </button>
 
@@ -176,8 +176,8 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                                 <button
                                     onClick={() => setSelectedFilter('all')}
                                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'all'
-                                            ? 'bg-indigo-50 text-indigo-700'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                            ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                                         }`}
                                 >
                                     <MessageSquare className="w-4 h-4" />
@@ -186,18 +186,18 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                                 <button
                                     onClick={() => setSelectedFilter('unread')}
                                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'unread'
-                                            ? 'bg-indigo-50 text-indigo-700'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                            ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                                         }`}
                                 >
-                                    <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                    <span className="w-2 h-2 bg-[var(--cl-primary)] rounded-full"></span>
                                     <span>Unread</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedFilter('starred')}
                                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'starred'
-                                            ? 'bg-indigo-50 text-indigo-700'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                            ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                                         }`}
                                 >
                                     <Star className="w-4 h-4" />
@@ -206,8 +206,8 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                                 <button
                                     onClick={() => setSelectedFilter('archived')}
                                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${selectedFilter === 'archived'
-                                            ? 'bg-indigo-50 text-indigo-700'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                            ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                                         }`}
                                 >
                                     <Archive className="w-4 h-4" />
@@ -223,11 +223,11 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
             <div className="flex-1 overflow-y-auto">
                 {filtered.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 px-4">
-                        <MessageSquare className="w-12 h-12 text-slate-300 mb-3" />
-                        <p className="text-slate-600 font-medium text-center">
+                        <MessageSquare className="w-12 h-12 text-[var(--cl-muted-soft)] mb-3" />
+                        <p className="text-[var(--cl-body)] font-medium text-center">
                             {conversations.length === 0 ? 'No conversations yet' : 'No matches found'}
                         </p>
-                        <p className="text-sm text-slate-400 mt-1 text-center">
+                        <p className="text-sm text-[var(--cl-muted-soft)] mt-1 text-center">
                             {conversations.length === 0
                                 ? `Click the + button to start chatting with ${currentUserRole === 'mentor' ? 'students' : 'mentors'}`
                                 : 'Try a different search term'}
@@ -246,38 +246,38 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                             <button
                                 key={conv.id}
                                 onClick={() => setActiveConversation(conv)}
-                                className={`w-full p-4 flex gap-4 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 ${isActive ? 'bg-indigo-50/50 hover:bg-indigo-50/80 border-l-4 border-l-indigo-500' : 'border-l-4 border-l-transparent'
+                                className={`w-full p-4 flex gap-4 hover:bg-[var(--cl-canvas-soft)] transition-colors border-b border-[var(--cl-hairline)] last:border-0 ${isActive ? 'bg-[var(--cl-surface-card)] hover:bg-[var(--cl-surface-card)] border-l-4 border-l-[var(--cl-primary)]' : 'border-l-4 border-l-transparent'
                                     }`}
                             >
                                 <div className="relative flex-shrink-0">
-                                    <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                                    <div className="w-12 h-12 rounded-full bg-[var(--cl-surface-strong)] overflow-hidden">
                                         {otherUser.avatar_url ? (
                                             <img src={otherUser.avatar_url} alt={otherUser.full_name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600 font-bold">
+                                            <div className="w-full h-full flex items-center justify-center bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] font-semibold">
                                                 {otherUser.full_name[0]}
                                             </div>
                                         )}
                                     </div>
                                     {isOnline && (
-                                        <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></span>
+                                        <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[var(--cl-success)] border-2 border-[var(--cl-on-dark)] rounded-full"></span>
                                     )}
                                 </div>
 
                                 <div className="flex-1 min-w-0 text-left">
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <span className={`font-semibold truncate ${isActive ? 'text-indigo-900' : 'text-slate-900'}`}>
+                                        <span className={`font-semibold truncate ${isActive ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-ink)]'}`}>
                                             {otherUser.full_name}
                                         </span>
                                         {conv.last_message_at && (
-                                            <span className="text-xs text-slate-400 flex-shrink-0 ml-2">
+                                            <span className="text-xs text-[var(--cl-muted-soft)] flex-shrink-0 ml-2">
                                                 {format(new Date(conv.last_message_at), 'h:mm a')}
                                             </span>
                                         )}
                                     </div>
 
                                     <div className="flex justify-between items-center">
-                                        <p className="text-sm text-slate-500 truncate pr-2">
+                                        <p className="text-sm text-[var(--cl-muted)] truncate pr-2">
                                             {conv.last_message ? (
                                                 <>
                                                     {conv.last_message.sender_id === currentUserId && 'You: '}
@@ -288,7 +288,7 @@ export function ConversationList({ currentUserId, currentUserRole }: Conversatio
                                             )}
                                         </p>
                                         {conv.unread_count && conv.unread_count > 0 ? (
-                                            <span className="min-w-[1.25rem] h-5 px-1.5 bg-indigo-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                                            <span className="min-w-[1.25rem] h-5 px-1.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-[10px] font-semibold rounded-full flex items-center justify-center">
                                                 {conv.unread_count}
                                             </span>
                                         ) : null}

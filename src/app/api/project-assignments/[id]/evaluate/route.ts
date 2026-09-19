@@ -56,7 +56,7 @@ export async function POST(
     // Verify caller is the assignment mentor
     const { data: assignment } = await admin
       .from('project_assignments')
-      .select('mentor_id')
+      .select('mentor_id, title')
       .eq('id', assignmentId)
       .single();
 
@@ -118,6 +118,21 @@ export async function POST(
       .from('assignment_submissions')
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', submission_id);
+
+    await admin.from('notifications').insert({
+      user_id: student_id,
+      type: newStatus === 'graded' ? 'project_graded' : 'project_feedback',
+      title: newStatus === 'graded' ? 'Project Graded' : 'New Feedback',
+      message:
+        newStatus === 'graded'
+          ? `Your submission for "${assignment.title}" was graded${score !== undefined ? `: ${score}` : ''}.`
+          : `You have new feedback on "${assignment.title}".`,
+      related_id: assignmentId,
+      related_type: 'project_assignment',
+      action_url: `/dashboard/student/projects/${assignmentId}`,
+      metadata: { assignment_id: assignmentId, score: score ?? null },
+      is_read: false,
+    });
 
     return NextResponse.json({ evaluation });
   } catch (err) {

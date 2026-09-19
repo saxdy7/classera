@@ -62,7 +62,7 @@ export function TypingIndicator({ channelId, supabase }: TypingIndicatorProps) {
     if (typingUsers.length === 0) return null;
 
     return (
-        <div className="text-xs text-slate-500 italic px-6 py-2 h-6">
+        <div className="text-xs text-[var(--cl-muted)] italic px-6 py-2 h-6">
             {typingUsers.join(', ')} {typingUsers.length === 1 ? 'is' : 'are'} typing...
         </div>
     );

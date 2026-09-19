@@ -101,24 +101,26 @@ export function NotificationBell({ userId }: NotificationBellProps) {
             {/* Bell Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-110"
+                aria-label="Notifications"
+                title="Notifications"
+                className="relative flex size-8 cursor-pointer items-center justify-center rounded-md border bg-neutral-100 text-foreground transition-all hover:text-accent-purple focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 group"
                 suppressHydrationWarning
             >
-                <Bell className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
+                <Bell className="size-4 transition-colors" />
 
                 {/* Unread Badge - Only render on client */}
                 {isMounted && unreadCount > 0 && (
                     <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+                        className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-purple px-1 text-[10px] font-semibold text-white ring-2 ring-background"
                     >
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </motion.span>
                 )}
 
                 {/* Tooltip */}
-                <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
+                <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                     Notifications
                 </span>
             </button>
@@ -131,16 +133,16 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50"
+                        className="absolute right-0 mt-2 w-96 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden z-50"
                     >
                         {/* Header */}
-                        <div className="p-4 border-b border-slate-200 bg-gradient-to-r from-purple-50 to-fuchsia-50">
+                        <div className="p-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-primary-soft)]">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-                                    <Bell className="w-5 h-5 text-purple-600" />
+                                <h3 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                                    <Bell className="w-5 h-5 text-[var(--cl-primary)]" />
                                     Notifications
                                     {unreadCount > 0 && (
-                                        <span className="px-2 py-0.5 bg-purple-600 text-white text-xs font-bold rounded-full">
+                                        <span className="px-2 py-0.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-xs font-semibold rounded-full">
                                             {unreadCount}
                                         </span>
                                     )}
@@ -149,7 +151,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                                     {unreadCount > 0 && (
                                         <button
                                             onClick={handleMarkAllAsRead}
-                                            className="text-xs text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1"
+                                            className="text-xs text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium flex items-center gap-1"
                                         >
                                             <CheckCheck className="w-4 h-4" />
                                             Mark all read
@@ -157,9 +159,9 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                                     )}
                                     <button
                                         onClick={() => setIsOpen(false)}
-                                        className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                                        className="p-1 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                                     >
-                                        <X className="w-4 h-4 text-slate-600" />
+                                        <X className="w-4 h-4 text-[var(--cl-body)]" />
                                     </button>
                                 </div>
                             </div>
@@ -169,50 +171,50 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                         <div className="max-h-[400px] overflow-y-auto">
                             {loading ? (
                                 <div className="flex items-center justify-center py-8">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--cl-primary)]"></div>
                                 </div>
                             ) : notifications.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                                        <Bell className="w-8 h-8 text-slate-400" />
+                                    <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mb-4">
+                                        <Bell className="w-8 h-8 text-[var(--cl-muted-soft)]" />
                                     </div>
-                                    <p className="text-sm text-slate-600 font-medium">No notifications yet</p>
-                                    <p className="text-xs text-slate-400 mt-1">We'll notify you when something happens</p>
+                                    <p className="text-sm text-[var(--cl-body)] font-medium">No notifications yet</p>
+                                    <p className="text-xs text-[var(--cl-muted-soft)] mt-1">We'll notify you when something happens</p>
                                 </div>
                             ) : (
-                                <div className="divide-y divide-slate-100">
+                                <div className="divide-y divide-[var(--cl-hairline)]">
                                     {notifications.map((notification) => (
                                         <motion.div
                                             key={notification.id}
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: 20 }}
-                                            className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer group ${!notification.read ? 'bg-purple-50/50' : ''
+                                            className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer group ${!notification.read ? 'bg-[var(--cl-surface-card)]' : ''
                                                 }`}
                                             onClick={() => handleNotificationClick(notification)}
                                         >
                                             <div className="flex gap-3">
                                                 {/* Icon */}
-                                                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white text-lg">
+                                                <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-lg bg-[var(--cl-primary)]">
                                                     {getNotificationIcon(notification.type)}
                                                 </div>
 
                                                 {/* Content */}
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-start justify-between gap-2">
-                                                        <h4 className={`text-sm font-semibold ${!notification.read ? 'text-slate-900' : 'text-slate-700'
+                                                        <h4 className={`text-sm font-semibold ${!notification.read ? 'text-[var(--cl-ink)]' : 'text-[var(--cl-body)]'
                                                             }`}>
                                                             {notification.title}
                                                         </h4>
                                                         {!notification.read && (
-                                                            <div className="w-2 h-2 bg-purple-600 rounded-full flex-shrink-0 mt-1"></div>
+                                                            <div className="w-2 h-2 bg-[var(--cl-primary)] rounded-full flex-shrink-0 mt-1"></div>
                                                         )}
                                                     </div>
-                                                    <p className="text-sm text-slate-600 mt-1 line-clamp-2">
+                                                    <p className="text-sm text-[var(--cl-body)] mt-1 line-clamp-2">
                                                         {notification.message}
                                                     </p>
                                                     <div className="flex items-center justify-between mt-2">
-                                                        <span className="text-xs text-slate-400">
+                                                        <span className="text-xs text-[var(--cl-muted-soft)]">
                                                             {formatTime(notification.created_at)}
                                                         </span>
                                                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -222,7 +224,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                                                                         e.stopPropagation();
                                                                         markAsRead(notification.id);
                                                                     }}
-                                                                    className="p-1 hover:bg-purple-100 rounded text-purple-600"
+                                                                    className="p-1 hover:bg-[var(--cl-primary-soft)] rounded text-[var(--cl-primary)]"
                                                                     title="Mark as read"
                                                                 >
                                                                     <Check className="w-4 h-4" />
@@ -230,7 +232,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                                                             )}
                                                             <button
                                                                 onClick={(e) => handleDelete(e, notification.id)}
-                                                                className="p-1 hover:bg-red-100 rounded text-red-600"
+                                                                className="p-1 hover:bg-[rgba(239,68,68,0.12)] rounded text-[var(--cl-error)]"
                                                                 title="Delete"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -247,13 +249,13 @@ export function NotificationBell({ userId }: NotificationBellProps) {
 
                         {/* Footer */}
                         {notifications.length > 0 && (
-                            <div className="p-3 border-t border-slate-200 bg-slate-50">
+                            <div className="p-3 border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
                                 <button
                                     onClick={() => {
                                         router.push(`/dashboard/${notifications[0]?.metadata?.role || 'student'}/notifications`);
                                         setIsOpen(false);
                                     }}
-                                    className="w-full text-center text-sm text-purple-600 hover:text-purple-700 font-medium"
+                                    className="w-full text-center text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium"
                                 >
                                     View all notifications
                                 </button>

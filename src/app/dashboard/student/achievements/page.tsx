@@ -26,10 +26,10 @@ export default async function AchievementsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-50">
+    <div className="flex h-screen bg-[var(--cl-canvas-soft)]">
       <Sidebar role="student" />
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 cl-main overflow-auto">
         <Header profile={{ id: user.id, ...profile }} />
 
         <AchievementsClient />

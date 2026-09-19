@@ -41,32 +41,32 @@ export default async function AssignmentRubricPage({
     .single();
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24 p-6 md:p-8">
+        <main className="flex-1 cl-main p-6 md:p-8">
           <div className="max-w-2xl mx-auto space-y-6">
             <Link
               href={`/dashboard/mentor/projects/${assignmentId}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Assignment
             </Link>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-5 h-5 text-violet-600" />
+              <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-5 h-5 text-[var(--cl-primary)]" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Grading Rubric</h1>
-                <p className="text-sm text-slate-500">{assignment.title}</p>
+                <h1 className="text-xl font-semibold text-[var(--cl-ink)]">Grading Rubric</h1>
+                <p className="text-sm text-[var(--cl-muted)]">{assignment.title}</p>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-100 rounded-2xl p-6">
-              <p className="text-sm text-slate-500 mb-6">
+            <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-6">
+              <p className="text-sm text-[var(--cl-muted)] mb-6">
                 Define criteria with weights summing to 100%. Students&apos; scores will be computed
                 automatically from rubric criterion scores when you evaluate their submissions.
               </p>

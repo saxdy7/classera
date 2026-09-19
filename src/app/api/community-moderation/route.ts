@@ -40,7 +40,9 @@ export async function POST(request: Request) {
                 .single();
 
             if (report) {
-                community = { mentor_id: report.communities?.mentor_id };
+                // `communities` comes back as an array from the join.
+                const rel: any = report.communities;
+                community = { mentor_id: Array.isArray(rel) ? rel[0]?.mentor_id : rel?.mentor_id };
             }
         }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Users, ArrowLeft, Image as ImageIcon } from 'lucide-react';
@@ -16,6 +16,35 @@ export default function CreateCommunityPage() {
   });
 
   const [loading, setLoading] = useState(false);
+
+  // "Upload Image" was a button with no handler at all - it looked interactive
+  // and did nothing. /api/upload already existed and was simply never called.
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      body.append('type', 'image');
+      const res = await fetch('/api/upload', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Upload failed');
+      setImageUrl(data.url);
+    } catch (err: any) {
+      setUploadError(err?.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+      // allow re-selecting the same file
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,24 +76,24 @@ export default function CreateCommunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <div className="max-w-4xl mx-auto px-8 py-12">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-slate-600 hover:text-black transition-colors mb-8"
+          className="flex items-center gap-2 text-[var(--cl-body)] hover:text-black transition-colors mb-8"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Communities
         </button>
 
-        <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-8 border border-[var(--cl-hairline)]">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-              <Users className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-[var(--cl-r-lg)] flex items-center justify-center bg-[var(--cl-primary)]">
+              <Users className="w-8 h-8 text-[var(--cl-on-dark)]" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-black">Create Community</h1>
-              <p className="text-slate-600">Build a learning space for your students</p>
+              <h1 className="text-3xl font-semibold text-black">Create Community</h1>
+              <p className="text-[var(--cl-body)]">Build a learning space for your students</p>
             </div>
           </div>
 
@@ -75,15 +104,35 @@ export default function CreateCommunityPage() {
                 Community Avatar (Optional)
               </label>
               <div className="flex items-center gap-4">
-                <div className="w-24 h-24 bg-slate-100 rounded-xl flex items-center justify-center border-2 border-dashed border-slate-300">
-                  <ImageIcon className="w-8 h-8 text-slate-400" />
+                <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-[var(--cl-r-lg)] border-2 border-dashed border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-strong)]">
+                  {imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={imageUrl} alt="Community" className="h-full w-full object-cover" />
+                  ) : (
+                    <ImageIcon className="h-8 w-8 text-[var(--cl-muted)]" />
+                  )}
                 </div>
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors"
-                >
-                  Upload Image
-                </button>
+
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageSelect}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="rounded-[var(--cl-r-md)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-4 py-2 font-medium text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] disabled:cursor-not-allowed disabled:bg-[var(--cl-surface-strong)] disabled:text-[var(--cl-muted)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+                  >
+                    {uploading ? 'Uploading…' : imageUrl ? 'Change Image' : 'Upload Image'}
+                  </button>
+                  {uploadError && (
+                    <p role="alert" className="mt-1.5 text-[13px] text-[var(--cl-error)]">{uploadError}</p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -99,7 +148,7 @@ export default function CreateCommunityPage() {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Computer Science Hub"
                 required
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full px-4 py-3 border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:border-[var(--cl-primary)] transition-colors"
               />
             </div>
 
@@ -115,30 +164,30 @@ export default function CreateCommunityPage() {
                 placeholder="Describe what this community is about..."
                 required
                 rows={5}
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-purple-500 transition-colors resize-none"
+                className="w-full px-4 py-3 border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:border-[var(--cl-primary)] transition-colors resize-none"
               />
             </div>
 
             {/* Community Settings */}
-            <div className="space-y-4 pt-4 border-t border-slate-200">
-              <h3 className="font-bold text-black">Community Settings</h3>
+            <div className="space-y-4 pt-4 border-t border-[var(--cl-hairline)]">
+              <h3 className="font-semibold text-black">Community Settings</h3>
 
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                  className="w-5 h-5 text-[var(--cl-primary)] rounded focus:ring-[var(--cl-primary)]"
                 />
                 <div>
                   <p className="font-medium text-black">Active Community</p>
-                  <p className="text-sm text-slate-600">Students can join and participate</p>
+                  <p className="text-sm text-[var(--cl-body)]">Students can join and participate</p>
                 </div>
               </label>
 
-              <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-4 border border-[var(--cl-hairline)]">
                 <h4 className="font-medium text-black mb-2">Join Approval</h4>
-                <p className="text-sm text-slate-600 mb-3">
+                <p className="text-sm text-[var(--cl-body)] mb-3">
                   All join requests will require your approval before students can access the community.
                 </p>
                 <div className="flex items-center gap-2">
@@ -148,9 +197,9 @@ export default function CreateCommunityPage() {
                     name="approval"
                     value="manual"
                     defaultChecked
-                    className="w-4 h-4 text-purple-600"
+                    className="w-4 h-4 text-[var(--cl-primary)]"
                   />
-                  <label htmlFor="manual" className="text-sm text-slate-700">Manual Approval</label>
+                  <label htmlFor="manual" className="text-sm text-[var(--cl-body)]">Manual Approval</label>
                 </div>
               </div>
             </div>
@@ -160,7 +209,7 @@ export default function CreateCommunityPage() {
               <button
                 type="submit"
                 disabled={loading || !formData.name || !formData.description}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 text-[var(--cl-on-dark)] rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--cl-primary)]"
               >
                 {loading ? 'Creating Community...' : 'Create Community'}
               </button>
@@ -168,7 +217,7 @@ export default function CreateCommunityPage() {
                 type="button"
                 onClick={() => router.back()}
                 disabled={loading}
-                className="px-6 py-3 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors disabled:opacity-50"
+                className="px-6 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg font-medium hover:bg-[var(--cl-surface-strong)] transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -177,9 +226,9 @@ export default function CreateCommunityPage() {
         </div>
 
         {/* Guidelines */}
-        <div className="mt-6 bg-blue-50 rounded-xl p-6 border border-blue-200">
-          <h3 className="font-bold text-blue-900 mb-3">Community Guidelines</h3>
-          <ul className="space-y-2 text-sm text-blue-800">
+        <div className="mt-6 bg-[rgba(13,116,206,0.12)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-info)]">
+          <h3 className="font-semibold text-[var(--cl-info)] mb-3">Community Guidelines</h3>
+          <ul className="space-y-2 text-sm text-[var(--cl-info)]">
             <li>• Choose a clear and descriptive name that reflects the community's purpose</li>
             <li>• Write a detailed description to help students understand what to expect</li>
             <li>• Review and approve join requests to maintain quality discussions</li>

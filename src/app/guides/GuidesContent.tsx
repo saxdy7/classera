@@ -1,5 +1,6 @@
 'use client';
 
+import { AIToolShell } from '@/components/shared/AIToolShell';
 import { useState, useEffect } from 'react';
 import { Sparkles, BookText, ArrowLeft, Loader2, Clock, ExternalLink, ChevronDown, History, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -107,65 +108,80 @@ export function GuidesContent() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
-            <header className="bg-white border-b border-slate-200 px-4 md:px-8 py-4 sticky top-0 z-20">
+        <div className="flex min-h-screen flex-col bg-[var(--cl-canvas-soft)]">
+            <header className="bg-[var(--cl-surface-card)] border-b border-[var(--cl-hairline)] px-4 md:px-8 py-4 sticky top-0 z-20">
                 <div className="max-w-4xl mx-auto flex items-center gap-3">
-                    <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-                        <ArrowLeft size={18} className="text-slate-600" />
+                    <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-[var(--cl-surface-strong)] transition-colors">
+                        <ArrowLeft size={18} className="text-[var(--cl-body)]" />
                     </Link>
-                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                        <BookText size={15} className="text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-[var(--cl-info)] flex items-center justify-center">
+                        <BookText size={15} className="text-[var(--cl-on-dark)]" />
                     </div>
                     <div>
-                        <h1 className="text-sm font-bold text-slate-900">AI Guide Generator</h1>
-                        <p className="text-xs text-slate-400">Generate focused learning guides on any topic</p>
+                        <h1 className="text-sm font-semibold text-[var(--cl-ink)]">AI Guide Generator</h1>
+                        <p className="text-xs text-[var(--cl-muted)]">Generate focused learning guides on any topic</p>
                     </div>
                     {guide && (
-                        <button onClick={() => { setGuide(null); setTopic(''); }}
-                            className="ml-auto text-xs text-blue-600 font-semibold px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">
-                            ← New Guide
+                        <button
+                            onClick={() => { setGuide(null); setTopic(''); }}
+                            className="ml-auto rounded-[var(--cl-r-md)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-3 py-1.5 text-xs font-semibold text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+                        >
+                            Back to form
                         </button>
                     )}
                 </div>
             </header>
 
+            {/* Two-pane shell shared with the AI Career Coach: history rail on the
+                left, working surface on the right. */}
+            <AIToolShell
+                newLabel="New Guide"
+                onNew={() => { setGuide(null); setError(''); setTopic(''); }}
+                history={history.map(h => ({ id: h.id, title: h.title, createdAt: h.created_at }))}
+                activeId={null}
+                onDelete={deleteHistory}
+                onSelect={(id) => { const item = history.find(h => h.id === id); if (item) loadFromHistory(item); }}
+                historyLabel="Recent Guides"
+                emptyLabel="No guides yet. Generate your first one."
+            >
+
             {!guide ? (
                 <div className="max-w-2xl mx-auto px-4 py-12">
                     <div className="text-center mb-10">
-                        <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-                            <Sparkles size={28} className="text-white" />
+                        <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-info)] flex items-center justify-center mx-auto mb-4">
+                            <Sparkles size={28} className="text-[var(--cl-on-dark)]" />
                         </div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Generate a Guide</h2>
-                        <p className="text-slate-500 max-w-md mx-auto">
+                        <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Generate a Guide</h2>
+                        <p className="text-[var(--cl-muted)] max-w-md mx-auto">
                             Get a deep, focused guide on any programming concept, tool, or technology — structured, clear, and actionable.
                         </p>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
-                        <label className="block text-xs font-semibold text-slate-600 mb-2 uppercase tracking-wider">What do you want explained?</label>
+                    <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-6 mb-6">
+                        <label className="block text-xs font-semibold text-[var(--cl-body)] mb-2 uppercase tracking-wider">What do you want explained?</label>
                         <div className="flex gap-2 mb-4">
                             <input
                                 value={topic}
                                 onChange={e => setTopic(e.target.value)}
                                 onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
                                 placeholder="e.g. How REST APIs work, What is recursion, Docker explained..."
-                                className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 transition-all"
+                                className="flex-1 px-4 py-3 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] focus:border-[var(--cl-info)] transition-all"
                             />
                             <button onClick={generate} disabled={!topic.trim() || loading}
-                                className="px-5 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-40 transition-colors flex items-center gap-2 flex-shrink-0">
+                                className="px-5 py-3 bg-[var(--cl-info)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold text-sm hover:bg-[var(--cl-info)] disabled:opacity-40 transition-colors flex items-center gap-2 flex-shrink-0">
                                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                                 Generate
                             </button>
                         </div>
                         <div>
-                            <label className="block text-xs text-slate-500 mb-1">Depth level</label>
+                            <label className="block text-xs text-[var(--cl-muted)] mb-1">Depth level</label>
                             <div className="flex gap-2">
                                 {['beginner', 'intermediate', 'advanced'].map(d => (
                                     <button key={d} onClick={() => setDifficulty(d)}
                                         className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold capitalize border transition-all
                       ${difficulty === d
-                                                ? 'bg-blue-600 text-white border-blue-600'
-                                                : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                                                ? 'bg-[var(--cl-info)] text-[var(--cl-on-dark)] border-[var(--cl-info)]'
+                                                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] border-[var(--cl-hairline)] hover:border-[var(--cl-info)]'
                                             }`}>
                                         {d}
                                     </button>
@@ -174,38 +190,15 @@ export function GuidesContent() {
                         </div>
                     </div>
 
-                    {error && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 mb-6">{error}</div>}
+                    {error && <div className="bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] rounded-[var(--cl-r-lg)] px-4 py-3 text-sm text-[var(--cl-error)] mb-6">{error}</div>}
 
-                    {history.length > 0 && (
-                        <div className="mb-6">
-                            <div className="flex items-center gap-2 mb-3">
-                                <History size={13} className="text-slate-400" />
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Guides</p>
-                            </div>
-                            <div className="flex gap-2 overflow-x-auto pb-1">
-                                {history.map(item => (
-                                    <div key={item.id}
-                                        className="flex-shrink-0 w-48 p-3 bg-white border border-slate-200 rounded-xl text-left hover:border-blue-300 hover:bg-blue-50 transition-all group cursor-pointer"
-                                        onClick={() => loadFromHistory(item)}>
-                                        <p className="text-xs font-bold text-slate-800 truncate mb-1 leading-snug">{item.title}</p>
-                                        <p className="text-[10px] text-slate-400">{new Date(item.created_at).toLocaleDateString()}</p>
-                                        <button
-                                            onClick={e => { e.stopPropagation(); deleteHistory(item.id); }}
-                                            className="mt-1.5 flex items-center gap-1 text-[10px] text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Trash2 size={10} /> Delete
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
 
                     <div>
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Try these topics</p>
+                        <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wider mb-3">Try these topics</p>
                         <div className="flex flex-wrap gap-2">
                             {POPULAR.map(t => (
                                 <button key={t} onClick={() => setTopic(t)}
-                                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 hover:border-blue-300 hover:text-blue-700 hover:bg-blue-50 transition-all">
+                                    className="px-3 py-1.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-sm text-[var(--cl-body)] hover:border-[var(--cl-info)] hover:text-[var(--cl-info)] hover:bg-[rgba(13,116,206,0.12)] transition-all">
                                     {t}
                                 </button>
                             ))}
@@ -216,52 +209,52 @@ export function GuidesContent() {
                 /* ── Guide view ── */
                 <div className="max-w-3xl mx-auto px-4 py-8">
                     {/* Header */}
-                    <div className="bg-white border border-slate-200 rounded-2xl p-7 mb-6 shadow-sm">
+                    <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-7 mb-6">
                         <div className="flex items-center gap-2 mb-3">
                             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize
-                ${{ beginner: 'bg-emerald-100 text-emerald-700', intermediate: 'bg-amber-100 text-amber-700', advanced: 'bg-red-100 text-red-700' }[guide.difficulty] || 'bg-slate-100 text-slate-600'}`}>
+                ${{ beginner: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]', intermediate: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]', advanced: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]' }[guide.difficulty] || 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'}`}>
                                 {guide.difficulty}
                             </span>
-                            <span className="flex items-center gap-1 text-xs text-slate-400">
+                            <span className="flex items-center gap-1 text-xs text-[var(--cl-muted-soft)]">
                                 <Clock size={11} /> {guide.estimated_read_minutes} min read
                             </span>
                         </div>
-                        <h1 className="text-2xl font-bold text-slate-900 mb-3">{guide.guide_title}</h1>
-                        <p className="text-slate-600 leading-relaxed">{guide.introduction}</p>
+                        <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mb-3">{guide.guide_title}</h1>
+                        <p className="text-[var(--cl-body)] leading-relaxed">{guide.introduction}</p>
                     </div>
 
                     {/* Sections */}
                     <div className="space-y-3 mb-6">
                         {guide.sections.map((section, i) => (
-                            <div key={i} className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                            <div key={i} className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] overflow-hidden">
                                 <button
                                     onClick={() => toggleSection(i)}
-                                    className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
+                                    className="w-full flex items-center gap-3 px-5 py-4 hover:bg-[var(--cl-canvas-soft)] transition-colors text-left"
                                 >
-                                    <span className="text-xs font-bold text-blue-500 bg-blue-50 w-6 h-6 rounded flex items-center justify-center flex-shrink-0">
+                                    <span className="text-xs font-semibold text-[var(--cl-info)] bg-[rgba(13,116,206,0.12)] w-6 h-6 rounded flex items-center justify-center flex-shrink-0">
                                         {i + 1}
                                     </span>
-                                    <h2 className="flex-1 text-sm font-bold text-slate-900">{section.heading}</h2>
-                                    <ChevronDown size={16} className={`text-slate-400 flex-shrink-0 transition-transform ${openSections.has(i) ? 'rotate-180' : ''}`} />
+                                    <h2 className="flex-1 text-sm font-semibold text-[var(--cl-ink)]">{section.heading}</h2>
+                                    <ChevronDown size={16} className={`text-[var(--cl-muted-soft)] flex-shrink-0 transition-transform ${openSections.has(i) ? 'rotate-180' : ''}`} />
                                 </button>
 
                                 {openSections.has(i) && (
-                                    <div className="border-t border-slate-100 px-5 py-5 space-y-4">
-                                        <p className="text-sm text-slate-700 leading-relaxed">{section.content}</p>
+                                    <div className="border-t border-[var(--cl-hairline)] px-5 py-5 space-y-4">
+                                        <p className="text-sm text-[var(--cl-body)] leading-relaxed">{section.content}</p>
 
                                         {section.code_example && (
-                                            <pre className="bg-slate-900 text-slate-100 rounded-xl px-4 py-4 text-xs leading-relaxed overflow-x-auto">
+                                            <pre className="bg-[var(--cl-surface-inverse)] text-[var(--cl-muted-soft)] rounded-[var(--cl-r-lg)] px-4 py-4 text-xs leading-relaxed overflow-x-auto">
                                                 <code>{section.code_example}</code>
                                             </pre>
                                         )}
 
                                         {section.key_points?.length > 0 && (
-                                            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
-                                                <p className="text-xs font-bold text-blue-700 mb-2">Key Points</p>
+                                            <div className="bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] rounded-[var(--cl-r-lg)] px-4 py-3">
+                                                <p className="text-xs font-semibold text-[var(--cl-info)] mb-2">Key Points</p>
                                                 <ul className="space-y-1.5">
                                                     {section.key_points.map((pt, j) => (
-                                                        <li key={j} className="text-xs text-blue-800 flex items-start gap-2">
-                                                            <span className="text-blue-400 flex-shrink-0 mt-0.5">→</span>
+                                                        <li key={j} className="text-xs text-[var(--cl-info)] flex items-start gap-2">
+                                                            <span className="text-[var(--cl-info)] flex-shrink-0 mt-0.5">→</span>
                                                             {pt}
                                                         </li>
                                                     ))}
@@ -273,9 +266,9 @@ export function GuidesContent() {
                                             <div className="space-y-2">
                                                 {section.resources?.map((r, j) => (
                                                     <a key={j} href={r.url} target="_blank" rel="noopener noreferrer"
-                                                        className="flex items-center gap-3 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-all group">
+                                                        className="flex items-center gap-3 px-3 py-2 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg text-xs text-[var(--cl-body)] hover:border-[var(--cl-info)] hover:bg-[rgba(13,116,206,0.12)] hover:text-[var(--cl-info)] transition-all group">
                                                         <span className="flex-1 truncate">{r.title}</span>
-                                                        <ExternalLink size={11} className="flex-shrink-0 text-slate-400" />
+                                                        <ExternalLink size={11} className="flex-shrink-0 text-[var(--cl-muted-soft)]" />
                                                     </a>
                                                 ))}
                                             </div>
@@ -287,16 +280,16 @@ export function GuidesContent() {
                     </div>
 
                     {/* Summary + next steps */}
-                    <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6">
-                        <h3 className="text-sm font-bold text-indigo-900 mb-2">Summary</h3>
-                        <p className="text-sm text-indigo-800 leading-relaxed mb-4">{guide.summary}</p>
+                    <div className="bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] p-6">
+                        <h3 className="text-sm font-semibold text-[var(--cl-primary)] mb-2">Summary</h3>
+                        <p className="text-sm text-[var(--cl-primary)] leading-relaxed mb-4">{guide.summary}</p>
                         {guide.next_steps?.length > 0 && (
                             <>
-                                <h4 className="text-xs font-bold text-indigo-700 mb-2">What to learn next</h4>
+                                <h4 className="text-xs font-semibold text-[var(--cl-primary)] mb-2">What to learn next</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {guide.next_steps.map((step, i) => (
                                         <button key={i} onClick={() => { setGuide(null); setTopic(step); }}
-                                            className="px-3 py-1.5 bg-white text-xs font-semibold text-indigo-700 rounded-lg border border-indigo-200 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all">
+                                            className="px-3 py-1.5 bg-[var(--cl-surface-card)] text-xs font-semibold text-[var(--cl-primary)] rounded-lg border border-[var(--cl-primary)] hover:bg-[var(--cl-primary)] hover:text-[var(--cl-on-dark)] hover:border-[var(--cl-primary)] transition-all">
                                             {step} →
                                         </button>
                                     ))}
@@ -308,21 +301,22 @@ export function GuidesContent() {
             )}
 
             {loading && (
-                <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-[rgba(255,255,255,0.8)] backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="text-center">
-                        <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse">
-                            <BookText size={28} className="text-white" />
+                        <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-info)] flex items-center justify-center mx-auto mb-4 animate-pulse">
+                            <BookText size={28} className="text-[var(--cl-on-dark)]" />
                         </div>
-                        <h3 className="text-lg font-bold text-slate-900 mb-2">Writing your guide…</h3>
-                        <p className="text-sm text-slate-500">AI is creating a detailed guide on <strong>{topic}</strong></p>
+                        <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">Writing your guide…</h3>
+                        <p className="text-sm text-[var(--cl-muted)]">AI is creating a detailed guide on <strong>{topic}</strong></p>
                         <div className="flex justify-center gap-1 mt-4">
                             {[0, 150, 300].map(d => (
-                                <div key={d} className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: `${d}ms` }} />
+                                <div key={d} className="w-2 h-2 bg-[var(--cl-info)] rounded-full animate-bounce" style={{ animationDelay: `${d}ms` }} />
                             ))}
                         </div>
                     </div>
                 </div>
             )}
+            </AIToolShell>
         </div>
     );
 }

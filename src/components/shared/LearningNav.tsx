@@ -17,7 +17,7 @@ export function LearningNav() {
     const isActive = (href: string) => pathname.startsWith(href);
 
     return (
-        <div className="bg-white border-b sticky top-0 z-40">
+        <div className="bg-[var(--cl-surface-card)] border-b sticky top-0 z-40">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Navigation Tabs */}
@@ -32,11 +32,11 @@ export function LearningNav() {
                                     href={item.href}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${active
                                             ? item.color === 'purple'
-                                                ? 'bg-purple-100 text-purple-700'
+                                                ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
                                                 : item.color === 'blue'
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-green-100 text-green-700'
-                                            : 'text-gray-600 hover:bg-gray-100'
+                                                    ? 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]'
+                                                    : 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
                                         }`}
                                 >
                                     <Icon className="h-5 w-5" />
@@ -49,7 +49,7 @@ export function LearningNav() {
                     {/* AI Generate Button */}
                     <Button
                         variant="outline"
-                        className="flex items-center gap-2 border-purple-200 text-purple-700 hover:bg-purple-50"
+                        className="flex items-center gap-2 border-[var(--cl-primary)] text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)]"
                     >
                         <Sparkles className="h-4 w-4" />
                         <span>AI Generate</span>

@@ -98,9 +98,10 @@ export async function POST(request: NextRequest) {
       deadline?: string;
       max_score?: number;
       student_ids?: string[];
+      submission_type?: 'github' | 'file_upload' | 'link' | 'written';
     };
 
-    const { title, description, requirements, technologies, deadline, max_score, student_ids } = body;
+    const { title, description, requirements, technologies, deadline, max_score, student_ids, submission_type } = body;
 
     if (!title?.trim()) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
@@ -118,6 +119,7 @@ export async function POST(request: NextRequest) {
         technologies: technologies ?? [],
         deadline: deadline ?? null,
         max_score: max_score ?? 100,
+        submission_type: submission_type ?? 'github',
       })
       .select()
       .single();
@@ -131,6 +133,19 @@ export async function POST(request: NextRequest) {
         student_id: sid,
       }));
       await admin.from('assignment_students').insert(rows);
+
+      const notifications = student_ids.map((student_id) => ({
+        user_id: student_id,
+        type: 'project_assigned',
+        title: 'New Project Assigned',
+        message: `You've been assigned to the project "${assignment.title}".`,
+        related_id: assignment.id,
+        related_type: 'project_assignment',
+        action_url: `/dashboard/student/projects/${assignment.id}`,
+        metadata: { assignment_id: assignment.id, assignment_title: assignment.title },
+        is_read: false,
+      }));
+      await admin.from('notifications').insert(notifications);
     }
 
     return NextResponse.json({ assignment }, { status: 201 });

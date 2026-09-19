@@ -419,12 +419,12 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Live Sessions</h1>
-          <p className="text-slate-600">Schedule and manage live meetings, proctored tests, and more</p>
+          <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Live Sessions</h1>
+          <p className="text-[var(--cl-body)]">Schedule and manage live meetings, proctored tests, and more</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all bg-[var(--cl-primary)]"
         >
           <Plus className="w-5 h-5" />
           Schedule Session
@@ -434,19 +434,19 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Search and Filter */}
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
           <input
             type="text"
             placeholder="Search sessions by title or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full pl-11 pr-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+          className="px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] bg-[var(--cl-surface-card)]"
         >
           <option value="all">All Types</option>
           <option value="mentor_meeting">Mentor Meetings</option>
@@ -459,44 +459,44 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl p-6 border border-slate-200">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-600">Total Sessions</span>
-            <Calendar className="w-5 h-5 text-blue-500" />
+            <span className="text-sm font-medium text-[var(--cl-body)]">Total Sessions</span>
+            <Calendar className="w-5 h-5 text-[var(--cl-info)]" />
           </div>
-          <p className="text-3xl font-bold text-slate-900">{sessions.length}</p>
+          <p className="text-3xl font-semibold text-[var(--cl-ink)]">{sessions.length}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 border border-slate-200">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-600">Live Now</span>
-            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-[var(--cl-body)]">Live Now</span>
+            <div className="w-3 h-3 bg-[var(--cl-success)] rounded-full animate-pulse" />
           </div>
-          <p className="text-3xl font-bold text-green-600">{liveSessions.length}</p>
+          <p className="text-3xl font-semibold text-[var(--cl-success)]">{liveSessions.length}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 border border-slate-200">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-600">Upcoming</span>
-            <Clock className="w-5 h-5 text-orange-500" />
+            <span className="text-sm font-medium text-[var(--cl-body)]">Upcoming</span>
+            <Clock className="w-5 h-5 text-[var(--cl-warning)]" />
           </div>
-          <p className="text-3xl font-bold text-orange-600">{upcomingSessions.length}</p>
+          <p className="text-3xl font-semibold text-[var(--cl-warning)]">{upcomingSessions.length}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 border border-slate-200">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-600">Completed</span>
-            <CheckCircle className="w-5 h-5 text-slate-400" />
+            <span className="text-sm font-medium text-[var(--cl-body)]">Completed</span>
+            <CheckCircle className="w-5 h-5 text-[var(--cl-muted-soft)]" />
           </div>
-          <p className="text-3xl font-bold text-slate-600">{pastSessions.length}</p>
+          <p className="text-3xl font-semibold text-[var(--cl-body)]">{pastSessions.length}</p>
         </div>
       </div>
 
       {/* Live Sessions */}
       {liveSessions.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-[var(--cl-success)] rounded-full animate-pulse" />
             Live Now
           </h2>
           <div className="grid gap-4">
@@ -518,7 +518,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Upcoming Sessions */}
       {upcomingSessions.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Upcoming Sessions</h2>
+          <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Upcoming Sessions</h2>
           <div className="grid gap-4">
             {upcomingSessions.map(session => (
               <SessionCard
@@ -538,7 +538,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Past Sessions */}
       {pastSessions.length > 0 && (
         <div>
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Past Sessions</h2>
+          <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Past Sessions</h2>
           <div className="grid gap-4">
             {pastSessions.map(session => (
               <SessionCard
@@ -555,15 +555,15 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       )}
 
       {sessions.length === 0 && (
-        <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Video className="w-8 h-8 text-slate-400" />
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-16 text-center border border-[var(--cl-hairline)]">
+          <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Video className="w-8 h-8 text-[var(--cl-muted-soft)]" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">No sessions yet</h3>
-          <p className="text-slate-600 mb-6">Schedule your first live session to get started</p>
+          <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No sessions yet</h3>
+          <p className="text-[var(--cl-body)] mb-6">Schedule your first live session to get started</p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium"
+            className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium bg-[var(--cl-primary)]"
           >
             <Plus className="w-5 h-5" />
             Schedule Session
@@ -574,10 +574,10 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Create Session Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-200 p-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Schedule New Session</h2>
-              <button onClick={() => setShowCreateModal(false)} className="p-2 hover:bg-slate-100 rounded-lg">
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-[var(--cl-surface-card)] border-b border-[var(--cl-hairline)] p-6 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Schedule New Session</h2>
+              <button onClick={() => setShowCreateModal(false)} className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -585,7 +585,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
             <div className="p-6 space-y-6">
               {/* Session Type */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Session Type</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Session Type</label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {Object.entries(sessionTypeLabels).map(([type, info]) => {
                     const Icon = info.icon;
@@ -593,13 +593,13 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                       <button
                         key={type}
                         onClick={() => setFormData({ ...formData, session_type: type as Session['session_type'] })}
-                        className={`p-4 rounded-xl border-2 transition-all ${formData.session_type === type
+                        className={`p-4 rounded-[var(--cl-r-lg)] border-2 transition-all ${formData.session_type === type
                           ? `border-${info.color}-500 bg-${info.color}-50`
-                          : 'border-slate-200 hover:border-slate-300'
+                          : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)]'
                           }`}
                       >
-                        <Icon className={`w-6 h-6 mb-2 ${formData.session_type === type ? `text-${info.color}-600` : 'text-slate-400'}`} />
-                        <p className={`text-sm font-medium ${formData.session_type === type ? 'text-slate-900' : 'text-slate-600'}`}>
+                        <Icon className={`w-6 h-6 mb-2 ${formData.session_type === type ? `text-${info.color}-600` : 'text-[var(--cl-muted-soft)]'}`} />
+                        <p className={`text-sm font-medium ${formData.session_type === type ? 'text-[var(--cl-ink)]' : 'text-[var(--cl-body)]'}`}>
                           {info.label}
                         </p>
                       </button>
@@ -610,48 +610,48 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
 
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Title *</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Title *</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Weekly Check-in, Final Exam Proctoring"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="What will this session cover?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                 />
               </div>
 
               {/* Date & Time */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Date & Time *</label>
+                  <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Date & Time *</label>
                   <input
                     type="datetime-local"
                     value={formData.scheduled_at}
                     onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Duration (minutes)</label>
+                  <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Duration (minutes)</label>
                   <input
                     type="number"
                     value={formData.duration_minutes}
                     onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
                     min={15}
                     max={480}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                   />
                 </div>
               </div>
@@ -659,11 +659,11 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               {/* Link Test (for proctored tests) */}
               {formData.session_type === 'proctored_test' && tests.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Link to Test (Optional)</label>
+                  <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Link to Test (Optional)</label>
                   <select
                     value={formData.test_id}
                     onChange={(e) => setFormData({ ...formData, test_id: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                   >
                     <option value="">Select a test...</option>
                     {tests.map(test => (
@@ -677,7 +677,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
 
               {/* Settings */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-3">Session Settings</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-3">Session Settings</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { key: 'waiting_room', label: 'Waiting Room', icon: Clock },
@@ -689,9 +689,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                   ].map(setting => (
                     <label
                       key={setting.key}
-                      className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${formData.settings[setting.key as keyof typeof formData.settings]
-                        ? 'border-indigo-500 bg-indigo-50'
-                        : 'border-slate-200 hover:border-slate-300'
+                      className={`flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] border cursor-pointer transition-all ${formData.settings[setting.key as keyof typeof formData.settings]
+                        ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
+                        : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)]'
                         }`}
                     >
                       <input
@@ -703,9 +703,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                         })}
                         className="sr-only"
                       />
-                      <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-indigo-600' : 'text-slate-400'
+                      <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'
                         }`} />
-                      <span className="text-sm font-medium text-slate-700">{setting.label}</span>
+                      <span className="text-sm font-medium text-[var(--cl-body)]">{setting.label}</span>
                     </label>
                   ))}
                 </div>
@@ -714,44 +714,44 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               {/* Invite Participants */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm font-medium text-slate-700">
+                  <label className="text-sm font-medium text-[var(--cl-body)]">
                     Invite Students ({formData.participant_ids.length} selected)
                   </label>
                   {students.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, participant_ids: formData.participant_ids.length === students.length ? [] : students.map(s => s.id) })}
-                      className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                      className="text-xs text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium"
                     >
                       {formData.participant_ids.length === students.length ? 'Deselect All' : 'Select All'}
                     </button>
                   )}
                 </div>
-                <div className="border border-slate-200 rounded-xl max-h-64 overflow-y-auto bg-slate-50">
+                <div className="border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] max-h-64 overflow-y-auto bg-[var(--cl-canvas-soft)]">
                   {students.length === 0 ? (
                     <div className="p-8 text-center">
-                      <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                      <p className="text-slate-500 text-sm">No students in your university yet</p>
+                      <Users className="w-8 h-8 text-[var(--cl-muted-soft)] mx-auto mb-2" />
+                      <p className="text-[var(--cl-muted)] text-sm">No students in your university yet</p>
                     </div>
                   ) : (
                     students.map(student => (
                       <label
                         key={student.id}
-                        className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-slate-100 border-b border-slate-200 last:border-b-0 transition-colors ${formData.participant_ids.includes(student.id) ? 'bg-indigo-100' : ''
+                        className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-[var(--cl-surface-strong)] border-b border-[var(--cl-hairline)] last:border-b-0 transition-colors ${formData.participant_ids.includes(student.id) ? 'bg-[var(--cl-primary-soft)]' : ''
                           }`}
                       >
                         <input
                           type="checkbox"
                           checked={formData.participant_ids.includes(student.id)}
                           onChange={() => toggleParticipant(student.id)}
-                          className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          className="rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)] cursor-pointer"
                         />
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold flex-shrink-0 bg-[var(--cl-primary)]">
                           {student.full_name?.charAt(0) || '?'}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">{student.full_name}</p>
-                          <p className="text-xs text-slate-500 truncate">{student.email}</p>
+                          <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{student.full_name}</p>
+                          <p className="text-xs text-[var(--cl-muted)] truncate">{student.email}</p>
                         </div>
                       </label>
                     ))
@@ -760,17 +760,17 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-slate-50 border-t border-slate-200 p-6 flex items-center justify-end gap-3">
+            <div className="sticky bottom-0 bg-[var(--cl-canvas-soft)] border-t border-[var(--cl-hairline)] p-6 flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="px-6 py-3 text-slate-700 font-medium hover:bg-slate-100 rounded-xl transition-colors"
+                className="px-6 py-3 text-[var(--cl-body)] font-medium hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateSession}
                 disabled={loading}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transition-all disabled:opacity-50"
+                className="px-6 py-3 text-[var(--cl-on-dark)] font-medium rounded-[var(--cl-r-lg)] transition-all disabled:opacity-50 bg-[var(--cl-primary)]"
               >
                 {loading ? 'Creating...' : 'Schedule Session'}
               </button>
@@ -782,10 +782,10 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       {/* Edit Session Modal */}
       {showEditModal && editingSession && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-200 p-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Edit Session</h2>
-              <button onClick={() => { setShowEditModal(false); setEditingSession(null); resetForm(); }} className="p-2 hover:bg-slate-100 rounded-lg">
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-[var(--cl-surface-card)] border-b border-[var(--cl-hairline)] p-6 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Edit Session</h2>
+              <button onClick={() => { setShowEditModal(false); setEditingSession(null); resetForm(); }} className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -793,55 +793,55 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
             <div className="p-6 space-y-6">
               {/* Title */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Title *</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Title *</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Session title"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="What will this session cover?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                 />
               </div>
 
               {/* Date & Time */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Date & Time *</label>
+                  <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Date & Time *</label>
                   <input
                     type="datetime-local"
                     value={formData.scheduled_at}
                     onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Duration (minutes)</label>
+                  <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Duration (minutes)</label>
                   <input
                     type="number"
                     value={formData.duration_minutes}
                     onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
                     min={15}
                     max={480}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)]"
                   />
                 </div>
               </div>
 
               {/* Settings */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-3">Session Settings</label>
+                <label className="block text-sm font-medium text-[var(--cl-body)] mb-3">Session Settings</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { key: 'waiting_room', label: 'Waiting Room', icon: Clock },
@@ -853,9 +853,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                   ].map(setting => (
                     <label
                       key={setting.key}
-                      className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${formData.settings[setting.key as keyof typeof formData.settings]
-                        ? 'border-indigo-500 bg-indigo-50'
-                        : 'border-slate-200 hover:border-slate-300'
+                      className={`flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] border cursor-pointer transition-all ${formData.settings[setting.key as keyof typeof formData.settings]
+                        ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
+                        : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)]'
                         }`}
                     >
                       <input
@@ -867,26 +867,26 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                         })}
                         className="sr-only"
                       />
-                      <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-indigo-600' : 'text-slate-400'
+                      <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'
                         }`} />
-                      <span className="text-sm font-medium text-slate-700">{setting.label}</span>
+                      <span className="text-sm font-medium text-[var(--cl-body)]">{setting.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-slate-50 border-t border-slate-200 p-6 flex items-center justify-end gap-3">
+            <div className="sticky bottom-0 bg-[var(--cl-canvas-soft)] border-t border-[var(--cl-hairline)] p-6 flex items-center justify-end gap-3">
               <button
                 onClick={() => { setShowEditModal(false); setEditingSession(null); resetForm(); }}
-                className="px-6 py-3 text-slate-700 font-medium hover:bg-slate-100 rounded-xl transition-colors"
+                className="px-6 py-3 text-[var(--cl-body)] font-medium hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleEditSession}
                 disabled={loading}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transition-all disabled:opacity-50"
+                className="px-6 py-3 text-[var(--cl-on-dark)] font-medium rounded-[var(--cl-r-lg)] transition-all disabled:opacity-50 bg-[var(--cl-primary)]"
               >
                 {loading ? 'Updating...' : 'Update Session'}
               </button>
@@ -939,12 +939,12 @@ function SessionCard({
   const scheduledDate = new Date(session.scheduled_at);
 
   return (
-    <div className={`bg-white rounded-xl p-6 border-2 transition-all ${isLive ? 'border-green-500 shadow-lg' : isPast ? 'border-slate-200 opacity-75' : 'border-slate-200 hover:border-indigo-300'
+    <div className={`bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border-2 transition-all ${isLive ? 'border-[var(--cl-success)]' : isPast ? 'border-[var(--cl-hairline)] opacity-75' : 'border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
       }`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className={`w-10 h-10 rounded-xl bg-${typeInfo.color}-100 flex items-center justify-center`}>
+            <div className={`w-10 h-10 rounded-[var(--cl-r-lg)] bg-${typeInfo.color}-100 flex items-center justify-center`}>
               <Icon className={`w-5 h-5 text-${typeInfo.color}-600`} />
             </div>
             <div>
@@ -952,18 +952,18 @@ function SessionCard({
                 {typeInfo.label}
               </span>
               {isLive && (
-                <span className="ml-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                <span className="ml-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]">
+                  <span className="w-1.5 h-1.5 bg-[var(--cl-success)] rounded-full animate-pulse" />
                   Live
                 </span>
               )}
             </div>
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">{session.title}</h3>
+          <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-1">{session.title}</h3>
           {session.description && (
-            <p className="text-sm text-slate-600 mb-3 line-clamp-2">{session.description}</p>
+            <p className="text-sm text-[var(--cl-body)] mb-3 line-clamp-2">{session.description}</p>
           )}
-          <div className="flex items-center gap-4 text-sm text-slate-500">
+          <div className="flex items-center gap-4 text-sm text-[var(--cl-muted)]">
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
               {scheduledDate.toLocaleDateString()}
@@ -978,7 +978,7 @@ function SessionCard({
             </span>
           </div>
           {session.test && (
-            <p className="mt-2 text-sm text-indigo-600 flex items-center gap-1">
+            <p className="mt-2 text-sm text-[var(--cl-primary)] flex items-center gap-1">
               <FileText className="w-4 h-4" />
               Linked: {session.test.title}
             </p>
@@ -990,14 +990,14 @@ function SessionCard({
             <>
               <button
                 onClick={() => onJoin?.(session)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-success)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-success)] transition-colors"
               >
                 <Video className="w-4 h-4" />
                 Join
               </button>
               <button
                 onClick={() => onEnd(session)}
-                className="px-4 py-2 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-50 transition-colors"
+                className="px-4 py-2 text-[var(--cl-error)] border border-[var(--cl-error)] rounded-lg font-medium hover:bg-[rgba(239,68,68,0.12)] transition-colors"
               >
                 End Session
               </button>
@@ -1006,7 +1006,7 @@ function SessionCard({
             <>
               <button
                 onClick={() => onStart(session)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors"
               >
                 <Play className="w-4 h-4" />
                 Start
@@ -1014,7 +1014,7 @@ function SessionCard({
               {onEdit && (
                 <button
                   onClick={() => onEdit(session)}
-                  className="px-4 py-2 text-indigo-600 border border-indigo-200 rounded-lg font-medium hover:bg-indigo-50 transition-colors"
+                  className="px-4 py-2 text-[var(--cl-primary)] border border-[var(--cl-primary)] rounded-lg font-medium hover:bg-[var(--cl-primary-soft)] transition-colors"
                 >
                   Edit
                 </button>
@@ -1022,14 +1022,14 @@ function SessionCard({
               {onCancel && (
                 <button
                   onClick={() => onCancel(session)}
-                  className="px-4 py-2 text-orange-600 border border-orange-200 rounded-lg font-medium hover:bg-orange-50 transition-colors"
+                  className="px-4 py-2 text-[var(--cl-warning)] border border-[var(--cl-warning)] rounded-lg font-medium hover:bg-[rgba(171,100,0,0.12)] transition-colors"
                 >
                   Cancel
                 </button>
               )}
             </>
           ) : (
-            <span className="px-4 py-2 text-slate-400 text-sm">
+            <span className="px-4 py-2 text-[var(--cl-muted-soft)] text-sm">
               {session.status === 'cancelled' ? 'Cancelled' : 'Completed'}
             </span>
           )}

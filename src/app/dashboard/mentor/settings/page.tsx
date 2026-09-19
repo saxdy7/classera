@@ -20,14 +20,14 @@ export default async function MentorSettingsPage() {
   if (!profile?.full_name || !profile?.university_id) redirect('/onboarding/mentor');
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-14 p-4 md:p-8 flex flex-col items-center">
+        <main className="flex-1 cl-main p-4 md:p-8 flex flex-col items-center">
           <div className="mb-8 w-full max-w-2xl">
-            <h1 className="text-3xl font-bold text-slate-900 mb-1">Settings</h1>
-            <p className="text-slate-500">Manage your account and preferences</p>
+            <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">Settings</h1>
+            <p className="text-[var(--cl-muted)]">Manage your account and preferences</p>
           </div>
           <div className="w-full max-w-2xl">
             <SettingsClient profile={{ ...profile, universities: profile.universities }} />

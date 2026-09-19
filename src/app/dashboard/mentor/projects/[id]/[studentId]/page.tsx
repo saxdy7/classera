@@ -75,24 +75,32 @@ export default async function StudentProjectReviewPage({
     .eq('submission_id', submission.id)
     .order('analyzed_at', { ascending: true });
 
+  // Resolve display names for any peers flagged by the code-similarity check
+  const similarityFlags = (analytics?.similarity_flags as Array<{ peer_student_id: string }> | null) ?? [];
+  const peerIds = similarityFlags.map((f) => f.peer_student_id);
+  const { data: peers } = peerIds.length
+    ? await admin.from('users').select('id, full_name').in('id', peerIds)
+    : { data: [] };
+  const peerNames = Object.fromEntries((peers ?? []).map((p) => [p.id, p.full_name]));
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24 p-6 md:p-8">
+        <main className="flex-1 cl-main p-6 md:p-8">
           <div className="max-w-5xl mx-auto space-y-6">
             {/* Back */}
             <Link
               href={`/dashboard/mentor/projects/${assignmentId}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Assignment
             </Link>
 
             {/* Header card */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
               <div className="flex items-start gap-5 flex-wrap">
                 {/* Student avatar */}
                 {student.avatar_url ? (
@@ -101,47 +109,89 @@ export default async function StudentProjectReviewPage({
                     alt={student.full_name}
                     width={64}
                     height={64}
-                    className="w-16 h-16 rounded-2xl object-cover border border-slate-100 flex-shrink-0"
+                    className="w-16 h-16 rounded-[var(--cl-r-xl)] object-cover border border-[var(--cl-hairline)] flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center text-xl font-bold text-violet-700 flex-shrink-0">
+                  <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary-soft)] flex items-center justify-center text-xl font-semibold text-[var(--cl-primary)] flex-shrink-0">
                     {student.full_name[0]?.toUpperCase()}
                   </div>
                 )}
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h1 className="text-xl font-bold text-slate-900">{student.full_name}</h1>
+                    <h1 className="text-xl font-semibold text-[var(--cl-ink)]">{student.full_name}</h1>
                     {evaluation?.score !== null && evaluation?.score !== undefined && (
-                      <span className="text-sm font-bold px-3 py-1 bg-violet-100 text-violet-700 rounded-full">
+                      <span className="text-sm font-semibold px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full">
                         {evaluation.score}/{assignment.max_score}
                       </span>
                     )}
                   </div>
-                  <p className="text-slate-500 text-sm mt-0.5">{student.email}</p>
+                  <p className="text-[var(--cl-muted)] text-sm mt-0.5">{student.email}</p>
                   {student.specialization_board && (
-                    <p className="text-slate-400 text-sm">{student.specialization_board}</p>
+                    <p className="text-[var(--cl-muted)] text-sm">{student.specialization_board}</p>
                   )}
 
-                  {/* Repo link */}
+                  {/* Submission link */}
                   <div className="flex items-center gap-3 mt-3 flex-wrap">
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 rounded-xl text-sm text-white">
-                      <GitBranch className="w-3.5 h-3.5 text-slate-400" />
-                      <span className="font-mono">{submission.repo_full_name}</span>
-                    </div>
-                    <a
-                      href={`https://github.com/${submission.repo_full_name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-sm text-violet-600 hover:text-violet-800 transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      Open on GitHub
-                    </a>
+                    {assignment.submission_type === 'github' && (
+                      <>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-on-dark)]">
+                          <GitBranch className="w-3.5 h-3.5 text-[var(--cl-muted-soft)]" />
+                          <span className="font-mono">{submission.repo_full_name}</span>
+                        </div>
+                        <a
+                          href={`https://github.com/${submission.repo_full_name}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] transition-colors"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          Open on GitHub
+                        </a>
+                      </>
+                    )}
+                    {assignment.submission_type === 'link' && submission.submission_url && (
+                      <a
+                        href={submission.submission_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline break-all"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                        {submission.submission_url}
+                      </a>
+                    )}
+                    {assignment.submission_type === 'file_upload' && submission.file_url && (
+                      <a
+                        href={submission.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                        {submission.file_name ?? 'View uploaded file'}
+                      </a>
+                    )}
+                    {submission.deploy_url && (
+                      <a
+                        href={submission.deploy_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                        Live site
+                      </a>
+                    )}
                   </div>
+                  {assignment.submission_type === 'written' && submission.submission_text && (
+                    <p className="mt-3 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-body)] whitespace-pre-line">
+                      {submission.submission_text}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex flex-col items-end gap-1 text-xs text-slate-400 flex-shrink-0">
+                <div className="flex flex-col items-end gap-1 text-xs text-[var(--cl-muted-soft)] flex-shrink-0">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
                     Submitted {new Date(submission.submitted_at).toLocaleDateString('en-US', {
@@ -151,7 +201,7 @@ export default async function StudentProjectReviewPage({
                     })}
                   </span>
                   {analytics?.analyzed_at && (
-                    <span className="text-slate-300">
+                    <span className="text-[var(--cl-muted)]">
                       Analyzed {new Date(analytics.analyzed_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -168,12 +218,14 @@ export default async function StudentProjectReviewPage({
               submissionId={submission.id}
               studentId={studentId}
               maxScore={assignment.max_score}
-              repoUrl={`https://github.com/${submission.repo_full_name}`}
+              submissionType={assignment.submission_type}
+              repoUrl={submission.repo_full_name ? `https://github.com/${submission.repo_full_name}` : null}
               repoFullName={submission.repo_full_name}
               status={submission.status}
               analytics={analytics ?? null}
               evaluation={evaluation ?? null}
               snapshots={snapshots ?? []}
+              peerNames={peerNames}
             />
           </div>
         </main>

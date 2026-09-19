@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface DisplayCardProps {
   className?: string;
@@ -16,43 +16,42 @@ interface DisplayCardProps {
 
 function DisplayCard({
   className,
-  icon = <Sparkles className="size-4 text-blue-300" />,
+  icon = <Sparkles className="size-4 text-[var(--cl-info)]" />,
   title = "Featured",
   description = "Discover amazing content",
   date = "Just now",
-  titleClassName = "text-blue-500",
+  titleClassName = "text-[var(--cl-info)]",
   index = 0,
 }: DisplayCardProps) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 50, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ 
-        delay: index * 0.2,
-        duration: 0.6,
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }}
-      whileHover={{ 
-        y: -20, 
-        scale: 1.05,
-        filter: "grayscale(0%)",
-        transition: { duration: 0.3 }
-      }}
+      transition={
+        reduceMotion
+          ? { duration: 0.3 }
+          : { delay: index * 0.2, duration: 0.6, type: "spring", stiffness: 100, damping: 15 }
+      }
+      whileHover={
+        reduceMotion
+          ? { filter: "grayscale(0%)" }
+          : { y: -20, scale: 1.05, filter: "grayscale(0%)", transition: { duration: 0.3 } }
+      }
       className={cn(
-        "relative flex h-36 w-[22rem] -skew-y-[8deg] select-none flex-col justify-between rounded-3xl border-2 border-gray-300 bg-white/90 backdrop-blur-sm px-4 py-3 shadow-md cursor-pointer grayscale hover:grayscale-0 hover:border-gray-400 hover:bg-white hover:shadow-2xl after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:bg-gradient-to-l after:from-white after:to-transparent after:content-[''] [&>*]:flex [&>*]:items-center [&>*]:gap-2",
+        "relative flex h-36 w-[22rem] -skew-y-[8deg] select-none flex-col justify-between rounded-[var(--cl-r-xl)] border-2 border-[var(--cl-hairline-strong)] bg-[rgba(255,255,255,0.9)] backdrop-blur-sm px-4 py-3 cursor-pointer grayscale hover:grayscale-0 hover:border-[var(--cl-hairline-strong)] hover:bg-[var(--cl-surface-card)] after:absolute after:-right-1 after:top-[-5%] after:h-[110%] after:w-[20rem] after:content-[''] [&>*]:flex [&>*]:items-center [&>*]:gap-2",
         className
       )}
     >
       <div>
-        <span className="relative inline-block rounded-full bg-gray-100 p-1">
+        <span className="relative inline-block rounded-full bg-[var(--cl-surface-strong)] p-1">
           {icon}
         </span>
-        <p className={cn("text-lg font-medium text-gray-900", titleClassName)}>{title}</p>
+        <p className={cn("text-lg font-medium text-[var(--cl-ink)]", titleClassName)}>{title}</p>
       </div>
-      <p className="whitespace-nowrap text-lg text-gray-700">{description}</p>
-      <p className="text-gray-500">{date}</p>
+      <p className="whitespace-nowrap text-lg text-[var(--cl-body)]">{description}</p>
+      <p className="text-[var(--cl-muted)]">{date}</p>
     </motion.div>
   );
 }

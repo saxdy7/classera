@@ -30,20 +30,20 @@ export function AnalyticsCharts({ communityId }: AnalyticsChartsProps) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-12 mb-8">
+      <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-12 mb-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-slate-200 rounded w-1/4"></div>
-          <div className="h-64 bg-slate-200 rounded"></div>
+          <div className="h-8 bg-[var(--cl-surface-strong)] rounded w-1/4"></div>
+          <div className="h-64 bg-[var(--cl-surface-strong)] rounded"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-8">
+    <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6 mb-8">
       <div className="flex items-center gap-3 mb-6">
-        <Calendar className="w-5 h-5 text-indigo-500" />
-        <h2 className="text-xl font-bold text-slate-900">Activity Over Time (Last 30 Days)</h2>
+        <Calendar className="w-5 h-5 text-[var(--cl-primary)]" />
+        <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Activity Over Time (Last 30 Days)</h2>
       </div>
 
       {activityData.length > 0 ? (
@@ -86,23 +86,23 @@ export function AnalyticsCharts({ communityId }: AnalyticsChartsProps) {
           </LineChart>
         </ResponsiveContainer>
       ) : (
-        <div className="h-64 flex items-center justify-center text-slate-600">
+        <div className="h-64 flex items-center justify-center text-[var(--cl-body)]">
           Not enough data to display chart
         </div>
       )}
 
       <div className="flex items-center justify-center gap-8 mt-6">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-indigo-500 rounded"></div>
-          <span className="text-sm text-slate-600">Posts</span>
+          <div className="w-4 h-4 bg-[var(--cl-primary)] rounded"></div>
+          <span className="text-sm text-[var(--cl-body)]">Posts</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-green-500 rounded"></div>
-          <span className="text-sm text-slate-600">Comments</span>
+          <div className="w-4 h-4 bg-[var(--cl-success)] rounded"></div>
+          <span className="text-sm text-[var(--cl-body)]">Comments</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-amber-500 rounded"></div>
-          <span className="text-sm text-slate-600">Likes</span>
+          <div className="w-4 h-4 bg-[var(--cl-warning)] rounded"></div>
+          <span className="text-sm text-[var(--cl-body)]">Likes</span>
         </div>
       </div>
     </div>

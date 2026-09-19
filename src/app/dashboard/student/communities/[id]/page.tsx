@@ -21,7 +21,7 @@ export default async function StudentCommunityDetailPage({
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect('/auth/sign-in');
+    if (!user) redirect('/signin');
 
     const { data: profile } = await supabase
         .from('users')
@@ -71,40 +71,40 @@ export default async function StudentCommunityDetailPage({
     const isMuted = muteStatus && (!muteStatus.muted_until || new Date(muteStatus.muted_until) > new Date());
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[var(--cl-surface-card)]">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="student" />
-                <main className="flex-1 p-4 md:p-8 md:ml-24">
+                <main className="flex-1 p-4 md:p-8 cl-main">
                     <div className="max-w-7xl mx-auto">
                         {/* Back Button */}
                         <Link
                             href="/dashboard/student/communities"
-                            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back to Communities
                         </Link>
 
                         {/* Community Header */}
-                        <div className="bg-white rounded-3xl border border-slate-200 p-8 mb-6 shadow-sm">
+                        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-8 mb-6">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+                                    <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] text-3xl font-semibold bg-[var(--cl-primary)]">
                                         {community.name.charAt(0)}
                                     </div>
                                     <div>
-                                        <h1 className="text-4xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                                        <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
                                             {community.name}
                                         </h1>
-                                        <p className="text-slate-600 mb-3">{community.description}</p>
+                                        <p className="text-[var(--cl-body)] mb-3">{community.description}</p>
                                         <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                            <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
                                                 <Users className="w-4 h-4" />
                                                 <span>{memberCount} members</span>
                                             </div>
-                                            <div className="text-sm text-slate-500">
-                                                Mentor: <span className="font-semibold text-slate-700">{community.mentor?.full_name}</span>
+                                            <div className="text-sm text-[var(--cl-muted)]">
+                                                Mentor: <span className="font-semibold text-[var(--cl-body)]">{community.mentor?.full_name}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -113,12 +113,12 @@ export default async function StudentCommunityDetailPage({
                         </div>
 
                         {/* Tab Navigation */}
-                        <div className="flex gap-2 mb-6 border-b border-slate-200">
+                        <div className="flex gap-2 mb-6 border-b border-[var(--cl-hairline)]">
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=feed`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'feed'
-                                    ? 'text-indigo-600 border-b-2 border-indigo-600'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">
@@ -129,8 +129,8 @@ export default async function StudentCommunityDetailPage({
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=chat`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'chat'
-                                    ? 'text-indigo-600 border-b-2 border-indigo-600'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">
@@ -141,8 +141,8 @@ export default async function StudentCommunityDetailPage({
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=members`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'members'
-                                    ? 'text-indigo-600 border-b-2 border-indigo-600'
-                                    : 'text-slate-600 hover:text-slate-900'
+                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">

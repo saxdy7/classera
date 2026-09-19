@@ -17,7 +17,7 @@ export async function LearningLayout({ children }: LearningLayoutProps) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        redirect('/auth/sign-in');
+        redirect('/signin');
     }
 
     const { data: profile } = await supabase
@@ -33,11 +33,11 @@ export async function LearningLayout({ children }: LearningLayoutProps) {
     const role = profile.role || 'student';
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[var(--cl-surface-card)]">
             <Header profile={{ id: user.id, ...profile, role }} />
-            <div className="flex bg-white">
+            <div className="flex bg-[var(--cl-surface-card)]">
                 <Sidebar role={role} />
-                <main className="flex-1 md:ml-24 bg-white">
+                <main className="flex-1 cl-main bg-[var(--cl-surface-card)]">
                     {children}
                 </main>
             </div>

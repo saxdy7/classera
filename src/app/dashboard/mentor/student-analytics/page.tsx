@@ -49,11 +49,11 @@ export default async function StudentAnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24 p-4 md:p-8">
+        <main className="flex-1 cl-main p-4 md:p-8">
           <StudentAnalyticsClient 
             mentorId={user.id} 
             students={students}

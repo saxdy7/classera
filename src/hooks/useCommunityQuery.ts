@@ -1,7 +1,9 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
+
+const supabase = createClient();
 import { redis, cacheKeys, cacheUtils } from '@/lib/redis';
 
 // Fetch paginated community posts feed
@@ -11,7 +13,7 @@ export function useCommunityPostsFeed(communityId: string, pageSize = 20) {
     queryFn: async ({ pageParam = 1 }) => {
       // Try to get from cache first
       const cacheKey = cacheKeys.communityPostsFeed(communityId, pageParam);
-      const cachedData = await cacheUtils.get(cacheKey);
+      const cachedData = (await cacheUtils.get(cacheKey)) as any[] | null;
       if (cachedData) return cachedData;
 
       const { data, error } = await supabase
@@ -36,7 +38,7 @@ export function useCommunityPostsFeed(communityId: string, pageSize = 20) {
         await cacheUtils.set(cacheKey, data, cacheUtils.TTL.SHORT);
       }
 
-      return data || [];
+      return (data ?? []) as any[];
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>

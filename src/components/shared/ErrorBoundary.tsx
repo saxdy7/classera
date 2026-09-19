@@ -63,41 +63,41 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 p-4">
-          <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl p-8">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-[rgba(239,68,68,0.12)]">
+          <div className="max-w-2xl w-full bg-[var(--cl-surface-card)] rounded-lg p-8">
             {/* Icon */}
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
-                <AlertTriangle className="w-10 h-10 text-red-600" />
+              <div className="w-20 h-20 bg-[rgba(239,68,68,0.12)] rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-10 h-10 text-[var(--cl-error)]" />
               </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl font-bold text-center text-gray-900 mb-4">
+            <h1 className="text-3xl font-semibold text-center text-[var(--cl-ink)] mb-4">
               Oops! Something went wrong
             </h1>
 
             {/* Description */}
-            <p className="text-center text-gray-600 mb-6">
+            <p className="text-center text-[var(--cl-body)] mb-6">
               We encountered an unexpected error. Don't worry, our team has been notified
               and we're working on it.
             </p>
 
             {/* Error Details (only in development) */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mb-6 p-4 bg-gray-100 rounded-lg border border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">
+              <div className="mb-6 p-4 bg-[var(--cl-surface-strong)] rounded-lg border border-[var(--cl-hairline)]">
+                <h3 className="text-sm font-semibold text-[var(--cl-ink)] mb-2">
                   Error Details (Development Only)
                 </h3>
-                <p className="text-sm text-red-600 font-mono mb-2">
+                <p className="text-sm text-[var(--cl-error)] font-mono mb-2">
                   {this.state.error.toString()}
                 </p>
                 {this.state.errorInfo && (
                   <details className="mt-2">
-                    <summary className="text-sm text-gray-700 cursor-pointer hover:text-gray-900">
+                    <summary className="text-sm text-[var(--cl-body)] cursor-pointer hover:text-[var(--cl-ink)]">
                       Component Stack
                     </summary>
-                    <pre className="mt-2 text-xs text-gray-600 overflow-auto max-h-64 p-2 bg-white rounded">
+                    <pre className="mt-2 text-xs text-[var(--cl-body)] overflow-auto max-h-64 p-2 bg-[var(--cl-surface-card)] rounded">
                       {this.state.errorInfo.componentStack}
                     </pre>
                   </details>
@@ -126,11 +126,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Help Text */}
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[var(--cl-muted)]">
                 If the problem persists, please{' '}
                 <a
                   href="/contact"
-                  className="text-purple-600 hover:text-purple-700 underline"
+                  className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] underline"
                 >
                   contact support
                 </a>

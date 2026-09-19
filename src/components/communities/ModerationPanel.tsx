@@ -58,10 +58,10 @@ export function ModerationPanel({
     };
 
     return (
-        <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
+        <div className="bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-xl)] p-4 border border-[var(--cl-primary)]">
             <div className="flex items-center gap-2 mb-4">
-                <Shield className="w-5 h-5 text-indigo-600" />
-                <h3 className="font-bold text-indigo-900">Moderation Tools</h3>
+                <Shield className="w-5 h-5 text-[var(--cl-primary)]" />
+                <h3 className="font-semibold text-[var(--cl-primary)]">Moderation Tools</h3>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -71,8 +71,8 @@ export function ModerationPanel({
                         onClick={handleLockChannel}
                         disabled={processing}
                         className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isLocked
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                            : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                            ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] hover:bg-[var(--cl-success)]'
+                            : 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] hover:bg-[var(--cl-warning)]'
                             } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         {processing ? (
@@ -94,7 +94,7 @@ export function ModerationPanel({
                 {/* View Logs */}
                 <button
                     onClick={() => setShowLogsModal(true)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-medium transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg font-medium transition-colors"
                 >
                     <FileText className="w-4 h-4" />
                     Logs
@@ -148,20 +148,20 @@ function ModerationLogsModal({ communityId, onClose }: { communityId: string; on
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[80vh] overflow-hidden shadow-2xl">
-                <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-3xl w-full max-h-[80vh] overflow-hidden">
+                <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-indigo-600" />
+                        <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-[var(--cl-primary)]" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-slate-900">Moderation Logs</h2>
-                            <p className="text-sm text-slate-600">Recent moderation actions</p>
+                            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Moderation Logs</h2>
+                            <p className="text-sm text-[var(--cl-body)]">Recent moderation actions</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                     >
                         ✕
                     </button>
@@ -170,10 +170,10 @@ function ModerationLogsModal({ communityId, onClose }: { communityId: string; on
                 <div className="p-6 overflow-y-auto max-h-96">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+                            <Loader2 className="w-8 h-8 animate-spin text-[var(--cl-primary)]" />
                         </div>
                     ) : logs.length === 0 ? (
-                        <div className="text-center py-12 text-slate-400">
+                        <div className="text-center py-12 text-[var(--cl-muted-soft)]">
                             <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
                             <p>No moderation actions yet</p>
                         </div>
@@ -182,28 +182,28 @@ function ModerationLogsModal({ communityId, onClose }: { communityId: string; on
                             {logs.map((log) => (
                                 <div
                                     key={log.id}
-                                    className="p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                                    className="p-4 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
                                 >
                                     <div className="flex items-start justify-between mb-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                                            <span className="px-2 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-semibold rounded-full">
                                                 {formatAction(log.action)}
                                             </span>
                                             {log.target_user && (
-                                                <span className="text-sm text-slate-600">
+                                                <span className="text-sm text-[var(--cl-body)]">
                                                     → {log.target_user.full_name}
                                                 </span>
                                             )}
                                         </div>
-                                        <span className="text-xs text-slate-500">{formatDate(log.created_at)}</span>
+                                        <span className="text-xs text-[var(--cl-muted)]">{formatDate(log.created_at)}</span>
                                     </div>
                                     {log.reason && (
-                                        <p className="text-sm text-slate-600 mt-2">
+                                        <p className="text-sm text-[var(--cl-body)] mt-2">
                                             <span className="font-semibold">Reason:</span> {log.reason}
                                         </p>
                                     )}
                                     {log.metadata?.duration && (
-                                        <p className="text-sm text-slate-600 mt-1">
+                                        <p className="text-sm text-[var(--cl-body)] mt-1">
                                             <span className="font-semibold">Duration:</span> {log.metadata.duration}
                                         </p>
                                     )}

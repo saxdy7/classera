@@ -116,25 +116,25 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
   const selectedDayEvents = getEventsForDate(selectedDate.getDate());
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 h-fit">
+    <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] h-fit">
       {/* Calendar Header */}
-      <div className="p-3 border-b border-slate-200">
+      <div className="p-3 border-b border-[var(--cl-hairline)]">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">
+          <h2 className="text-sm font-semibold text-[var(--cl-ink)]">
             {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </h2>
           <div className="flex items-center gap-1">
             <button
               onClick={handlePreviousMonth}
-              className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-1 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 text-slate-600" />
+              <ChevronLeft className="w-4 h-4 text-[var(--cl-body)]" />
             </button>
             <button
               onClick={handleNextMonth}
-              className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-1 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
             >
-              <ChevronRight className="w-4 h-4 text-slate-600" />
+              <ChevronRight className="w-4 h-4 text-[var(--cl-body)]" />
             </button>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
       <div className="p-2.5">
         <div className="grid grid-cols-7 gap-0.5 mb-1">
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-            <div key={i} className="text-center text-[9px] font-semibold text-slate-400 py-0.5">
+            <div key={i} className="text-center text-[9px] font-semibold text-[var(--cl-muted-soft)] py-0.5">
               {day}
             </div>
           ))}
@@ -168,10 +168,10 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
                 onClick={() => handleDateClick(day)}
                 className={`aspect-square flex flex-col items-center justify-center text-[10px] rounded-md transition-all relative ${
                   isSelectedDate
-                    ? 'bg-gradient-to-br from-purple-500 to-fuchsia-500 text-white font-bold shadow-md scale-105'
+                    ? 'text-[var(--cl-on-dark)] font-semibold scale-105 bg-[var(--cl-primary)]'
                     : isTodayDate
-                    ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white font-bold'
-                    : 'hover:bg-slate-100 text-slate-700'
+                    ? 'text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-info)]'
+                    : 'hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
                 }`}
               >
                 <span>{day}</span>
@@ -182,12 +182,12 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
                         key={idx}
                         className={`w-1 h-1 rounded-full ${
                           isSelectedDate || isTodayDate
-                            ? 'bg-white'
+                            ? 'bg-[var(--cl-surface-card)]'
                             : event.type === 'test'
-                            ? 'bg-red-500'
+                            ? 'bg-[var(--cl-error)]'
                             : event.type === 'deadline'
-                            ? 'bg-orange-500'
-                            : 'bg-blue-500'
+                            ? 'bg-[var(--cl-warning)]'
+                            : 'bg-[var(--cl-info)]'
                         }`}
                       />
                     ))}
@@ -200,8 +200,8 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
       </div>
 
       {/* Selected Date Events */}
-      <div className="border-t border-slate-200 p-3">
-        <div className="text-xs font-semibold text-slate-900 mb-2">
+      <div className="border-t border-[var(--cl-hairline)] p-3">
+        <div className="text-xs font-semibold text-[var(--cl-ink)] mb-2">
           {selectedDate.toLocaleDateString('en-US', { 
             weekday: 'short', 
             month: 'short', 
@@ -212,11 +212,11 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
         {loading ? (
           <div className="space-y-1.5">
             {[1, 2].map((i) => (
-              <div key={i} className="h-8 bg-slate-100 rounded animate-pulse" />
+              <div key={i} className="h-8 bg-[var(--cl-surface-strong)] rounded animate-pulse" />
             ))}
           </div>
         ) : selectedDayEvents.length === 0 ? (
-          <div className="text-center py-4 text-slate-400">
+          <div className="text-center py-4 text-[var(--cl-muted-soft)]">
             <p className="text-[10px]">No events</p>
           </div>
         ) : (
@@ -226,19 +226,19 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
                 key={event.id}
                 className={`p-2 rounded-lg border ${
                   event.type === 'test'
-                    ? 'bg-red-50 border-red-200'
+                    ? 'bg-[rgba(239,68,68,0.12)] border-[var(--cl-error)]'
                     : event.type === 'deadline'
-                    ? 'bg-orange-50 border-orange-200'
-                    : 'bg-blue-50 border-blue-200'
+                    ? 'bg-[rgba(171,100,0,0.12)] border-[var(--cl-warning)]'
+                    : 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]'
                 }`}
               >
                 <div className="flex items-start justify-between gap-1">
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-slate-900 truncate">
+                    <p className="text-[10px] font-semibold text-[var(--cl-ink)] truncate">
                       {event.title}
                     </p>
                     {event.time && (
-                      <p className="text-[9px] text-slate-600 mt-0.5">
+                      <p className="text-[9px] text-[var(--cl-body)] mt-0.5">
                         {event.time}
                       </p>
                     )}
@@ -246,10 +246,10 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
                   <span
                     className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${
                       event.type === 'test'
-                        ? 'bg-red-200 text-red-700'
+                        ? 'bg-[var(--cl-error)] text-[var(--cl-error)]'
                         : event.type === 'deadline'
-                        ? 'bg-orange-200 text-orange-700'
-                        : 'bg-blue-200 text-blue-700'
+                        ? 'bg-[var(--cl-warning)] text-[var(--cl-warning)]'
+                        : 'bg-[var(--cl-info)] text-[var(--cl-info)]'
                     }`}
                   >
                     {event.type}
@@ -262,25 +262,25 @@ export default function RealCalendar({ userId }: RealCalendarProps) {
       </div>
 
       {/* Quick Stats */}
-      <div className="border-t border-slate-200 p-2.5 bg-slate-50 rounded-b-2xl">
+      <div className="border-t border-[var(--cl-hairline)] p-2.5 bg-[var(--cl-canvas-soft)] rounded-b-2xl">
         <div className="flex items-center justify-around">
           <div className="text-center">
-            <p className="text-[10px] text-slate-500">Tests</p>
-            <p className="text-sm font-bold text-red-600">
+            <p className="text-[10px] text-[var(--cl-muted)]">Tests</p>
+            <p className="text-sm font-semibold text-[var(--cl-error)]">
               {events.filter(e => e.type === 'test').length}
             </p>
           </div>
-          <div className="w-px h-6 bg-slate-200" />
+          <div className="w-px h-6 bg-[var(--cl-surface-strong)]" />
           <div className="text-center">
-            <p className="text-[10px] text-slate-500">Deadlines</p>
-            <p className="text-sm font-bold text-orange-600">
+            <p className="text-[10px] text-[var(--cl-muted)]">Deadlines</p>
+            <p className="text-sm font-semibold text-[var(--cl-warning)]">
               {events.filter(e => e.type === 'deadline').length}
             </p>
           </div>
-          <div className="w-px h-6 bg-slate-200" />
+          <div className="w-px h-6 bg-[var(--cl-surface-strong)]" />
           <div className="text-center">
-            <p className="text-[10px] text-slate-500">Events</p>
-            <p className="text-sm font-bold text-blue-600">
+            <p className="text-[10px] text-[var(--cl-muted)]">Events</p>
+            <p className="text-sm font-semibold text-[var(--cl-info)]">
               {events.filter(e => e.type === 'meeting' || e.type === 'event').length}
             </p>
           </div>

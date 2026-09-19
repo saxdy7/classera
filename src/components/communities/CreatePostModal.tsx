@@ -80,14 +80,14 @@ export function CreatePostModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[2.5rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-indigo-500/20 border border-slate-100">
+    <div className="fixed inset-0 bg-[rgba(10,10,10,0.4)] backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--cl-surface-card)] rounded-[2.5rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[var(--cl-hairline)]">
         {/* Header */}
-        <div className="flex items-center justify-between p-8 border-b border-slate-100 sticky top-0 bg-white/80 backdrop-blur-md z-30">
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Create <span className="text-indigo-600">Post</span></h2>
+        <div className="flex items-center justify-between p-8 border-b border-[var(--cl-hairline)] sticky top-0 bg-[rgba(255,255,255,0.8)] backdrop-blur-md z-30">
+          <h2 className="text-3xl font-semibold text-[var(--cl-ink)] tracking-tight uppercase">Create <span className="text-[var(--cl-primary)]">Post</span></h2>
           <button
             onClick={onClose}
-            className="p-3 hover:bg-slate-100 text-slate-400 hover:text-slate-900 rounded-2xl transition-all"
+            className="p-3 hover:bg-[var(--cl-surface-strong)] text-[var(--cl-muted-soft)] hover:text-[var(--cl-ink)] rounded-[var(--cl-r-xl)] transition-all"
           >
             <X className="w-6 h-6" />
           </button>
@@ -97,7 +97,7 @@ export function CreatePostModal({
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           {/* Post Type Selection */}
           <div>
-            <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+            <label className="block text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-[0.2em] mb-4">
               Post Type
             </label>
             <div className={`grid ${userRole === 'mentor' ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
@@ -105,30 +105,30 @@ export function CreatePostModal({
                 type="button"
                 onClick={() => setPostType('normal')}
                 className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'normal'
-                  ? 'border-indigo-600 bg-indigo-50/50 shadow-lg shadow-indigo-500/10'
-                  : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
+                  ? 'border-[var(--cl-primary)] bg-[var(--cl-surface-card)]'
+                  : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)] bg-[rgba(250,250,247,0.5)]'
                   }`}
               >
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'normal' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                <div className={`w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 transition-colors ${postType === 'normal' ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-card)] text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-body)]'}`}>
                   <FileText className="w-6 h-6" />
                 </div>
-                <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Normal</div>
-                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Share thoughts</div>
+                <div className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight">Normal</div>
+                <div className="text-[10px] text-[var(--cl-muted)] font-semibold uppercase tracking-widest mt-1">Share thoughts</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setPostType('question')}
                 className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'question'
-                  ? 'border-emerald-600 bg-emerald-50/50 shadow-lg shadow-emerald-500/10'
-                  : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
+                  ? 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.5)]'
+                  : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)] bg-[rgba(250,250,247,0.5)]'
                   }`}
               >
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'question' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                <div className={`w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 transition-colors ${postType === 'question' ? 'bg-[var(--cl-success)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-card)] text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-body)]'}`}>
                   <HelpCircle className="w-6 h-6" />
                 </div>
-                <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Question</div>
-                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Ask for help</div>
+                <div className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight">Question</div>
+                <div className="text-[10px] text-[var(--cl-muted)] font-semibold uppercase tracking-widest mt-1">Ask for help</div>
               </button>
 
               {userRole === 'mentor' && (
@@ -136,15 +136,15 @@ export function CreatePostModal({
                   type="button"
                   onClick={() => setPostType('announcement')}
                   className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center text-center group ${postType === 'announcement'
-                    ? 'border-amber-600 bg-amber-50/50 shadow-lg shadow-amber-500/10'
-                    : 'border-slate-100 hover:border-slate-300 bg-slate-50/50'
+                    ? 'border-[var(--cl-warning)] bg-[rgba(171,100,0,0.5)]'
+                    : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)] bg-[rgba(250,250,247,0.5)]'
                     }`}
                 >
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${postType === 'announcement' ? 'bg-amber-600 text-white' : 'bg-white text-slate-400 group-hover:text-slate-600'}`}>
+                  <div className={`w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 transition-colors ${postType === 'announcement' ? 'bg-[var(--cl-warning)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-card)] text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-body)]'}`}>
                     <Megaphone className="w-6 h-6" />
                   </div>
-                  <div className="text-sm font-black text-slate-900 uppercase tracking-tight">Alert</div>
-                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Official</div>
+                  <div className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight">Alert</div>
+                  <div className="text-[10px] text-[var(--cl-muted)] font-semibold uppercase tracking-widest mt-1">Official</div>
                 </button>
               )}
             </div>
@@ -152,8 +152,8 @@ export function CreatePostModal({
 
           {/* Title */}
           <div>
-            <label htmlFor="title" className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-3">
-              Title {(postType === 'question' || postType === 'announcement') ? <span className="text-red-500">*</span> : <span className="italic opacity-60">(Optional)</span>}
+            <label htmlFor="title" className="block text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-[0.2em] mb-3">
+              Title {(postType === 'question' || postType === 'announcement') ? <span className="text-[var(--cl-error)]">*</span> : <span className="italic opacity-60">(Optional)</span>}
             </label>
             <input
               type="text"
@@ -168,14 +168,14 @@ export function CreatePostModal({
                     : 'Give your post a catchy title...'
               }
               required={postType === 'question' || postType === 'announcement'}
-              className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-700 placeholder:text-slate-400"
+              className="w-full px-6 py-4 rounded-[var(--cl-r-xl)] bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-4 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] transition-all font-semibold text-[var(--cl-body)] placeholder:text-[var(--cl-muted-soft)]"
             />
           </div>
 
           {/* Content */}
           <div>
-            <label htmlFor="content" className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-3">
-              {postType === 'question' ? 'Question Details' : 'Description'} <span className="text-red-500">*</span>
+            <label htmlFor="content" className="block text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-[0.2em] mb-3">
+              {postType === 'question' ? 'Question Details' : 'Description'} <span className="text-[var(--cl-error)]">*</span>
             </label>
             <textarea
               id="content"
@@ -190,14 +190,14 @@ export function CreatePostModal({
               }
               required
               rows={6}
-              className="w-full px-6 py-5 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-medium text-slate-700 placeholder:text-slate-400 leading-relaxed resize-none"
+              className="w-full px-6 py-5 rounded-[1.5rem] bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-4 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] transition-all font-medium text-[var(--cl-body)] placeholder:text-[var(--cl-muted-soft)] leading-relaxed resize-none"
             />
             <div className="flex justify-between items-center mt-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="text-[10px] font-semibold text-[var(--cl-muted-soft)] uppercase tracking-widest">
                 {content.length} / 5000
               </span>
               {postType === 'question' && (
-                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-1.5 bg-indigo-50 px-2 py-1 rounded-lg">
+                <span className="text-[10px] font-semibold text-[var(--cl-primary)] uppercase tracking-widest flex items-center gap-1.5 bg-[var(--cl-primary-soft)] px-2 py-1 rounded-lg">
                   <Sparkles size={10} /> Clear questions get better answers
                 </span>
               )}
@@ -206,7 +206,7 @@ export function CreatePostModal({
 
           {/* Media Attachments */}
           <div>
-            <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+            <label className="block text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-[0.2em] mb-4">
               Attachments <span className="italic opacity-60">(Optional)</span>
             </label>
             <FileUpload 
@@ -218,11 +218,11 @@ export function CreatePostModal({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-4 pt-4 sticky bottom-0 bg-white">
+          <div className="flex items-center gap-4 pt-4 sticky bottom-0 bg-[var(--cl-surface-card)]">
             <button
               type="submit"
               disabled={loading || !content.trim() || ((postType === 'question' || postType === 'announcement') && !title.trim())}
-              className="flex-1 px-8 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl shadow-indigo-600/20 active:scale-[0.98]"
+              className="flex-1 px-8 py-5 text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] font-semibold text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 active:scale-[0.98] bg-[var(--cl-primary)]"
             >
               {loading ? (
                 <>
@@ -237,7 +237,7 @@ export function CreatePostModal({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-8 py-5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 active:scale-[0.98]"
+              className="px-8 py-5 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-xl)] font-semibold text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 active:scale-[0.98]"
             >
               Cancel
             </button>

@@ -22,9 +22,9 @@ function getFileIcon(name: string) {
   const ext = name.split('.').pop()?.toLowerCase();
   const codeExts = new Set(['ts', 'tsx', 'js', 'jsx', 'py', 'java', 'cpp', 'c', 'go', 'rs', 'rb', 'php', 'cs', 'swift', 'kt']);
   const docExts = new Set(['md', 'txt', 'pdf', 'doc', 'docx', 'rst']);
-  if (ext && codeExts.has(ext)) return <span className="text-purple-400 text-xs font-mono">{`.${ext}`}</span>;
-  if (ext && docExts.has(ext)) return <FileText className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />;
-  return <File className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />;
+  if (ext && codeExts.has(ext)) return <span className="text-[var(--cl-primary)] text-xs font-mono">{`.${ext}`}</span>;
+  if (ext && docExts.has(ext)) return <FileText className="w-3.5 h-3.5 text-[var(--cl-info)] flex-shrink-0" />;
+  return <File className="w-3.5 h-3.5 text-[var(--cl-muted-soft)] flex-shrink-0" />;
 }
 
 function formatBytes(bytes?: number): string {
@@ -53,22 +53,22 @@ function TreeNodeItem({
       <div>
         <button
           onClick={() => setOpen((o) => !o)}
-          className={`flex items-center gap-1.5 w-full text-left px-2 py-0.5 rounded hover:bg-slate-100 transition-colors text-sm`}
+          className={`flex items-center gap-1.5 w-full text-left px-2 py-0.5 rounded hover:bg-[var(--cl-surface-strong)] transition-colors text-sm`}
           style={{ paddingLeft: `${8 + depth * 16}px` }}
         >
           {open ? (
-            <ChevronDown className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <ChevronDown className="w-3 h-3 text-[var(--cl-muted-soft)] flex-shrink-0" />
           ) : (
-            <ChevronRight className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <ChevronRight className="w-3 h-3 text-[var(--cl-muted-soft)] flex-shrink-0" />
           )}
           {open ? (
-            <FolderOpen className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+            <FolderOpen className="w-3.5 h-3.5 text-[var(--cl-warning)] flex-shrink-0" />
           ) : (
-            <Folder className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+            <Folder className="w-3.5 h-3.5 text-[var(--cl-warning)] flex-shrink-0" />
           )}
-          <span className="text-slate-700 truncate">{node.name}</span>
+          <span className="text-[var(--cl-body)] truncate">{node.name}</span>
           {node.children && (
-            <span className="ml-auto text-xs text-slate-400 flex-shrink-0">
+            <span className="ml-auto text-xs text-[var(--cl-muted-soft)] flex-shrink-0">
               {node.children.length}
             </span>
           )}
@@ -94,7 +94,7 @@ function TreeNodeItem({
     <button
       onClick={() => onFileClick?.(node.path)}
       className={`flex items-center gap-1.5 w-full text-left px-2 py-0.5 rounded transition-colors text-sm group ${
-        isSelected ? 'bg-violet-100 text-violet-700' : 'hover:bg-slate-100 text-slate-600'
+        isSelected ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' : 'hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
       }`}
       style={{ paddingLeft: `${8 + depth * 16}px` }}
     >
@@ -102,7 +102,7 @@ function TreeNodeItem({
       {getFileIcon(node.name)}
       <span className="truncate flex-1">{node.name}</span>
       {node.size !== undefined && (
-        <span className="text-xs text-slate-400 flex-shrink-0 opacity-0 group-hover:opacity-100">
+        <span className="text-xs text-[var(--cl-muted-soft)] flex-shrink-0 opacity-0 group-hover:opacity-100">
           {formatBytes(node.size)}
         </span>
       )}
@@ -115,7 +115,7 @@ export default function RepoFileTree({ tree, onFileClick, selectedPath }: RepoFi
 
   if (!tree || tree.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-400 text-sm">
+      <div className="text-center py-8 text-[var(--cl-muted-soft)] text-sm">
         No files found in this repository.
       </div>
     );
@@ -146,7 +146,7 @@ export default function RepoFileTree({ tree, onFileClick, selectedPath }: RepoFi
           placeholder="Search files..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-violet-400"
+          className="w-full px-3 py-1.5 text-sm bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-1 focus:ring-[var(--cl-primary)]"
         />
       </div>
       <div className="flex-1 overflow-y-auto">

@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Allow builds to succeed even if TypeScript type errors exist
+  // Type errors now fail the build. This was `ignoreBuildErrors: true`, which
+  // hid ~40 real defects - unconditional 401s in every GitHub route, a webhook
+  // signature check that threw, Supabase clients built with no credentials, and
+  // a dead /auth/sign-in redirect among them.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   reactCompiler: true,
   images: {
@@ -33,6 +36,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
+      },
+      // Integration logos on the landing page
+      {
+        protocol: 'https',
+        hostname: 'cdn.simpleicons.org',
       },
     ],
   },

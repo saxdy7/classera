@@ -100,11 +100,11 @@ export default async function StudentSessionsPage() {
     ) || [];
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
             <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
                 <Sidebar role="student" />
-                <main className="flex-1 p-4 md:p-8 md:ml-24">
+                <main className="flex-1 p-4 md:p-8 cl-main">
                     <StudentSessionsClient
                         profile={profile}
                         upcomingSessions={upcomingSessions}

@@ -126,8 +126,8 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
     sortKey === col ? (sortDir === 'desc' ? <ChevronDown size={12} /> : <ChevronUp size={12} />) : null;
 
   const ScoreBadge = ({ score }: { score: number | undefined }) => {
-    if (score === undefined) return <span className="text-slate-300">—</span>;
-    const color = score >= 80 ? 'text-emerald-600 bg-emerald-50' : score >= 60 ? 'text-amber-600 bg-amber-50' : 'text-red-600 bg-red-50';
+    if (score === undefined) return <span className="text-[var(--cl-muted-soft)]">—</span>;
+    const color = score >= 80 ? 'text-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]' : score >= 60 ? 'text-[var(--cl-warning)] bg-[rgba(171,100,0,0.12)]' : 'text-[var(--cl-error)] bg-[rgba(239,68,68,0.12)]';
     return <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${color}`}>{score}</span>;
   };
 
@@ -137,26 +137,26 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
       {withAnalytics.length > 0 && (
         <div className="grid sm:grid-cols-2 gap-4">
           {topPerformer && (
-            <div className="flex items-center gap-3 bg-amber-50 border border-amber-100 rounded-2xl p-4">
-              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <Trophy size={18} className="text-amber-600" />
+            <div className="flex items-center gap-3 bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-[var(--cl-r-xl)] p-4">
+              <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-full flex items-center justify-center flex-shrink-0">
+                <Trophy size={18} className="text-[var(--cl-warning)]" />
               </div>
               <div>
-                <p className="text-xs text-amber-600 font-semibold uppercase tracking-wide">Top Performer</p>
-                <p className="text-sm font-semibold text-slate-800">{topPerformer.student_name}</p>
-                <p className="text-xs text-slate-500">Overall score: {topPerformer.analytics!.overall_score}</p>
+                <p className="text-xs text-[var(--cl-warning)] font-semibold uppercase tracking-wide">Top Performer</p>
+                <p className="text-sm font-semibold text-[var(--cl-ink)]">{topPerformer.student_name}</p>
+                <p className="text-xs text-[var(--cl-muted)]">Overall score: {topPerformer.analytics!.overall_score}</p>
               </div>
             </div>
           )}
           {needsAttention && (
-            <div className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl p-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <AlertTriangle size={18} className="text-red-600" />
+            <div className="flex items-center gap-3 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] rounded-[var(--cl-r-xl)] p-4">
+              <div className="w-10 h-10 bg-[rgba(239,68,68,0.12)] rounded-full flex items-center justify-center flex-shrink-0">
+                <AlertTriangle size={18} className="text-[var(--cl-error)]" />
               </div>
               <div>
-                <p className="text-xs text-red-600 font-semibold uppercase tracking-wide">Needs Attention</p>
-                <p className="text-sm font-semibold text-slate-800">{needsAttention.student_name}</p>
-                <p className="text-xs text-slate-500">Overall score: {needsAttention.analytics!.overall_score}</p>
+                <p className="text-xs text-[var(--cl-error)] font-semibold uppercase tracking-wide">Needs Attention</p>
+                <p className="text-sm font-semibold text-[var(--cl-ink)]">{needsAttention.student_name}</p>
+                <p className="text-xs text-[var(--cl-muted)]">Overall score: {needsAttention.analytics!.overall_score}</p>
               </div>
             </div>
           )}
@@ -166,8 +166,8 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
       {/* Charts row */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Score distribution */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Score Distribution</h3>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Score Distribution</h3>
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={distribution} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -180,11 +180,11 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
         </div>
 
         {/* Radar chart for selected students */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">Performance Radar</h3>
-          <p className="text-xs text-slate-400 mb-3">Select up to 5 students from the table below</p>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-1">Performance Radar</h3>
+          <p className="text-xs text-[var(--cl-muted-soft)] mb-3">Select up to 5 students from the table below</p>
           {selectedIds.length === 0 ? (
-            <div className="flex items-center justify-center h-[180px] text-slate-300 text-sm">
+            <div className="flex items-center justify-center h-[180px] text-[var(--cl-muted-soft)] text-sm">
               No students selected
             </div>
           ) : (
@@ -214,11 +214,11 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden">
+      <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
+              <tr className="border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
                 <th className="w-8 px-3 py-2.5" />
                 <SortTH col="student_name"  label="Student"     current={sortKey} dir={sortDir} onSort={toggleSort} />
                 <SortTH col="overall"       label="Overall"     current={sortKey} dir={sortDir} onSort={toggleSort} />
@@ -228,10 +228,10 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
                 <SortTH col="commits"       label="Commits"     current={sortKey} dir={sortDir} onSort={toggleSort} />
                 <SortTH col="score"         label="Grade"       current={sortKey} dir={sortDir} onSort={toggleSort} />
                 <SortTH col="flags"         label="Flags"       current={sortKey} dir={sortDir} onSort={toggleSort} />
-                <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500" />
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-[var(--cl-muted)]" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-[var(--cl-hairline)]">
               {sorted.map((sub) => {
                 const ana = sub.analytics;
                 const isSelected = selectedIds.includes(sub.id);
@@ -239,15 +239,15 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
                 return (
                   <tr
                     key={sub.id}
-                    className={`hover:bg-slate-50/60 transition-colors ${isSelected ? 'bg-violet-50/40' : ''}`}
+                    className={`hover:bg-slate-50/60 transition-colors ${isSelected ? 'bg-[var(--cl-surface-card)]' : ''}`}
                   >
                     <td className="pl-3">
                       <button
                         onClick={() => toggleSelect(sub.id)}
                         className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                           isSelected
-                            ? 'border-transparent bg-violet-600'
-                            : 'border-slate-300 hover:border-violet-400'
+                            ? 'border-transparent bg-[var(--cl-primary)]'
+                            : 'border-[var(--cl-hairline-strong)] hover:border-[var(--cl-primary)]'
                         }`}
                       >
                         {isSelected && (
@@ -259,32 +259,32 @@ export default function ComparisonDashboard({ assignmentId, maxScore, submission
                       </button>
                     </td>
                     <td className="px-3 py-2.5">
-                      <p className="font-medium text-slate-800 text-sm">{sub.student_name}</p>
-                      <p className="text-xs text-slate-400">{sub.student_email}</p>
+                      <p className="font-medium text-[var(--cl-ink)] text-sm">{sub.student_name}</p>
+                      <p className="text-xs text-[var(--cl-muted-soft)]">{sub.student_email}</p>
                     </td>
                     <td className="px-3 py-2.5 text-center"><ScoreBadge score={ana?.overall_score} /></td>
                     <td className="px-3 py-2.5 text-center"><ScoreBadge score={ana?.consistency_score} /></td>
                     <td className="px-3 py-2.5 text-center"><ScoreBadge score={ana?.activity_score} /></td>
                     <td className="px-3 py-2.5 text-center"><ScoreBadge score={ana?.quality_score} /></td>
-                    <td className="px-3 py-2.5 text-center text-slate-600 font-mono text-xs">{ana?.total_commits ?? '—'}</td>
+                    <td className="px-3 py-2.5 text-center text-[var(--cl-body)] font-mono text-xs">{ana?.total_commits ?? '—'}</td>
                     <td className="px-3 py-2.5 text-center">
                       {sub.score !== undefined
-                        ? <span className="font-semibold text-slate-700">{sub.score}<span className="text-slate-400 font-normal">/{maxScore}</span></span>
-                        : <span className="text-slate-300">—</span>}
+                        ? <span className="font-semibold text-[var(--cl-body)]">{sub.score}<span className="text-[var(--cl-muted-soft)] font-normal">/{maxScore}</span></span>
+                        : <span className="text-[var(--cl-muted-soft)]">—</span>}
                     </td>
                     <td className="px-3 py-2.5 text-center">
                       {(ana?.suspicious_flags.length ?? 0) > 0 ? (
-                        <span className="text-xs bg-red-50 text-red-600 font-semibold px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] font-semibold px-2 py-0.5 rounded-full">
                           {ana!.suspicious_flags.length}
                         </span>
                       ) : (
-                        <span className="text-slate-300">—</span>
+                        <span className="text-[var(--cl-muted-soft)]">—</span>
                       )}
                     </td>
                     <td className="px-3 py-2.5">
                       <Link
                         href={`/dashboard/mentor/projects/${assignmentId}/${sub.student_id}`}
-                        className="flex items-center gap-1 text-xs text-violet-600 hover:underline whitespace-nowrap"
+                        className="flex items-center gap-1 text-xs text-[var(--cl-primary)] hover:underline whitespace-nowrap"
                       >
                         Review <ExternalLink size={11} />
                       </Link>
@@ -311,7 +311,7 @@ function SortTH({
       className="px-3 py-2.5 text-left cursor-pointer select-none"
       onClick={() => onSort(col)}
     >
-      <span className={`flex items-center gap-1 text-xs font-medium ${active ? 'text-violet-600' : 'text-slate-500'}`}>
+      <span className={`flex items-center gap-1 text-xs font-medium ${active ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted)]'}`}>
         {label}
         {active ? (dir === 'desc' ? <ChevronDown size={12} /> : <ChevronUp size={12} />) : null}
       </span>

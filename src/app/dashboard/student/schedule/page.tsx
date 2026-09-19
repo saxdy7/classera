@@ -26,17 +26,17 @@ export default async function StudentSchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-14">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <div className="max-w-6xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold text-slate-900 mb-2">Schedule</h1>
-              <p className="text-slate-600">View all your upcoming sessions, tests, and assignments in one place</p>
+              <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-2">Schedule</h1>
+              <p className="text-[var(--cl-body)]">View all your upcoming sessions, tests, and assignments in one place</p>
             </div>
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
               <CalendarWidget />
             </div>
           </div>

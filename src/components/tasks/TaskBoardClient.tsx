@@ -9,16 +9,17 @@ type Task = {
   id: string;
   title: string;
   description: string | null;
-  status: 'todo' | 'in_progress' | 'completed';
+  status: 'pending' | 'in_progress' | 'completed';
   priority: 'low' | 'medium' | 'high' | null;
   due_date: string | null;
+  completed_at: string | null;
   created_at: string;
 };
 
 const priorityColors = {
-  low: 'bg-blue-100 text-blue-700',
-  medium: 'bg-yellow-100 text-yellow-700',
-  high: 'bg-red-100 text-red-700',
+  low: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]',
+  medium: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]',
+  high: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]',
 };
 
 export default function TaskBoardClient({ initialTasks, userId }: { initialTasks: Task[], userId: string }) {
@@ -28,9 +29,9 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
   const [showNewTask, setShowNewTask] = useState(false);
 
   const columns = {
-    todo: { title: 'To Do', color: 'border-slate-300 bg-slate-50' },
-    in_progress: { title: 'In Progress', color: 'border-blue-300 bg-blue-50' },
-    completed: { title: 'Completed', color: 'border-green-300 bg-green-50' },
+    pending: { title: 'To Do', color: 'border-[var(--cl-hairline-strong)] bg-[var(--cl-canvas-soft)]' },
+    in_progress: { title: 'In Progress', color: 'border-[var(--cl-info)] bg-[rgba(13,116,206,0.12)]' },
+    completed: { title: 'Completed', color: 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]' },
   };
 
   const getTasksByStatus = (status: string) => {
@@ -43,8 +44,12 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    const newStatus = destination.droppableId as 'todo' | 'in_progress' | 'completed';
-    
+    // droppableId is always a key of `columns`, i.e. one of the three status
+    // values the `tasks` CHECK constraint accepts. The previous 'todo' in this
+    // cast was never a real droppableId and isn't a legal status in the DB.
+    const newStatus = destination.droppableId as Task['status'];
+
+
     setTasks(tasks.map(task => 
       task.id === draggableId 
         ? { ...task, status: newStatus, completed_at: newStatus === 'completed' ? new Date().toISOString() : null } 
@@ -68,7 +73,7 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
       .insert({
         student_id: userId,
         title: newTaskTitle,
-        status: 'todo',
+        status: 'pending',
         priority: 'medium',
       })
       .select()
@@ -90,12 +95,12 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Task Board</h2>
-          <p className="text-sm text-slate-600">Organize your work with drag and drop</p>
+          <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Task Board</h2>
+          <p className="text-sm text-[var(--cl-body)]">Organize your work with drag and drop</p>
         </div>
         <button
           onClick={() => setShowNewTask(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Task
@@ -103,20 +108,20 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
       </div>
 
       {showNewTask && (
-        <div className="mb-6 p-4 bg-white rounded-2xl border border-slate-200 shadow-lg">
+        <div className="mb-6 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
           <input
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addTask()}
             placeholder="Task title..."
-            className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 mb-3"
+            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:ring-2 focus:ring-[var(--cl-primary)] mb-3"
             autoFocus
           />
           <div className="flex gap-2">
             <button
               onClick={addTask}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg"
+              className="px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold rounded-lg"
             >
               Add
             </button>
@@ -125,7 +130,7 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                 setShowNewTask(false);
                 setNewTaskTitle('');
               }}
-              className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg"
+              className="px-4 py-2 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] font-semibold rounded-lg"
             >
               Cancel
             </button>
@@ -138,8 +143,8 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
           {Object.entries(columns).map(([status, column]) => (
             <div key={status} className="flex flex-col">
               <div className="mb-4">
-                <h3 className="text-lg font-bold text-slate-900">{column.title}</h3>
-                <p className="text-sm text-slate-500">{getTasksByStatus(status).length} tasks</p>
+                <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{column.title}</h3>
+                <p className="text-sm text-[var(--cl-muted)]">{getTasksByStatus(status).length} tasks</p>
               </div>
 
               <Droppable droppableId={status}>
@@ -147,9 +152,9 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`flex-1 p-4 rounded-2xl border-2 transition-colors min-h-[500px] ${
+                    className={`flex-1 p-4 rounded-[var(--cl-r-xl)] border-2 transition-colors min-h-[500px] ${
                       column.color
-                    } ${snapshot.isDraggingOver ? 'border-purple-400 bg-purple-50' : ''}`}
+                    } ${snapshot.isDraggingOver ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]' : ''}`}
                   >
                     <div className="space-y-3">
                       {getTasksByStatus(status).map((task, index) => (
@@ -159,22 +164,22 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className={`p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all ${
-                                snapshot.isDragging ? 'rotate-2 shadow-xl' : ''
+                              className={`p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] transition-all ${
+                                snapshot.isDragging ? 'rotate-2' : ''
                               }`}
                             >
                               <div className="flex items-start justify-between mb-2">
-                                <h4 className="font-semibold text-slate-900 flex-1">{task.title}</h4>
+                                <h4 className="font-semibold text-[var(--cl-ink)] flex-1">{task.title}</h4>
                                 <button
                                   onClick={() => deleteTask(task.id)}
-                                  className="text-slate-400 hover:text-red-500 transition-colors"
+                                  className="text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-colors"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
 
                               {task.description && (
-                                <p className="text-sm text-slate-600 mb-3">{task.description}</p>
+                                <p className="text-sm text-[var(--cl-body)] mb-3">{task.description}</p>
                               )}
 
                               <div className="flex items-center gap-2 flex-wrap">
@@ -185,7 +190,7 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                                   </span>
                                 )}
                                 {task.due_date && (
-                                  <span className="text-xs text-slate-500 flex items-center gap-1">
+                                  <span className="text-xs text-[var(--cl-muted)] flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
                                     {new Date(task.due_date).toLocaleDateString()}
                                   </span>

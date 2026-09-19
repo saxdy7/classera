@@ -1,4 +1,4 @@
-import { razorpay } from '@/lib/razorpay';
+import { getRazorpay } from '@/lib/razorpay';
 import { getTokenPackage } from '@/lib/tokens';
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const order = await razorpay.orders.create(options);
+    const order = await getRazorpay().orders.create(options);
 
     return NextResponse.json({ 
       orderId: order.id, 

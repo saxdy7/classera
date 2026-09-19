@@ -74,86 +74,86 @@ export default async function CommunityModerationPage({
   const dismissedCount = reports?.filter((r) => r.status === "dismissed").length || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-8">
+    <div className="min-h-screen py-8 bg-[var(--cl-canvas)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-amber-100 rounded-xl">
-              <Flag className="w-6 h-6 text-amber-600" />
+            <div className="p-3 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)]">
+              <Flag className="w-6 h-6 text-[var(--cl-warning)]" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Moderation Dashboard</h1>
-              <p className="text-slate-600">{community.name}</p>
+              <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">Moderation Dashboard</h1>
+              <p className="text-[var(--cl-body)]">{community.name}</p>
             </div>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 border border-amber-200">
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-warning)]">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-amber-100 rounded-xl">
-                <Clock className="w-6 h-6 text-amber-600" />
+              <div className="p-3 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)]">
+                <Clock className="w-6 h-6 text-[var(--cl-warning)]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900">{pendingCount}</div>
-                <div className="text-sm text-slate-600">Pending Reports</div>
+                <div className="text-2xl font-semibold text-[var(--cl-ink)]">{pendingCount}</div>
+                <div className="text-sm text-[var(--cl-body)]">Pending Reports</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-green-200">
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-success)]">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-xl">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="p-3 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)]">
+                <CheckCircle className="w-6 h-6 text-[var(--cl-success)]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900">{resolvedCount}</div>
-                <div className="text-sm text-slate-600">Resolved</div>
+                <div className="text-2xl font-semibold text-[var(--cl-ink)]">{resolvedCount}</div>
+                <div className="text-sm text-[var(--cl-body)]">Resolved</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-200">
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-100 rounded-xl">
-                <XCircle className="w-6 h-6 text-slate-600" />
+              <div className="p-3 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)]">
+                <XCircle className="w-6 h-6 text-[var(--cl-body)]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900">{dismissedCount}</div>
-                <div className="text-sm text-slate-600">Dismissed</div>
+                <div className="text-2xl font-semibold text-[var(--cl-ink)]">{dismissedCount}</div>
+                <div className="text-sm text-[var(--cl-body)]">Dismissed</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Reports List */}
-        <div className="bg-white rounded-2xl border border-slate-200">
-          <div className="p-6 border-b border-slate-200">
-            <h2 className="text-xl font-bold text-slate-900">All Reports</h2>
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
+          <div className="p-6 border-b border-[var(--cl-hairline)]">
+            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">All Reports</h2>
           </div>
 
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-[var(--cl-hairline)]">
             {reports && reports.length > 0 ? (
               reports.map((report) => (
-                <div key={report.id} className="p-6 hover:bg-slate-50 transition-colors">
+                <div key={report.id} className="p-6 hover:bg-[var(--cl-canvas-soft)] transition-colors">
                   <div className="flex items-start gap-4">
                     {/* Status Indicator */}
                     <div
                       className={`p-2 rounded-lg ${report.status === "pending"
-                        ? "bg-amber-100"
+                        ? "bg-[rgba(171,100,0,0.12)]"
                         : report.status === "resolved"
-                          ? "bg-green-100"
-                          : "bg-slate-100"
+                          ? "bg-[rgba(22,163,74,0.12)]"
+                          : "bg-[var(--cl-surface-strong)]"
                         }`}
                     >
                       {report.status === "pending" ? (
-                        <AlertTriangle className="w-5 h-5 text-amber-600" />
+                        <AlertTriangle className="w-5 h-5 text-[var(--cl-warning)]" />
                       ) : report.status === "resolved" ? (
-                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <CheckCircle className="w-5 h-5 text-[var(--cl-success)]" />
                       ) : (
-                        <XCircle className="w-5 h-5 text-slate-600" />
+                        <XCircle className="w-5 h-5 text-[var(--cl-body)]" />
                       )}
                     </div>
 
@@ -164,19 +164,19 @@ export default async function CommunityModerationPage({
                           <div className="flex items-center gap-2 mb-1">
                             <span
                               className={`px-3 py-1 rounded-full text-xs font-medium ${report.status === "pending"
-                                ? "bg-amber-100 text-amber-700"
+                                ? "bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]"
                                 : report.status === "resolved"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-slate-100 text-slate-700"
+                                  ? "bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]"
+                                  : "bg-[var(--cl-surface-strong)] text-[var(--cl-body)]"
                                 }`}
                             >
                               {report.status.toUpperCase()}
                             </span>
-                            <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                            <span className="px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-xs font-medium">
                               {report.reason.replace("_", " ").toUpperCase()}
                             </span>
                           </div>
-                          <div className="text-sm text-slate-600">
+                          <div className="text-sm text-[var(--cl-body)]">
                             Reported {new Date(report.created_at).toLocaleDateString()} at{" "}
                             {new Date(report.created_at).toLocaleTimeString()}
                           </div>
@@ -185,10 +185,10 @@ export default async function CommunityModerationPage({
 
                       {/* Reporter Info */}
                       <div className="flex items-center gap-2 mb-3">
-                        <User className="w-4 h-4 text-slate-400" />
-                        <span className="text-sm text-slate-600">
+                        <User className="w-4 h-4 text-[var(--cl-muted-soft)]" />
+                        <span className="text-sm text-[var(--cl-body)]">
                           Reported by{" "}
-                          <span className="font-medium text-slate-900">
+                          <span className="font-medium text-[var(--cl-ink)]">
                             {report.reporter?.[0]?.full_name || "Unknown User"}
                           </span>
                         </span>
@@ -196,33 +196,33 @@ export default async function CommunityModerationPage({
 
                       {/* Report Description */}
                       {report.description && (
-                        <div className="mb-4 p-3 bg-slate-50 rounded-lg">
-                          <p className="text-sm text-slate-700">{report.description}</p>
+                        <div className="mb-4 p-3 bg-[var(--cl-canvas-soft)] rounded-lg">
+                          <p className="text-sm text-[var(--cl-body)]">{report.description}</p>
                         </div>
                       )}
 
                       {/* Reported Content */}
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                      <div className="bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] rounded-lg p-4 mb-4">
                         <div className="flex items-center gap-2 mb-2">
                           {report.post?.[0] ? (
                             <>
-                              <FileText className="w-4 h-4 text-red-600" />
-                              <span className="text-sm font-medium text-red-900">Reported Post</span>
+                              <FileText className="w-4 h-4 text-[var(--cl-error)]" />
+                              <span className="text-sm font-medium text-[var(--cl-error)]">Reported Post</span>
                             </>
                           ) : (
                             <>
-                              <MessageSquare className="w-4 h-4 text-red-600" />
-                              <span className="text-sm font-medium text-red-900">Reported Comment</span>
+                              <MessageSquare className="w-4 h-4 text-[var(--cl-error)]" />
+                              <span className="text-sm font-medium text-[var(--cl-error)]">Reported Comment</span>
                             </>
                           )}
                         </div>
                         {report.post?.[0] && (
                           <div>
                             {report.post[0].title && (
-                              <h4 className="font-semibold text-slate-900 mb-1">{report.post[0].title}</h4>
+                              <h4 className="font-semibold text-[var(--cl-ink)] mb-1">{report.post[0].title}</h4>
                             )}
-                            <p className="text-sm text-slate-700 line-clamp-3">{report.post[0].content}</p>
-                            <div className="text-xs text-slate-500 mt-2">
+                            <p className="text-sm text-[var(--cl-body)] line-clamp-3">{report.post[0].content}</p>
+                            <div className="text-xs text-[var(--cl-muted)] mt-2">
                               By {report.post[0].author?.[0]?.full_name || "Unknown"} •{" "}
                               {new Date(report.post[0].created_at).toLocaleDateString()}
                             </div>
@@ -230,8 +230,8 @@ export default async function CommunityModerationPage({
                         )}
                         {report.comment?.[0] && (
                           <div>
-                            <p className="text-sm text-slate-700">{report.comment[0].content}</p>
-                            <div className="text-xs text-slate-500 mt-2">
+                            <p className="text-sm text-[var(--cl-body)]">{report.comment[0].content}</p>
+                            <div className="text-xs text-[var(--cl-muted)] mt-2">
                               By {report.comment[0].author?.[0]?.full_name || "Unknown"} •{" "}
                               {new Date(report.comment[0].created_at).toLocaleDateString()}
                             </div>
@@ -254,11 +254,11 @@ export default async function CommunityModerationPage({
               ))
             ) : (
               <div className="p-12 text-center">
-                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Flag className="w-10 h-10 text-slate-400" />
+                <div className="w-20 h-20 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Flag className="w-10 h-10 text-[var(--cl-muted-soft)]" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">No reports yet</h3>
-                <p className="text-slate-600">Your community is clean! Reports will appear here.</p>
+                <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No reports yet</h3>
+                <p className="text-[var(--cl-body)]">Your community is clean! Reports will appear here.</p>
               </div>
             )}
           </div>

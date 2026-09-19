@@ -106,13 +106,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <User className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-primary)]">
+                <User className="w-10 h-10 text-[var(--cl-on-dark)]" />
               </div>
-              <h2 className="text-3xl font-bold text-black mb-2">
+              <h2 className="text-3xl font-semibold text-black mb-2">
                 Welcome, Mentor!
               </h2>
-              <p className="text-slate-600">
+              <p className="text-[var(--cl-body)]">
                 Let&rsquo;s set up your teaching profile
               </p>
             </div>
@@ -131,13 +131,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <GraduationCap className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-info)]">
+                <GraduationCap className="w-10 h-10 text-[var(--cl-on-dark)]" />
               </div>
-              <h2 className="text-3xl font-bold text-black mb-2">
+              <h2 className="text-3xl font-semibold text-black mb-2">
                 Your Institution
               </h2>
-              <p className="text-slate-600">
+              <p className="text-[var(--cl-body)]">
                 Where do you teach or mentor?
               </p>
             </div>
@@ -159,13 +159,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Briefcase className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-primary)]">
+                <Briefcase className="w-10 h-10 text-[var(--cl-on-dark)]" />
               </div>
-              <h2 className="text-3xl font-bold text-black mb-2">
+              <h2 className="text-3xl font-semibold text-black mb-2">
                 Your Expertise
               </h2>
-              <p className="text-slate-600">
+              <p className="text-[var(--cl-body)]">
                 What subjects do you teach?
               </p>
             </div>
@@ -197,48 +197,48 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Target className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-success)]">
+                <Target className="w-10 h-10 text-[var(--cl-on-dark)]" />
               </div>
-              <h2 className="text-3xl font-bold text-black mb-2">
+              <h2 className="text-3xl font-semibold text-black mb-2">
                 All Set!
               </h2>
-              <p className="text-slate-600">
+              <p className="text-[var(--cl-body)]">
                 Connect your GitHub account (optional)
               </p>
             </div>
 
-            <div className="bg-slate-50 rounded-xl p-6 space-y-4">
+            <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6 space-y-4">
               <div>
-                <p className="text-sm text-slate-600 mb-1">Full Name</p>
+                <p className="text-sm text-[var(--cl-body)] mb-1">Full Name</p>
                 <p className="font-semibold text-black">{formData.full_name}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600 mb-1">Institution</p>
+                <p className="text-sm text-[var(--cl-body)] mb-1">Institution</p>
                 <p className="font-semibold text-black">{formData.university}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-600 mb-1">Area of Expertise</p>
+                <p className="text-sm text-[var(--cl-body)] mb-1">Area of Expertise</p>
                 <p className="font-semibold text-black">{formData.expertise}</p>
               </div>
               {formData.years_of_experience && (
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Experience</p>
+                  <p className="text-sm text-[var(--cl-body)] mb-1">Experience</p>
                   <p className="font-semibold text-black">{formData.years_of_experience} years</p>
                 </div>
               )}
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 space-y-4">
+            <div className="bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] rounded-[var(--cl-r-lg)] p-6 space-y-4">
               <div className="flex items-start gap-3">
-                <Github className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Github className="w-6 h-6 text-[var(--cl-info)] flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">Connect GitHub</h3>
-                  <p className="text-sm text-blue-700 mb-4">
+                  <h3 className="font-semibold text-[var(--cl-info)] mb-1">Connect GitHub</h3>
+                  <p className="text-sm text-[var(--cl-info)] mb-4">
                     Connect your GitHub account to showcase your projects and expertise. Students can view your contributions and code quality metrics.
                   </p>
                   <GitHubConnectButton
-                    isConnected={false}
+                    connected={false}
                     returnTo="/onboarding/mentor/quiz"
                   />
                 </div>
@@ -253,8 +253,8 @@ export default function MentorOnboarding() {
               type="url"
             />
 
-            <div className="border-t border-slate-200 pt-4">
-              <p className="text-xs text-slate-600 text-center">
+            <div className="border-t border-[var(--cl-hairline)] pt-4">
+              <p className="text-xs text-[var(--cl-body)] text-center">
                 You can add or update your GitHub and LinkedIn profiles later in your profile settings
               </p>
             </div>
@@ -264,14 +264,14 @@ export default function MentorOnboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-indigo-50 to-blue-50 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
       <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 md:p-12">
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
           <div className="mt-8 mb-8">
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+              <div className="mb-6 p-4 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] text-[var(--cl-error)] rounded-[var(--cl-r-lg)] text-sm">
                 {error}
               </div>
             )}
@@ -279,7 +279,7 @@ export default function MentorOnboarding() {
             {renderStep()}
           </div>
 
-          <div className="flex items-center justify-between gap-4 pt-6 border-t border-slate-200">
+          <div className="flex items-center justify-between gap-4 pt-6 border-t border-[var(--cl-hairline)]">
             <Button
               variant="ghost"
               onClick={handleBack}

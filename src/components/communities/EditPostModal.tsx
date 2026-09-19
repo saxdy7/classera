@@ -68,14 +68,14 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
   if (!canEdit) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl max-w-md w-full p-6">
-          <h3 className="text-xl font-bold text-slate-900 mb-4">Cannot Edit Post</h3>
-          <p className="text-slate-600 mb-6">
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-md w-full p-6">
+          <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Cannot Edit Post</h3>
+          <p className="text-[var(--cl-body)] mb-6">
             Posts can only be edited within 3 hours of creation. This post is too old to edit.
           </p>
           <button
             onClick={onClose}
-            className="w-full px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition-colors"
+            className="w-full px-6 py-3 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-semibold transition-colors"
           >
             Close
           </button>
@@ -86,15 +86,15 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white rounded-t-2xl">
-          <h2 className="text-2xl font-bold text-slate-900">Edit Post</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[var(--cl-hairline)] sticky top-0 bg-[var(--cl-surface-card)] rounded-t-2xl">
+          <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Edit Post</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
           >
-            <X className="w-6 h-6 text-slate-600" />
+            <X className="w-6 h-6 text-[var(--cl-body)]" />
           </button>
         </div>
 
@@ -103,8 +103,8 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
           {/* Title (if question or announcement) */}
           {(post.type === 'question' || post.type === 'announcement') && (
             <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
-                Title <span className="text-red-500">*</span>
+              <label htmlFor="title" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                Title <span className="text-[var(--cl-error)]">*</span>
               </label>
               <input
                 type="text"
@@ -112,30 +112,30 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
               />
             </div>
           )}
 
           {post.type === 'normal' && (
             <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
-                Title <span className="text-slate-400">(Optional)</span>
+              <label htmlFor="title" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                Title <span className="text-[var(--cl-muted-soft)]">(Optional)</span>
               </label>
               <input
                 type="text"
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
               />
             </div>
           )}
 
           {/* Content */}
           <div>
-            <label htmlFor="content" className="block text-sm font-semibold text-slate-700 mb-2">
-              Content <span className="text-red-500">*</span>
+            <label htmlFor="content" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+              Content <span className="text-[var(--cl-error)]">*</span>
             </label>
             <textarea
               id="content"
@@ -143,18 +143,18 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
               onChange={(e) => setContent(e.target.value)}
               required
               rows={8}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent resize-none"
             />
             <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-[var(--cl-muted)]">
                 {content.length} / 5000 characters
               </span>
             </div>
           </div>
 
           {/* Edit Notice */}
-          <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-            <p className="text-sm text-amber-800">
+          <div className="bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)] p-4 border border-[var(--cl-warning)]">
+            <p className="text-sm text-[var(--cl-warning)]">
               ℹ️ Edited posts will show an "edited" indicator. You can only edit within 3 hours of posting.
             </p>
           </div>
@@ -164,7 +164,7 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
             <button
               type="submit"
               disabled={loading || !content.trim()}
-              className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -179,7 +179,7 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition-colors disabled:opacity-50"
+              className="px-6 py-3 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-semibold transition-colors disabled:opacity-50"
             >
               Cancel
             </button>

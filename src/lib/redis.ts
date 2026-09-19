@@ -33,18 +33,21 @@ export const cacheKeys = {
   aiTokenBalance: (userId: string) => `user:${userId}:ai_tokens:balance`,
 };
 
+// TTL in seconds. Declared separately because referencing `cacheUtils.TTL`
+// from inside the `cacheUtils` initializer made the object implicitly `any`.
+export const CACHE_TTL = {
+  SHORT: 5 * 60, // 5 minutes
+  MEDIUM: 30 * 60, // 30 minutes
+  LONG: 60 * 60, // 1 hour
+  VERY_LONG: 24 * 60 * 60, // 24 hours
+} as const;
+
 // Cache utilities
 export const cacheUtils = {
-  // TTL in seconds
-  TTL: {
-    SHORT: 5 * 60, // 5 minutes
-    MEDIUM: 30 * 60, // 30 minutes
-    LONG: 60 * 60, // 1 hour
-    VERY_LONG: 24 * 60 * 60, // 24 hours
-  },
+  TTL: CACHE_TTL,
 
   // Set cache with TTL
-  async set<T>(key: string, value: T, ttl = cacheUtils.TTL.MEDIUM) {
+  async set<T>(key: string, value: T, ttl: number = CACHE_TTL.MEDIUM) {
     try {
       await redis.setex(key, ttl, JSON.stringify(value));
     } catch (error) {

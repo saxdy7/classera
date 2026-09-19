@@ -10,12 +10,12 @@ export function Select({ label, error, options, className = '', ...props }: Sele
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
           {label}
         </label>
       )}
       <select
-        className={`w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors bg-white text-black ${error ? 'border-red-500' : ''} ${className}`}
+        className={`w-full px-4 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors bg-[var(--cl-surface-card)] text-black ${error ? 'border-[var(--cl-error)]' : ''} ${className}`}
         {...props}
       >
         {options.map((option) => (
@@ -25,7 +25,7 @@ export function Select({ label, error, options, className = '', ...props }: Sele
         ))}
       </select>
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-1 text-sm text-[var(--cl-error)]">{error}</p>
       )}
     </div>
   );

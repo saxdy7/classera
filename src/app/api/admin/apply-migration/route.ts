@@ -59,13 +59,13 @@ export async function POST(request: Request) {
         const results = [];
         for (const statement of statements) {
             try {
-                const { data, error } = await supabase.rpc('execute_sql', {
-                    sql: statement
-                }).catch(() => {
-                    // If execute_sql doesn't exist, we need to use raw query
-                    // This requires direct database connection
-                    return null;
-                });
+                // The builder is thenable but has no typed .catch, so await it
+                // and inspect the result instead of chaining.
+                const res = await supabase
+                    .rpc('execute_sql', { sql: statement })
+                    .then((r) => r, () => null);
+                const data = res?.data ?? null;
+                const error = res?.error ?? null;
 
                 if (error) {
                     console.warn(`Statement failed: ${statement.substring(0, 50)}...`, error);

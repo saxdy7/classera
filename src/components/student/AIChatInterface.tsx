@@ -98,27 +98,27 @@ export function AIChatInterface({ userName }: { userName: string }) {
   const clearChat = () => setMessages([]);
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="flex flex-col h-full bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden">
 
       {/* ── Header ── */}
-      <div className="border-b border-slate-100 bg-white">
+      <div className="border-b border-[var(--cl-hairline)] bg-[var(--cl-surface-card)]">
         <div className="flex items-center justify-between px-5 py-3.5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-violet-600 flex items-center justify-center shadow-sm">
-              <Bot className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center">
+              <Bot className="w-5 h-5 text-[var(--cl-on-dark)]" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900">Classera AI Copilot</h2>
+              <h2 className="text-sm font-semibold text-[var(--cl-ink)]">Classera AI Copilot</h2>
               <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs text-slate-400 font-medium">llama-3.3-70b · Online</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--cl-success)] animate-pulse" />
+                <span className="text-xs text-[var(--cl-muted-soft)] font-medium">llama-3.3-70b · Online</span>
               </div>
             </div>
           </div>
           {messages.length > 0 && (
             <button
               onClick={clearChat}
-              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-50 font-bold uppercase tracking-wider"
+              className="flex items-center gap-1.5 text-xs text-[var(--cl-muted-soft)] hover:text-[var(--cl-body)] transition-colors px-3 py-1.5 rounded-lg hover:bg-[var(--cl-canvas-soft)] font-semibold uppercase tracking-wider"
             >
               <RotateCcw className="w-3.5 h-3.5" /> Reset
             </button>
@@ -131,7 +131,7 @@ export function AIChatInterface({ userName }: { userName: string }) {
             <button
               key={i}
               onClick={() => sendMessage(p.text)}
-              className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-slate-600 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-600 transition-all active:scale-95 shadow-sm"
+              className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-full text-xs font-semibold text-[var(--cl-body)] hover:bg-[var(--cl-primary-soft)] hover:border-[var(--cl-primary)] hover:text-[var(--cl-primary)] transition-all active:scale-95"
             >
               <span>{p.icon}</span>
               {p.text.split('(')[0].trim()}
@@ -146,11 +146,11 @@ export function AIChatInterface({ userName }: { userName: string }) {
         {messages.length === 0 ? (
           /* Empty / Welcome state */
           <div className="flex flex-col items-center justify-center h-full text-center max-w-lg mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
-              <Sparkles className="w-8 h-8 text-violet-600" />
+            <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary-soft)] flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-[var(--cl-primary)]" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-1">Hey {userName} 👋</h3>
-            <p className="text-slate-500 text-sm mb-8">
+            <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-1">Hey {userName} 👋</h3>
+            <p className="text-[var(--cl-muted)] text-sm mb-8">
               I'm your AI study companion. Ask me anything — concepts, code, problems, summaries.
             </p>
             <div className="grid grid-cols-2 gap-2 w-full">
@@ -158,7 +158,7 @@ export function AIChatInterface({ userName }: { userName: string }) {
                 <button
                   key={i}
                   onClick={() => sendMessage(p.text)}
-                  className="text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-violet-300 hover:bg-violet-50 transition-all text-sm text-slate-700 group"
+                  className="text-left px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] transition-all text-sm text-[var(--cl-body)] group"
                 >
                   <span className="mr-2">{p.icon}</span>
                   {p.text}
@@ -170,22 +170,22 @@ export function AIChatInterface({ userName }: { userName: string }) {
           messages.map(msg => (
             <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
-                <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                  <Bot className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-lg bg-[var(--cl-primary)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Bot className="w-4 h-4 text-[var(--cl-on-dark)]" />
                 </div>
               )}
               <div className={`max-w-[75%] ${msg.role === 'user' ? 'order-first' : ''}`}>
                 <div
-                  className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                      ? 'bg-violet-600 text-white rounded-br-sm'
-                      : 'bg-slate-50 border border-slate-200 text-slate-800 rounded-bl-sm'
+                  className={`px-4 py-3 rounded-[var(--cl-r-xl)] text-sm leading-relaxed ${msg.role === 'user'
+                      ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-br-sm'
+                      : 'bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] text-[var(--cl-ink)] rounded-bl-sm'
                     }`}
                 >
                   {msg.content === '' && msg.role === 'assistant' ? (
                     <div className="flex gap-1 py-1">
-                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="w-2 h-2 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   ) : (
                     <>
@@ -199,15 +199,15 @@ export function AIChatInterface({ userName }: { userName: string }) {
                               const match = msg.content.match(/\[TALENT_MATCHING:\s*(.*?)\]/);
                               const data = JSON.parse(match![1]);
                               return data.profiles.map((p: any, idx: number) => (
-                                <div key={idx} className="bg-white border border-violet-100 rounded-xl p-3 shadow-sm flex items-center gap-3 animate-in slide-in-from-bottom-2 duration-300">
-                                  <div className="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 font-bold">
+                                <div key={idx} className="bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-[var(--cl-r-lg)] p-3 flex items-center gap-3 animate-in slide-in-from-bottom-2 duration-300">
+                                  <div className="w-10 h-10 rounded-full bg-[var(--cl-primary-soft)] flex items-center justify-center text-[var(--cl-primary)] font-semibold">
                                     {p.name.charAt(0)}
                                   </div>
                                   <div className="flex-1">
-                                    <h4 className="text-sm font-black text-slate-900">{p.name}</h4>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">{p.role} · {p.year}</p>
+                                    <h4 className="text-sm font-semibold text-[var(--cl-ink)]">{p.name}</h4>
+                                    <p className="text-[10px] text-[var(--cl-muted)] font-semibold uppercase tracking-tight">{p.role} · {p.year}</p>
                                   </div>
-                                  <button className="px-3 py-1.5 bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-violet-700 transition-all active:scale-95">
+                                  <button className="px-3 py-1.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-[10px] font-semibold uppercase tracking-widest rounded-lg hover:bg-[var(--cl-primary)] transition-all active:scale-95">
                                     Connect
                                   </button>
                                 </div>
@@ -218,8 +218,8 @@ export function AIChatInterface({ userName }: { userName: string }) {
                       )}
 
                       {msg.role === 'assistant' && msg.content.includes('[ROADMAP:') && (
-                        <div className="mt-4 bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-xl overflow-hidden relative group">
-                          <div className="absolute top-0 right-0 w-32 h-32 bg-violet-600/10 blur-3xl -mr-16 -mt-16" />
+                        <div className="mt-4 bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline-strong)] overflow-hidden relative group">
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--cl-surface-card)] blur-3xl -mr-16 -mt-16" />
                           {(() => {
                             try {
                               const match = msg.content.match(/\[ROADMAP:\s*(.*?)\]/);
@@ -227,24 +227,24 @@ export function AIChatInterface({ userName }: { userName: string }) {
                               return (
                                 <>
                                   <div className="flex items-center gap-2 mb-4">
-                                    <Layers className="w-4 h-4 text-violet-400" />
-                                    <h4 className="text-sm font-black text-white uppercase tracking-widest italic">{data.title}</h4>
+                                    <Layers className="w-4 h-4 text-[var(--cl-primary)]" />
+                                    <h4 className="text-sm font-semibold text-[var(--cl-on-dark)] uppercase tracking-widest italic">{data.title}</h4>
                                   </div>
                                   <div className="space-y-4">
                                     {data.steps.map((s: any, idx: number) => (
                                       <div key={idx} className="flex gap-3 relative">
-                                        {idx !== data.steps.length - 1 && <div className="absolute left-2 top-5 bottom-0 w-px bg-slate-700" />}
-                                        <div className="w-4 h-4 rounded-full bg-violet-600 border-4 border-slate-900 z-10" />
+                                        {idx !== data.steps.length - 1 && <div className="absolute left-2 top-5 bottom-0 w-px bg-[var(--cl-surface-inverse)]" />}
+                                        <div className="w-4 h-4 rounded-full bg-[var(--cl-primary)] border-4 border-[var(--cl-hairline-strong)] z-10" />
                                         <div>
-                                          <p className="text-xs font-black text-white leading-none mb-1">{s.title}</p>
-                                          <p className="text-[10px] text-slate-400 font-medium">{s.desc}</p>
+                                          <p className="text-xs font-semibold text-[var(--cl-on-dark)] leading-none mb-1">{s.title}</p>
+                                          <p className="text-[10px] text-[var(--cl-muted-soft)] font-medium">{s.desc}</p>
                                         </div>
                                       </div>
                                     ))}
                                   </div>
-                                  <Link href="/roadmaps" className="mt-6 flex items-center justify-between group/btn w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
-                                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Go to Full Roadmap</span>
-                                    <ArrowRight className="w-4 h-4 text-violet-400 group-hover/btn:translate-x-1 transition-transform" />
+                                  <Link href="/roadmaps" className="mt-6 flex items-center justify-between group/btn w-full px-4 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-lg)] hover:bg-[rgba(255,255,255,0.1)] transition-all duration-300">
+                                    <span className="text-[10px] font-semibold text-[var(--cl-on-dark)] uppercase tracking-widest">Go to Full Roadmap</span>
+                                    <ArrowRight className="w-4 h-4 text-[var(--cl-primary)] group-hover/btn:translate-x-1 transition-transform" />
                                   </Link>
                                 </>
                               );
@@ -255,12 +255,12 @@ export function AIChatInterface({ userName }: { userName: string }) {
                     </>
                   )}
                 </div>
-                <p className={`text-[10px] text-slate-400 mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                <p className={`text-[10px] text-[var(--cl-muted-soft)] mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                   {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
               {msg.role === 'user' && (
-                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold shadow-sm">
+                <div className="w-8 h-8 rounded-lg bg-[var(--cl-surface-inverse)] flex items-center justify-center flex-shrink-0 mt-0.5 text-[var(--cl-on-dark)] text-xs font-semibold">
                   {userName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -271,15 +271,15 @@ export function AIChatInterface({ userName }: { userName: string }) {
       </div>
 
       {/* ── Input ── */}
-      <div className="border-t border-slate-100 bg-white px-4 py-3">
+      <div className="border-t border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] px-4 py-3">
         {messages.length === 0 && (
-          <p className="text-xs text-slate-400 mb-2 text-center">Press Enter to send · Shift+Enter for new line</p>
+          <p className="text-xs text-[var(--cl-muted-soft)] mb-2 text-center">Press Enter to send · Shift+Enter for new line</p>
         )}
         <div className="flex items-end gap-2">
           <button
             onClick={clearChat}
             title="New chat"
-            className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors text-slate-500 flex-shrink-0 mb-0.5"
+            className="p-2.5 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-colors text-[var(--cl-muted)] flex-shrink-0 mb-0.5"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -292,19 +292,19 @@ export function AIChatInterface({ userName }: { userName: string }) {
               onKeyDown={handleKey}
               placeholder="Ask anything about your studies..."
               disabled={loading}
-              className="w-full resize-none px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-400 transition-all text-slate-900 placeholder:text-slate-400 disabled:opacity-50 bg-white leading-relaxed"
+              className="w-full resize-none px-4 py-3 text-sm border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-md)] focus:outline-none focus:border-[var(--cl-ink)] focus:ring-[3px] focus:ring-[rgba(10,10,10,0.12)] transition-all text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)] disabled:opacity-50 bg-[var(--cl-surface-card)] leading-relaxed"
               style={{ minHeight: '44px', maxHeight: '160px' }}
             />
           </div>
           <button
             onClick={() => sendMessage()}
             disabled={loading || !input.trim()}
-            className="p-2.5 rounded-xl bg-violet-600 text-white hover:bg-violet-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 mb-0.5 shadow-sm"
+            className="p-2.5 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-primary)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 mb-0.5"
           >
             <Send className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-[10px] text-slate-300 text-center mt-2">AI can make mistakes. Verify important information.</p>
+        <p className="text-[10px] text-[var(--cl-muted-soft)] text-center mt-2">AI can make mistakes. Verify important information.</p>
       </div>
     </div>
   );

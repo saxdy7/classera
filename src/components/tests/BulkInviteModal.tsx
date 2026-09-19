@@ -130,31 +130,31 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                 className="fixed inset-0 bg-black/50 z-40"
                 onClick={onClose}
             />
-            <div className="fixed inset-x-4 top-8 bottom-8 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[700px] z-50 flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="fixed inset-x-4 top-8 bottom-8 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[700px] z-50 flex flex-col bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-6 border-b border-[var(--cl-hairline)]">
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-900">Invite Students</h2>
-                        <p className="text-sm text-slate-500 mt-1">
+                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Invite Students</h2>
+                        <p className="text-sm text-[var(--cl-muted)] mt-1">
                             to {testTitle}
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-slate-200">
+                <div className="flex border-b border-[var(--cl-hairline)]">
                     <button
                         onClick={() => setTab('students')}
                         className={`flex-1 px-6 py-3 text-sm font-medium transition-colors ${
                             tab === 'students'
-                                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
-                                : 'text-slate-600 hover:bg-slate-50'
+                                ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
+                                : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                         }`}
                     >
                         <UserPlus className="w-4 h-4 inline-block mr-2" />
@@ -164,8 +164,8 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                         onClick={() => setTab('communities')}
                         className={`flex-1 px-6 py-3 text-sm font-medium transition-colors ${
                             tab === 'communities'
-                                ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
-                                : 'text-slate-600 hover:bg-slate-50'
+                                ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
+                                : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
                         }`}
                     >
                         <Users className="w-4 h-4 inline-block mr-2" />
@@ -177,27 +177,27 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                 {tab === 'students' ? (
                     <>
                         {/* Search & Actions */}
-                        <div className="p-4 border-b border-slate-200 bg-slate-50">
+                        <div className="p-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
                             <div className="flex items-center gap-3">
                                 <div className="relative flex-1">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
                                     <input
                                         type="text"
                                         placeholder="Search students..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        className="w-full pl-10 pr-4 py-2 border border-[var(--cl-hairline)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
                                     />
                                 </div>
                                 <button
                                     onClick={selectAll}
-                                    className="px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                    className="px-3 py-2 text-sm text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] rounded-lg transition-colors"
                                 >
                                     Select All
                                 </button>
                                 <button
                                     onClick={clearSelection}
-                                    className="px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                    className="px-3 py-2 text-sm text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                                 >
                                     Clear
                                 </button>
@@ -208,12 +208,12 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                         <div className="flex-1 overflow-y-auto p-4">
                             {loading ? (
                                 <div className="flex items-center justify-center py-12">
-                                    <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                                    <div className="w-8 h-8 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin" />
                                 </div>
                             ) : filteredStudents.length === 0 ? (
                                 <div className="text-center py-12">
-                                    <Users className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-                                    <p className="text-slate-500">No students found</p>
+                                    <Users className="w-12 h-12 mx-auto text-[var(--cl-muted-soft)] mb-4" />
+                                    <p className="text-[var(--cl-muted)]">No students found</p>
                                 </div>
                             ) : (
                                 <div className="space-y-2">
@@ -225,34 +225,34 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                                             <div
                                                 key={student.id}
                                                 onClick={() => !isAlreadyInvited && toggleStudent(student.id)}
-                                                className={`flex items-center gap-4 p-3 border rounded-xl cursor-pointer transition-all ${
+                                                className={`flex items-center gap-4 p-3 border rounded-[var(--cl-r-lg)] cursor-pointer transition-all ${
                                                     isAlreadyInvited
-                                                        ? 'bg-slate-50 border-slate-200 opacity-50 cursor-not-allowed'
+                                                        ? 'bg-[var(--cl-canvas-soft)] border-[var(--cl-hairline)] opacity-50 cursor-not-allowed'
                                                         : isSelected
-                                                            ? 'bg-indigo-50 border-indigo-300'
-                                                            : 'bg-white border-slate-200 hover:border-indigo-300'
+                                                            ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]'
+                                                            : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
                                                 }`}
                                             >
                                                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                                                     isSelected 
-                                                        ? 'bg-indigo-600 border-indigo-600'
-                                                        : 'border-slate-300'
+                                                        ? 'bg-[var(--cl-primary)] border-[var(--cl-primary)]'
+                                                        : 'border-[var(--cl-hairline-strong)]'
                                                 }`}>
-                                                    {isSelected && <Check className="w-4 h-4 text-white" />}
+                                                    {isSelected && <Check className="w-4 h-4 text-[var(--cl-on-dark)]" />}
                                                 </div>
-                                                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                                                <div className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
                                                     {student.full_name.charAt(0)}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="font-medium text-slate-900">
+                                                    <p className="font-medium text-[var(--cl-ink)]">
                                                         {student.full_name}
                                                     </p>
-                                                    <p className="text-sm text-slate-500 truncate">
+                                                    <p className="text-sm text-[var(--cl-muted)] truncate">
                                                         {student.email}
                                                     </p>
                                                 </div>
                                                 {isAlreadyInvited && (
-                                                    <span className="text-xs text-orange-500 font-medium">
+                                                    <span className="text-xs text-[var(--cl-warning)] font-medium">
                                                         Already invited
                                                     </span>
                                                 )}
@@ -268,46 +268,46 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                     <div className="flex-1 overflow-y-auto p-4">
                         {loading ? (
                             <div className="flex items-center justify-center py-12">
-                                <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                                <div className="w-8 h-8 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin" />
                             </div>
                         ) : communities.length === 0 ? (
                             <div className="text-center py-12">
-                                <Users className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-                                <p className="text-slate-500">No communities found</p>
+                                <Users className="w-12 h-12 mx-auto text-[var(--cl-muted-soft)] mb-4" />
+                                <p className="text-[var(--cl-muted)]">No communities found</p>
                             </div>
                         ) : (
                             <div className="space-y-3">
-                                <p className="text-sm text-slate-500 mb-4">
+                                <p className="text-sm text-[var(--cl-muted)] mb-4">
                                     Select a community to invite all its members
                                 </p>
                                 {communities.map((community) => (
                                     <div
                                         key={community.id}
                                         onClick={() => setSelectedCommunity(community.id)}
-                                        className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all ${
+                                        className={`flex items-center gap-4 p-4 border rounded-[var(--cl-r-lg)] cursor-pointer transition-all ${
                                             selectedCommunity === community.id
-                                                ? 'bg-indigo-50 border-indigo-300'
-                                                : 'bg-white border-slate-200 hover:border-indigo-300'
+                                                ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]'
+                                                : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
                                         }`}
                                     >
                                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                                             selectedCommunity === community.id
-                                                ? 'bg-indigo-600 border-indigo-600'
-                                                : 'border-slate-300'
+                                                ? 'bg-[var(--cl-primary)] border-[var(--cl-primary)]'
+                                                : 'border-[var(--cl-hairline-strong)]'
                                         }`}>
                                             {selectedCommunity === community.id && (
-                                                <Check className="w-4 h-4 text-white" />
+                                                <Check className="w-4 h-4 text-[var(--cl-on-dark)]" />
                                             )}
                                         </div>
-                                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                                        <div className="w-12 h-12 rounded-[var(--cl-r-lg)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold text-lg bg-[var(--cl-primary)]">
                                             {community.name.charAt(0)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-slate-900">
+                                            <p className="font-semibold text-[var(--cl-ink)]">
                                                 {community.name}
                                             </p>
                                             {community.member_count && (
-                                                <p className="text-sm text-slate-500">
+                                                <p className="text-sm text-[var(--cl-muted)]">
                                                     {community.member_count} members
                                                 </p>
                                             )}
@@ -320,8 +320,8 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                 )}
 
                 {/* Footer */}
-                <div className="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50">
-                    <p className="text-sm text-slate-600">
+                <div className="flex items-center justify-between p-4 border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                    <p className="text-sm text-[var(--cl-body)]">
                         {tab === 'students' 
                             ? `${selectedStudents.length} students selected`
                             : selectedCommunity ? '1 community selected' : 'No community selected'
@@ -331,7 +331,7 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                            className="px-4 py-2 text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                         >
                             Cancel
                         </button>
@@ -339,7 +339,7 @@ export function BulkInviteModal({ testId, testTitle, onClose, onSuccess, existin
                             type="button"
                             onClick={handleSendInvitations}
                             disabled={!canSend || sending}
-                            className="inline-flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="inline-flex items-center gap-2 px-6 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Send className="w-4 h-4" />
                             {sending ? 'Sending...' : 'Send Invitations'}

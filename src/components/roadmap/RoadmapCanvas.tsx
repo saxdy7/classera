@@ -63,7 +63,7 @@ export function RoadmapCanvas({
     );
 
     return (
-        <div className="w-full h-[600px] border-2 border-gray-200 rounded-xl overflow-hidden bg-white">
+        <div className="w-full h-[600px] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] overflow-hidden bg-[var(--cl-surface-card)]">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}

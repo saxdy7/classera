@@ -40,7 +40,7 @@ export default function CalendarWidget() {
           title: test.title,
           date: new Date(test.scheduled_at),
           type: 'test',
-          color: 'bg-red-500',
+          color: 'bg-[var(--cl-error)]',
           time: format(new Date(test.scheduled_at), 'HH:mm'),
           description: `Test • ${test.duration_minutes || 60} minutes`,
         }));
@@ -56,7 +56,7 @@ export default function CalendarWidget() {
           title: task.title,
           date: new Date(task.due_date),
           type: 'deadline',
-          color: 'bg-orange-500',
+          color: 'bg-[var(--cl-warning)]',
           description: `Task Deadline`,
         }));
 
@@ -100,7 +100,7 @@ export default function CalendarWidget() {
       {/* Calendar Header */}
       <Card className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-semibold text-[var(--cl-ink)]">
             {format(currentDate, 'MMMM yyyy')}
           </h2>
           <div className="flex items-center space-x-2">
@@ -122,7 +122,7 @@ export default function CalendarWidget() {
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div
               key={day}
-              className="text-center text-sm font-medium text-gray-500 py-2"
+              className="text-center text-sm font-medium text-[var(--cl-muted)] py-2"
             >
               {day}
             </div>
@@ -145,11 +145,11 @@ export default function CalendarWidget() {
                 onClick={() => setSelectedDate(day)}
                 className={`aspect-square p-1 rounded-lg text-sm transition-colors ${
                   !isSameMonth(day, currentDate)
-                    ? 'text-gray-300'
+                    ? 'text-[var(--cl-muted-soft)]'
                     : isSelected
-                    ? 'bg-purple-600 text-white font-bold'
+                    ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold'
                     : isCurrentDay
-                    ? 'bg-purple-100 text-purple-600 font-bold'
+                    ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] font-semibold'
                     : 'hover:bg-gray-100'
                 }`}
               >
@@ -161,7 +161,7 @@ export default function CalendarWidget() {
                         <div
                           key={idx}
                           className={`w-1 h-1 rounded-full ${
-                            isSelected ? 'bg-white' : event.color
+                            isSelected ? 'bg-[var(--cl-surface-card)]' : event.color
                           }`}
                         />
                       ))}
@@ -177,7 +177,7 @@ export default function CalendarWidget() {
       {/* Selected Day Events */}
       <Card className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-[var(--cl-ink)]">
             {format(selectedDate, 'EEEE, MMMM d')}
           </h3>
           <Button size="sm" variant="ghost">
@@ -189,12 +189,12 @@ export default function CalendarWidget() {
         {loading ? (
           <div className="space-y-2">
             {[1, 2].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded animate-pulse" />
+              <div key={i} className="h-16 bg-[var(--cl-surface-strong)] rounded animate-pulse" />
             ))}
           </div>
         ) : dayEvents.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <CalendarIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+          <div className="text-center py-8 text-[var(--cl-muted)]">
+            <CalendarIcon className="w-12 h-12 mx-auto mb-2 text-[var(--cl-muted-soft)]" />
             <p>No events scheduled</p>
           </div>
         ) : (
@@ -202,16 +202,16 @@ export default function CalendarWidget() {
             {dayEvents.map((event) => (
               <div
                 key={event.id}
-                className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
+                className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-[var(--cl-canvas-soft)] transition-colors cursor-pointer"
               >
                 <div className={`w-3 h-3 rounded-full ${event.color} mt-1.5 flex-shrink-0`} />
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 truncate">{event.title}</h4>
+                  <h4 className="font-medium text-[var(--cl-ink)] truncate">{event.title}</h4>
                   {event.description && (
-                    <p className="text-sm text-gray-600">{event.description}</p>
+                    <p className="text-sm text-[var(--cl-body)]">{event.description}</p>
                   )}
                   {event.time && (
-                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <div className="flex items-center text-sm text-[var(--cl-muted)] mt-1">
                       <Clock className="w-3 h-3 mr-1" />
                       {event.time}
                     </div>
@@ -225,23 +225,23 @@ export default function CalendarWidget() {
 
       {/* Event Legend */}
       <Card className="p-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Event Types</h3>
+        <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-3">Event Types</h3>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <span className="text-sm text-gray-600">Tests</span>
+            <div className="w-3 h-3 rounded-full bg-[var(--cl-error)]" />
+            <span className="text-sm text-[var(--cl-body)]">Tests</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-orange-500" />
-            <span className="text-sm text-gray-600">Deadlines</span>
+            <div className="w-3 h-3 rounded-full bg-[var(--cl-warning)]" />
+            <span className="text-sm text-[var(--cl-body)]">Deadlines</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-blue-500" />
-            <span className="text-sm text-gray-600">Meetings</span>
+            <div className="w-3 h-3 rounded-full bg-[var(--cl-info)]" />
+            <span className="text-sm text-[var(--cl-body)]">Meetings</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-            <span className="text-sm text-gray-600">Events</span>
+            <div className="w-3 h-3 rounded-full bg-[var(--cl-success)]" />
+            <span className="text-sm text-[var(--cl-body)]">Events</span>
           </div>
         </div>
       </Card>

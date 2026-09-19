@@ -138,26 +138,26 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-            <Card className="max-w-3xl w-full p-8 relative bg-white shadow-2xl">
+            <Card className="max-w-3xl w-full p-8 relative bg-[var(--cl-surface-card)]">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="absolute top-4 right-4 p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                 >
                     <X className="h-5 w-5" />
                 </button>
 
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">
                         What can I help you learn?
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-[var(--cl-body)]">
                         Enter a topic below to generate a personalized course for it
                     </p>
                 </div>
 
                 {/* Topic Input */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
                         What can I help you learn?
                     </label>
                     <input
@@ -165,13 +165,13 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                         value={topic}
                         onChange={(e) => setTopic(e.target.value)}
                         placeholder="Enter a topic"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
                     />
                 </div>
 
                 {/* Format Selection */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-3">
                         Choose the format
                     </label>
                     <div className="grid grid-cols-3 gap-4">
@@ -183,18 +183,18 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                                 <button
                                     key={format.id}
                                     onClick={() => setSelectedFormat(format.id)}
-                                    className={`p-6 border-2 rounded-xl transition-all ${isSelected
-                                        ? 'border-purple-500 bg-purple-50'
-                                        : 'border-gray-200 hover:border-gray-300'
+                                    className={`p-6 border-2 rounded-[var(--cl-r-lg)] transition-all ${isSelected
+                                        ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
+                                        : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)]'
                                         }`}
                                 >
-                                    <Icon className={`h-8 w-8 mx-auto mb-3 ${isSelected ? 'text-purple-600' : 'text-gray-400'
+                                    <Icon className={`h-8 w-8 mx-auto mb-3 ${isSelected ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'
                                         }`} />
-                                    <div className={`font-semibold mb-1 ${isSelected ? 'text-gray-900' : 'text-gray-600'
+                                    <div className={`font-semibold mb-1 ${isSelected ? 'text-[var(--cl-ink)]' : 'text-[var(--cl-body)]'
                                         }`}>
                                         {format.label}
                                     </div>
-                                    <div className="text-xs text-gray-500">
+                                    <div className="text-xs text-[var(--cl-muted)]">
                                         {format.description}
                                     </div>
                                 </button>
@@ -210,9 +210,9 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                             type="checkbox"
                             checked={showQuestions}
                             onChange={(e) => setShowQuestions(e.target.checked)}
-                            className="rounded border-gray-300"
+                            className="rounded border-[var(--cl-hairline-strong)]"
                         />
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm text-[var(--cl-body)]">
                             Answer the following questions for a better course
                         </span>
                     </label>
@@ -222,7 +222,7 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                 <Button
                     onClick={handleGenerate}
                     disabled={!topic.trim() || generating}
-                    className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-lg flex items-center justify-center gap-2 text-lg font-medium"
+                    className="w-full bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] py-4 rounded-lg flex items-center justify-center gap-2 text-lg font-medium"
                 >
                     <Sparkles className="h-5 w-5" />
                     {generating ? 'Generating...' : 'Generate'}

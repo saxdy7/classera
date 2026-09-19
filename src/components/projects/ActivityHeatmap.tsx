@@ -10,11 +10,11 @@ interface ActivityHeatmapProps {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function getColor(count: number): string {
-  if (count === 0) return 'bg-slate-100';
-  if (count <= 1) return 'bg-violet-200';
-  if (count <= 3) return 'bg-violet-400';
-  if (count <= 6) return 'bg-violet-600';
-  return 'bg-violet-800';
+  if (count === 0) return 'bg-[var(--cl-surface-strong)]';
+  if (count <= 1) return 'bg-[var(--cl-primary)]/25';
+  if (count <= 3) return 'bg-[var(--cl-primary)]/50';
+  if (count <= 6) return 'bg-[var(--cl-primary)]/75';
+  return 'bg-[var(--cl-primary)]';
 }
 
 export default function ActivityHeatmap({ dailyActivity, weeks = 26 }: ActivityHeatmapProps) {
@@ -79,12 +79,12 @@ export default function ActivityHeatmap({ dailyActivity, weeks = 26 }: ActivityH
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">
-          <span className="font-semibold text-slate-800">{totalCommits}</span> commits in the last {weeks} weeks
+        <p className="text-sm text-[var(--cl-muted)]">
+          <span className="font-semibold text-[var(--cl-ink)]">{totalCommits}</span> commits in the last {weeks} weeks
         </p>
-        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+        <div className="flex items-center gap-1.5 text-xs text-[var(--cl-muted-soft)]">
           <span>Less</span>
-          {['bg-slate-100', 'bg-violet-200', 'bg-violet-400', 'bg-violet-600', 'bg-violet-800'].map((c) => (
+          {['bg-[var(--cl-surface-strong)]', 'bg-[var(--cl-primary)]/25', 'bg-[var(--cl-primary)]/50', 'bg-[var(--cl-primary)]/75', 'bg-[var(--cl-primary)]'].map((c) => (
             <span key={c} className={`w-3 h-3 rounded-sm ${c}`} />
           ))}
           <span>More</span>
@@ -98,7 +98,7 @@ export default function ActivityHeatmap({ dailyActivity, weeks = 26 }: ActivityH
             {columns.map(([wIdx]) => {
               const label = monthLabels.find((m) => m.weekIdx === wIdx);
               return (
-                <div key={wIdx} className="w-3 text-xs text-slate-400 truncate">
+                <div key={wIdx} className="w-3 text-xs text-[var(--cl-muted-soft)] truncate">
                   {label?.label ?? ''}
                 </div>
               );
@@ -108,7 +108,7 @@ export default function ActivityHeatmap({ dailyActivity, weeks = 26 }: ActivityH
           {/* Day rows */}
           {DAYS.map((day, dayIdx) => (
             <div key={day} className="flex items-center gap-1">
-              <span className="w-6 text-xs text-slate-400 text-right flex-shrink-0">
+              <span className="w-6 text-xs text-[var(--cl-muted-soft)] text-right flex-shrink-0">
                 {dayIdx % 2 === 1 ? day.slice(0, 3) : ''}
               </span>
               {columns.map(([wIdx, week]) => {

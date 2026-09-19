@@ -1,36 +1,347 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
-/* Clash Display Variable Font for Headings */
-@font-face {
-  font-family: 'Clash Display';
-  src: url('/ClashDisplay-Variable.ttf') format('truetype');
-  font-weight: 100 500;
-  font-style: normal;
-  font-display: swap;
-}
+/* Light-only product: `dark:` utilities only apply under an explicit .dark
+   ancestor, which the app never sets. Without this they fire from the OS
+   preference and repaint the whole UI in a palette we have no tokens for. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+  --accent: #d946ef;
+  --accent-foreground: #ffffff;
+
+  /* Font families. These used to be injected by next/font/google; the families
+     are now self-hosted via @fontsource (imported in layout.tsx), so the names
+     are declared here instead. --font-display still comes from next/font/local. */
+  --font-ui: "Inter";
+  --font-mono: "JetBrains Mono";
+  --font-body: "Plus Jakarta Sans";
+
+  /* Heading face for the product surface (.cl-v3). The Cognify system asks for
+     Geist + Space Grotesk + Geist Mono via next/font/google; neither family is
+     installed and there is no network here to add them, and next/font/google is
+     exactly what broke this layout before (see layout.tsx). Inter stands in for
+     both Geist and Space Grotesk — it is the same calm neutral grotesque the
+     system is reaching for — and JetBrains Mono stands in for Geist Mono. */
+  --font-heading: "Inter";
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLASSERA DESIGN SYSTEM v2 — tokens
+   Source of truth: /DESIGN.md
+   Sources: Clay (DESIGN 3) + Expo (DESIGN 4) ONLY.
+
+   Both source systems independently chose a near-black CTA, so black is the
+   only action colour here. Colour arrives through Clay's saturated category
+   surfaces instead. Token NAMES are unchanged from v1 so every migrated file
+   inherits these values automatically.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Action — Clay #0a0a0a / Expo #000000 converge on near-black */
+  --cl-primary: #0a0a0a;
+  --cl-primary-active: #1f1f1f;
+  --cl-primary-disabled: #e9eaec;
+  /* Neutral tint that replaces v1's rose wash (selected rows, soft fills) */
+  --cl-primary-soft: #f1f2f4;
+  --cl-on-primary: #ffffff;
+
+  /* Ink — Clay ramp */
+  --cl-ink: #0a0a0a;
+  --cl-body-strong: #1a1a1a;
+  --cl-body: #3d4046;
+  --cl-muted: #5c6067;
+  --cl-muted-soft: #7a7f87;
+  --cl-on-dark: #ffffff;
+  --cl-on-dark-soft: #a0a0a0;
+
+  /* Surface — WHITE canvas.
+     The reference dashboards all sit on white (or a near-white neutral) with
+     white cards lifted by a soft shadow. Clay's cream floor was too heavy
+     across a dense app, so the canvas is white and neutrals are cool-neutral,
+     not tan. */
+  --cl-canvas: #ffffff;
+  --cl-canvas-soft: #f7f8fa;
+  --cl-surface-card: #ffffff;
+  --cl-surface-strong: #f1f2f4;
+  --cl-surface-inverse: #101114;
+  --cl-surface-inverse-elevated: #1c1e22;
+
+  /* Hairlines */
+  --cl-hairline: #e3e5e8;
+  --cl-hairline-soft: #f1f2f3;
+  --cl-hairline-strong: #c9ccd1;
+
+  /* Category surfaces.
+     The references fill cards with SOFT pastels (LuckyJob's job cards), not
+     saturated colour, so these are the card fills. The saturated values below
+     are kept for small accents like badges and dots. */
+  --cl-tint-peach: #ffe8d9;
+  --cl-tint-mint: #d9f0e3;
+  --cl-tint-lavender: #e9e2fb;
+  --cl-tint-blue: #dceafd;
+  --cl-tint-pink: #fde3ea;
+  --cl-tint-ochre: #fdf0d0;
+
+  /* Saturated accents — badges, dots, small marks. Never page-sized fills. */
+  --cl-brand-pink: #ff4d8b;
+  --cl-brand-teal: #1a3a3a;
+  --cl-brand-lavender: #b8a4ed;
+  --cl-brand-peach: #ffb084;
+  --cl-brand-ochre: #e8b94a;
+  --cl-brand-mint: #a4d4c5;
+  --cl-brand-coral: #ff6b5a;
+
+  /* Inline link (Expo) — body copy only, never on a button */
+  --cl-text-link: #0d74ce;
+
+  /* Semantic */
+  --cl-success: #16a34a;
+  --cl-error: #ef4444;
+  --cl-warning: #ab6400;
+  --cl-info: #0d74ce;
+
+  /* Radius — Clay's generous scale */
+  --cl-r-xs: 6px;
+  --cl-r-sm: 8px;
+  --cl-r-md: 12px;
+  --cl-r-lg: 16px;
+  --cl-r-xl: 24px;
+  --cl-r-block: 24px;
+  --cl-r-pill: 9999px;
+
+  /* Depth — Expo permits exactly one soft tier. Modals get the deeper one. */
+  --cl-shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --cl-shadow-card-hover: 0 6px 16px rgba(0, 0, 0, 0.06);
+  --cl-shadow-float: 0 12px 32px rgba(0, 0, 0, 0.10);
+  --cl-scrim: rgba(10, 10, 10, 0.5);
+
+  /* Motion */
+  --cl-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cl-dur-micro: 150ms;
+  --cl-dur-panel: 250ms;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+
+  /* Tailwind's base palette is not inherited into this `@theme inline` block,
+     so `--color-white` / `--color-black` were undefined and `.text-white` /
+     `.bg-white` were never generated at all. 552 `text-white` usages across
+     154 files were silently producing no CSS, which is why white labels on
+     dark surfaces fell through to the heading colour and rendered near-black. */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Design-system colors exposed as Tailwind utilities (bg-cl-primary, text-cl-ink, …) */
+  --color-cl-primary: var(--cl-primary);
+  --color-cl-primary-active: var(--cl-primary-active);
+  --color-cl-primary-soft: var(--cl-primary-soft);
+  --color-cl-on-primary: var(--cl-on-primary);
+  --color-cl-ink: var(--cl-ink);
+  --color-cl-body: var(--cl-body);
+  --color-cl-muted: var(--cl-muted);
+  --color-cl-muted-soft: var(--cl-muted-soft);
+  --color-cl-canvas: var(--cl-canvas);
+  --color-cl-canvas-soft: var(--cl-canvas-soft);
+  --color-cl-surface: var(--cl-surface-card);
+  --color-cl-surface-strong: var(--cl-surface-strong);
+  --color-cl-surface-inverse: var(--cl-surface-inverse);
+  --color-cl-hairline: var(--cl-hairline);
+  --color-cl-hairline-soft: var(--cl-hairline-soft);
+  --color-cl-hairline-strong: var(--cl-hairline-strong);
+  --color-cl-tint-peach: var(--cl-tint-peach);
+  --color-cl-tint-mint: var(--cl-tint-mint);
+  --color-cl-tint-lavender: var(--cl-tint-lavender);
+  --color-cl-tint-blue: var(--cl-tint-blue);
+  --color-cl-tint-pink: var(--cl-tint-pink);
+  --color-cl-tint-ochre: var(--cl-tint-ochre);
+  --color-cl-brand-pink: var(--cl-brand-pink);
+  --color-cl-brand-teal: var(--cl-brand-teal);
+  --color-cl-brand-lavender: var(--cl-brand-lavender);
+  --color-cl-brand-peach: var(--cl-brand-peach);
+  --color-cl-brand-ochre: var(--cl-brand-ochre);
+  --color-cl-brand-mint: var(--cl-brand-mint);
+  --color-cl-brand-coral: var(--cl-brand-coral);
+  --color-cl-text-link: var(--cl-text-link);
+  --color-cl-success: var(--cl-success);
+  --color-cl-error: var(--cl-error);
+  --color-cl-warning: var(--cl-warning);
+  --color-cl-info: var(--cl-info);
+
+  --font-ui: var(--font-ui);
+  --font-mono: var(--font-mono);
+
+  --radius-cl-md: var(--cl-r-md);
+  --radius-cl-lg: var(--cl-r-lg);
+  --radius-cl-xl: var(--cl-r-xl);
+  --radius-cl-block: var(--cl-r-block);
+
+  /* ── Cognify vocabulary (design/DESIGN.md §2) ────────────────────────────
+     The design system's own token names, exposed as Tailwind utilities so new
+     and reworked components can be written the way DESIGN.md specifies
+     (`bg-card`, `text-muted-foreground`, `border-docs/40`) instead of through
+     `var(--cl-*)` arbitrary values. The values themselves are defined on
+     `:root` below and re-pointed per-theme inside `.cl-v3`. */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+
+  /* Workspace accents — one per area of the product (DESIGN.md §2.2). */
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-purple-soft: var(--accent-purple-soft);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-canvas-accent: var(--canvas-accent);
+  --color-docs: var(--docs);
+  --color-ai: var(--ai);
+
+  --font-heading: var(--font-heading);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── App surface ───────────────────────────────────────────────────────────
+   Applied by route-segment layouts (dashboard, auth, onboarding, …).
+   Scoping the canvas + type here — rather than on <body> — is what keeps the
+   marketing landing page visually untouched.
+   ─────────────────────────────────────────────────────────────────────────── */
+.cl-app {
+  color-scheme: light;
+  background-color: var(--cl-canvas);
+  color: var(--cl-body);
+  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* :where() keeps these at ZERO specificity so a utility class always wins.
+   Without it, `.cl-app h3` (0,1,1) beats Tailwind's `.text-white` (0,1,0) and
+   every heading inside a dark panel is forced back to near-black - which made
+   inverse cards render dark-text-on-dark. */
+:where(.cl-app) :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  color: var(--cl-ink);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Display scale — Clay keeps display at weight 500 with negative tracking.
+   Clay is explicit that 700 reads bombastic. */
+:where(.cl-app) :where(h1) { font-size: 40px; line-height: 1.10; letter-spacing: -1px; }
+:where(.cl-app) :where(h2) { font-size: 32px; line-height: 1.15; letter-spacing: -0.5px; }
+:where(.cl-app) :where(h3) { font-size: 24px; line-height: 1.30; letter-spacing: -0.3px; font-weight: 600; }
+:where(.cl-app) :where(h4) { font-size: 18px; line-height: 1.40; letter-spacing: 0; font-weight: 600; }
+:where(.cl-app) :where(h5, h6) { font-size: 16px; line-height: 1.40; letter-spacing: 0; font-weight: 600; }
+
+/* Mono surfaces — code, metrics, scores, IDs, durations, timestamps */
+.cl-mono,
+.cl-app code,
+.cl-app kbd,
+.cl-app pre,
+.cl-app [data-numeric] {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Eyebrow — Clay's section label: Inter, not mono. */
+.cl-eyebrow {
+  font-family: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cl-muted);
+}
+
+/* Metric — Expo's mono-on-numbers rule. Tabular figures keep columns aligned. */
+.cl-metric {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: var(--cl-ink);
+}
+
+/* Focus — Expo thickens the border to ink, plus a soft neutral ring. */
+.cl-app :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  border-color: var(--cl-ink);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.12);
+}
+
+/* Form controls inside the app surface.
+   `:where()` keeps this at ZERO specificity. It was `.cl-app :is(input, ...)`
+   (0,1,1) with !important, which outranked utilities like `border-none` and
+   `bg-transparent` - so inputs that are meant to sit INSIDE a styled container
+   (chat composer, search field) had a second box forcibly drawn around them.
+   The !important was there to beat the old dark-mode override, which no longer
+   exists, so it is gone too. */
+:where(.cl-app) :where(input, select, textarea) {
+  color: var(--cl-ink);
+  -webkit-text-fill-color: var(--cl-ink);
+  background-color: var(--cl-surface-card);
+  border: 1px solid var(--cl-hairline-strong);
+  border-radius: var(--cl-r-md);
+}
+
+:where(.cl-app) :where(input, textarea)::placeholder {
+  color: var(--cl-muted);
+  -webkit-text-fill-color: var(--cl-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-rise, .cl-fade, .cl-pop, .cl-stagger > *, .cl-skeleton::after { animation: none !important; }
+  .cl-press:active { transform: none !important; }
+  .cl-app *,
+  .cl-app *::before,
+  .cl-app *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+
+html {
+  color-scheme: light;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-body), sans-serif;
 }
 
 /* ── Always show dark text in form controls regardless of OS color scheme ── */
@@ -59,13 +370,13 @@ html {
   scroll-behavior: smooth;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Clash Display', sans-serif;
+/* Clash Display is the marketing display face. It was applied to EVERY heading
+   in the app via this bare element selector (0,0,1), which outranks the design
+   system's :where() rule (0,0,0) - so every dashboard heading rendered in a
+   heavy geometric display face instead of Inter. It is now scoped to the
+   marketing surface only. */
+:where(.cl-display-face) :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-display), sans-serif;
 }
 
 /* Custom scrollbar for filters */
@@ -87,30 +398,87 @@ h6 {
   background: #94a3b8;
 }
 
-/* Custom animations for dashboard */
-@keyframes gradient {
-
-  0%,
-  100% {
-    background-size: 200% 200%;
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-size: 200% 200%;
-    background-position: 100% 50%;
+/* Main content offset follows the sidebar rail width. Pages used to hard-code
+   `md:ml-24` (96px) while the expanded rail is 260px, so an open sidebar sat on
+   top of the content. --cl-sidebar-w is published by Sidebar. */
+@media (min-width: 768px) {
+  .cl-main {
+    margin-left: var(--cl-sidebar-w, 260px);
+    transition: margin-left var(--cl-dur-panel) var(--cl-ease);
   }
 }
 
-.animate-gradient {
-  animation: gradient 6s ease infinite;
+/* ── Motion layer ──────────────────────────────────────────────────────────
+   Transitions are scoped to elements that actually change state. The previous
+   rule applied a transform+shadow transition to EVERY element in the document,
+   which forced needless compositing work and fought component-level animation.
+   ────────────────────────────────────────────────────────────────────────── */
+:where(a, button, input, select, textarea, summary, label,
+       [role="button"], [role="tab"], [role="menuitem"], .cl-interactive) {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow;
+  transition-timing-function: var(--cl-ease);
+  transition-duration: var(--cl-dur-micro);
 }
 
-/* Smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
+/* Surfaces that lift or reveal get their own, slightly slower curve. */
+:where(.cl-card, [data-card]) {
+  transition: box-shadow var(--cl-dur-panel) var(--cl-ease),
+              border-color var(--cl-dur-panel) var(--cl-ease);
+}
+
+/* ── Entrance animations ──
+   Opacity + transform only, so they run on the compositor. */
+@keyframes cl-rise {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes cl-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cl-scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.cl-rise    { animation: cl-rise    380ms var(--cl-ease) both; }
+.cl-fade    { animation: cl-fade    300ms var(--cl-ease) both; }
+.cl-pop     { animation: cl-scale-in 240ms var(--cl-ease) both; }
+
+/* Stagger helpers for grids and lists. */
+.cl-stagger > *          { animation: cl-rise 380ms var(--cl-ease) both; }
+.cl-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.cl-stagger > *:nth-child(2) { animation-delay: 45ms; }
+.cl-stagger > *:nth-child(3) { animation-delay: 90ms; }
+.cl-stagger > *:nth-child(4) { animation-delay: 135ms; }
+.cl-stagger > *:nth-child(5) { animation-delay: 180ms; }
+.cl-stagger > *:nth-child(6) { animation-delay: 225ms; }
+.cl-stagger > *:nth-child(7) { animation-delay: 270ms; }
+.cl-stagger > *:nth-child(8) { animation-delay: 315ms; }
+.cl-stagger > *:nth-child(n+9) { animation-delay: 360ms; }
+
+/* Pressable feedback - the one place a transform transition is warranted. */
+.cl-press {
+  transition: transform 90ms var(--cl-ease), background-color var(--cl-dur-micro) var(--cl-ease);
+}
+.cl-press:active { transform: scale(0.97); }
+
+/* Skeleton shimmer for loading rows. */
+@keyframes cl-shimmer {
+  100% { transform: translateX(100%); }
+}
+.cl-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--cl-surface-strong);
+}
+.cl-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+  animation: cl-shimmer 1.4s infinite;
 }
 
 /* Remove transitions from motion elements */
@@ -238,23 +606,8 @@ h6 {
   }
 }
 
-@keyframes bounce {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-bounce {
-  animation: bounce 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
+/* Landing-only decorative pulse (does not shadow Tailwind's animate-pulse utility, which skeleton loaders across the app rely on) */
+@keyframes landing-soft-pulse {
 
   0%,
   100% {
@@ -268,17 +621,13 @@ h6 {
   }
 }
 
-.animate-pulse {
-  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-landing-pulse {
+  animation: landing-soft-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
+@media (prefers-reduced-motion: reduce) {
+  .animate-landing-pulse {
+    animation: none;
   }
 }
 
@@ -297,6 +646,12 @@ h6 {
 .animate-float {
   animation: float 6s ease-in-out infinite;
   will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
 }
 
 /* Gradient background animation */
@@ -321,30 +676,6 @@ h6 {
   animation-delay: 0.6s;
 }
 
-/* Hover scale animation */
-@keyframes hover-scale {
-  0% {
-    transform: scale(1);
-  }
-
-  100% {
-    transform: scale(1.05);
-  }
-}
-
-/* Arrow bounce */
-@keyframes arrow-bounce {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  50% {
-    transform: translateX(5px);
-  }
-}
-
 /* Smooth transitions for interactive elements */
 button,
 a {
@@ -365,19 +696,6 @@ a:hover {
   transform: translateY(-12px) scale(1.03);
 }
 
-/* Stats card pulse on hover */
-@keyframes stats-pulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
-  }
-
-  50% {
-    box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
-  }
-}
-
 /* Smooth scroll */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -385,12 +703,283 @@ a:hover {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-fade-in-up,
+  .animate-marquee {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* GPU acceleration for better performance */
 .animate-fade-in-up,
 .animate-float,
-.animate-pulse,
+.animate-landing-pulse,
 .animate-marquee {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+}
+/* ═══════════════════════════════════════════════════════════════════════════
+   COGNIFY DESIGN SYSTEM — applied to the product surface
+   Source of truth: C:/Users/mamid/Desktop/HUB/design/ (DESIGN.md, tokens.css)
+
+   A calm, neutral workspace in the Linear / Notion / Vercel tradition: neutral
+   chrome, hierarchy from type scale + spacing + 1px borders, and ONE restrained
+   accent per area of the product. Explicitly not the previous cream/Clay look.
+
+   HOW THIS IS SCOPED
+   ------------------
+   The marketing landing page (src/app/page.tsx) and the product share the
+   `.cl-app` class, so re-pointing tokens on `:root` or `.cl-app` would restyle
+   the landing page too. Instead the new system lives on `.cl-v3`, which the ten
+   route-segment layouts add next to `cl-app`. The landing page keeps `cl-app`
+   alone and therefore renders exactly as before.
+
+   Because `--cl-*` custom properties INHERIT, re-pointing them here restyles
+   all ~10,500 existing `var(--cl-*)` call sites across 248 files at once, so
+   the whole product moves to the new palette coherently rather than page by
+   page. New work should prefer the DESIGN.md vocabulary (`bg-card`,
+   `text-muted-foreground`, `border-docs/40`), which is wired up above.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Base (light) values for the Cognify vocabulary. Defined on :root so the
+   utilities always resolve; the landing page uses none of these class names. */
+:root {
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.955 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+
+  /* Workspace accents. `--canvas-accent` is named to avoid colliding with the
+     pre-existing `--cl-canvas`, which means "page ground", not an accent. */
+  /* ONE accent, matching the reference repos directly:
+       aria  → sidebar active rule `border-purple-500`, wash `from-purple-500/20`,
+               plan card `from-white via-purple-50 to-purple-500/30`
+       looma → `hover:border-primary` on the dashed create tile
+     `--accent-purple` is Tailwind's purple-500. The four named slots below all
+     resolve to it so any component written against them stays purple. */
+  --accent-purple: oklch(0.627 0.265 303.9);
+  --accent-purple-soft: oklch(0.977 0.014 308.3);   /* purple-50 */
+  --brand: var(--accent-purple);
+  --brand-foreground: oklch(0.985 0 0);
+  --canvas-accent: var(--accent-purple);
+  --docs: var(--accent-purple);
+  --ai: var(--accent-purple);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   The product surface. Re-points every legacy `--cl-*` token at the Cognify
+   palette above, so existing markup inherits the new system unchanged.
+   ───────────────────────────────────────────────────────────────────────── */
+.cl-v3 {
+  /* Action — neutral near-black remains the only button fill (DESIGN.md 7). */
+  --cl-primary: oklch(0.205 0 0);
+  --cl-primary-active: oklch(0.145 0 0);
+  --cl-primary-disabled: oklch(0.922 0 0);
+  --cl-primary-soft: oklch(0.96 0 0);
+  --cl-on-primary: oklch(0.985 0 0);
+
+  /* Ink ramp — foreground to muted-foreground. */
+  --cl-ink: oklch(0.145 0 0);
+  --cl-body-strong: oklch(0.205 0 0);
+  --cl-body: oklch(0.28 0 0);
+  --cl-muted: oklch(0.5 0 0);
+  --cl-muted-soft: oklch(0.6 0 0);
+  --cl-on-dark: oklch(0.985 0 0);
+  --cl-on-dark-soft: oklch(0.708 0 0);
+
+  /* Surfaces — near-white ground, pure-white cards, neutral fills. */
+  --cl-canvas: oklch(0.99 0 0);
+  --cl-canvas-soft: oklch(0.97 0 0);
+  --cl-surface-card: oklch(1 0 0);
+  --cl-surface-strong: oklch(0.96 0 0);
+  --cl-surface-inverse: oklch(0.17 0 0);
+  --cl-surface-inverse-elevated: oklch(0.22 0 0);
+
+  /* Hairlines — 1px borders carry the structure (DESIGN.md 2.5). */
+  --cl-hairline: oklch(0.922 0 0);
+  --cl-hairline-soft: oklch(0.96 0 0);
+  --cl-hairline-strong: oklch(0.87 0 0);
+
+  /* Category fills become low-alpha accent washes rather than pastel blocks.
+     DESIGN.md 2.2 permits accents at /5 /10 /15 /20 /40 only. */
+  --cl-tint-peach: color-mix(in oklch, var(--brand) 15%, transparent);
+  --cl-tint-ochre: color-mix(in oklch, var(--brand) 10%, transparent);
+  --cl-tint-mint: color-mix(in oklch, var(--docs) 15%, transparent);
+  --cl-tint-lavender: color-mix(in oklch, var(--ai) 15%, transparent);
+  --cl-tint-blue: color-mix(in oklch, var(--ai) 10%, transparent);
+  --cl-tint-pink: color-mix(in oklch, var(--canvas-accent) 15%, transparent);
+
+  /* The seven saturated brand colours collapse onto the four workspace
+     accents — the system allows no more than that (DESIGN.md 2.2). */
+  --cl-brand-peach: var(--brand);
+  --cl-brand-ochre: var(--brand);
+  --cl-brand-pink: var(--canvas-accent);
+  --cl-brand-coral: var(--canvas-accent);
+  --cl-brand-mint: var(--docs);
+  --cl-brand-teal: var(--docs);
+  --cl-brand-lavender: var(--ai);
+
+  --cl-text-link: var(--docs);
+
+  /* Semantic */
+  --cl-success: oklch(0.65 0.15 155);
+  --cl-error: var(--destructive);
+  --cl-warning: oklch(0.68 0.15 70);
+  --cl-info: var(--ai);
+
+  /* Radius — shadcn scale off --radius: 0.625rem.
+     Buttons/inputs rounded-lg, cards rounded-xl, chips full. */
+  --cl-r-xs: 0.375rem;
+  --cl-r-sm: 0.5rem;
+  --cl-r-md: 0.625rem;
+  --cl-r-lg: 0.75rem;
+  --cl-r-xl: 0.875rem;
+  --cl-r-block: 1.125rem;
+  --cl-r-pill: 9999px;
+
+  /* Elevation — DESIGN.md 2.5: no shadow at rest. Cards are separated by a
+     1px border instead. hover:shadow-md is allowed on interactive cards, and
+     popovers/dialogs keep the shadcn shadow-md. */
+  --cl-shadow-card: none;
+  --cl-shadow-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+  --cl-shadow-float: 0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);
+  --cl-scrim: oklch(0 0 0 / 0.5);
+
+  /* Motion — DESIGN.md 2.7 prefers short CSS transitions. */
+  --cl-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cl-dur-micro: 150ms;
+  --cl-dur-panel: 200ms;
+
+  background-color: var(--cl-canvas);
+  color: var(--cl-body);
+}
+
+/* Type scale (DESIGN.md 2.3). The previous scale ran to a 40px/500 display h1;
+   this system caps page titles at text-2xl/3xl semibold with tight tracking,
+   and bans font-black and display tracking outright.
+   Specificity (0,1,1) intentionally beats the :where() rules above. */
+.cl-v3 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-heading), var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  color: var(--cl-ink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.cl-v3 h1 { font-size: 1.875rem; line-height: 1.2; }   /* text-3xl */
+.cl-v3 h2 { font-size: 1.5rem;   line-height: 1.25; }  /* text-2xl */
+.cl-v3 h3 { font-size: 1.125rem; line-height: 1.4; }   /* text-lg  */
+.cl-v3 h4 { font-size: 1rem;     line-height: 1.5; }
+.cl-v3 :is(h5, h6) { font-size: 0.875rem; line-height: 1.5; }
+
+/* Eyebrow — the 10px uppercase group label from the system. */
+.cl-v3 .cl-eyebrow {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--cl-muted);
+}
+
+/* Metric — stat numbers are sans, not mono, at text-3xl semibold. */
+.cl-v3 .cl-metric {
+  font-family: var(--font-heading), var(--font-ui), ui-sans-serif, sans-serif;
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--cl-ink);
+}
+
+/* Focus — the shadcn ring rather than the previous thickened ink border. */
+.cl-v3 :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+}
+
+/* Form controls — 1px border, rounded-lg, neutral. */
+.cl-v3 :where(input, select, textarea) {
+  background-color: var(--cl-surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--cl-r-md);
+}
+
+/* shadcn's base rule (`* { @apply border-border }`), scoped. Lets the design
+   system's bare `border` / `divide-y` utilities resolve to the hairline token
+   instead of currentColor. Any explicit `border-[...]` colour still wins. */
+.cl-v3 :where(*, *::before, *::after) {
+  border-color: var(--border);
+}
+
+/* Cards sit flat; the border does the separating. */
+.cl-v3 :where(.cl-card, [data-card]) {
+  box-shadow: none;
+  border: 1px solid var(--border);
+  border-radius: var(--cl-r-xl);
+}
+
+/* Dark theme. The tokens are complete and correct, but nothing toggles the
+   `.dark` class yet — the app sets color-scheme: light and next-themes is not
+   installed. Adding a theme switch is a wiring task, not a design task. */
+.dark .cl-v3,
+.cl-v3.dark {
+  --card: oklch(0.17 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.18 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.24 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.16 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.24 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --accent-purple: oklch(0.714 0.203 305.5);        /* purple-400 */
+  --accent-purple-soft: oklch(0.29 0.11 305 / 40%);
+  --brand: var(--accent-purple);
+  --brand-foreground: oklch(0.145 0 0);
+  --canvas-accent: var(--accent-purple);
+  --docs: var(--accent-purple);
+  --ai: var(--accent-purple);
+
+  --cl-primary: oklch(0.922 0 0);
+  --cl-primary-active: oklch(0.985 0 0);
+  --cl-on-primary: oklch(0.205 0 0);
+  --cl-primary-soft: oklch(0.26 0 0);
+  --cl-ink: oklch(0.985 0 0);
+  --cl-body-strong: oklch(0.95 0 0);
+  --cl-body: oklch(0.88 0 0);
+  --cl-muted: oklch(0.708 0 0);
+  --cl-muted-soft: oklch(0.62 0 0);
+  --cl-canvas: oklch(0.13 0 0);
+  --cl-canvas-soft: oklch(0.22 0 0);
+  --cl-surface-card: oklch(0.17 0 0);
+  --cl-surface-strong: oklch(0.26 0 0);
+  --cl-hairline: oklch(1 0 0 / 10%);
+  --cl-hairline-soft: oklch(1 0 0 / 6%);
+  --cl-hairline-strong: oklch(1 0 0 / 18%);
+  color-scheme: dark;
 }

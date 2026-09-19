@@ -76,7 +76,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   const admin = createAdminClient();
   const { data: githubConn } = await admin
     .from('github_connections')
-    .select('github_username, github_avatar_url, public_repos')
+    .select('github_username, github_avatar_url, public_repos, followers, following')
     .eq('user_id', id)
     .single();
 
@@ -121,16 +121,16 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     .map(([lang]) => lang);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-6 md:p-12 lg:px-16 md:ml-24">
+        <main className="flex-1 p-6 md:p-12 lg:px-16 cl-main">
           <div className="max-w-[1400px] mx-auto">
             {/* Back Button */}
             <Link
               href="/dashboard/mentor/students"
-              className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-slate-600 hover:text-indigo-600 hover:bg-white rounded-xl transition-all group"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-[var(--cl-body)] hover:text-[var(--cl-primary)] hover:bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] transition-all group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Back to Students</span>
@@ -140,9 +140,9 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Profile Card */}
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm sticky top-8">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden sticky top-8">
                   {/* Profile Header */}
-                  <div className="relative h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400">
+                  <div className="relative h-32 bg-[var(--cl-primary)]">
                     <div className="absolute inset-0 bg-black/5"></div>
                   </div>
                   
@@ -153,44 +153,44 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                         <Image
                           src={student.avatar_url}
                           alt={student.full_name}
-                          className="w-28 h-28 rounded-3xl border-4 border-white shadow-xl object-cover"
+                          className="w-28 h-28 rounded-[var(--cl-r-xl)] border-4 border-[var(--cl-on-dark)] object-cover"
                           width={112}
                           height={112}
                         />
                       ) : (
-                        <div className="w-28 h-28 rounded-3xl border-4 border-white shadow-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400 flex items-center justify-center text-white text-3xl font-bold">
+                        <div className="w-28 h-28 rounded-[var(--cl-r-xl)] border-4 border-[var(--cl-on-dark)] flex items-center justify-center text-[var(--cl-on-dark)] text-3xl font-semibold bg-[var(--cl-primary)]">
                           {student.full_name.charAt(0).toUpperCase()}
                         </div>
                       )}
-                      <div className="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+                      <div className="absolute bottom-1 right-1 w-6 h-6 bg-[var(--cl-success)] border-4 border-[var(--cl-on-dark)] rounded-full"></div>
                     </div>
 
                     {/* Name & Title */}
-                    <h1 className="text-2xl font-bold text-slate-900 mb-1">{student.full_name}</h1>
-                    <p className="text-indigo-600 font-medium mb-4">{student.specialization_board || 'Student'}</p>
+                    <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mb-1">{student.full_name}</h1>
+                    <p className="text-[var(--cl-primary)] font-medium mb-4">{student.specialization_board || 'Student'}</p>
                     
                     {/* Action Button */}
                     <Link
                       href={`/dashboard/mentor/messages?userId=${student.id}`}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 mb-6"
+                      className="w-full px-4 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all flex items-center justify-center gap-2 mb-6 bg-[var(--cl-primary)]"
                     >
                       <MessageSquare className="w-5 h-5" />
                       Send Message
                     </Link>
 
                     {/* Quick Stats */}
-                    <div className="grid grid-cols-3 gap-3 p-4 bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl border border-slate-100">
+                    <div className="grid grid-cols-3 gap-3 p-4 rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] bg-[var(--cl-canvas)]">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-slate-900">{enrolledCourses}</div>
-                        <div className="text-xs text-slate-600">Courses</div>
+                        <div className="text-2xl font-semibold text-[var(--cl-ink)]">{enrolledCourses}</div>
+                        <div className="text-xs text-[var(--cl-body)]">Courses</div>
                       </div>
-                      <div className="text-center border-x border-slate-200">
-                        <div className="text-2xl font-bold text-slate-900">{totalHours}h</div>
-                        <div className="text-xs text-slate-600">Hours</div>
+                      <div className="text-center border-x border-[var(--cl-hairline)]">
+                        <div className="text-2xl font-semibold text-[var(--cl-ink)]">{totalHours}h</div>
+                        <div className="text-xs text-[var(--cl-body)]">Hours</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-slate-900">{completedAssignments}</div>
-                        <div className="text-xs text-slate-600">Projects</div>
+                        <div className="text-2xl font-semibold text-[var(--cl-ink)]">{completedAssignments}</div>
+                        <div className="text-xs text-[var(--cl-body)]">Projects</div>
                       </div>
                     </div>
                   </div>
@@ -201,176 +201,176 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
               <div className="lg:col-span-2 space-y-6">
                 {/* Contact Info Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-blue-500/30">
-                      <Mail className="w-6 h-6 text-white" />
+                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] transition-shadow">
+                    <div className="w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 bg-[var(--cl-info)]">
+                      <Mail className="w-6 h-6 text-[var(--cl-on-dark)]" />
                     </div>
-                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Email Address</div>
-                    <div className="text-sm text-slate-900 font-medium break-all">{student.email}</div>
+                    <div className="text-xs text-[var(--cl-muted)] mb-1 uppercase tracking-wide font-semibold">Email Address</div>
+                    <div className="text-sm text-[var(--cl-ink)] font-medium break-all">{student.email}</div>
                   </div>
 
-                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-purple-500/30">
-                      <GraduationCap className="w-6 h-6 text-white" />
+                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] transition-shadow">
+                    <div className="w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 bg-[var(--cl-primary)]">
+                      <GraduationCap className="w-6 h-6 text-[var(--cl-on-dark)]" />
                     </div>
-                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">University</div>
-                    <div className="text-sm text-slate-900 font-medium">{student.universities?.name || student.university}</div>
+                    <div className="text-xs text-[var(--cl-muted)] mb-1 uppercase tracking-wide font-semibold">University</div>
+                    <div className="text-sm text-[var(--cl-ink)] font-medium">{student.universities?.name || student.university}</div>
                   </div>
 
-                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg shadow-indigo-500/30">
-                      <BookOpen className="w-6 h-6 text-white" />
+                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] transition-shadow">
+                    <div className="w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center mb-3 bg-[var(--cl-primary)]">
+                      <BookOpen className="w-6 h-6 text-[var(--cl-on-dark)]" />
                     </div>
-                    <div className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-semibold">Field of Study</div>
-                    <div className="text-sm text-slate-900 font-medium">{student.specialization_board || 'Not specified'}</div>
+                    <div className="text-xs text-[var(--cl-muted)] mb-1 uppercase tracking-wide font-semibold">Field of Study</div>
+                    <div className="text-sm text-[var(--cl-ink)] font-medium">{student.specialization_board || 'Not specified'}</div>
                   </div>
                 </div>
 
                 {/* About Section */}
-                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
-                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 md:p-8 border border-[var(--cl-hairline)]">
+                  <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[var(--cl-primary-soft)] rounded-lg flex items-center justify-center">
+                      <svg className="w-4 h-4 text-[var(--cl-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                     </div>
                     About
                   </h2>
-                  <p className="text-slate-600 leading-relaxed">
-                    Student at <span className="font-semibold text-slate-900">{student.universities?.name || student.university}</span> studying <span className="font-semibold text-slate-900">{student.specialization_board || 'various subjects'}</span>.
+                  <p className="text-[var(--cl-body)] leading-relaxed">
+                    Student at <span className="font-semibold text-[var(--cl-ink)]">{student.universities?.name || student.university}</span> studying <span className="font-semibold text-[var(--cl-ink)]">{student.specialization_board || 'various subjects'}</span>.
                     Actively engaged in learning and seeking mentorship opportunities to excel in academic and professional pursuits.
                   </p>
                 </div>
 
                 {/* Learning Progress */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] bg-[var(--cl-info)]">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="text-sm font-medium text-blue-100">Study Hours</div>
-                      <svg className="w-5 h-5 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="text-sm font-medium text-[var(--cl-info)]">Study Hours</div>
+                      <svg className="w-5 h-5 text-[var(--cl-info)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <p className="text-3xl font-bold mb-1">{totalHours}h</p>
-                    <p className="text-xs text-blue-100">Total learning time</p>
+                    <p className="text-3xl font-semibold mb-1">{totalHours}h</p>
+                    <p className="text-xs text-[var(--cl-info)]">Total learning time</p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] bg-[var(--cl-primary)]">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="text-sm font-medium text-purple-100">Assignments</div>
-                      <svg className="w-5 h-5 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="text-sm font-medium text-[var(--cl-primary)]">Assignments</div>
+                      <svg className="w-5 h-5 text-[var(--cl-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <p className="text-3xl font-bold mb-1">{completedAssignments}</p>
-                    <p className="text-xs text-purple-100">Completed tasks</p>
+                    <p className="text-3xl font-semibold mb-1">{completedAssignments}</p>
+                    <p className="text-xs text-[var(--cl-primary)]">Completed tasks</p>
                   </div>
 
-                  <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] bg-[var(--cl-primary)]">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="text-sm font-medium text-indigo-100">Achievements</div>
-                      <svg className="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="text-sm font-medium text-[var(--cl-primary)]">Achievements</div>
+                      <svg className="w-5 h-5 text-[var(--cl-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                       </svg>
                     </div>
-                    <p className="text-3xl font-bold mb-1">0</p>
-                    <p className="text-xs text-indigo-100">Badges earned</p>
+                    <p className="text-3xl font-semibold mb-1">0</p>
+                    <p className="text-xs text-[var(--cl-primary)]">Badges earned</p>
                   </div>
                 </div>
 
                 {/* Enrolled Courses */}
-                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
-                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-4 h-4 text-indigo-600" />
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 md:p-8 border border-[var(--cl-hairline)]">
+                  <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[var(--cl-primary-soft)] rounded-lg flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-[var(--cl-primary)]" />
                     </div>
                     Enrolled Courses
                   </h2>
-                  <div className="text-center py-12 bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl border-2 border-dashed border-slate-200">
-                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <BookOpen className="w-8 h-8 text-slate-400" />
+                  <div className="text-center py-12 rounded-[var(--cl-r-xl)] border-2 border-dashed border-[var(--cl-hairline)] bg-[var(--cl-canvas)]">
+                    <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4">
+                      <BookOpen className="w-8 h-8 text-[var(--cl-muted-soft)]" />
                     </div>
-                    <h3 className="font-semibold text-slate-900 mb-1">No Courses Enrolled</h3>
-                    <p className="text-sm text-slate-500">Student hasn't enrolled in any courses yet</p>
+                    <h3 className="font-semibold text-[var(--cl-ink)] mb-1">No Courses Enrolled</h3>
+                    <p className="text-sm text-[var(--cl-muted)]">Student hasn't enrolled in any courses yet</p>
                   </div>
                 </div>
 
                 {/* GitHub Stats */}
-                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 md:p-8 border border-[var(--cl-hairline)]">
                 {/* GitHub & LinkedIn Profiles */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* GitHub */}
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
-                      <Github className="w-4 h-4 text-white" />
+                  <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[var(--cl-surface-inverse)] rounded-lg flex items-center justify-center">
+                      <Github className="w-4 h-4 text-[var(--cl-on-dark)]" />
                     </div>
                     GitHub Profile
                   </h2>
 
                 {!githubConn && !githubUrlData ? (
-                    <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <Github className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                      <p className="text-sm font-medium text-slate-600">GitHub not connected</p>
-                      <p className="text-xs text-slate-400 mt-1">Student hasn't linked their GitHub account</p>
+                    <div className="text-center py-10 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-dashed border-[var(--cl-hairline)]">
+                      <Github className="w-10 h-10 text-[var(--cl-muted-soft)] mx-auto mb-3" />
+                      <p className="text-sm font-medium text-[var(--cl-body)]">GitHub not connected</p>
+                      <p className="text-xs text-[var(--cl-muted)] mt-1">Student hasn't linked their GitHub account</p>
                     </div>
                   ) : (
-                    <div className="space-y-4 bg-slate-50 rounded-xl p-4">
+                    <div className="space-y-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-4">
                       {/* Profile header */}
-                      <div className="flex items-center gap-3 pb-3 border-b border-slate-200">
+                      <div className="flex items-center gap-3 pb-3 border-b border-[var(--cl-hairline)]">
                         {(githubConn?.github_avatar_url || githubUrlData?.avatar_url) && (
                           <Image
                             src={githubConn?.github_avatar_url || githubUrlData?.avatar_url || ''}
                             alt={githubConn?.github_username || githubUrlData?.login || 'GitHub'}
                             width={40}
                             height={40}
-                            className="w-10 h-10 rounded-full border border-slate-200"
+                            className="w-10 h-10 rounded-full border border-[var(--cl-hairline)]"
                           />
                         )}
                         <div>
-                          <p className="text-sm font-semibold text-slate-800">
+                          <p className="text-sm font-semibold text-[var(--cl-ink)]">
                             @{githubConn?.github_username || githubUrlData?.login}
                           </p>
-                          {githubUrlData?.name && <p className="text-xs text-slate-500">{githubUrlData.name}</p>}
+                          {githubUrlData?.name && <p className="text-xs text-[var(--cl-muted)]">{githubUrlData.name}</p>}
                         </div>
                       </div>
 
                       {/* Stats */}
                       <div className="grid grid-cols-3 gap-2">
-                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
-                          <p className="text-lg font-bold text-slate-900">{githubConn?.public_repos || githubUrlData?.public_repos || 0}</p>
-                          <p className="text-xs text-slate-600">Repos</p>
+                        <div className="bg-[var(--cl-surface-card)] rounded-lg p-2 text-center border border-[var(--cl-hairline)]">
+                          <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubConn?.public_repos || githubUrlData?.public_repos || 0}</p>
+                          <p className="text-xs text-[var(--cl-body)]">Repos</p>
                         </div>
-                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
-                          <p className="text-lg font-bold text-slate-900">{githubConn?.followers || githubUrlData?.followers || 0}</p>
-                          <p className="text-xs text-slate-600">Followers</p>
+                        <div className="bg-[var(--cl-surface-card)] rounded-lg p-2 text-center border border-[var(--cl-hairline)]">
+                          <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubConn?.followers || githubUrlData?.followers || 0}</p>
+                          <p className="text-xs text-[var(--cl-body)]">Followers</p>
                         </div>
-                        <div className="bg-white rounded-lg p-2 text-center border border-slate-200">
-                          <p className="text-lg font-bold text-slate-900">{githubConn?.following || githubUrlData?.following || 0}</p>
-                          <p className="text-xs text-slate-600">Following</p>
+                        <div className="bg-[var(--cl-surface-card)] rounded-lg p-2 text-center border border-[var(--cl-hairline)]">
+                          <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubConn?.following || githubUrlData?.following || 0}</p>
+                          <p className="text-xs text-[var(--cl-body)]">Following</p>
                         </div>
                       </div>
 
                       {/* Profile details */}
                       <div className="space-y-2">
                         {githubUrlData?.bio && (
-                          <p className="text-xs text-slate-600 italic">&quot;{githubUrlData.bio}&quot;</p>
+                          <p className="text-xs text-[var(--cl-body)] italic">&quot;{githubUrlData.bio}&quot;</p>
                         )}
                         {githubUrlData?.company && (
-                          <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Briefcase className="w-3 h-3 text-slate-400" />
+                          <div className="flex items-center gap-2 text-xs text-[var(--cl-body)]">
+                            <Briefcase className="w-3 h-3 text-[var(--cl-muted-soft)]" />
                             <span>{githubUrlData.company}</span>
                           </div>
                         )}
                         {githubUrlData?.location && (
-                          <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <MapPin className="w-3 h-3 text-slate-400" />
+                          <div className="flex items-center gap-2 text-xs text-[var(--cl-body)]">
+                            <MapPin className="w-3 h-3 text-[var(--cl-muted-soft)]" />
                             <span>{githubUrlData.location}</span>
                           </div>
                         )}
                         {githubUrlData?.created_at && (
-                          <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Clock className="w-3 h-3 text-slate-400" />
+                          <div className="flex items-center gap-2 text-xs text-[var(--cl-body)]">
+                            <Clock className="w-3 h-3 text-[var(--cl-muted-soft)]" />
                             <span>Joined {new Date(githubUrlData.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                           </div>
                         )}
@@ -378,24 +378,24 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
                       {/* Platform score */}
                       {avgPlatformScore !== null && githubConn && (
-                        <div className="bg-white border border-slate-200 rounded-lg p-3">
+                        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg p-3">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-bold text-slate-600">Consistency</span>
-                            <span className="text-sm font-bold text-violet-700">{avgPlatformScore}%</span>
+                            <span className="text-xs font-semibold text-[var(--cl-body)]">Consistency</span>
+                            <span className="text-sm font-semibold text-[var(--cl-primary)]">{avgPlatformScore}%</span>
                           </div>
-                          <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-violet-500" style={{ width: `${avgPlatformScore}%` }} />
+                          <div className="h-1 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                            <div className="h-full bg-[var(--cl-primary)]" style={{ width: `${avgPlatformScore}%` }} />
                           </div>
                         </div>
                       )}
 
                       {/* Top languages */}
                       {topLanguages.length > 0 && (
-                        <div className="bg-white border border-slate-200 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-slate-600 mb-2">Top Languages</p>
+                        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg p-3">
+                          <p className="text-xs font-semibold text-[var(--cl-body)] mb-2">Top Languages</p>
                           <div className="flex flex-wrap gap-1">
                             {topLanguages.slice(0, 4).map((lang) => (
-                              <span key={lang} className="text-xs bg-violet-50 text-violet-700 px-2 py-0.5 rounded-full">
+                              <span key={lang} className="text-xs bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] px-2 py-0.5 rounded-full">
                                 {lang}
                               </span>
                             ))}
@@ -408,43 +408,43 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
                 {/* LinkedIn */}
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
-                      <Linkedin className="w-4 h-4 text-white" />
+                  <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[var(--cl-info)] rounded-lg flex items-center justify-center">
+                      <Linkedin className="w-4 h-4 text-[var(--cl-on-dark)]" />
                     </div>
                     LinkedIn Profile
                   </h2>
 
                   {student.linkedin_url ? (
-                    <div className="space-y-4 bg-blue-50 rounded-xl p-4 border border-blue-100">
-                      <div className="flex items-center gap-3 pb-3 border-b border-blue-200">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Linkedin className="w-5 h-5 text-blue-700" />
+                    <div className="space-y-4 bg-[rgba(13,116,206,0.12)] rounded-[var(--cl-r-lg)] p-4 border border-[var(--cl-info)]">
+                      <div className="flex items-center gap-3 pb-3 border-b border-[var(--cl-info)]">
+                        <div className="w-10 h-10 rounded-full bg-[rgba(13,116,206,0.12)] flex items-center justify-center flex-shrink-0">
+                          <Linkedin className="w-5 h-5 text-[var(--cl-info)]" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-slate-800">LinkedIn</p>
+                          <p className="text-sm font-semibold text-[var(--cl-ink)]">LinkedIn</p>
                           <a 
                             href={student.linkedin_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-0.5"
+                            className="text-xs text-[var(--cl-info)] hover:underline flex items-center gap-1 mt-0.5"
                           >
                             View Profile <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
                       </div>
 
-                      <div className="bg-white rounded-lg p-3 border border-blue-200">
-                        <p className="text-sm text-slate-600">
+                      <div className="bg-[var(--cl-surface-card)] rounded-lg p-3 border border-[var(--cl-info)]">
+                        <p className="text-sm text-[var(--cl-body)]">
                           Connect on LinkedIn to see {student.full_name}'s detailed career information, recommendations, and professional network.
                         </p>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <Linkedin className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                      <p className="text-sm font-medium text-slate-600">LinkedIn not added</p>
-                      <p className="text-xs text-slate-400 mt-1">Student hasn't linked their LinkedIn profile</p>
+                    <div className="text-center py-10 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-dashed border-[var(--cl-hairline)]">
+                      <Linkedin className="w-10 h-10 text-[var(--cl-muted-soft)] mx-auto mb-3" />
+                      <p className="text-sm font-medium text-[var(--cl-body)]">LinkedIn not added</p>
+                      <p className="text-xs text-[var(--cl-muted)] mt-1">Student hasn't linked their LinkedIn profile</p>
                     </div>
                   )}
                 </div>

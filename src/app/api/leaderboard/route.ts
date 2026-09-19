@@ -69,7 +69,40 @@ export async function GET(request: NextRequest) {
         studentStats[sub.student_id].total_tests += 1;
       });
 
+      // Blend in graded project scores, normalized to a 0-100 scale (project
+      // max_score varies per assignment, unlike tests which are already a
+      // percentage). Counts as one more "test" in the running average so a
+      // strong project pulls weight the same as a strong test.
+      const { data: projectScores } = await supabase
+        .from('project_evaluations')
+        .select('student_id, score, assignment:project_assignments(max_score)')
+        .not('score', 'is', null);
+
+      const missingStudentIds = new Set<string>();
+      (projectScores ?? []).forEach((p: any) => {
+        const maxScore = p.assignment?.max_score || 100;
+        const percentage = (p.score / maxScore) * 100;
+        if (!studentStats[p.student_id]) {
+          studentStats[p.student_id] = { student: null, total_score: 0, total_tests: 0, avg_percentage: 0 };
+          missingStudentIds.add(p.student_id);
+        }
+        studentStats[p.student_id].total_score += percentage;
+        studentStats[p.student_id].total_tests += 1;
+      });
+
+      // Fill in profile info for students who only appear via project scores.
+      if (missingStudentIds.size > 0) {
+        const { data: missingProfiles } = await supabase
+          .from('users')
+          .select('id, full_name, avatar_url, degree_type, current_semester')
+          .in('id', Array.from(missingStudentIds));
+        (missingProfiles ?? []).forEach((profile) => {
+          if (studentStats[profile.id]) studentStats[profile.id].student = profile;
+        });
+      }
+
       const leaderboardData = Object.values(studentStats)
+        .filter((stat: any) => stat.student)
         .map((stat: any) => ({
           ...stat.student,
           total_tests: stat.total_tests,

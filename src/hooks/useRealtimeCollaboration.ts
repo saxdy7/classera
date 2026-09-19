@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { createBrowserClient } from '@/lib/supabase/browser';
+import { createClient } from '@/lib/supabase/browser';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface CursorPosition {
@@ -54,7 +54,7 @@ export function useRealtimeCollaboration({
   userName,
   userAvatar,
 }: UseRealtimeCollaborationProps) {
-  const supabase = createBrowserClient();
+  const supabase = createClient();
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [state, setState] = useState<CollaborationState>({
     cursors: new Map(),

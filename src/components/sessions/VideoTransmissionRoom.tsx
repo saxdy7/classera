@@ -155,68 +155,68 @@ export function VideoTransmissionRoom({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950 z-[100] flex flex-col font-sans">
+    <div className="fixed inset-0 bg-[var(--cl-surface-inverse)] z-[100] flex flex-col font-sans">
       {/* Jitsi Engine Container */}
-      <div ref={containerRef} className="flex-1 relative bg-slate-900" />
+      <div ref={containerRef} className="flex-1 relative bg-[var(--cl-surface-inverse)]" />
 
       {/* 🛡️ CLASSERA BRANDING OVERLAY - Hides Jitsi Logos */}
       <div className="absolute inset-0 pointer-events-none z-10">
         
         {/* Top-Left: Classera Logo (Branding Overlay) */}
-        <div className="absolute top-0 left-0 w-64 h-24 bg-gradient-to-br from-slate-950 via-slate-950/80 to-transparent p-6 pointer-events-auto">
+        <div className="absolute top-0 left-0 w-64 h-24 p-6 pointer-events-auto bg-[var(--cl-surface-inverse)]">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                <span className="text-white font-black text-xl leading-none italic">C</span>
+             <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center">
+                <span className="text-[var(--cl-on-dark)] font-semibold text-xl leading-none italic">C</span>
              </div>
              <div>
-                <h1 className="text-white text-base font-bold leading-none tracking-tight">Classera <span className="text-indigo-400">Live</span></h1>
-                <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest mt-1">E-Learning Hub</p>
+                <h1 className="text-[var(--cl-on-dark)] text-base font-semibold leading-none tracking-tight">Classera <span className="text-[var(--cl-primary)]">Live</span></h1>
+                <p className="text-[var(--cl-muted-soft)] text-[10px] uppercase font-semibold tracking-widest mt-1">E-Learning Hub</p>
              </div>
           </div>
         </div>
 
         {/* Top-Center: Session Title */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-slate-950/60 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center gap-3">
-           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-lg text-[10px] font-bold border border-emerald-500/10">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center gap-3">
+           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[rgba(22,163,74,0.2)] text-[var(--cl-success)] rounded-lg text-[10px] font-semibold border border-[var(--cl-success)]">
               <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
               SECURE
            </div>
-           <span className="text-sm font-bold text-white tracking-wide">{sessionTitle}</span>
+           <span className="text-sm font-semibold text-[var(--cl-on-dark)] tracking-wide">{sessionTitle}</span>
         </div>
 
         {/* Bottom-Right: Participant Sidebar Toggle (Floating Overlay) */}
         <div className="absolute bottom-32 right-6 flex flex-col gap-3 pointer-events-auto">
            <button 
              onClick={() => setShowParticipants(!showParticipants)}
-             className="w-12 h-12 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-indigo-600 transition-all shadow-2xl"
+             className="w-12 h-12 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] hover:bg-[var(--cl-primary)] transition-all"
            >
               <Users size={20} />
            </button>
-           <button className="w-12 h-12 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-slate-800 transition-all shadow-2xl">
+           <button className="w-12 h-12 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)] transition-all">
               <Settings size={20} />
            </button>
         </div>
 
         {/* Custom Sidebar Overlay */}
         {showParticipants && (
-           <div className="absolute right-6 top-24 bottom-48 w-72 bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 pointer-events-auto shadow-2xl overflow-y-auto">
+           <div className="absolute right-6 top-24 bottom-48 w-72 bg-[var(--cl-surface-card)] backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] p-6 pointer-events-auto overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-white font-bold text-lg">Members</h3>
-                <button onClick={() => setShowParticipants(false)} className="text-slate-500 hover:text-white"><X size={20} /></button>
+                <h3 className="text-[var(--cl-on-dark)] font-semibold text-lg">Members</h3>
+                <button onClick={() => setShowParticipants(false)} className="text-[var(--cl-muted)] hover:text-[var(--cl-on-dark)]"><X size={20} /></button>
               </div>
               <div className="space-y-4">
-                 <div className="flex items-center gap-3 p-3 bg-indigo-600/10 border border-indigo-500/20 rounded-2xl">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black">{mentorName.charAt(0)}</div>
+                 <div className="flex items-center gap-3 p-3 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)]">
+                    <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold">{mentorName.charAt(0)}</div>
                     <div>
-                      <p className="text-sm font-bold text-white">{mentorName}</p>
-                      <p className="text-[10px] text-indigo-400 uppercase font-black tracking-widest">Mentor (Host)</p>
+                      <p className="text-sm font-semibold text-[var(--cl-on-dark)]">{mentorName}</p>
+                      <p className="text-[10px] text-[var(--cl-primary)] uppercase font-semibold tracking-widest">Mentor (Host)</p>
                     </div>
                  </div>
-                 <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-2xl">
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white font-black">{userName.charAt(0)}</div>
+                 <div className="flex items-center gap-3 p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)]">
+                    <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-inverse)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold">{userName.charAt(0)}</div>
                     <div>
-                      <p className="text-sm font-bold text-white">{userName}</p>
-                      <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">You</p>
+                      <p className="text-sm font-semibold text-[var(--cl-on-dark)]">{userName}</p>
+                      <p className="text-[10px] text-[var(--cl-muted)] uppercase font-semibold tracking-widest">You</p>
                     </div>
                  </div>
               </div>
@@ -225,22 +225,22 @@ export function VideoTransmissionRoom({
       </div>
 
       {/* 🎮 CLASSERA CONTROL CENTER */}
-      <div className="bg-slate-950/90 backdrop-blur-3xl px-8 py-6 border-t border-white/5 flex items-center justify-between z-20">
+      <div className="bg-[var(--cl-surface-card)] backdrop-blur-3xl px-8 py-6 border-t border-[rgba(255,255,255,0.05)] flex items-center justify-between z-20">
         <div className="flex items-center gap-4 flex-1">
-           <div className="p-3 bg-white/5 rounded-2xl border border-white/5 text-slate-400 group hover:border-indigo-500/30 transition-all cursor-pointer" onClick={handleCopyRoomUrl}>
+           <div className="p-3 bg-[rgba(255,255,255,0.05)] rounded-[var(--cl-r-xl)] border border-[rgba(255,255,255,0.05)] text-[var(--cl-muted-soft)] group hover:border-[var(--cl-primary)] transition-all cursor-pointer" onClick={handleCopyRoomUrl}>
               <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                 <span className="text-[10px] font-black uppercase tracking-widest">{copied ? 'Copied' : 'Session Info'}</span>
-                 {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                 <div className="w-2 h-2 rounded-full bg-[var(--cl-primary)]" />
+                 <span className="text-[10px] font-semibold uppercase tracking-widest">{copied ? 'Copied' : 'Session Info'}</span>
+                 {copied ? <Check size={12} className="text-[var(--cl-success)]" /> : <Copy size={12} />}
               </div>
            </div>
         </div>
 
-        <div className="flex items-center gap-4 bg-white/5 p-2 rounded-3xl border border-white/5">
+        <div className="flex items-center gap-4 bg-[rgba(255,255,255,0.05)] p-2 rounded-[var(--cl-r-xl)] border border-[rgba(255,255,255,0.05)]">
           <button
             onClick={toggleMic}
-            className={`p-4 rounded-2xl transition-all transform active:scale-95 ${
-              isMuted ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'bg-slate-800 text-white hover:bg-slate-700'
+            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-95 ${
+              isMuted ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
             }`}
           >
             {isMuted ? <MicOff size={22} /> : <Mic size={22} />}
@@ -248,37 +248,37 @@ export function VideoTransmissionRoom({
 
           <button
             onClick={toggleCamera}
-            className={`p-4 rounded-2xl transition-all transform active:scale-95 ${
-              isCameraOff ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'bg-slate-800 text-white hover:bg-slate-700'
+            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-95 ${
+              isCameraOff ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
             }`}
           >
             {isCameraOff ? <VideoOff size={22} /> : <Video size={22} />}
           </button>
 
-          <div className="w-[1px] h-10 bg-white/10 mx-1" />
+          <div className="w-[1px] h-10 bg-[rgba(255,255,255,0.1)] mx-1" />
 
           <button
             onClick={toggleScreenShare}
-            className={`p-4 rounded-2xl transition-all transform active:scale-105 ${
-              isScreenSharing ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white hover:bg-slate-700'
+            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-105 ${
+              isScreenSharing ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
             }`}
           >
             <Share2 size={22} />
           </button>
 
-          <div className="w-[1px] h-10 bg-white/10 mx-1" />
+          <div className="w-[1px] h-10 bg-[rgba(255,255,255,0.1)] mx-1" />
 
           <button
             onClick={handleLeaveCall}
-            className="p-4 bg-red-600 hover:bg-red-500 text-white rounded-2xl transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-red-600/30 flex items-center gap-2 group"
+            className="p-4 bg-[var(--cl-error)] hover:bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 group"
           >
             <PhoneOff size={22} />
-            <span className="text-xs font-bold font-sans pr-1 group-hover:block hidden">End</span>
+            <span className="text-xs font-semibold font-sans pr-1 group-hover:block hidden">End</span>
           </button>
         </div>
 
         <div className="flex-1 flex justify-end gap-3 text-xs">
-           <div className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 font-black uppercase tracking-widest text-[9px]">
+           <div className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] text-[var(--cl-primary)] rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)] font-semibold uppercase tracking-widest text-[9px]">
              Meeting ID: {sessionId.split('-')[0]}
            </div>
         </div>

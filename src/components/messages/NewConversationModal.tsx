@@ -70,45 +70,45 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden shadow-2xl">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-2xl w-full max-h-[80vh] overflow-hidden">
                 {/* Header */}
-                <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+                <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                            <MessageSquare className="w-5 h-5 text-indigo-600" />
+                        <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
+                            <MessageSquare className="w-5 h-5 text-[var(--cl-primary)]" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-slate-900">New Conversation</h2>
-                            <p className="text-sm text-slate-600">
+                            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">New Conversation</h2>
+                            <p className="text-sm text-[var(--cl-body)]">
                                 Select a student or mentor to start chatting
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
                     >
-                        <X className="w-5 h-5 text-slate-600" />
+                        <X className="w-5 h-5 text-[var(--cl-body)]" />
                     </button>
                 </div>
 
                 {/* Tabs */}
-                <div className="p-4 border-b border-slate-100">
+                <div className="p-4 border-b border-[var(--cl-hairline)]">
                     <div className="flex gap-2 mb-4">
                         <button
                             onClick={() => setActiveTab('mentors')}
-                            className={`flex-1 px-4 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                            className={`flex-1 px-4 py-2.5 rounded-[var(--cl-r-lg)] font-medium text-sm transition-all ${
                                 activeTab === 'mentors'
-                                    ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg shadow-indigo-500/30'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'text-[var(--cl-on-dark)] bg-[var(--cl-primary)]'
+                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
                             }`}
                         >
                             Mentors
                             {mentorsCount > 0 && (
                                 <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
                                     activeTab === 'mentors'
-                                        ? 'bg-white/20 text-white'
-                                        : 'bg-slate-200 text-slate-700'
+                                        ? 'bg-[rgba(255,255,255,0.2)] text-[var(--cl-on-dark)]'
+                                        : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
                                 }`}>
                                     {mentorsCount}
                                 </span>
@@ -116,18 +116,18 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                         </button>
                         <button
                             onClick={() => setActiveTab('students')}
-                            className={`flex-1 px-4 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                            className={`flex-1 px-4 py-2.5 rounded-[var(--cl-r-lg)] font-medium text-sm transition-all ${
                                 activeTab === 'students'
-                                    ? 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white shadow-lg shadow-purple-500/30'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'text-[var(--cl-on-dark)] bg-[var(--cl-primary)]'
+                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
                             }`}
                         >
                             Students
                             {studentsCount > 0 && (
                                 <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
                                     activeTab === 'students'
-                                        ? 'bg-white/20 text-white'
-                                        : 'bg-slate-200 text-slate-700'
+                                        ? 'bg-[rgba(255,255,255,0.2)] text-[var(--cl-on-dark)]'
+                                        : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
                                 }`}>
                                     {studentsCount}
                                 </span>
@@ -137,13 +137,13 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
 
                     {/* Search */}
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
                         <input
                             type="text"
                             placeholder={`Search ${activeTab}...`}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-300 text-slate-900 placeholder:text-slate-400"
+                            className="w-full pl-9 pr-4 py-2.5 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] text-[var(--cl-ink)] placeholder:text-[var(--cl-muted-soft)]"
                         />
                     </div>
                 </div>
@@ -152,26 +152,26 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                 <div className="overflow-y-auto max-h-[50vh]">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-12">
-                            <Loader2 className="w-8 h-8 text-indigo-600 animate-spin mb-3" />
-                            <p className="text-sm text-slate-500">Loading users...</p>
+                            <Loader2 className="w-8 h-8 text-[var(--cl-primary)] animate-spin mb-3" />
+                            <p className="text-sm text-[var(--cl-muted)]">Loading users...</p>
                         </div>
                     ) : filteredUsers.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12">
-                            <MessageSquare className="w-12 h-12 text-slate-300 mb-3" />
-                            <p className="text-slate-600 font-medium">
+                            <MessageSquare className="w-12 h-12 text-[var(--cl-muted-soft)] mb-3" />
+                            <p className="text-[var(--cl-body)] font-medium">
                                 {searchQuery ? `No ${activeTab} found` : `No ${activeTab} available`}
                             </p>
-                            <p className="text-sm text-slate-400 mt-1">
+                            <p className="text-sm text-[var(--cl-muted-soft)] mt-1">
                                 {searchQuery ? 'Try a different search term' : 'Check back later'}
                             </p>
                         </div>
                     ) : (
-                        <div className="divide-y divide-slate-100">
+                        <div className="divide-y divide-[var(--cl-hairline)]">
                             {filteredUsers.map(user => (
                                 <button
                                     key={user.id}
                                     onClick={() => onSelectUser(user)}
-                                    className="w-full p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors text-left"
+                                    className="w-full p-4 flex items-center gap-4 hover:bg-[var(--cl-canvas-soft)] transition-colors text-left"
                                 >
                                     {/* Avatar */}
                                     <div className="relative flex-shrink-0">
@@ -182,10 +182,10 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                                                 className="w-12 h-12 rounded-full object-cover"
                                             />
                                         ) : (
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold text-white ${
+                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold text-[var(--cl-on-dark)] ${
                                                 user.role === 'student'
-                                                    ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500'
-                                                    : 'bg-gradient-to-br from-indigo-500 to-blue-500'
+                                                    ? 'bg-[var(--cl-primary)]'
+                                                    : 'bg-[var(--cl-primary)]'
                                             }`}>
                                                 {getInitials(user.full_name)}
                                             </div>
@@ -195,13 +195,13 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                                     {/* Info */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h3 className="font-semibold text-slate-900 truncate">
+                                            <h3 className="font-semibold text-[var(--cl-ink)] truncate">
                                                 {user.full_name}
                                             </h3>
                                         </div>
-                                        <p className="text-sm text-slate-500 truncate">{user.email}</p>
+                                        <p className="text-sm text-[var(--cl-muted)] truncate">{user.email}</p>
                                         {user.specialization_board && (
-                                            <p className="text-xs text-slate-400 mt-1 truncate">
+                                            <p className="text-xs text-[var(--cl-muted-soft)] mt-1 truncate">
                                                 {user.specialization_board}
                                             </p>
                                         )}
@@ -209,7 +209,7 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
 
                                     {/* Action Indicator */}
                                     <div className="flex-shrink-0">
-                                        <MessageSquare className="w-5 h-5 text-slate-400" />
+                                        <MessageSquare className="w-5 h-5 text-[var(--cl-muted-soft)]" />
                                     </div>
                                 </button>
                             ))}
@@ -218,8 +218,8 @@ export function NewConversationModal({ currentUserRole, onClose, onSelectUser }:
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-slate-100 bg-slate-50">
-                    <p className="text-xs text-slate-500 text-center">
+                <div className="p-4 border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                    <p className="text-xs text-[var(--cl-muted)] text-center">
                         Showing {filteredUsers.length} {activeTab} from your university
                     </p>
                 </div>

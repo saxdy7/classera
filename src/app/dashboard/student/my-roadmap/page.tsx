@@ -39,20 +39,20 @@ export default function MyRoadmapPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
             </div>
         );
     }
 
     if (!plan) {
         return (
-            <div className="min-h-screen bg-gradient-to-br bg-slate-50 p-8">
+            <div className="min-h-screen bg-[var(--cl-canvas-soft)] p-8">
                 <div className="max-w-4xl mx-auto text-center py-12">
-                    <Target className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    <Target className="h-16 w-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
+                    <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">
                         No Active Learning Plan
                     </h2>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-[var(--cl-body)] mb-6">
                         Start a roadmap to begin your learning journey
                     </p>
                     <Button onClick={() => router.push('/roadmaps')}>
@@ -67,16 +67,16 @@ export default function MyRoadmapPage() {
     const progress = stats.completionPercentage || 0;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br bg-slate-50">
+        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
             {/* Header */}
-            <div className="bg-white border-b">
+            <div className="bg-[var(--cl-surface-card)] border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                            <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">
                                 {plan.roadmap?.title}
                             </h1>
-                            <p className="text-gray-600">
+                            <p className="text-[var(--cl-body)]">
                                 {plan.roadmap?.description}
                             </p>
                         </div>
@@ -93,48 +93,48 @@ export default function MyRoadmapPage() {
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">Progress</p>
-                                <p className="text-3xl font-bold text-purple-600">
+                                <p className="text-sm text-[var(--cl-body)] mb-1">Progress</p>
+                                <p className="text-3xl font-semibold text-[var(--cl-primary)]">
                                     {progress}%
                                 </p>
                             </div>
-                            <TrendingUp className="h-10 w-10 text-purple-600" />
+                            <TrendingUp className="h-10 w-10 text-[var(--cl-primary)]" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">Completed</p>
-                                <p className="text-3xl font-bold text-green-600">
+                                <p className="text-sm text-[var(--cl-body)] mb-1">Completed</p>
+                                <p className="text-3xl font-semibold text-[var(--cl-success)]">
                                     {stats.completedNodes}/{stats.totalNodes}
                                 </p>
                             </div>
-                            <CheckCircle2 className="h-10 w-10 text-green-600" />
+                            <CheckCircle2 className="h-10 w-10 text-[var(--cl-success)]" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">Days Active</p>
-                                <p className="text-3xl font-bold text-blue-600">
+                                <p className="text-sm text-[var(--cl-body)] mb-1">Days Active</p>
+                                <p className="text-3xl font-semibold text-[var(--cl-info)]">
                                     {stats.daysActive || 0}
                                 </p>
                             </div>
-                            <Calendar className="h-10 w-10 text-blue-600" />
+                            <Calendar className="h-10 w-10 text-[var(--cl-info)]" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600 mb-1">Daily Goal</p>
-                                <p className="text-3xl font-bold text-orange-600">
+                                <p className="text-sm text-[var(--cl-body)] mb-1">Daily Goal</p>
+                                <p className="text-3xl font-semibold text-[var(--cl-warning)]">
                                     {plan.daily_time_minutes}m
                                 </p>
                             </div>
-                            <Flame className="h-10 w-10 text-orange-600" />
+                            <Flame className="h-10 w-10 text-[var(--cl-warning)]" />
                         </div>
                     </Card>
                 </div>
@@ -142,13 +142,13 @@ export default function MyRoadmapPage() {
                 {/* Progress Bar */}
                 <Card className="p-6 mb-8">
                     <h3 className="text-lg font-semibold mb-4">Overall Progress</h3>
-                    <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
+                    <div className="w-full bg-[var(--cl-surface-strong)] rounded-full h-4 mb-2">
                         <div
-                            className="bg-gradient-to-r from-purple-600 to-blue-600 h-4 rounded-full transition-all duration-500"
+                            className="h-4 rounded-full transition-all duration-500 bg-[var(--cl-primary)]"
                             style={{ width: `${progress}%` }}
                         ></div>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-[var(--cl-body)]">
                         {stats.completedNodes} of {stats.totalNodes} steps completed
                     </p>
                 </Card>
@@ -161,22 +161,22 @@ export default function MyRoadmapPage() {
                             <div
                                 key={item.id}
                                 className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all ${item.status === 'completed'
-                                        ? 'bg-green-50 border-green-200'
+                                        ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
                                         : item.status === 'in_progress'
-                                            ? 'bg-blue-50 border-blue-200'
-                                            : 'bg-white border-gray-200'
+                                            ? 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]'
+                                            : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]'
                                     }`}
                             >
                                 <div className="flex-shrink-0 mt-1">
                                     {item.status === 'completed' ? (
-                                        <CheckCircle2 className="h-6 w-6 text-green-600" />
+                                        <CheckCircle2 className="h-6 w-6 text-[var(--cl-success)]" />
                                     ) : (
-                                        <Circle className="h-6 w-6 text-gray-400" />
+                                        <Circle className="h-6 w-6 text-[var(--cl-muted-soft)]" />
                                     )}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
-                                        <h4 className="font-semibold text-gray-900">
+                                        <h4 className="font-semibold text-[var(--cl-ink)]">
                                             {item.node?.title}
                                         </h4>
                                         <Badge variant={
@@ -187,11 +187,11 @@ export default function MyRoadmapPage() {
                                             {item.status.replace('_', ' ')}
                                         </Badge>
                                     </div>
-                                    <p className="text-sm text-gray-600 mb-2">
+                                    <p className="text-sm text-[var(--cl-body)] mb-2">
                                         {item.node?.description}
                                     </p>
                                     {item.node?.estimated_hours && (
-                                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                                        <div className="flex items-center gap-2 text-sm text-[var(--cl-muted)]">
                                             <Clock className="h-4 w-4" />
                                             <span>{item.node.estimated_hours} hours</span>
                                         </div>

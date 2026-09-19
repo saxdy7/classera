@@ -11,19 +11,17 @@ const aj = arcjet({
   rules: [
     // Detect bots
     detectBot({
-      mode: 'CHALLENGE', // Require proof of work for suspected bots
-      patterns: {
-        // Only flag obviously automated clients
-        skip: [
-          'Slack',
-          'Telegram', // Allow legitimate services
-        ],
-      },
+      // 'CHALLENGE' is not a valid ArcjetMode - the options are DRY_RUN / LIVE.
+      mode: 'LIVE',
+      // The old `patterns.skip` shape was removed in arcjet v1. The equivalent
+      // is an explicit allow-list; PREVIEW covers link-unfurling bots such as
+      // Slack and Telegram, which is what the previous skip list intended.
+      allow: ['CATEGORY:SEARCH_ENGINE', 'CATEGORY:PREVIEW', 'CATEGORY:MONITOR'],
     }),
 
     // General API rate limit: 100 requests per minute
     slidingWindow({
-      mode: 'CHALLENGE',
+      mode: 'LIVE',
       interval: '1m',
       max: 100,
     }),

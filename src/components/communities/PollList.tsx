@@ -105,19 +105,19 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
             {poll.creator.avatar_url ? (
               <img src={poll.creator.avatar_url} alt={poll.creator.full_name} />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+              <div className="w-full h-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
                 {poll.creator.full_name.charAt(0)}
               </div>
             )}
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center space-x-2">
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-[var(--cl-ink)]">
                 {poll.creator.full_name}
               </span>
-              <span className="text-sm text-gray-500">created a poll</span>
+              <span className="text-sm text-[var(--cl-muted)]">created a poll</span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[var(--cl-muted)]">
               {formatDistanceToNow(new Date(poll.created_at), { addSuffix: true })}
             </p>
           </div>
@@ -128,7 +128,7 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
             size="sm"
             variant="ghost"
             onClick={() => onDelete(poll.id)}
-            className="text-red-500 hover:text-red-700"
+            className="text-[var(--cl-error)] hover:text-[var(--cl-error)]"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -138,19 +138,19 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
       {/* Question */}
       <div className="mb-4">
         <div className="flex items-start space-x-2 mb-2">
-          <BarChart3 className="w-5 h-5 text-purple-600 mt-0.5" />
-          <h3 className="text-lg font-semibold text-gray-900">{poll.question}</h3>
+          <BarChart3 className="w-5 h-5 text-[var(--cl-primary)] mt-0.5" />
+          <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{poll.question}</h3>
         </div>
 
         {/* Poll Info */}
-        <div className="flex items-center space-x-4 text-sm text-gray-500">
+        <div className="flex items-center space-x-4 text-sm text-[var(--cl-muted)]">
           {poll.multiple_choice && (
-            <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+            <span className="bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] px-2 py-0.5 rounded">
               Multiple Choice
             </span>
           )}
           {poll.anonymous && (
-            <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+            <span className="bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-0.5 rounded">
               Anonymous
             </span>
           )}
@@ -191,7 +191,7 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
                 {/* Vote Bar */}
                 {(hasVoted || isExpired) && (
                   <div
-                    className="absolute inset-0 bg-purple-100 transition-all duration-300"
+                    className="absolute inset-0 bg-[var(--cl-primary-soft)] transition-all duration-300"
                     style={{ width: `${percentage}%` }}
                   />
                 )}
@@ -199,30 +199,30 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center space-x-2 flex-1">
                     {isSelected && (hasVoted || isExpired) && (
-                      <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0" />
                     )}
                     {!hasVoted && !isExpired && (
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${
                           isSelected
-                            ? 'border-purple-600 bg-purple-600'
-                            : 'border-gray-300'
+                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary)]'
+                            : 'border-[var(--cl-hairline-strong)]'
                         }`}
                       >
                         {isSelected && (
                           <div className="w-full h-full flex items-center justify-center">
-                            <div className="w-2 h-2 bg-white rounded-full" />
+                            <div className="w-2 h-2 bg-[var(--cl-surface-card)] rounded-full" />
                           </div>
                         )}
                       </div>
                     )}
-                    <span className="font-medium text-gray-900">{option.text}</span>
+                    <span className="font-medium text-[var(--cl-ink)]">{option.text}</span>
                   </div>
 
                   {(hasVoted || isExpired) && (
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-600">{voteCount}</span>
-                      <span className="text-sm font-semibold text-gray-900">
+                      <span className="text-sm text-[var(--cl-body)]">{voteCount}</span>
+                      <span className="text-sm font-semibold text-[var(--cl-ink)]">
                         {percentage}%
                       </span>
                     </div>
@@ -236,7 +236,7 @@ export function PollCard({ poll, currentUserId, onVote, onDelete }: PollCardProp
 
       {/* Vote Button / Results */}
       <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-[var(--cl-body)]">
           {totalVotes} {totalVotes === 1 ? 'vote' : 'votes'}
         </div>
 
@@ -310,7 +310,7 @@ export default function PollList({ communityId, channelId, currentUserId }: Poll
     return (
       <div className="space-y-4">
         {[1, 2].map((i) => (
-          <div key={i} className="h-64 bg-gray-200 rounded-lg animate-pulse" />
+          <div key={i} className="h-64 bg-[var(--cl-surface-strong)] rounded-lg animate-pulse" />
         ))}
       </div>
     );

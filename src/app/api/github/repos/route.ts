@@ -11,7 +11,8 @@ import { getUserRepos } from '@/lib/github';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { session, user } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const admin = createAdminClient();

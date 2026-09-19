@@ -177,10 +177,10 @@ export default function ConnectStudents() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--cl-surface-card)] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading students...</p>
+          <div className="w-16 h-16 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[var(--cl-body)]">Loading students...</p>
         </div>
       </div>
     );
@@ -192,33 +192,33 @@ export default function ConnectStudents() {
   const uniqueSpecializations = Array.from(new Set(students.map(s => s.specialization_board))).filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-14">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <div className="max-w-6xl mx-auto">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50 rounded-3xl p-6 md:p-8 mb-6 border border-indigo-100 shadow-sm">
+            <div className="rounded-[var(--cl-r-xl)] p-6 md:p-8 mb-6 border border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]">
               <div className="flex items-center justify-between gap-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 rounded-[var(--cl-r-xl)] flex items-center justify-center bg-[var(--cl-primary)]">
+                      <svg className="w-6 h-6 text-[var(--cl-on-dark)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 00-6-6 6 6 0 00-6 6z" />
                       </svg>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    <h1 className="text-3xl md:text-4xl font-semibold text-[var(--cl-ink)]">
                       Connect with Students
                     </h1>
                   </div>
-                  <p className="text-slate-600 text-sm md:text-base leading-relaxed max-w-2xl">
-                    Meet and collaborate with fellow students from <span className="font-semibold text-indigo-600">{profile.universities?.name}</span>. Share ideas, form study groups, and learn together!
+                  <p className="text-[var(--cl-body)] text-sm md:text-base leading-relaxed max-w-2xl">
+                    Meet and collaborate with fellow students from <span className="font-semibold text-[var(--cl-primary)]">{profile.universities?.name}</span>. Share ideas, form study groups, and learn together!
                   </p>
                   <div className="flex items-center gap-4 mt-4">
-                    <div className="px-4 py-2 bg-white/60 backdrop-blur-sm rounded-xl border border-indigo-100">
-                      <span className="text-2xl font-bold text-indigo-600">{filteredStudents?.length || 0}</span>
-                      <span className="text-xs text-slate-600 ml-2">{searchQuery || selectedSemester !== 'All Semesters' ? 'Filtered' : 'Available'} Students</span>
+                    <div className="px-4 py-2 bg-[rgba(255,255,255,0.6)] backdrop-blur-sm rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)]">
+                      <span className="text-2xl font-semibold text-[var(--cl-primary)]">{filteredStudents?.length || 0}</span>
+                      <span className="text-xs text-[var(--cl-body)] ml-2">{searchQuery || selectedSemester !== 'All Semesters' ? 'Filtered' : 'Available'} Students</span>
                     </div>
                   </div>
                 </div>
@@ -236,7 +236,7 @@ export default function ConnectStudents() {
             {/* Search and Filter Bar */}
             <div className="flex flex-col md:flex-row gap-3 mb-6">
               <div className="flex-1 relative">
-                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input
@@ -244,7 +244,7 @@ export default function ConnectStudents() {
                   placeholder="Search students by name, field..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all shadow-sm hover:shadow-md"
+                  className="w-full pl-12 pr-4 py-3.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] transition-all"
                 />
               </div>
               
@@ -252,14 +252,14 @@ export default function ConnectStudents() {
                 <select 
                   value={selectedSemester}
                   onChange={(e) => setSelectedSemester(e.target.value)}
-                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 font-medium text-slate-700 appearance-none cursor-pointer shadow-sm hover:shadow-md transition-all"
+                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] font-medium text-[var(--cl-body)] appearance-none cursor-pointer transition-all"
                 >
                   <option>All Semesters</option>
                   {uniqueSemesters.map((sem) => (
                     <option key={sem}>Sem {sem}</option>
                   ))}
                 </select>
-                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -268,14 +268,14 @@ export default function ConnectStudents() {
                 <select 
                   value={selectedSpecialization}
                   onChange={(e) => setSelectedSpecialization(e.target.value)}
-                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 font-medium text-slate-700 appearance-none cursor-pointer shadow-sm hover:shadow-md transition-all"
+                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] font-medium text-[var(--cl-body)] appearance-none cursor-pointer transition-all"
                 >
                   <option>All Fields</option>
                   {uniqueSpecializations.map((spec) => (
                     <option key={spec}>{spec}</option>
                   ))}
                 </select>
-                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -286,19 +286,19 @@ export default function ConnectStudents() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredStudents.map((student, index) => {
                   const cardColors = [
-                    { top: 'bg-blue-50', badge: 'bg-blue-100 border-blue-200 text-blue-700', accent: '#3B82F6' },
-                    { top: 'bg-cyan-50', badge: 'bg-cyan-100 border-cyan-200 text-cyan-700', accent: '#06B6D4' },
-                    { top: 'bg-indigo-50', badge: 'bg-indigo-100 border-indigo-200 text-indigo-700', accent: '#6366F1' },
-                    { top: 'bg-teal-50', badge: 'bg-teal-100 border-teal-200 text-teal-700', accent: '#14B8A6' },
-                    { top: 'bg-sky-50', badge: 'bg-sky-100 border-sky-200 text-sky-700', accent: '#0EA5E9' },
-                    { top: 'bg-slate-50', badge: 'bg-slate-100 border-slate-200 text-slate-700', accent: '#64748B' },
+                    { top: 'bg-[rgba(13,116,206,0.12)]', badge: 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)] text-[var(--cl-info)]', accent: '#3B82F6' },
+                    { top: 'bg-[rgba(13,116,206,0.12)]', badge: 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)] text-[var(--cl-info)]', accent: '#06B6D4' },
+                    { top: 'bg-[var(--cl-primary-soft)]', badge: 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)] text-[var(--cl-primary)]', accent: '#6366F1' },
+                    { top: 'bg-[rgba(22,163,74,0.12)]', badge: 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)] text-[var(--cl-success)]', accent: '#14B8A6' },
+                    { top: 'bg-[rgba(13,116,206,0.12)]', badge: 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)] text-[var(--cl-info)]', accent: '#0EA5E9' },
+                    { top: 'bg-[var(--cl-canvas-soft)]', badge: 'bg-[var(--cl-surface-strong)] border-[var(--cl-hairline)] text-[var(--cl-body)]', accent: '#64748B' },
                   ];
                   const colorScheme = cardColors[index % cardColors.length];
                   
                   return (
                     <div
                       key={student.id}
-                      className="w-full rounded-3xl shadow-sm border border-black/5 transition-transform hover:scale-[1.02] hover:shadow-md overflow-hidden"
+                      className="w-full rounded-[var(--cl-r-xl)] border border-black/5 transition-transform hover:scale-[1.02] overflow-hidden"
                     >
                       {/* Top Section */}
                       <div className={`${colorScheme.top} p-5 relative`}>
@@ -315,12 +315,12 @@ export default function ConnectStudents() {
                             <Image
                               src={student.avatar_url}
                               alt={student.full_name}
-                              className="w-16 h-16 rounded-2xl object-cover ring-2 ring-white shadow-lg"
+                              className="w-16 h-16 rounded-[var(--cl-r-xl)] object-cover ring-2 ring-white"
                               width={64}
                               height={64}
                             />
                           ) : (
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            <div className="w-16 h-16 rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] text-2xl font-semibold bg-[var(--cl-primary)]">
                               {student.full_name.charAt(0).toUpperCase()}
                             </div>
                           )}
@@ -330,16 +330,16 @@ export default function ConnectStudents() {
                         </div>
 
                         {/* Name */}
-                        <h3 className="text-xl font-bold leading-snug mb-3 text-gray-900 line-clamp-1 min-h-[1.75rem] relative z-10">
+                        <h3 className="text-xl font-semibold leading-snug mb-3 text-[var(--cl-ink)] line-clamp-1 min-h-[1.75rem] relative z-10">
                           {student.full_name}
                         </h3>
 
                         {/* Specialization */}
                         <div className="flex items-center gap-2 mb-3 relative z-10">
-                          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 text-[var(--cl-body)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                           </svg>
-                          <span className="text-sm font-medium text-gray-700">
+                          <span className="text-sm font-medium text-[var(--cl-body)]">
                             {student.specialization_board || 'Field not specified'}
                           </span>
                         </div>
@@ -347,7 +347,7 @@ export default function ConnectStudents() {
                         {/* Semester Info */}
                         <div className="flex flex-wrap gap-2 min-h-[2.5rem] relative z-10">
                           {student.current_semester && (
-                            <span className="px-3 py-1 rounded-full text-xs bg-white border border-black/10 text-gray-700 flex items-center gap-1">
+                            <span className="px-3 py-1 rounded-full text-xs bg-[var(--cl-surface-card)] border border-black/10 text-[var(--cl-body)] flex items-center gap-1">
                               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
@@ -359,17 +359,17 @@ export default function ConnectStudents() {
 
                       {/* Bio Section */}
                       {student.bio && (
-                        <div className="px-5 pt-4 bg-white">
-                          <p className="text-xs text-gray-600 line-clamp-2">{student.bio}</p>
+                        <div className="px-5 pt-4 bg-[var(--cl-surface-card)]">
+                          <p className="text-xs text-[var(--cl-body)] line-clamp-2">{student.bio}</p>
                         </div>
                       )}
 
                       {/* Action Buttons */}
-                      <div className="p-5 pt-4 bg-white border-t border-slate-100 flex gap-3">
+                      <div className="p-5 pt-4 bg-[var(--cl-surface-card)] border-t border-[var(--cl-hairline)] flex gap-3">
                         {/* View Profile Link */}
                         <Link
                           href={`/dashboard/student/profile/${student.id}`}
-                          className="flex-1 px-4 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-200 transition-colors text-center border border-slate-300"
+                          className="flex-1 px-4 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] font-semibold rounded-[var(--cl-r-lg)] text-sm hover:bg-[var(--cl-surface-strong)] transition-colors text-center border border-[var(--cl-hairline-strong)]"
                         >
                           👁️ View Profile
                         </Link>
@@ -378,28 +378,28 @@ export default function ConnectStudents() {
                         {hasActiveChat(student.id) ? (
                           <Link
                             href={`/dashboard/student/messages?userId=${student.id}`}
-                            className="flex-1 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-xl text-sm hover:bg-indigo-700 transition-colors text-center"
+                            className="flex-1 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] text-sm hover:bg-[var(--cl-primary)] transition-colors text-center"
                           >
                             💬 Message
                           </Link>
                         ) : isConnected(student.id) ? (
                           <Link
                             href={`/dashboard/student/messages?userId=${student.id}`}
-                            className="flex-1 px-4 py-2 bg-green-600 text-white font-semibold rounded-xl text-sm hover:bg-green-700 transition-colors text-center"
+                            className="flex-1 px-4 py-2 bg-[var(--cl-success)] text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] text-sm hover:bg-[var(--cl-success)] transition-colors text-center"
                           >
                             ✓ Connected
                           </Link>
                         ) : isConnectionPending(student.id) ? (
                           <button
                             disabled
-                            className="flex-1 px-4 py-2 bg-yellow-100 text-yellow-700 font-semibold rounded-xl text-sm cursor-not-allowed"
+                            className="flex-1 px-4 py-2 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] font-semibold rounded-[var(--cl-r-lg)] text-sm cursor-not-allowed"
                           >
                             ⏳ Pending
                           </button>
                         ) : (
                           <button
                             onClick={() => handleConnect(student.id)}
-                            className="flex-1 px-4 py-2 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-xl text-sm hover:bg-indigo-50 transition-colors"
+                            className="flex-1 px-4 py-2 border-2 border-[var(--cl-primary)] text-[var(--cl-primary)] font-semibold rounded-[var(--cl-r-lg)] text-sm hover:bg-[var(--cl-primary-soft)] transition-colors"
                           >
                             + Connect
                           </button>
@@ -410,10 +410,10 @@ export default function ConnectStudents() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-16 bg-slate-50 rounded-3xl">
+              <div className="text-center py-16 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)]">
                 <div className="text-5xl mb-4">👥</div>
-                <p className="text-xl font-bold text-slate-900 mb-2">No students found</p>
-                <p className="text-slate-600">Try adjusting your filters or search criteria</p>
+                <p className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No students found</p>
+                <p className="text-[var(--cl-body)]">Try adjusting your filters or search criteria</p>
               </div>
             )}
           </div>

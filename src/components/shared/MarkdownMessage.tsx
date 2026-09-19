@@ -28,7 +28,7 @@ function preprocessContent(content: string): string {
 export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProps) {
     if (isUser) {
         // User messages don't need markdown rendering
-        return <div className="whitespace-pre-wrap text-white">{content}</div>;
+        return <div className="whitespace-pre-wrap text-[var(--cl-on-dark)]">{content}</div>;
     }
 
     // Preprocess content to fix formatting issues
@@ -56,7 +56,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                             <CodeBlock language={language} value={value} />
                         ) : (
                             <code
-                                className="px-1.5 py-0.5 bg-slate-100 text-fuchsia-600 rounded text-sm font-mono"
+                                className="px-1.5 py-0.5 bg-[var(--cl-surface-strong)] text-[var(--cl-primary)] rounded text-sm font-mono"
                                 {...rest}
                             >
                                 {children}
@@ -68,7 +68,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                     table({ children }) {
                         return (
                             <div className="overflow-x-auto my-4">
-                                <table className="min-w-full divide-y divide-slate-200 border border-slate-200 rounded-lg">
+                                <table className="min-w-full divide-y divide-[var(--cl-hairline)] border border-[var(--cl-hairline)] rounded-lg">
                                     {children}
                                 </table>
                             </div>
@@ -76,12 +76,12 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                     },
 
                     thead({ children }) {
-                        return <thead className="bg-slate-50">{children}</thead>;
+                        return <thead className="bg-[var(--cl-canvas-soft)]">{children}</thead>;
                     },
 
                     th({ children }) {
                         return (
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--cl-body)] uppercase tracking-wider border-b border-[var(--cl-hairline)]">
                                 {children}
                             </th>
                         );
@@ -89,7 +89,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
 
                     td({ children }) {
                         return (
-                            <td className="px-4 py-3 text-sm text-slate-900 border-b border-slate-100">
+                            <td className="px-4 py-3 text-sm text-[var(--cl-ink)] border-b border-[var(--cl-hairline)]">
                                 {children}
                             </td>
                         );
@@ -97,24 +97,24 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
 
                     // Headings
                     h1({ children }) {
-                        return <h1 className="text-2xl font-bold text-slate-900 mt-6 mb-4">{children}</h1>;
+                        return <h1 className="text-2xl font-semibold text-[var(--cl-ink)] mt-6 mb-4">{children}</h1>;
                     },
 
                     h2({ children }) {
-                        return <h2 className="text-xl font-bold text-slate-900 mt-5 mb-3">{children}</h2>;
+                        return <h2 className="text-xl font-semibold text-[var(--cl-ink)] mt-5 mb-3">{children}</h2>;
                     },
 
                     h3({ children }) {
-                        return <h3 className="text-lg font-semibold text-slate-900 mt-4 mb-2">{children}</h3>;
+                        return <h3 className="text-lg font-semibold text-[var(--cl-ink)] mt-4 mb-2">{children}</h3>;
                     },
 
                     // Lists
                     ul({ children }) {
-                        return <ul className="list-disc list-inside space-y-1 my-3 text-slate-700">{children}</ul>;
+                        return <ul className="list-disc list-inside space-y-1 my-3 text-[var(--cl-body)]">{children}</ul>;
                     },
 
                     ol({ children }) {
-                        return <ol className="list-decimal list-inside space-y-1 my-3 text-slate-700">{children}</ol>;
+                        return <ol className="list-decimal list-inside space-y-1 my-3 text-[var(--cl-body)]">{children}</ol>;
                     },
 
                     li({ children }) {
@@ -123,13 +123,13 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
 
                     // Paragraphs
                     p({ children }) {
-                        return <p className="text-slate-700 leading-relaxed my-3">{children}</p>;
+                        return <p className="text-[var(--cl-body)] leading-relaxed my-3">{children}</p>;
                     },
 
                     // Blockquotes
                     blockquote({ children }) {
                         return (
-                            <blockquote className="border-l-4 border-fuchsia-500 pl-4 py-2 my-4 bg-fuchsia-50 text-slate-700 italic">
+                            <blockquote className="border-l-4 border-[var(--cl-primary)] pl-4 py-2 my-4 bg-[var(--cl-primary-soft)] text-[var(--cl-body)] italic">
                                 {children}
                             </blockquote>
                         );
@@ -142,7 +142,7 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
                                 href={href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-fuchsia-600 hover:text-fuchsia-700 underline"
+                                className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] underline"
                             >
                                 {children}
                             </a>
@@ -151,17 +151,17 @@ export function MarkdownMessage({ content, isUser = false }: MarkdownMessageProp
 
                     // Strong/Bold
                     strong({ children }) {
-                        return <strong className="font-bold text-slate-900">{children}</strong>;
+                        return <strong className="font-semibold text-[var(--cl-ink)]">{children}</strong>;
                     },
 
                     // Emphasis/Italic
                     em({ children }) {
-                        return <em className="italic text-slate-700">{children}</em>;
+                        return <em className="italic text-[var(--cl-body)]">{children}</em>;
                     },
 
                     // Horizontal rule
                     hr() {
-                        return <hr className="my-6 border-t-2 border-slate-200" />;
+                        return <hr className="my-6 border-t-2 border-[var(--cl-hairline)]" />;
                     },
                 }}
             >

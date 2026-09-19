@@ -33,31 +33,31 @@ export default async function MentorTestMonitorPage({ params }: { params: Promis
   if (!test) redirect('/dashboard/mentor/tests');
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <div className="max-w-6xl mx-auto">
             <Link
               href={`/dashboard/mentor/tests/${id}`}
-              className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6"
+              className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Test
             </Link>
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">{test.title}</h1>
-                <p className="text-slate-600 mt-1">Live monitoring &amp; proctoring</p>
+                <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">{test.title}</h1>
+                <p className="text-[var(--cl-body)] mt-1">Live monitoring &amp; proctoring</p>
               </div>
               {test.is_live ? (
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] rounded-lg font-medium">
+                  <span className="w-2 h-2 bg-[var(--cl-success)] rounded-full animate-pulse" />
                   Live
                 </span>
               ) : (
-                <span className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium">Not Live</span>
+                <span className="px-4 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg font-medium">Not Live</span>
               )}
             </div>
             <TestMonitorClient testId={id} />

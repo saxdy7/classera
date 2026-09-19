@@ -14,23 +14,23 @@ const chartData = [
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl">
-        <p className="text-white font-bold mb-2 text-sm">{payload[0].payload.month}</p>
+      <div className="bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] p-4">
+        <p className="text-[var(--cl-on-dark)] font-semibold mb-2 text-sm">{payload[0].payload.month}</p>
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            <span className="text-white/70 text-xs">Students:</span>
-            <span className="text-white font-semibold text-xs ml-auto">{payload[0].payload.students}</span>
+            <div className="w-2 h-2 rounded-full bg-[var(--cl-success)]"></div>
+            <span className="text-[rgba(255,255,255,0.7)] text-xs">Students:</span>
+            <span className="text-[var(--cl-on-dark)] font-semibold text-xs ml-auto">{payload[0].payload.students}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-cyan-400"></div>
-            <span className="text-white/70 text-xs">Completion:</span>
-            <span className="text-white font-semibold text-xs ml-auto">{payload[0].payload.completion}%</span>
+            <div className="w-2 h-2 rounded-full bg-[var(--cl-info)]"></div>
+            <span className="text-[rgba(255,255,255,0.7)] text-xs">Completion:</span>
+            <span className="text-[var(--cl-on-dark)] font-semibold text-xs ml-auto">{payload[0].payload.completion}%</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-violet-400"></div>
-            <span className="text-white/70 text-xs">Engagement:</span>
-            <span className="text-white font-semibold text-xs ml-auto">{payload[0].payload.engagement}%</span>
+            <div className="w-2 h-2 rounded-full bg-[var(--cl-primary)]"></div>
+            <span className="text-[rgba(255,255,255,0.7)] text-xs">Engagement:</span>
+            <span className="text-[var(--cl-on-dark)] font-semibold text-xs ml-auto">{payload[0].payload.engagement}%</span>
           </div>
         </div>
       </div>
@@ -45,16 +45,16 @@ export function AnalyticsChart() {
       {/* Legend */}
       <div className="flex items-center justify-center gap-6 mb-6">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-teal-400 to-teal-500 shadow-lg shadow-teal-400/50"></div>
-          <span className="text-white/80 text-xs font-medium">Active Students</span>
+          <div className="w-3 h-3 rounded-full bg-[var(--cl-success)]"></div>
+          <span className="text-[rgba(255,255,255,0.8)] text-xs font-medium">Active Students</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 shadow-lg shadow-cyan-400/50"></div>
-          <span className="text-white/80 text-xs font-medium">Completion Rate</span>
+          <div className="w-3 h-3 rounded-full bg-[var(--cl-info)]"></div>
+          <span className="text-[rgba(255,255,255,0.8)] text-xs font-medium">Completion Rate</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-violet-400 to-violet-500 shadow-lg shadow-violet-400/50"></div>
-          <span className="text-white/80 text-xs font-medium">Engagement</span>
+          <div className="w-3 h-3 rounded-full bg-[var(--cl-primary)]"></div>
+          <span className="text-[rgba(255,255,255,0.8)] text-xs font-medium">Engagement</span>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export function AnalyticsChart() {
               <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.4} />
               <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
             </linearGradient>
-            <filter id="shadow">
+            <filter id="">
               <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.3" />
             </filter>
           </defs>
@@ -151,17 +151,17 @@ export function AnalyticsChart() {
 
       {/* Bottom Stats */}
       {/* <div className="grid grid-cols-3 gap-3 mt-6">
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-          <div className="text-white/60 text-xs mb-1">Growth Rate</div>
-          <div className="text-white text-lg font-bold">+47%</div>
+        <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-[var(--cl-r-lg)] p-3 border border-[rgba(255,255,255,0.1)]">
+          <div className="text-[rgba(255,255,255,0.6)] text-xs mb-1">Growth Rate</div>
+          <div className="text-[var(--cl-on-dark)] text-lg font-semibold">+47%</div>
         </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-          <div className="text-white/60 text-xs mb-1">Avg. Session</div>
-          <div className="text-white text-lg font-bold">24min</div>
+        <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-[var(--cl-r-lg)] p-3 border border-[rgba(255,255,255,0.1)]">
+          <div className="text-[rgba(255,255,255,0.6)] text-xs mb-1">Avg. Session</div>
+          <div className="text-[var(--cl-on-dark)] text-lg font-semibold">24min</div>
         </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-          <div className="text-white/60 text-xs mb-1">Satisfaction</div>
-          <div className="text-white text-lg font-bold">4.9/5</div>
+        <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-[var(--cl-r-lg)] p-3 border border-[rgba(255,255,255,0.1)]">
+          <div className="text-[rgba(255,255,255,0.6)] text-xs mb-1">Satisfaction</div>
+          <div className="text-[var(--cl-on-dark)] text-lg font-semibold">4.9/5</div>
         </div>
       </div> */}
     </div>

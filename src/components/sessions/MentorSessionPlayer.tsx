@@ -31,24 +31,24 @@ export function MentorSessionPlayer({
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-[var(--cl-scrim)] z-50 flex items-center justify-center p-4">
+      <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Classera Branding Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 flex items-center justify-between">
+        <div className="px-6 py-4 flex items-center justify-between bg-[var(--cl-primary)]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-              <span className="text-indigo-600 font-bold text-sm">C</span>
+            <div className="w-8 h-8 bg-[var(--cl-surface-card)] rounded-lg flex items-center justify-center">
+              <span className="text-[var(--cl-primary)] font-semibold text-sm">C</span>
             </div>
             <div>
-              <h3 className="text-white font-bold">{sessionTitle}</h3>
-              <p className="text-indigo-100 text-xs flex items-center gap-1">
+              <h3 className="text-[var(--cl-on-dark)] font-semibold">{sessionTitle}</h3>
+              <p className="text-[var(--cl-primary)] text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" /> {participants} participant{participants > 1 ? 's' : ''}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-indigo-500 rounded-lg transition text-white"
+            className="p-2 hover:bg-[var(--cl-primary)] rounded-lg transition text-[var(--cl-on-dark)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -59,16 +59,16 @@ export function MentorSessionPlayer({
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
               <div className="text-center">
-                <Loader className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-                <p className="text-white text-sm">Loading video conference...</p>
+                <Loader className="w-8 h-8 text-[var(--cl-on-dark)] animate-spin mx-auto mb-4" />
+                <p className="text-[var(--cl-on-dark)] text-sm">Loading video conference...</p>
               </div>
             </div>
           )}
 
           {error && (
             <div className="flex flex-col items-center justify-center text-center">
-              <AlertCircle className="w-8 h-8 text-red-500 mb-4" />
-              <p className="text-white text-sm">{error}</p>
+              <AlertCircle className="w-8 h-8 text-[var(--cl-error)] mb-4" />
+              <p className="text-[var(--cl-on-dark)] text-sm">{error}</p>
             </div>
           )}
 
@@ -86,7 +86,7 @@ export function MentorSessionPlayer({
         </div>
 
         {/* Footer Info */}
-        <div className="bg-slate-50 px-6 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+        <div className="bg-[var(--cl-canvas-soft)] px-6 py-3 border-t border-[var(--cl-hairline)] flex items-center justify-between text-xs text-[var(--cl-body)]">
           <div>
             <p className="font-medium">Session ID: {sessionId.slice(0, 8)}</p>
           </div>

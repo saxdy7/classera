@@ -90,7 +90,7 @@ export function ModerationActions({
       <button
         onClick={() => handleResolve(true)}
         disabled={loading}
-        className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-error)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -103,7 +103,7 @@ export function ModerationActions({
       <button
         onClick={() => handleResolve(false)}
         disabled={loading}
-        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-success)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-success)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -116,7 +116,7 @@ export function ModerationActions({
       <button
         onClick={handleDismiss}
         disabled={loading}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-surface-inverse)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? (
           <Loader2 className="w-4 h-4 animate-spin" />

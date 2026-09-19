@@ -9,7 +9,8 @@ const MAX_PATCH_CHARS = 5_000;
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user, session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { searchParams } = request.nextUrl;

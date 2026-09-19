@@ -379,6 +379,51 @@ export function buildNestedTree(items: TreeItem[]): TreeNode[] {
   return root;
 }
 
+// ── Cross-submission code similarity ─────────────────────────
+
+const COMPARABLE_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.py', '.java', '.go', '.rb', '.php', '.c', '.cpp', '.cs', '.swift', '.kt'];
+const EXCLUDE_PATH_FRAGMENTS = ['node_modules/', 'vendor/', 'dist/', 'build/', '.min.', 'package-lock', 'yarn.lock', '.next/'];
+
+/** Pick a small sample of substantial, non-vendored source files to compare, largest first. */
+export function pickComparableFiles(files: TreeItem[], limit = 3): string[] {
+  return files
+    .filter((f) => COMPARABLE_EXTENSIONS.some((ext) => f.path.toLowerCase().endsWith(ext)))
+    .filter((f) => !EXCLUDE_PATH_FRAGMENTS.some((p) => f.path.includes(p)))
+    .sort((a, b) => (b.size ?? 0) - (a.size ?? 0))
+    .slice(0, limit)
+    .map((f) => f.path);
+}
+
+/** Flatten a nested TreeNode[] (as stored in repo_analytics.file_tree) back to file paths. */
+export function flattenTreePaths(nodes: TreeNode[]): string[] {
+  const paths: string[] = [];
+  for (const node of nodes) {
+    if (node.type === 'file') paths.push(node.path);
+    if (node.children) paths.push(...flattenTreePaths(node.children));
+  }
+  return paths;
+}
+
+function shingles(text: string, n = 5): Set<string> {
+  const tokens = text.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  const set = new Set<string>();
+  for (let i = 0; i + n <= tokens.length; i++) {
+    set.add(tokens.slice(i, i + n).join(' '));
+  }
+  return set;
+}
+
+/** Jaccard similarity (0-1) between two files' content, via 5-word shingles. Order-independent, catches reordered/renamed-but-copied code better than a raw diff. */
+export function jaccardSimilarity(a: string, b: string): number {
+  const setA = shingles(a);
+  const setB = shingles(b);
+  if (setA.size === 0 || setB.size === 0) return 0;
+  let intersection = 0;
+  for (const s of setA) if (setB.has(s)) intersection++;
+  const union = setA.size + setB.size - intersection;
+  return union === 0 ? 0 : intersection / union;
+}
+
 // ── Suspicious activity detection ────────────────────────────
 
 export interface SuspiciousFlag {

@@ -92,10 +92,11 @@ export async function POST(request: Request) {
 
         console.log('✍️  Inserting invitations:', invitations.length);
 
-        // Use insert instead of upsert to avoid duplicate key issues
+        // `ignoreDuplicates` is an upsert option - passing it to .insert() did
+        // nothing, so re-assigning a test still hit duplicate-key errors.
         const { data: created, error } = await admin
             .from('test_invitations')
-            .insert(invitations, { ignoreDuplicates: true })
+            .upsert(invitations, { ignoreDuplicates: true })
             .select();
 
         if (error) {

@@ -1,15 +1,22 @@
 'use client';
 
-import { LogOut, ChevronDown, MessageSquare, Bot } from 'lucide-react';
+import { LogOut, ChevronDown, MessageSquare, HelpCircle } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import { cn } from '@/lib/utils';
 import { NotificationBell } from '@/components/shared/NotificationBell';
+import GlobalSearch from '@/components/shared/GlobalSearch';
+import { BreadCrumbs } from '@/components/shared/BreadCrumbs';
 
 interface HeaderProps {
-  profile: {
+  /**
+   * Optional: the public portfolio page renders <Header /> with no profile.
+   * Previously this was a required prop, so that page threw on `profile.role`.
+   */
+  profile?: {
     id?: string;
     full_name?: string;
     email?: string;
@@ -18,7 +25,18 @@ interface HeaderProps {
   };
 }
 
-export function Header({ profile }: HeaderProps) {
+/**
+ * App header — composition taken from aria's `(main)/home/layout.tsx` and
+ * looma's dashboard layout:
+ *
+ *   <header class="flex h-16 shrink-0 items-center justify-between px-4 border-b">
+ *     [ divider · Breadcrumbs ]  ……  [ search ] [ outline icon-sm buttons ] [ UserMenu ]
+ *
+ * The sidebar is full-height and sits to the LEFT of the header (aria/looma
+ * both do this), so on md+ the header is offset by the rail width via
+ * `--cl-sidebar-w`, which the Sidebar publishes.
+ */
+export function Header({ profile = {} }: HeaderProps) {
   const router = useRouter();
   const supabase = createClient();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -30,9 +48,16 @@ export function Header({ profile }: HeaderProps) {
         setShowDropdown(false);
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    function handleKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setShowDropdown(false);
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
   }, []);
 
   const handleSignOut = async () => {
@@ -42,105 +67,92 @@ export function Header({ profile }: HeaderProps) {
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
+  /** aria: `variant="outline" size="icon-sm"` with a neutral-100 fill. */
+  const iconBtn =
+    'flex size-8 items-center justify-center rounded-md border bg-neutral-100 text-foreground transition-all hover:text-accent-purple focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 cursor-pointer';
+
   return (
-    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40">
-      <div className="h-full px-4 md:px-6 flex items-center justify-between">
-        {/* Left - Logo */}
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
-            Classera
-          </h1>
+    <header
+      className={cn(
+        'sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-background px-4',
+        // Sit beside the full-height rail on desktop.
+        'md:ml-[var(--cl-sidebar-w,260px)] md:transition-[margin-left] md:duration-200',
+      )}
+    >
+      {/* Left: divider + breadcrumbs (aria) */}
+      <div className="flex min-w-0 items-center gap-2">
+        {/* Mobile wordmark — the rail (and its logo) is hidden below md */}
+        <Link href={`/dashboard/${profile.role ?? 'student'}`} className="text-base font-semibold tracking-tight text-foreground md:hidden">
+          Classera
+        </Link>
+        <div className="mx-2 hidden h-4 w-px bg-border md:block" />
+        <BreadCrumbs className="hidden md:flex" />
+      </div>
+
+      {/* Right cluster */}
+      <div className="flex items-center gap-3">
+        <div className="hidden w-64 md:block">
+          <GlobalSearch />
         </div>
 
-        {/* Center - Dashboard Title */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <h2 className="text-lg md:text-xl font-semibold text-slate-700">
-            {profile.role === 'student' ? 'Student' : 'Mentor'} Dashboard
-          </h2>
-        </div>
+        {profile.role && (
+          <Link href={`/dashboard/${profile.role}/messages`} aria-label="Messages" title="Messages" className={iconBtn}>
+            <MessageSquare className="size-4" />
+          </Link>
+        )}
 
-        {/* Right - Actions */}
-        <div className="flex items-center gap-2 md:gap-3">
-          {/* Right Side Actions - Dock Style */}
-          <div className="flex items-center gap-1 md:gap-2 px-2 py-1 bg-slate-50/80 backdrop-blur-sm rounded-2xl border border-slate-200">
-            {/* Messages */}
-            <Link
-              href={`/dashboard/${profile.role}/messages`}
-              className="relative p-2 rounded-xl hover:bg-white transition-all duration-300 group hover:scale-125 hover:translate-y-1"
-            >
-              <MessageSquare className="w-5 h-5 text-slate-600 group-hover:text-purple-600 transition-colors" />
-              {/* Tooltip */}
-              <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg">
-                Messages
-              </span>
-            </Link>
+        {profile.id && <NotificationBell userId={profile.id} />}
 
-            {/* Notifications - Realtime Bell */}
-            {profile.id && <NotificationBell userId={profile.id} />}
-          </div>
+        <Link href="/contact" aria-label="Help & guides" title="Help & Guides" className={iconBtn}>
+          <HelpCircle className="size-4" />
+        </Link>
 
-          {/* Divider */}
-          <div className="h-8 w-px bg-slate-200 mx-1 md:mx-2"></div>
-
-          {/* Profile Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
-            >
-              {profile.avatar_url ? (
-                <Image
-                  src={profile.avatar_url}
-                  alt={profile.full_name || 'User avatar'}
-                  className="w-9 h-9 rounded-full object-cover"
-                  width={36}
-                  height={36}
-                />
-              ) : (
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold text-white ${profile.role === 'student'
-                  ? 'bg-gradient-to-br from-fuchsia-500 to-purple-500'
-                  : 'bg-gradient-to-br from-indigo-500 to-blue-500'
-                  }`}>
-                  {getInitials(profile.full_name)}
-                </div>
-              )}
-              <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-black">
-                  {profile.full_name || 'User'}
-                </p>
-                <p className="text-xs text-slate-500 capitalize">{profile.role}</p>
-              </div>
-              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-            </button>
-
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-4 py-3 border-b border-slate-100">
-                  <p className="text-sm font-semibold text-black">
-                    {profile.full_name || 'User'}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-1">{profile.email}</p>
-                </div>
-
-                <button
-                  onClick={handleSignOut}
-                  className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2 mt-1"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </button>
+        {/* UserMenu */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            aria-haspopup="menu"
+            aria-expanded={showDropdown}
+            className="flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
+            {profile.avatar_url ? (
+              <Image src={profile.avatar_url} alt="" className="size-8 rounded-full border object-cover" width={32} height={32} />
+            ) : (
+              <div className="flex size-8 items-center justify-center rounded-full border bg-primary/10 text-[11px] font-semibold text-primary">
+                {getInitials(profile.full_name)}
               </div>
             )}
-          </div>
+            <ChevronDown className={cn('size-4 text-muted-foreground transition-transform duration-200', showDropdown && 'rotate-180')} />
+          </button>
+
+          {showDropdown && (
+            <div role="menu" className="absolute right-0 mt-2 w-60 rounded-lg border bg-popover py-1.5 text-popover-foreground shadow-md">
+              <div className="border-b px-3 py-2.5">
+                <p className="truncate text-sm font-semibold capitalize text-foreground">{profile.full_name || 'User'}</p>
+                <p className="truncate text-xs text-muted-foreground">{profile.email}</p>
+                {profile.role && <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{profile.role}</p>}
+              </div>
+              <Link
+                href={`/dashboard/${profile.role}/settings`}
+                role="menuitem"
+                onClick={() => setShowDropdown(false)}
+                className="mt-1 flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground transition-colors hover:bg-muted"
+              >
+                Settings
+              </Link>
+              <button
+                onClick={handleSignOut}
+                role="menuitem"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10"
+              >
+                <LogOut className="size-4" />
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

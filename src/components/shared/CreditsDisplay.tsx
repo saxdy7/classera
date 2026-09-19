@@ -34,16 +34,16 @@ export function CreditsDisplay({ balance, onTopUpClick }: CreditsDisplayProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+    <Card className="border-[var(--cl-info)] bg-[rgba(13,116,206,0.12)]">
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Zap className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-[rgba(13,116,206,0.12)] rounded-lg">
+              <Zap className="w-5 h-5 text-[var(--cl-info)]" />
             </div>
             <div>
-              <p className="text-sm text-gray-600 font-medium">AI Tool Credits</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-[var(--cl-body)] font-medium">AI Tool Credits</p>
+              <p className="text-2xl font-semibold text-[var(--cl-ink)]">
                 {localBalance ?? 0}
               </p>
             </div>
@@ -51,7 +51,7 @@ export function CreditsDisplay({ balance, onTopUpClick }: CreditsDisplayProps) {
           <Button
             onClick={handleTopUp}
             disabled={loading}
-            className="gap-2 bg-blue-600 hover:bg-blue-700"
+            className="gap-2 bg-[var(--cl-info)] hover:bg-[var(--cl-info)]"
           >
             <Plus className="w-4 h-4" />
             Top Up
@@ -165,13 +165,13 @@ export function CreditsModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Purchase AI Credits</h2>
-        <p className="text-gray-600">Choose a package to add more credits to your account</p>
+        <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">Purchase AI Credits</h2>
+        <p className="text-[var(--cl-body)]">Choose a package to add more credits to your account</p>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-700 text-sm">{error}</p>
+        <div className="p-4 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] rounded-lg">
+          <p className="text-[var(--cl-error)] text-sm">{error}</p>
         </div>
       )}
 
@@ -181,7 +181,7 @@ export function CreditsModal({ onClose }: { onClose: () => void }) {
             key={pkg.id}
             className={`cursor-pointer transition-all ${
               selectedPackage === pkg.id
-                ? 'ring-2 ring-blue-500 border-blue-500'
+                ? 'ring-2 ring-[var(--cl-info)] border-[var(--cl-info)]'
                 : 'hover:border-blue-300'
             }`}
             onClick={() => setSelectedPackage(pkg.id)}
@@ -189,14 +189,14 @@ export function CreditsModal({ onClose }: { onClose: () => void }) {
             <CardContent className="pt-6">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <p className="font-bold text-gray-900">{pkg.tokens}</p>
-                  <p className="text-xs text-gray-500">Credits</p>
+                  <p className="font-semibold text-[var(--cl-ink)]">{pkg.tokens}</p>
+                  <p className="text-xs text-[var(--cl-muted)]">Credits</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-lg text-gray-900">₹{(pkg.price / 100).toFixed(2)}</p>
+                  <p className="font-semibold text-lg text-[var(--cl-ink)]">₹{(pkg.price / 100).toFixed(2)}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-600 line-clamp-2">{pkg.description}</p>
+              <p className="text-xs text-[var(--cl-body)] line-clamp-2">{pkg.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -214,7 +214,7 @@ export function CreditsModal({ onClose }: { onClose: () => void }) {
         <Button
           onClick={() => selectedPackage && handleCheckout(selectedPackage)}
           disabled={!selectedPackage || loading}
-          className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700"
+          className="flex-1 gap-2 bg-[var(--cl-info)] hover:bg-[var(--cl-info)]"
         >
           <CreditCard className="w-4 h-4" />
           {loading ? 'Processing...' : 'Checkout'}

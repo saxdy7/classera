@@ -23,14 +23,26 @@ interface CourseCardProps {
   onToggleFavorite: (courseId: string) => void;
 }
 
-const CARD_COLORS = [
-  'bg-orange-100',
-  'bg-emerald-100',
-  'bg-purple-100',
-  'bg-blue-100',
-  'bg-pink-100',
-  'bg-gray-100',
+/**
+ * Soft pastel card fills, matching the reference job/course cards.
+ * This array already existed but was never referenced - every card hardcoded a
+ * single brown tint, so the whole grid rendered the same muddy colour.
+ */
+const CARD_TINTS = [
+  'bg-[var(--cl-tint-blue)]',
+  'bg-[var(--cl-tint-mint)]',
+  'bg-[var(--cl-tint-peach)]',
+  'bg-[var(--cl-tint-lavender)]',
+  'bg-[var(--cl-tint-pink)]',
+  'bg-[var(--cl-tint-ochre)]',
 ];
+
+/** Stable per-course tint, so a card keeps its colour across re-renders. */
+function tintFor(key: string) {
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return CARD_TINTS[h % CARD_TINTS.length];
+}
 
 // Platform icon components
 const PlatformIcon = ({ platform }: { platform: string }) => {
@@ -97,14 +109,17 @@ const PlatformIcon = ({ platform }: { platform: string }) => {
 };
 
 export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardProps) {
-  const cardIndex = parseInt(course.id) || 0;
-  const bgColor = CARD_COLORS[cardIndex % CARD_COLORS.length];
-
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-  const day = (cardIndex % 28) + 1;
-  const month = months[cardIndex % 5];
-  const year = 2023;
-  const date = `${day} ${month}, ${year}`;
+  /**
+   * `bgColor` used to be derived from `parseInt(course.id)`, but course ids are
+   * not numeric, so it was always 0 - every card got the same colour, and the
+   * value was never applied to the DOM anyway. Tint now comes from a stable
+   * hash of the id (see tintFor).
+   *
+   * The card also synthesised a date from that same always-zero index, which is
+   * why every card read "1 Jan, 2023". There is no date on the course record,
+   * so rather than invent one the badge now shows the platform, which is real.
+   */
+  const platformLabel = course.platform || 'Course';
 
   const getLocation = () => '🇮🇳 India';
 
@@ -125,51 +140,51 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
 
   return (
     <div
-      className="w-full rounded-3xl shadow-sm border border-black/5 transition-transform hover:scale-[1.02] hover:shadow-md overflow-hidden"
+      className="w-full overflow-hidden rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] shadow-[var(--cl-shadow-card)] transition-shadow duration-[var(--cl-dur-micro)] hover:shadow-[var(--cl-shadow-card-hover)]"
     >
       {/* Top Section - Light Yellow Background */}
-      <div className="bg-yellow-50 p-5 relative">
+      <div className={`${tintFor(course.id || course.title)} p-5 relative`}>
         {/* Decorative curves and lines */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
           {/* Curved line top right */}
           <svg className="absolute -top-4 -right-4 w-32 h-32" viewBox="0 0 100 100">
-            <path d="M 0,50 Q 25,25 50,50 T 100,50" stroke="#FCD34D" strokeWidth="2" fill="none" />
-            <path d="M 0,60 Q 25,35 50,60 T 100,60" stroke="#FCD34D" strokeWidth="1.5" fill="none" />
+            <path d="M 0,50 Q 25,25 50,50 T 100,50" stroke="rgba(10,10,10,0.18)" strokeWidth="2" fill="none" />
+            <path d="M 0,60 Q 25,35 50,60 T 100,60" stroke="rgba(10,10,10,0.18)" strokeWidth="1.5" fill="none" />
           </svg>
           {/* Diagonal lines */}
           <div className="absolute top-0 right-0 w-full h-full">
             <svg className="w-full h-full" preserveAspectRatio="none">
-              <line x1="100%" y1="0" x2="80%" y2="100%" stroke="#FCD34D" strokeWidth="1" />
-              <line x1="90%" y1="0" x2="70%" y2="100%" stroke="#FCD34D" strokeWidth="0.5" />
+              <line x1="100%" y1="0" x2="80%" y2="100%" stroke="rgba(10,10,10,0.18)" strokeWidth="1" />
+              <line x1="90%" y1="0" x2="70%" y2="100%" stroke="rgba(10,10,10,0.18)" strokeWidth="0.5" />
             </svg>
           </div>
           {/* Small circles */}
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-yellow-300 rounded-full"></div>
-          <div className="absolute top-8 right-16 w-4 h-4 bg-yellow-200 rounded-full"></div>
+          <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-[rgba(10,10,10,0.15)] rounded-full"></div>
+          <div className="absolute top-8 right-16 w-4 h-4 bg-[var(--cl-surface-card)] rounded-full"></div>
         </div>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-4 relative z-10">
-          <span className="bg-white px-3 py-1 rounded-full text-xs font-medium text-gray-800">
-            {date}
+          <span className="bg-[var(--cl-surface-card)] px-3 py-1 rounded-full text-xs font-medium text-[var(--cl-ink)]">
+            {platformLabel}
           </span>
           {/* Platform Icon */}
-          <div className="bg-white p-2 rounded-full shadow-sm" title={course.platform}>
+          <div className="bg-[var(--cl-surface-card)] p-2 rounded-full" title={course.platform}>
             <PlatformIcon platform={course.platform} />
           </div>
         </div>
 
         {/* Content */}
-        <h2 className="text-xl font-bold leading-snug mb-4 text-gray-900 line-clamp-2 min-h-[3.5rem] relative z-10">
+        <h3 className="relative z-10 mb-4 line-clamp-2 min-h-[3.25rem] text-[18px] font-semibold leading-[1.35] tracking-normal text-[var(--cl-ink)]">
           {course.title}
-        </h2>
+        </h3>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 min-h-[2.5rem] relative z-10">
           {tags.slice(0, 4).map((tag, index) => (
             <span
               key={index}
-              className="px-3 py-1 rounded-full text-xs bg-white border border-black/10 text-gray-700"
+              className="px-3 py-1 rounded-full text-xs bg-[var(--cl-surface-card)] border border-black/10 text-[var(--cl-body)]"
             >
               {tag}
             </span>
@@ -178,7 +193,7 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
       </div>
 
       {/* Bottom Section - White Background */}
-      <div className="bg-white p-5 relative">
+      <div className="bg-[var(--cl-surface-card)] p-5 relative">
         {/* Decorative curves and lines */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
           {/* Curved line bottom left */}
@@ -194,23 +209,23 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
             </svg>
           </div>
           {/* Small shapes */}
-          <div className="absolute top-4 right-8 w-6 h-6 border-2 border-gray-200 rotate-45"></div>
-          <div className="absolute bottom-8 right-4 w-3 h-3 bg-gray-200 rounded-full"></div>
+          <div className="absolute top-4 right-8 w-6 h-6 border-2 border-[var(--cl-hairline)] rotate-45"></div>
+          <div className="absolute bottom-8 right-4 w-3 h-3 bg-[var(--cl-surface-strong)] rounded-full"></div>
         </div>
 
         <div className="flex items-center justify-between relative z-10">
           <div>
-            <p className={`text-lg font-bold ${course.type === 'free' ? 'text-emerald-600' : 'text-gray-900'}`}>
+            <p className={`text-lg font-semibold ${course.type === 'free' ? 'text-[var(--cl-success)]' : 'text-[var(--cl-ink)]'}`}>
               {course.type === 'free' ? 'FREE' : 'Paid'}
             </p>
-            <p className="text-sm text-gray-600">{getLocation()}</p>
+            <p className="text-sm text-[var(--cl-body)]">{getLocation()}</p>
           </div>
 
           <a
             href={course.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors whitespace-nowrap"
+            className="bg-black text-[var(--cl-on-dark)] px-5 py-2 rounded-full text-sm hover:bg-[var(--cl-surface-inverse)] transition-colors whitespace-nowrap"
           >
             Details
           </a>

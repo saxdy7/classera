@@ -50,54 +50,54 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-fuchsia-900 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
       <div className="w-full max-w-md">
-        <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-black/40 backdrop-blur-xl border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
               Welcome Back
             </h1>
-            <p className="text-gray-400 mt-2">Sign in to continue your journey</p>
+            <p className="text-[var(--cl-muted)] mt-2">Sign in to continue your journey</p>
           </div>
 
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
                   placeholder="you@university.edu"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-11 pr-12 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -105,7 +105,7 @@ export default function SignInPage() {
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm">
+              <div className="bg-[rgba(239,68,68,0.1)] border border-[var(--cl-error)] rounded-lg p-3 text-[var(--cl-error)] text-sm">
                 {error}
               </div>
             )}
@@ -113,7 +113,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--cl-on-primary)] font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
             >
               {loading ? (
                 <>
@@ -127,11 +127,11 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400">
+            <p className="text-[var(--cl-muted)]">
               Don't have an account?{' '}
               <Link
                 href="/auth/sign-up"
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
+                className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-semibold transition-colors"
               >
                 Sign Up
               </Link>
@@ -141,7 +141,7 @@ export default function SignInPage() {
           <div className="mt-4 text-center">
             <Link
               href="/auth/forgot-password"
-              className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
+              className="text-sm text-[var(--cl-muted)] hover:text-[var(--cl-muted)] transition-colors"
             >
               Forgot your password?
             </Link>

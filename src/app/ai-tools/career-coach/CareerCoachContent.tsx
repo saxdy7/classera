@@ -156,38 +156,38 @@ export default function CareerCoachContent() {
     };
 
     return (
-        <div className="flex bg-slate-50 h-full overflow-hidden">
+        <div className="flex bg-[var(--cl-canvas-soft)] h-full overflow-hidden">
             {/* ── Sidebar: History ── */}
-            <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 shadow-sm relative z-20 overflow-hidden">
-                <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+            <aside className="hidden lg:flex flex-col w-72 bg-[var(--cl-surface-card)] border-r border-[var(--cl-hairline)] relative z-20 overflow-hidden">
+                <div className="p-4 border-b border-[var(--cl-hairline)] bg-[rgba(250,250,247,0.5)]">
                     <button onClick={handleNewChat}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all active:scale-95 shadow-sm">
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] text-xs font-semibold uppercase tracking-widest hover:bg-[var(--cl-primary)] transition-all active:scale-95">
                         <Plus size={14} /> New Career Chat
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-3 no-scrollbar space-y-1.5 font-bold uppercase tracking-tight text-[11px]">
-                    <div className="px-3 py-2 text-slate-400 font-black mb-1">Recent Sessions</div>
+                <div className="flex-1 overflow-y-auto p-3 no-scrollbar space-y-1.5 font-semibold uppercase tracking-tight text-[11px]">
+                    <div className="px-3 py-2 text-[var(--cl-muted-soft)] font-semibold mb-1">Recent Sessions</div>
                     {sessions.length === 0 ? (
-                        <div className="px-3 py-8 text-center text-slate-400 font-medium italic">
+                        <div className="px-3 py-8 text-center text-[var(--cl-muted-soft)] font-medium italic">
                             No history yet. Start your first session!
                         </div>
                     ) : (
                         sessions.map(s => (
                             <div key={s.id}
                                 onClick={() => loadSession(s)}
-                                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all border ${
+                                className={`group flex items-center gap-3 px-3 py-2.5 rounded-[var(--cl-r-lg)] cursor-pointer transition-all border ${
                                     currentSessionId === s.id 
-                                    ? 'bg-indigo-50 border-indigo-100 text-indigo-700' 
-                                    : 'border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900 shadow-sm hover:shadow-md'
+                                    ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)] text-[var(--cl-primary)]' 
+                                    : 'border-transparent text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] hover:text-[var(--cl-ink)]'
                                 }`}>
-                                <MessageSquare size={14} className={currentSessionId === s.id ? 'text-indigo-500' : 'text-slate-400'} />
+                                <MessageSquare size={14} className={currentSessionId === s.id ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'} />
                                 <div className="flex-1 min-w-0">
                                     <p className="truncate lowercase text-xs first-letter:uppercase">{s.title}</p>
                                 </div>
                                 <button
                                     onClick={e => { e.stopPropagation(); deleteSession(s.id); }}
-                                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-red-500 transition-all rounded-md">
+                                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-all rounded-md">
                                     <Trash2 size={12} />
                                 </button>
                             </div>
@@ -195,50 +195,50 @@ export default function CareerCoachContent() {
                     )}
                 </div>
 
-                <div className="p-4 border-t border-slate-100 text-center">
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-normal">Your Personal<br/>AI Journey</p>
+                <div className="p-4 border-t border-[var(--cl-hairline)] text-center">
+                    <p className="text-[10px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest leading-normal">Your Personal<br/>AI Journey</p>
                 </div>
             </aside>
 
             {/* ── Main Chat Area ── */}
-            <div className="flex-1 flex flex-col h-full bg-white relative">
+            <div className="flex-1 flex flex-col h-full bg-[var(--cl-surface-card)] relative">
                 {/* Top bar */}
-                <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 px-5 py-3.5 flex items-center gap-4 sticky top-0 z-10">
+                <header className="bg-[rgba(255,255,255,0.8)] backdrop-blur-md border-b border-[var(--cl-hairline)] px-5 py-3.5 flex items-center gap-4 sticky top-0 z-10">
                     <div className="flex items-center gap-3 flex-1">
-                        <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <Bot size={18} className="text-white" />
+                        <div className="w-9 h-9 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center">
+                            <Bot size={18} className="text-[var(--cl-on-dark)]" />
                         </div>
                         <div className="min-w-0">
-                            <h1 className="text-sm font-black text-slate-900 uppercase tracking-tight truncate leading-none mb-1">
+                            <h1 className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight truncate leading-none mb-1">
                                 {currentSessionId ? sessions.find(s => s.id === currentSessionId)?.title : 'New Career Consultation'}
                             </h1>
                             <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] text-slate-400 font-bold uppercase">llama-3.3-70b · Online</span>
+                                <div className="w-1.5 h-1.5 rounded-full bg-[var(--cl-success)] animate-pulse" />
+                                <span className="text-[10px] text-[var(--cl-muted-soft)] font-semibold uppercase">llama-3.3-70b · Online</span>
                             </div>
                         </div>
                     </div>
                 </header>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-5 py-8 bg-slate-50/30">
+                <div className="flex-1 overflow-y-auto px-5 py-8 bg-[rgba(250,250,247,0.3)]">
                     <div className="max-w-4xl mx-auto space-y-8">
                         {messages.length === 0 ? (
                             <div className="text-center py-12 flex flex-col items-center">
-                                <div className="w-20 h-20 rounded-3xl bg-indigo-600 flex items-center justify-center shadow-2xl shadow-indigo-500/30 mb-6 rotate-3">
-                                    <Sparkles size={36} className="text-white" />
+                                <div className="w-20 h-20 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary)] flex items-center justify-center mb-6 rotate-3">
+                                    <Sparkles size={36} className="text-[var(--cl-on-dark)]" />
                                 </div>
-                                <h2 className="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">AI Career Coach</h2>
-                                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest max-w-sm mb-12 opacity-70">
+                                <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2 uppercase tracking-tight italic">AI Career Coach</h2>
+                                <p className="text-[var(--cl-muted)] text-xs font-semibold uppercase tracking-widest max-w-sm mb-12 opacity-70">
                                     Let's build your professional future together — fast, smart, and effective.
                                 </p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl text-left">
                                     {SUGGESTIONS.map((s, i) => (
                                         <button key={i} onClick={() => send(s)}
-                                            className="group px-5 py-4 bg-white border border-slate-200 rounded-2xl text-[11px] font-bold text-slate-700
+                                            className="group px-5 py-4 bg-[var(--cl-surface-card)] border border-slate-200 rounded-2xl text-[11px] font-semibold text-slate-700
                                             hover:border-indigo-400 hover:ring-4 hover:ring-indigo-500/5 hover:-translate-y-1 transition-all duration-300 shadow-sm flex items-center justify-between">
                                             <span className="leading-snug">{s}</span>
-                                            <ArrowRight size={14} className="text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" />
+                                            <ArrowRight size={14} className="text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-primary)] group-hover:translate-x-1 transition-all" />
                                         </button>
                                     ))}
                                 </div>
@@ -248,19 +248,19 @@ export default function CareerCoachContent() {
                                 {messages.map(msg => (
                                     <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
                                         {msg.role === 'assistant' && (
-                                            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-indigo-500/20">
-                                                <Bot size={18} className="text-white" />
+                                            <div className="w-9 h-9 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center flex-shrink-0 mt-1">
+                                                <Bot size={18} className="text-[var(--cl-on-dark)]" />
                                             </div>
                                         )}
                                         <div className={`max-w-[85%] sm:max-w-[75%]`}>
-                                            <div className={`px-5 py-4 rounded-3xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                                ? 'bg-indigo-600 text-white rounded-br-none shadow-indigo-500/10'
-                                                : 'bg-white border border-slate-100 text-slate-800 rounded-bl-none'
+                                            <div className={`px-5 py-4 rounded-[var(--cl-r-xl)] text-sm leading-relaxed ${msg.role === 'user'
+                                                ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-br-none'
+                                                : 'bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-ink)] rounded-bl-none'
                                                 }`}>
                                                 {msg.content === '' && msg.role === 'assistant' ? (
                                                     <div className="flex gap-1 py-1 px-2">
                                                         {[0, 150, 300].map(d => (
-                                                            <span key={d} className="w-2 h-2 bg-indigo-400/50 rounded-full animate-bounce"
+                                                            <span key={d} className="w-2 h-2 bg-[var(--cl-surface-card)] rounded-full animate-bounce"
                                                                 style={{ animationDelay: `${d}ms` }} />
                                                         ))}
                                                     </div>
@@ -268,12 +268,12 @@ export default function CareerCoachContent() {
                                                     <MarkdownMessage content={msg.content} isUser={msg.role === 'user'} />
                                                 )}
                                             </div>
-                                            <p className={`text-[10px] text-slate-300 mt-2 font-bold uppercase tracking-widest ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                                            <p className={`text-[10px] text-[var(--cl-muted-soft)] mt-2 font-semibold uppercase tracking-widest ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                                                 {msg.role === 'user' ? 'You' : 'Classera Coach'} · Just Now
                                             </p>
                                         </div>
                                         {msg.role === 'user' && (
-                                            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0 mt-1 text-white text-xs font-black shadow-lg shadow-slate-900/10">
+                                            <div className="w-9 h-9 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-inverse)] flex items-center justify-center flex-shrink-0 mt-1 text-[var(--cl-on-dark)] text-xs font-semibold">
                                                 U
                                             </div>
                                         )}
@@ -286,9 +286,9 @@ export default function CareerCoachContent() {
                 </div>
 
                 {/* Input Area */}
-                <div className="bg-white/80 backdrop-blur-md border-t border-slate-100 p-5 sticky bottom-0 z-10">
+                <div className="sticky bottom-0 z-10 border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas)] p-5">
                     <div className="max-w-4xl mx-auto">
-                        <div className="flex items-end gap-3 bg-slate-50 border border-slate-200 rounded-[2rem] p-2 pr-3 pl-5 focus-within:bg-white focus-within:border-indigo-400 focus-within:ring-4 focus-within:ring-indigo-500/5 transition-all duration-300 shadow-sm">
+                        <div className="flex items-end gap-2 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] p-1.5 pl-4 transition-colors focus-within:border-[var(--cl-ink)] focus-within:ring-[3px] focus-within:ring-[rgba(10,10,10,0.12)]">
                             <textarea
                                 ref={inputRef}
                                 rows={1}
@@ -297,10 +297,10 @@ export default function CareerCoachContent() {
                                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
                                 placeholder="Ask your expert coach anything..."
                                 disabled={loading}
-                                className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-bold text-slate-800 placeholder:text-slate-400 py-3 resize-none scroll-smooth min-h-[44px] max-h-[200px]"
+                                className="min-h-[40px] max-h-[200px] flex-1 resize-none border-0 bg-transparent px-0 py-2.5 text-[15px] font-normal leading-relaxed text-[var(--cl-ink)] shadow-none outline-none placeholder:text-[var(--cl-muted)] focus:border-0 focus:outline-none focus:ring-0"
                             />
                             <button onClick={() => send()} disabled={loading || !input.trim()}
-                                className="mb-1 p-3 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-300 disabled:opacity-40 flex-shrink-0 shadow-lg shadow-indigo-500/20 active:scale-90">
+                                className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[var(--cl-r-md)] bg-[var(--cl-primary)] text-[var(--cl-on-primary)] transition-colors hover:bg-[var(--cl-primary-active)] disabled:cursor-not-allowed disabled:bg-[var(--cl-surface-strong)] disabled:text-[var(--cl-muted)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)]">
                                 <Send size={18} />
                             </button>
                         </div>

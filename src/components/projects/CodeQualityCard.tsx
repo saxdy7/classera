@@ -43,19 +43,19 @@ function ScoreRing({ value, color, label }: { value: number; color: string; labe
             className="transition-all duration-700"
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-800">
+        <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-[var(--cl-ink)]">
           {value}
         </span>
       </div>
-      <span className="text-xs text-slate-500 text-center">{label}</span>
+      <span className="text-xs text-[var(--cl-muted)] text-center">{label}</span>
     </div>
   );
 }
 
 const complexityColor: Record<string, string> = {
-  low: 'bg-emerald-100 text-emerald-700',
-  medium: 'bg-amber-100 text-amber-700',
-  high: 'bg-red-100 text-red-700',
+  low: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]',
+  medium: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]',
+  high: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]',
 };
 
 export default function CodeQualityCard({
@@ -85,8 +85,8 @@ export default function CodeQualityCard({
   return (
     <div className="space-y-6">
       {/* Score rings */}
-      <div className="bg-gradient-to-br from-violet-50 to-indigo-50 rounded-2xl p-6">
-        <h3 className="text-sm font-semibold text-slate-700 mb-4 text-center">Performance Scores</h3>
+      <div className="rounded-[var(--cl-r-xl)] p-6 bg-[var(--cl-primary-soft)]">
+        <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4 text-center">Performance Scores</h3>
         <div className="flex items-center justify-around flex-wrap gap-4">
           <ScoreRing value={overallScore} color="#6366f1" label="Overall" />
           <ScoreRing value={consistencyScore} color="#8b5cf6" label="Consistency" />
@@ -98,18 +98,18 @@ export default function CodeQualityCard({
       {/* Repository stats */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { icon: FileCode, label: 'Files', value: totalFiles, color: 'text-violet-600' },
-          { icon: GitBranch, label: 'Branches', value: totalBranches, color: 'text-indigo-600' },
-          { icon: Clock, label: 'Est. Lines', value: totalLines.toLocaleString(), color: 'text-blue-600' },
-          { icon: Star, label: 'Stars', value: stars, color: 'text-amber-600' },
-          { icon: GitFork, label: 'Forks', value: forks, color: 'text-emerald-600' },
-          { icon: Users, label: 'Contributors', value: contributors.length, color: 'text-pink-600' },
+          { icon: FileCode, label: 'Files', value: totalFiles, color: 'text-[var(--cl-primary)]' },
+          { icon: GitBranch, label: 'Branches', value: totalBranches, color: 'text-[var(--cl-primary)]' },
+          { icon: Clock, label: 'Est. Lines', value: totalLines.toLocaleString(), color: 'text-[var(--cl-info)]' },
+          { icon: Star, label: 'Stars', value: stars, color: 'text-[var(--cl-warning)]' },
+          { icon: GitFork, label: 'Forks', value: forks, color: 'text-[var(--cl-success)]' },
+          { icon: Users, label: 'Contributors', value: contributors.length, color: 'text-[var(--cl-primary)]' },
         ].map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="bg-white border border-slate-100 rounded-xl p-3 flex items-center gap-3">
+          <div key={label} className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] p-3 flex items-center gap-3">
             <Icon className={`w-4 h-4 ${color} flex-shrink-0`} />
             <div>
-              <p className="text-lg font-bold text-slate-800 leading-none">{value}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+              <p className="text-lg font-semibold text-[var(--cl-ink)] leading-none">{value}</p>
+              <p className="text-xs text-[var(--cl-muted)] mt-0.5">{label}</p>
             </div>
           </div>
         ))}
@@ -117,7 +117,7 @@ export default function CodeQualityCard({
 
       {/* Quality checks */}
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold text-slate-700">Quality Checks</h3>
+        <h3 className="text-sm font-semibold text-[var(--cl-body)]">Quality Checks</h3>
         {[
           { label: 'README present', passed: hasReadme },
           { label: 'Test files found', passed: hasTests },
@@ -126,22 +126,22 @@ export default function CodeQualityCard({
         ].map(({ label, passed }) => (
           <div key={label} className="flex items-center gap-2">
             {passed ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[var(--cl-success)] flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-slate-300 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
             )}
-            <span className={`text-sm ${passed ? 'text-slate-700' : 'text-slate-400'}`}>{label}</span>
+            <span className={`text-sm ${passed ? 'text-[var(--cl-body)]' : 'text-[var(--cl-muted-soft)]'}`}>{label}</span>
           </div>
         ))}
       </div>
 
       {/* Complexity badge */}
       <div className="flex items-center gap-3">
-        <span className="text-sm text-slate-600">Code Complexity:</span>
-        <span className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${complexityColor[complexityLevel] ?? 'bg-slate-100 text-slate-600'}`}>
+        <span className="text-sm text-[var(--cl-body)]">Code Complexity:</span>
+        <span className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${complexityColor[complexityLevel] ?? 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'}`}>
           {complexityLevel}
         </span>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-[var(--cl-muted-soft)]">
           ({totalFiles} files, depth {folderDepth})
         </span>
       </div>
@@ -149,7 +149,7 @@ export default function CodeQualityCard({
       {/* Language breakdown */}
       {totalLangBytes > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-slate-700">Languages</h3>
+          <h3 className="text-sm font-semibold text-[var(--cl-body)]">Languages</h3>
           {/* Bar */}
           <div className="flex rounded-full overflow-hidden h-2">
             {Object.entries(languages)
@@ -176,8 +176,8 @@ export default function CodeQualityCard({
                     className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: langColors[i % langColors.length] }}
                   />
-                  <span className="text-xs text-slate-600">{lang}</span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-[var(--cl-body)]">{lang}</span>
+                  <span className="text-xs text-[var(--cl-muted-soft)]">
                     {((bytes / totalLangBytes) * 100).toFixed(0)}%
                   </span>
                 </div>
@@ -189,18 +189,18 @@ export default function CodeQualityCard({
       {/* Top contributors */}
       {contributors.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-slate-700">Contributors</h3>
+          <h3 className="text-sm font-semibold text-[var(--cl-body)]">Contributors</h3>
           {contributors.slice(0, 5).map((c) => (
             <div key={c.login} className="flex items-center gap-2">
               {c.avatar ? (
                 <img src={c.avatar} alt={c.login} className="w-6 h-6 rounded-full" />
               ) : (
-                <div className="w-6 h-6 rounded-full bg-violet-200 flex items-center justify-center text-xs font-bold text-violet-700">
+                <div className="w-6 h-6 rounded-full bg-[var(--cl-primary)] flex items-center justify-center text-xs font-semibold text-[var(--cl-primary)]">
                   {c.login[0]?.toUpperCase()}
                 </div>
               )}
-              <span className="text-sm text-slate-700 flex-1">{c.login}</span>
-              <span className="text-xs text-slate-500">{c.commits} commits</span>
+              <span className="text-sm text-[var(--cl-body)] flex-1">{c.login}</span>
+              <span className="text-xs text-[var(--cl-muted)]">{c.commits} commits</span>
             </div>
           ))}
         </div>

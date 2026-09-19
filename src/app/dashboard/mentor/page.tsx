@@ -124,7 +124,7 @@ export default async function MentorDashboard() {
 
   const firstName = profile.full_name?.split(' ')[0] || 'Mentor';
   const universityName = profile.universities?.name || 'your university';
-  const gradients = ['from-blue-400 to-indigo-500', 'from-cyan-400 to-teal-500', 'from-violet-400 to-purple-500', 'from-sky-400 to-blue-500'];
+  const gradients = ['', '', '', ''];
 
   // ── Derived metrics ──
   const liveTestsCount = tests.filter((t) => t.is_live).length;
@@ -157,80 +157,90 @@ export default async function MentorDashboard() {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24 p-4 md:p-8">
+        <main className="flex-1 cl-main p-4 md:p-8">
           <div className="w-full max-w-9xl mx-auto">
 
-            {/* ── Welcome Banner ── */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 rounded-3xl p-8 mb-8 text-white shadow-xl shadow-indigo-200">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32" />
-              <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-white/5 rounded-full translate-y-24" />
+            {/* ── Welcome header ──
+                Same defect as the student dashboard: body copy inside a solid
+                colour banner used text-[var(--cl-primary)] (near-black), which
+                was unreadable on the fill. Replaced with the light greeting the
+                reference dashboards use. */}
+            <div className="cl-rise mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
+                <span className="cl-eyebrow">Dashboard</span>
+                <h1 className="mt-2 text-[32px] font-semibold leading-[1.15] tracking-[-0.5px] text-[var(--cl-ink)] md:text-[40px] md:tracking-[-1px]">
+                  Hello, {firstName}
+                </h1>
+                <p className="mt-3 max-w-xl text-[15px] leading-[1.6] text-[var(--cl-muted)]">
+                  You&rsquo;re mentoring at{' '}
+                  <span className="font-semibold text-[var(--cl-ink)]">{universityName}</span>.
+                  Guide your students, manage sessions and build communities.
+                </p>
 
-              <div className="relative flex items-center justify-between">
-                <div>
-                  <p className="text-indigo-200 text-sm font-medium mb-1">Welcome back</p>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-3">Hello, {firstName}</h1>
-                  <p className="text-indigo-100 text-sm md:text-base max-w-md leading-relaxed">
-                    You're mentoring at <span className="font-semibold text-white">{universityName}</span>.
-                    Guide your students, manage sessions, and build impactful communities.
-                  </p>
-                  <div className="flex flex-wrap gap-3 mt-6">
-                    <Link href="/dashboard/mentor/communities" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-700 font-semibold rounded-xl text-sm hover:bg-indigo-50 transition-colors shadow-sm">
-                      <UsersRound className="w-4 h-4" /> Communities
-                    </Link>
-                    <Link href="/dashboard/mentor/messages" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/15 text-white font-semibold rounded-xl text-sm hover:bg-white/25 transition-colors border border-white/30">
-                      <MessageSquare className="w-4 h-4" /> Messages
-                    </Link>
-                  </div>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href="/dashboard/mentor/communities"
+                    className="inline-flex h-11 items-center gap-2 rounded-[var(--cl-r-md)] bg-[var(--cl-primary)] px-5 text-sm font-semibold text-[var(--cl-on-primary)] transition-colors hover:bg-[var(--cl-primary-active)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)]"
+                  >
+                    <UsersRound className="h-4 w-4" /> Communities
+                  </Link>
+                  <Link
+                    href="/dashboard/mentor/messages"
+                    className="inline-flex h-11 items-center gap-2 rounded-[var(--cl-r-md)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-5 text-sm font-semibold text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+                  >
+                    <MessageSquare className="h-4 w-4" /> Messages
+                  </Link>
                 </div>
-                <div className="hidden lg:block flex-shrink-0">
-                  <Image
-                    src="https://illustrations.popsy.co/amber/man-riding-a-rocket.svg"
-                    alt="Mentor"
-                    width={200}
-                    height={200}
-                    className="w-48 h-48 object-contain drop-shadow-lg"
-                  />
-                </div>
+              </div>
+
+              <div className="hidden flex-shrink-0 lg:block">
+                <Image
+                  src="https://illustrations.popsy.co/amber/man-riding-a-rocket.svg"
+                  alt=""
+                  width={200}
+                  height={200}
+                  className="h-44 w-44 object-contain"
+                />
               </div>
             </div>
 
             {/* ── Quick Actions ── */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <Link href="/dashboard/mentor/communities" className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md hover:border-indigo-200 transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                  <UsersRound className="w-5 h-5 text-blue-600" />
+              <Link href="/dashboard/mentor/communities" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all flex items-center gap-4">
+                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[rgba(13,116,206,0.12)] flex items-center justify-center flex-shrink-0">
+                  <UsersRound className="w-5 h-5 text-[var(--cl-info)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-slate-900 text-sm">Build Communities</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Create learning communities</p>
+                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Build Communities</h3>
+                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Create learning communities</p>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
               </Link>
 
-              <Link href="/dashboard/mentor/tests" className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md hover:border-amber-200 transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
-                  <ClipboardCheck className="w-5 h-5 text-amber-600" />
+              <Link href="/dashboard/mentor/tests" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-warning)] transition-all flex items-center gap-4">
+                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[rgba(171,100,0,0.12)] flex items-center justify-center flex-shrink-0">
+                  <ClipboardCheck className="w-5 h-5 text-[var(--cl-warning)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-slate-900 text-sm">Create Tests</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Design assessments</p>
+                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Create Tests</h3>
+                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Design assessments</p>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
               </Link>
 
-              <Link href="/dashboard/mentor/students" className="bg-white rounded-2xl p-5 border border-slate-200 hover:shadow-md hover:border-pink-200 transition-all flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-pink-50 flex items-center justify-center flex-shrink-0">
-                  <GraduationCap className="w-5 h-5 text-pink-600" />
+              <Link href="/dashboard/mentor/students" className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all flex items-center gap-4">
+                <div className="w-11 h-11 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary-soft)] flex items-center justify-center flex-shrink-0">
+                  <GraduationCap className="w-5 h-5 text-[var(--cl-primary)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-slate-900 text-sm">Manage Students</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Guide their learning journey</p>
+                  <h3 className="font-semibold text-[var(--cl-ink)] text-sm">Manage Students</h3>
+                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">Guide their learning journey</p>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                <ArrowUpRight className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
               </Link>
             </div>
 
@@ -242,55 +252,55 @@ export default async function MentorDashboard() {
 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <StatCard icon={Users} label="Students" value={students.length || 0} iconBg="bg-indigo-50" iconColor="text-indigo-600" />
-                  <StatCard icon={ClipboardCheck} label="Live Tests" value={liveTestsCount} iconBg="bg-amber-50" iconColor="text-amber-600" />
-                  <StatCard icon={Trophy} label="Avg Score" value={avgScore !== null ? `${avgScore}%` : '—'} iconBg="bg-emerald-50" iconColor="text-emerald-600" />
-                  <StatCard icon={MessageSquare} label="Messages" value={conversations.length || 0} iconBg="bg-violet-50" iconColor="text-violet-600" />
+                  <StatCard icon={Users} label="Students" value={students.length || 0} iconBg="bg-[var(--cl-primary-soft)]" iconColor="text-[var(--cl-primary)]" />
+                  <StatCard icon={ClipboardCheck} label="Live Tests" value={liveTestsCount} iconBg="bg-[rgba(171,100,0,0.12)]" iconColor="text-[var(--cl-warning)]" />
+                  <StatCard icon={Trophy} label="Avg Score" value={avgScore !== null ? `${avgScore}%` : '—'} iconBg="bg-[rgba(22,163,74,0.12)]" iconColor="text-[var(--cl-success)]" />
+                  <StatCard icon={MessageSquare} label="Messages" value={conversations.length || 0} iconBg="bg-[var(--cl-primary-soft)]" iconColor="text-[var(--cl-primary)]" />
                 </div>
 
                 {/* Submissions Chart + Leaderboard */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="bg-white rounded-3xl p-6 border border-slate-200">
+                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                     <div className="flex items-center justify-between mb-2">
-                      <h2 className="text-base font-semibold text-slate-900">Submissions This Week</h2>
+                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Submissions This Week</h2>
                     </div>
-                    <p className="text-xs text-slate-500 mb-4">Across all your tests</p>
+                    <p className="text-xs text-[var(--cl-muted)] mb-4">Across all your tests</p>
                     {submissions.length > 0 ? (
                       <ActivityBarChart data={submissionsByDay} color="#6366f1" />
                     ) : (
-                      <div className="h-[180px] flex items-center justify-center text-sm text-slate-400">
+                      <div className="h-[180px] flex items-center justify-center text-sm text-[var(--cl-muted-soft)]">
                         No submissions yet
                       </div>
                     )}
                   </div>
 
-                  <div className="bg-white rounded-3xl p-6 border border-slate-200">
+                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                     <div className="flex items-center gap-2 mb-4">
-                      <Trophy className="w-4 h-4 text-amber-500" />
-                      <h2 className="text-base font-semibold text-slate-900">Top Students</h2>
+                      <Trophy className="w-4 h-4 text-[var(--cl-warning)]" />
+                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Top Students</h2>
                     </div>
                     {topStudents.length > 0 ? (
                       <div className="space-y-3">
                         {topStudents.map((entry, i) => (
                           <div key={entry.student?.id || i} className="flex items-center gap-3">
-                            <span className="w-5 text-xs font-semibold text-slate-400">{i + 1}</span>
+                            <span className="w-5 text-xs font-semibold text-[var(--cl-muted)]">{i + 1}</span>
                             {entry.student?.avatar_url ? (
                               <img src={entry.student.avatar_url} alt={entry.student.full_name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                             ) : (
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+                              <div className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-xs font-semibold flex-shrink-0 bg-[var(--cl-primary)]">
                                 {entry.student?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-slate-900 truncate">{entry.student?.full_name || 'Student'}</p>
-                              <p className="text-xs text-slate-500">{entry.count} test{entry.count !== 1 ? 's' : ''}</p>
+                              <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{entry.student?.full_name || 'Student'}</p>
+                              <p className="text-xs text-[var(--cl-muted)]">{entry.count} test{entry.count !== 1 ? 's' : ''}</p>
                             </div>
-                            <span className="text-sm font-semibold text-emerald-600">{entry.avg}%</span>
+                            <span className="text-sm font-semibold text-[var(--cl-success)]">{entry.avg}%</span>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="h-[180px] flex items-center justify-center text-sm text-slate-400">
+                      <div className="h-[180px] flex items-center justify-center text-sm text-[var(--cl-muted-soft)]">
                         No graded submissions yet
                       </div>
                     )}
@@ -298,13 +308,13 @@ export default async function MentorDashboard() {
                 </div>
 
                 {/* Students at University */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h2 className="text-base font-semibold text-slate-900">Students at Your University</h2>
-                      <p className="text-xs text-slate-500 mt-0.5">{universityName}</p>
+                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Students at Your University</h2>
+                      <p className="text-xs text-[var(--cl-muted)] mt-0.5">{universityName}</p>
                     </div>
-                    <Link href="/dashboard/mentor/students" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                    <Link href="/dashboard/mentor/students" className="text-sm font-medium text-[var(--cl-primary)] hover:text-[var(--cl-primary)] flex items-center gap-1">
                       View all →
                     </Link>
                   </div>
@@ -312,33 +322,33 @@ export default async function MentorDashboard() {
                   {students.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {students.slice(0, 6).map((student: any, i: number) => (
-                        <div key={student.id} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-200 hover:shadow-sm hover:border-indigo-200 transition-all group">
+                        <div key={student.id} className="flex items-center gap-3 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all group">
                           {student.avatar_url ? (
                             <img src={student.avatar_url} alt={student.full_name} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
                           ) : (
-                            <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center text-white text-sm font-semibold flex-shrink-0`}>
+                            <div className={`w-11 h-11 rounded-full ${gradients[i % gradients.length]} flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold flex-shrink-0`}>
                               {student.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900 text-sm truncate group-hover:text-indigo-700 transition-colors">{student.full_name}</p>
-                            <p className="text-xs text-slate-500 truncate mt-0.5">{student.specialization_board || 'Student'}</p>
+                            <p className="font-medium text-[var(--cl-ink)] text-sm truncate group-hover:text-[var(--cl-primary)] transition-colors">{student.full_name}</p>
+                            <p className="text-xs text-[var(--cl-muted)] truncate mt-0.5">{student.specialization_board || 'Student'}</p>
                             {student.current_semester && (
-                              <span className="inline-block mt-1 px-2 py-0.5 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full">
+                              <span className="inline-block mt-1 px-2 py-0.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-medium rounded-full">
                                 Sem {student.current_semester}
                               </span>
                             )}
                           </div>
                           <Link href={`/dashboard/mentor/messages?userId=${student.id}`}
-                              className="flex-shrink-0 px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+                              className="flex-shrink-0 px-3 py-1.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-xs font-semibold rounded-lg hover:bg-[var(--cl-primary)] transition-colors">
                             Message
                           </Link>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-12 text-slate-400">
-                      <GraduationCap className="w-10 h-10 mx-auto mb-3 text-slate-300" />
+                    <div className="text-center py-12 text-[var(--cl-muted-soft)]">
+                      <GraduationCap className="w-10 h-10 mx-auto mb-3 text-[var(--cl-muted-soft)]" />
                       <p className="font-medium">No students at your university yet</p>
                       <p className="text-sm mt-1">Students will appear here once they join</p>
                     </div>
@@ -346,10 +356,10 @@ export default async function MentorDashboard() {
                 </div>
 
                 {/* Recent Messages */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-base font-semibold text-slate-900">Recent Messages</h2>
-                    <Link href="/dashboard/mentor/messages" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+                    <h2 className="text-base font-semibold text-[var(--cl-ink)]">Recent Messages</h2>
+                    <Link href="/dashboard/mentor/messages" className="text-sm font-medium text-[var(--cl-primary)] hover:text-[var(--cl-primary)]">
                       View all →
                     </Link>
                   </div>
@@ -357,31 +367,31 @@ export default async function MentorDashboard() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {conversations.map((conv: any) => (
                         <Link key={conv.id} href={`/dashboard/mentor/messages?userId=${conv.user?.id}`}
-                          className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200 hover:shadow-sm hover:border-indigo-200 transition-all group">
+                          className="flex items-center gap-3 p-4 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] transition-all group">
                           <div className="relative flex-shrink-0">
                             {conv.user?.avatar_url ? (
                               <img src={conv.user.avatar_url} alt={conv.user.full_name} className="w-11 h-11 rounded-full object-cover" />
                             ) : (
-                              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-sm font-semibold">
+                              <div className="w-11 h-11 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold bg-[var(--cl-info)]">
                                 {conv.user?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || '?'}
                               </div>
                             )}
-                            {conv.unread && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />}
+                            {conv.unread && <span className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--cl-error)] rounded-full border-2 border-[var(--cl-on-dark)]" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900 text-sm truncate group-hover:text-indigo-700 transition-colors">{conv.user?.full_name}</p>
-                            <p className="text-xs text-slate-500 truncate mt-0.5">{conv.lastMessage}</p>
+                            <p className="font-medium text-[var(--cl-ink)] text-sm truncate group-hover:text-[var(--cl-primary)] transition-colors">{conv.user?.full_name}</p>
+                            <p className="text-xs text-[var(--cl-muted)] truncate mt-0.5">{conv.lastMessage}</p>
                           </div>
                           <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                            <span className="text-xs text-slate-400">{conv.time}</span>
-                            {conv.unread && <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">New</span>}
+                            <span className="text-xs text-[var(--cl-muted)]">{conv.time}</span>
+                            {conv.unread && <span className="text-xs font-medium text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-0.5 rounded-full">New</span>}
                           </div>
                         </Link>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-10 text-slate-400">
-                      <MessageSquare className="w-10 h-10 mx-auto mb-3 text-slate-300" />
+                    <div className="text-center py-10 text-[var(--cl-muted-soft)]">
+                      <MessageSquare className="w-10 h-10 mx-auto mb-3 text-[var(--cl-muted-soft)]" />
                       <p className="font-medium">No messages yet</p>
                       <p className="text-sm mt-1">Your students will reach out soon</p>
                     </div>
@@ -394,22 +404,22 @@ export default async function MentorDashboard() {
                 <RealCalendar userId={user.id} />
 
                 {/* Profile Card */}
-                <div className="bg-white rounded-3xl p-6 border border-slate-200">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-lg font-semibold text-white shadow-sm">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold text-[var(--cl-on-dark)] bg-[var(--cl-info)]">
                       {firstName[0]?.toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-slate-900 truncate">{profile.full_name}</p>
-                      <p className="text-slate-500 text-xs truncate">
+                      <p className="font-semibold text-[var(--cl-ink)] truncate">{profile.full_name}</p>
+                      <p className="text-[var(--cl-muted)] text-xs truncate">
                         {Array.isArray(profile.expertise) ? profile.expertise.slice(0, 2).join(', ') : (profile.expertise || 'Mentor')}
                       </p>
                     </div>
                   </div>
-                  <p className="text-slate-500 text-xs leading-relaxed flex items-center gap-1.5">
+                  <p className="text-[var(--cl-muted)] text-xs leading-relaxed flex items-center gap-1.5">
                     <Target className="w-3.5 h-3.5" /> {universityName}
                   </p>
-                  <Link href="/dashboard/mentor/profile" className="mt-4 block text-center py-2 px-4 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded-xl transition-colors border border-slate-200">
+                  <Link href="/dashboard/mentor/profile" className="mt-4 block text-center py-2 px-4 bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] transition-colors border border-[var(--cl-hairline)]">
                     Edit Profile
                   </Link>
                 </div>

@@ -6,6 +6,7 @@ import RepoFileTree, { type TreeNode } from '@/components/projects/RepoFileTree'
 import ActivityHeatmap from '@/components/projects/ActivityHeatmap';
 import CodeQualityCard from '@/components/projects/CodeQualityCard';
 import SuspiciousActivityAlert from '@/components/projects/SuspiciousActivityAlert';
+import SimilarityFlagsAlert from '@/components/projects/SimilarityFlagsAlert';
 import ProjectTimeline from '@/components/projects/ProjectTimeline';
 import CommitHistory from '@/components/projects/CommitHistory';
 import AIReviewPanel from '@/components/projects/AIReviewPanel';
@@ -35,6 +36,7 @@ type Analytics = {
   has_tests: boolean;
   folder_depth: number;
   suspicious_flags: Array<{ type: string; message: string; severity: 'low' | 'medium' | 'high' | 'critical' }>;
+  similarity_flags: Array<{ peer_submission_id: string; peer_student_id: string; similarity: number; files_compared: string[] }>;
   timeline_events: Array<{ date: string; type: string; message: string }>;
   file_tree: TreeNode[];
   last_push_at: string | null;
@@ -50,17 +52,21 @@ type Evaluation = {
 
 type Tab = 'overview' | 'commits' | 'files' | 'ai_review' | 'quality' | 'timeline' | 'evaluate';
 
+type SubmissionType = 'github' | 'file_upload' | 'link' | 'written';
+
 interface ProjectReviewClientProps {
   assignmentId: string;
   submissionId: string;
   studentId: string;
   maxScore: number;
-  repoUrl: string;
-  repoFullName: string;
+  submissionType: SubmissionType;
+  repoUrl: string | null;
+  repoFullName: string | null;
   status: string;
   analytics: Analytics | null;
   evaluation: Evaluation;
   snapshots?: ProgressSnapshot[];
+  peerNames?: Record<string, string>;
 }
 
 export default function ProjectReviewClient({
@@ -68,28 +74,33 @@ export default function ProjectReviewClient({
   submissionId,
   studentId,
   maxScore,
+  submissionType,
   repoUrl,
   repoFullName,
   status,
   analytics,
   evaluation,
   snapshots,
+  peerNames,
 }: ProjectReviewClientProps) {
-  const [tab, setTab] = useState<Tab>('overview');
+  const isGithub = submissionType === 'github';
+  const [tab, setTab] = useState<Tab>(isGithub ? 'overview' : 'evaluate');
   const [reAnalyzing, setReAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [selectedFilePath, setSelectedFilePath] = useState<string | undefined>();
   const [aiPendingFilePath, setAiPendingFilePath] = useState<string | null>(null);
 
-  const tabs: Array<{ id: Tab; label: string }> = [
-    { id: 'overview',   label: 'Overview' },
-    { id: 'commits',    label: 'Commits' },
-    { id: 'files',      label: 'Files' },
-    { id: 'ai_review',  label: 'AI Review' },
-    { id: 'quality',    label: 'Quality' },
-    { id: 'timeline',   label: 'Timeline' },
-    { id: 'evaluate',   label: 'Evaluate' },
-  ];
+  const tabs: Array<{ id: Tab; label: string }> = isGithub
+    ? [
+        { id: 'overview',   label: 'Overview' },
+        { id: 'commits',    label: 'Commits' },
+        { id: 'files',      label: 'Files' },
+        { id: 'ai_review',  label: 'AI Review' },
+        { id: 'quality',    label: 'Quality' },
+        { id: 'timeline',   label: 'Timeline' },
+        { id: 'evaluate',   label: 'Evaluate' },
+      ]
+    : [{ id: 'evaluate', label: 'Evaluate' }];
 
   async function triggerReAnalysis() {
     setReAnalyzing(true);
@@ -116,44 +127,46 @@ export default function ProjectReviewClient({
   return (
     <div className="space-y-4">
       {/* Tab bar */}
-      <div className="flex items-center gap-1 bg-white border border-slate-100 rounded-2xl p-1 flex-wrap">
+      <div className="flex items-center gap-1 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-1 flex-wrap">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 px-3 rounded-[var(--cl-r-lg)] text-sm font-medium transition-colors ${
               tab === t.id
-                ? 'bg-violet-600 text-white shadow-sm'
-                : 'text-slate-600 hover:bg-slate-50'
+                ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
+                : 'text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)]'
             }`}
           >
             {t.label}
           </button>
         ))}
-        <button
-          onClick={triggerReAnalysis}
-          disabled={reAnalyzing}
-          className="px-3 py-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-1 text-sm"
-          title="Re-analyze repository"
-        >
-          {reAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-          <span className="hidden sm:inline">Re-analyze</span>
-        </button>
+        {isGithub && (
+          <button
+            onClick={triggerReAnalysis}
+            disabled={reAnalyzing}
+            className="px-3 py-2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] hover:bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] transition-colors flex items-center gap-1 text-sm"
+            title="Re-analyze repository"
+          >
+            {reAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+            <span className="hidden sm:inline">Re-analyze</span>
+          </button>
+        )}
       </div>
 
       {/* No analytics yet */}
-      {!analytics && tab !== 'evaluate' && (
-        <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
-          <RefreshCw className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium mb-1">Analysis not yet complete</p>
-          <p className="text-slate-400 text-sm mb-4">Status: <span className="font-mono">{status}</span></p>
+      {isGithub && !analytics && tab !== 'evaluate' && (
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-12 text-center">
+          <RefreshCw className="w-10 h-10 text-[var(--cl-muted-soft)] mx-auto mb-3" />
+          <p className="text-[var(--cl-muted)] font-medium mb-1">Analysis not yet complete</p>
+          <p className="text-[var(--cl-muted)] text-sm mb-4">Status: <span className="font-mono">{status}</span></p>
           {analysisError && (
-            <p className="text-sm text-red-600 mb-4 bg-red-50 rounded-xl px-4 py-2 inline-block">{analysisError}</p>
+            <p className="text-sm text-[var(--cl-error)] mb-4 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-lg)] px-4 py-2 inline-block">{analysisError}</p>
           )}
           <button
             onClick={triggerReAnalysis}
             disabled={reAnalyzing}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 text-white rounded-xl text-sm font-medium hover:bg-violet-700 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] text-sm font-medium hover:bg-[var(--cl-primary)] transition-colors"
           >
             {reAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
             Run Analysis
@@ -172,16 +185,16 @@ export default function ProjectReviewClient({
               { label: 'Files', value: analytics.total_files },
               { label: 'Branches', value: analytics.total_branches },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white border border-slate-100 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-slate-900">{value}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+              <div key={label} className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] p-4 text-center">
+                <p className="text-2xl font-semibold text-[var(--cl-ink)]">{value}</p>
+                <p className="text-xs text-[var(--cl-muted)] mt-0.5">{label}</p>
               </div>
             ))}
           </div>
 
           {/* Activity heatmap */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-5">
-            <h3 className="text-sm font-semibold text-slate-700 mb-4">Coding Activity</h3>
+          <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+            <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Coding Activity</h3>
             <ActivityHeatmap dailyActivity={analytics.daily_activity} weeks={26} />
           </div>
 
@@ -190,10 +203,10 @@ export default function ProjectReviewClient({
             const weeks = analytics.weekly_activity.slice(-16);
             const maxVal = Math.max(...weeks.map(w => w.total), 1);
             return (
-              <div className="bg-white border border-slate-100 rounded-2xl p-5">
+              <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-semibold text-slate-700">Commit Velocity (Weekly)</h3>
-                  <span className="text-xs text-slate-400">
+                  <h3 className="text-sm font-semibold text-[var(--cl-body)]">Commit Velocity (Weekly)</h3>
+                  <span className="text-xs text-[var(--cl-muted)]">
                     {weeks.reduce((s, w) => s + w.total, 0)} commits over {weeks.length} weeks
                   </span>
                 </div>
@@ -218,14 +231,14 @@ export default function ProjectReviewClient({
                           }}
                         />
                         {/* Tooltip */}
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex bg-slate-900 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
                           {label}: {w.total}
                         </div>
                       </div>
                     );
                   })}
                 </div>
-                <div className="flex justify-between text-xs text-slate-400 mt-2">
+                <div className="flex justify-between text-xs text-[var(--cl-muted-soft)] mt-2">
                   <span>{new Date(weeks[0].week * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                   <span>{new Date(weeks[weeks.length - 1].week * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 </div>
@@ -234,15 +247,22 @@ export default function ProjectReviewClient({
           })()}
 
           {/* Suspicious activity */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-5">
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Activity Integrity Check</h3>
+          <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+            <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-3">Activity Integrity Check</h3>
             <SuspiciousActivityAlert flags={analytics.suspicious_flags} />
           </div>
 
+          {/* Cross-submission similarity */}
+          {analytics.similarity_flags && analytics.similarity_flags.length > 0 && (
+            <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+              <SimilarityFlagsAlert flags={analytics.similarity_flags} peerNames={peerNames ?? {}} assignmentId={assignmentId} />
+            </div>
+          )}
+
           {/* Progress trend */}
           {snapshots && snapshots.length >= 2 && (
-            <div className="bg-white border border-slate-100 rounded-2xl p-5">
-              <h3 className="text-sm font-semibold text-slate-700 mb-4">Progress Trend</h3>
+            <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+              <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Progress Trend</h3>
               <ProgressChart snapshots={snapshots} />
             </div>
           )}
@@ -251,12 +271,12 @@ export default function ProjectReviewClient({
 
       {/* ── File Explorer tab ── */}
       {tab === 'files' && analytics && (
-        <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden">
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 h-[600px]">
             {/* Tree */}
-            <div className="border-r border-slate-100 overflow-hidden flex flex-col">
-              <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Repository Files</p>
+            <div className="border-r border-[var(--cl-hairline)] overflow-hidden flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wide">Repository Files</p>
               </div>
               <div className="flex-1 overflow-hidden py-2">
                 <RepoFileTree
@@ -275,7 +295,7 @@ export default function ProjectReviewClient({
             {/* Viewer */}
             <FileViewer
               submissionId={submissionId}
-              repoUrl={repoUrl}
+              repoUrl={repoUrl ?? ''}
               onReviewWithAI={(path) => { setAiPendingFilePath(path); setTab('ai_review'); }}
             />
           </div>
@@ -284,7 +304,7 @@ export default function ProjectReviewClient({
 
       {/* ── Code Quality tab ── */}
       {tab === 'quality' && analytics && (
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
           <CodeQualityCard
             hasReadme={analytics.has_readme}
             hasTests={analytics.has_tests}
@@ -307,24 +327,24 @@ export default function ProjectReviewClient({
 
       {/* ── Timeline tab ── */}
       {tab === 'timeline' && analytics && (
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Project Development Timeline</h3>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Project Development Timeline</h3>
           <ProjectTimeline events={analytics.timeline_events} />
         </div>
       )}
 
       {/* ── Commits tab ── */}
       {tab === 'commits' && (
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Commit History</h3>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Commit History</h3>
           <CommitHistory submissionId={submissionId} />
         </div>
       )}
 
       {/* ── AI Review tab ── */}
       {tab === 'ai_review' && (
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">AI Code Review</h3>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">AI Code Review</h3>
           <AIReviewPanel
             submissionId={submissionId}
             pendingFilePath={aiPendingFilePath}
@@ -335,8 +355,8 @@ export default function ProjectReviewClient({
 
       {/* ── Evaluate tab ── */}
       {tab === 'evaluate' && (
-        <div className="bg-white border border-slate-100 rounded-2xl p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-4">Evaluation & Grading</h3>
+        <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+          <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4">Evaluation & Grading</h3>
           <EvaluationPanel
             assignmentId={assignmentId}
             submissionId={submissionId}

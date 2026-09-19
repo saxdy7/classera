@@ -68,29 +68,29 @@ export default async function TestsPage() {
   ) || [];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 md:ml-24">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">Tests</h1>
-                <p className="text-slate-600">Create and manage your tests</p>
+                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Tests</h1>
+                <p className="text-[var(--cl-body)]">Create and manage your tests</p>
               </div>
               <div className="flex items-center gap-3">
                 <Link
                   href="/dashboard/mentor/question-bank"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-medium hover:border-indigo-300 hover:text-indigo-600 transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[var(--cl-surface-card)] text-[var(--cl-body)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] font-medium hover:border-[var(--cl-primary)] hover:text-[var(--cl-primary)] transition-all"
                 >
                   <BookMarked className="w-5 h-5" />
                   Question Bank
                 </Link>
                 <Link
                   href="/dashboard/mentor/tests/create"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all bg-[var(--cl-primary)]"
                 >
                   <Plus className="w-5 h-5" />
                   Create Test
@@ -100,61 +100,61 @@ export default async function TestsPage() {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Total Tests</span>
-                  <CheckCircle className="w-5 h-5 text-blue-500" />
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Total Tests</span>
+                  <CheckCircle className="w-5 h-5 text-[var(--cl-info)]" />
                 </div>
-                <p className="text-3xl font-bold text-slate-900">{tests?.length || 0}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-ink)]">{tests?.length || 0}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Live Now</span>
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Live Now</span>
+                  <div className="w-3 h-3 bg-[var(--cl-success)] rounded-full animate-pulse" />
                 </div>
-                <p className="text-3xl font-bold text-green-600">{liveTests.length}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-success)]">{liveTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Ready</span>
-                  <Rocket className="w-5 h-5 text-blue-500" />
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Ready</span>
+                  <Rocket className="w-5 h-5 text-[var(--cl-info)]" />
                 </div>
-                <p className="text-3xl font-bold text-blue-600">{readyTests.length}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-info)]">{readyTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Drafts</span>
-                  <div className="w-5 h-5 text-amber-500">📝</div>
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Drafts</span>
+                  <div className="w-5 h-5 text-[var(--cl-warning)]">📝</div>
                 </div>
-                <p className="text-3xl font-bold text-amber-600">{draftTests.length}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-warning)]">{draftTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Scheduled</span>
-                  <Clock className="w-5 h-5 text-orange-500" />
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Scheduled</span>
+                  <Clock className="w-5 h-5 text-[var(--cl-warning)]" />
                 </div>
-                <p className="text-3xl font-bold text-orange-600">{scheduledTests.length}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-warning)]">{scheduledTests.length}</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition-shadow">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-600">Completed</span>
-                  <Users className="w-5 h-5 text-slate-400" />
+                  <span className="text-sm font-medium text-[var(--cl-body)]">Completed</span>
+                  <Users className="w-5 h-5 text-[var(--cl-muted-soft)]" />
                 </div>
-                <p className="text-3xl font-bold text-slate-600">{completedTests.length}</p>
+                <p className="text-3xl font-semibold text-[var(--cl-body)]">{completedTests.length}</p>
               </div>
             </div>
 
             {/* Ready Tests - Has invitations but not live yet */}
             {readyTests.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
                   🚀 Ready to Go Live
-                  <span className="text-sm font-normal text-slate-500">(students invited)</span>
+                  <span className="text-sm font-normal text-[var(--cl-muted)]">(students invited)</span>
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {readyTests.map((test) => (
@@ -167,9 +167,9 @@ export default async function TestsPage() {
             {/* Draft Tests - Show prominently */}
             {draftTests.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
                   📝 Draft Tests
-                  <span className="text-sm font-normal text-slate-500">(needs setup)</span>
+                  <span className="text-sm font-normal text-[var(--cl-muted)]">(needs setup)</span>
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {draftTests.map((test) => (
@@ -182,8 +182,8 @@ export default async function TestsPage() {
             {/* Live Tests */}
             {liveTests.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-[var(--cl-success)] rounded-full animate-pulse" />
                   Live Tests
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -197,7 +197,7 @@ export default async function TestsPage() {
             {/* Scheduled Tests */}
             {scheduledTests.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Scheduled Tests</h2>
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Scheduled Tests</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {scheduledTests.map((test) => (
                     <TestCard key={test.id} test={test} />
@@ -209,7 +209,7 @@ export default async function TestsPage() {
             {/* Completed Tests */}
             {completedTests.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900 mb-4">Completed Tests</h2>
+                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Completed Tests</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {completedTests.map((test) => (
                     <TestCard key={test.id} test={test} isCompleted />
@@ -219,15 +219,15 @@ export default async function TestsPage() {
             )}
 
             {(!tests || tests.length === 0) && (
-              <div className="bg-white rounded-2xl p-16 text-center border border-slate-200">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-slate-400" />
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-16 text-center border border-[var(--cl-hairline)]">
+                <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-[var(--cl-muted-soft)]" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">No tests yet</h3>
-                <p className="text-slate-600 mb-6">Create your first test to get started</p>
+                <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No tests yet</h3>
+                <p className="text-[var(--cl-body)] mb-6">Create your first test to get started</p>
                 <Link
                   href="/dashboard/mentor/tests/create"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all bg-[var(--cl-primary)]"
                 >
                   <Plus className="w-5 h-5" />
                   Create Test
@@ -248,45 +248,45 @@ function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, 
   return (
     <Link
       href={`/dashboard/mentor/tests/${test.id}`}
-      className={`block bg-white rounded-2xl p-6 border hover:shadow-xl hover:-translate-y-0.5 transition-all ${
-        isDraft ? 'border-amber-300 hover:border-amber-400 bg-amber-50/30' :
-        isLive ? 'border-green-300 hover:border-green-400' :
-        isReady ? 'border-blue-300 hover:border-blue-400 bg-blue-50/30' :
-        isCompleted ? 'border-slate-300 hover:border-slate-400' :
-        'border-slate-200 hover:border-indigo-300'
+      className={`block bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border hover:-translate-y-0.5 transition-all ${
+        isDraft ? 'border-[var(--cl-warning)] hover:border-[var(--cl-warning)] bg-[rgba(171,100,0,0.3)]' :
+        isLive ? 'border-[var(--cl-success)] hover:border-[var(--cl-success)]' :
+        isReady ? 'border-[var(--cl-info)] hover:border-[var(--cl-info)] bg-[rgba(13,116,206,0.3)]' :
+        isCompleted ? 'border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)]' :
+        'border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
       }`}
     >
       {isLive && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full mb-3">
-          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] text-xs font-medium rounded-full mb-3">
+          <span className="w-1.5 h-1.5 bg-[var(--cl-success)] rounded-full animate-pulse" />
           Live Now
         </span>
       )}
 
       {isDraft && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] text-xs font-medium rounded-full mb-3">
           📝 Draft - Needs Setup
         </span>
       )}
 
       {isReady && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] text-xs font-medium rounded-full mb-3">
           🚀 Ready - Go Live
         </span>
       )}
 
       {isCompleted && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-full mb-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] text-xs font-medium rounded-full mb-3">
           ✅ Completed
         </span>
       )}
 
-      <h3 className="text-lg font-bold text-slate-900 mb-2">{test.title}</h3>
-      <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+      <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">{test.title}</h3>
+      <p className="text-sm text-[var(--cl-body)] mb-4 line-clamp-2">
         {test.description || 'No description'}
       </p>
 
-      <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+      <div className="flex items-center gap-4 text-sm text-[var(--cl-muted)] mb-4">
         <span className="flex items-center gap-1">
           <Clock className="w-4 h-4" />
           {test.duration_minutes} min
@@ -302,25 +302,25 @@ function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, 
       </div>
 
       {isDraft && (
-        <p className="text-xs text-amber-600 font-medium">
+        <p className="text-xs text-[var(--cl-warning)] font-medium">
           Click to invite students and go live →
         </p>
       )}
 
       {isReady && (
-        <p className="text-xs text-blue-600 font-medium">
+        <p className="text-xs text-[var(--cl-info)] font-medium">
           Click to start the test →
         </p>
       )}
 
       {isCompleted && (
-        <p className="text-xs text-slate-600 font-medium">
+        <p className="text-xs text-[var(--cl-body)] font-medium">
           Click to view results →
         </p>
       )}
 
       {test.scheduled_at && !isLive && !isDraft && !isReady && (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[var(--cl-muted)]">
           {isCompleted ? 'Conducted' : 'Scheduled'}: {new Date(test.scheduled_at).toLocaleDateString()}
         </p>
       )}

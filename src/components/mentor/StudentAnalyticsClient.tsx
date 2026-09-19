@@ -107,8 +107,8 @@ export function StudentAnalyticsClient({
     return (
       <div className="max-w-7xl mx-auto text-center py-20">
         <div className="text-5xl mb-4">👤</div>
-        <h1 className="text-3xl font-black text-slate-900 mb-2">No Students Available</h1>
-        <p className="text-slate-500 font-medium">You don't have any students at {universityName} yet</p>
+        <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">No Students Available</h1>
+        <p className="text-[var(--cl-muted)] font-medium">You don't have any students at {universityName} yet</p>
       </div>
     );
   }
@@ -121,10 +121,10 @@ export function StudentAnalyticsClient({
     <div className="max-w-7xl mx-auto">
       {/* Header Section */}
       <div className="mb-8">
-        <h1 className="text-5xl font-black text-slate-900 leading-tight tracking-tight mb-2">
+        <h1 className="text-5xl font-semibold text-[var(--cl-ink)] leading-tight tracking-tight mb-2">
           Student Analytics
         </h1>
-        <p className="text-xl text-slate-500 font-medium">
+        <p className="text-xl text-[var(--cl-muted)] font-medium">
           Monitor student performance and engagement
         </p>
       </div>
@@ -136,7 +136,7 @@ export function StudentAnalyticsClient({
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-2xl flex items-center justify-between hover:border-slate-300 transition-all font-bold text-slate-900"
+              className="w-full px-4 py-3 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] flex items-center justify-between hover:border-[var(--cl-hairline-strong)] transition-all font-semibold text-[var(--cl-ink)]"
             >
               <span className="flex items-center gap-2">
                 {selectedStudent.avatar_url ? (
@@ -146,7 +146,7 @@ export function StudentAnalyticsClient({
                     className="w-6 h-6 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-black">
+                  <div className="w-6 h-6 rounded-full bg-[var(--cl-primary)] flex items-center justify-center text-[var(--cl-on-dark)] text-xs font-semibold">
                     {selectedStudent.full_name.charAt(0)}
                   </div>
                 )}
@@ -158,17 +158,17 @@ export function StudentAnalyticsClient({
             </button>
 
             {dropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-slate-200 rounded-2xl shadow-lg z-10 max-h-96 overflow-hidden flex flex-col">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] z-10 max-h-96 overflow-hidden flex flex-col">
                 {/* Search Input */}
-                <div className="p-3 border-b border-slate-200 sticky top-0 bg-white">
+                <div className="p-3 border-b border-[var(--cl-hairline)] sticky top-0 bg-[var(--cl-surface-card)]">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
                     <input
                       type="text"
                       placeholder="Search students..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                      className="w-full pl-10 pr-4 py-2 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] text-sm font-medium"
                       autoFocus
                     />
                   </div>
@@ -190,8 +190,8 @@ export function StudentAnalyticsClient({
                           setDropdownOpen(false);
                           setSearchQuery('');
                         }}
-                        className={`w-full px-4 py-3 flex items-center gap-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-all text-left ${
-                          selectedStudent.id === student.id ? 'bg-indigo-50' : ''
+                        className={`w-full px-4 py-3 flex items-center gap-3 border-b border-[var(--cl-hairline)] last:border-0 hover:bg-[var(--cl-canvas-soft)] transition-all text-left ${
+                          selectedStudent.id === student.id ? 'bg-[var(--cl-primary-soft)]' : ''
                         }`}
                       >
                         {student.avatar_url ? (
@@ -201,18 +201,18 @@ export function StudentAnalyticsClient({
                             className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                           />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-black flex-shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[var(--cl-primary)] flex items-center justify-center text-[var(--cl-on-dark)] text-xs font-semibold flex-shrink-0">
                             {student.full_name.charAt(0)}
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="font-bold text-slate-900 truncate">{student.full_name}</p>
-                          <p className="text-xs text-slate-500 truncate">
+                          <p className="font-semibold text-[var(--cl-ink)] truncate">{student.full_name}</p>
+                          <p className="text-xs text-[var(--cl-muted)] truncate">
                             {student.specialization_board || 'Student'} • Sem {student.current_semester || 1}
                           </p>
                         </div>
                         {selectedStudent.id === student.id && (
-                          <CheckCircle className="w-5 h-5 text-indigo-600 flex-shrink-0" />
+                          <CheckCircle className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0" />
                         )}
                       </button>
                     ))}
@@ -221,7 +221,7 @@ export function StudentAnalyticsClient({
                       s.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                       s.specialization_board?.toLowerCase().includes(searchQuery.toLowerCase())
                   ).length === 0 && (
-                    <div className="p-8 text-center text-slate-500">
+                    <div className="p-8 text-center text-[var(--cl-muted)]">
                       <p className="text-sm font-medium">No students found</p>
                     </div>
                   )}
@@ -232,12 +232,12 @@ export function StudentAnalyticsClient({
         </div>
 
         {/* Profile Overview Card */}
-        <div className="lg:col-span-2 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-3xl p-6 text-white shadow-lg">
+        <div className="lg:col-span-2 rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] bg-[var(--cl-primary)]">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <p className="text-indigo-200 text-sm font-bold mb-1">Student Profile</p>
-              <h2 className="text-2xl md:text-3xl font-black">{selectedStudent.full_name}</h2>
-              <p className="text-indigo-100 text-sm mt-1 font-medium">
+              <p className="text-[var(--cl-primary)] text-sm font-semibold mb-1">Student Profile</p>
+              <h2 className="text-2xl md:text-3xl font-semibold">{selectedStudent.full_name}</h2>
+              <p className="text-[var(--cl-primary)] text-sm mt-1 font-medium">
                 {selectedStudent.specialization_board || 'Student'} • Semester {selectedStudent.current_semester || 1}
               </p>
             </div>
@@ -245,19 +245,19 @@ export function StudentAnalyticsClient({
               <img
                 src={selectedStudent.avatar_url}
                 alt={selectedStudent.full_name}
-                className="w-16 h-16 rounded-full object-cover border-4 border-white/20"
+                className="w-16 h-16 rounded-full object-cover border-4 border-[rgba(255,255,255,0.2)]"
               />
             )}
           </div>
 
           {/* GitHub & LinkedIn Links - VISIBLE */}
-          <div className="space-y-2 mb-6 pt-4 border-t border-white/20">
+          <div className="space-y-2 mb-6 pt-4 border-t border-[rgba(255,255,255,0.2)]">
             {selectedStudent.github_url && (
               <a
                 href={selectedStudent.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white hover:text-indigo-200 transition-colors font-bold text-sm group"
+                className="flex items-center gap-2 text-[var(--cl-on-dark)] hover:text-[var(--cl-primary)] transition-colors font-semibold text-sm group"
               >
                 <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span className="truncate">{selectedStudent.github_url}</span>
@@ -268,25 +268,25 @@ export function StudentAnalyticsClient({
                 href={selectedStudent.linkedin_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white hover:text-indigo-200 transition-colors font-bold text-sm group"
+                className="flex items-center gap-2 text-[var(--cl-on-dark)] hover:text-[var(--cl-primary)] transition-colors font-semibold text-sm group"
               >
                 <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span className="truncate">{selectedStudent.linkedin_url}</span>
               </a>
             )}
             {!selectedStudent.github_url && !selectedStudent.linkedin_url && (
-              <p className="text-indigo-200 text-xs italic">No social profiles linked</p>
+              <p className="text-[var(--cl-primary)] text-xs italic">No social profiles linked</p>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-indigo-200 text-xs font-bold uppercase tracking-widest mb-1">Joined</p>
-              <p className="text-lg font-black">{new Date(selectedStudent.created_at).toLocaleDateString()}</p>
+              <p className="text-[var(--cl-primary)] text-xs font-semibold uppercase tracking-widest mb-1">Joined</p>
+              <p className="text-lg font-semibold">{new Date(selectedStudent.created_at).toLocaleDateString()}</p>
             </div>
             <div>
-              <p className="text-indigo-200 text-xs font-bold uppercase tracking-widest mb-1">Last Active</p>
-              <p className="text-lg font-black">{metrics?.lastActive || '—'}</p>
+              <p className="text-[var(--cl-primary)] text-xs font-semibold uppercase tracking-widest mb-1">Last Active</p>
+              <p className="text-lg font-semibold">{metrics?.lastActive || '—'}</p>
             </div>
           </div>
         </div>
@@ -295,68 +295,68 @@ export function StudentAnalyticsClient({
       {/* Main Analytics Grid */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
         </div>
       ) : (
         <>
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* Roadmaps Created */}
-            <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm hover:shadow-lg transition-all">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-hairline)] transition-all">
               <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-purple-100 rounded-xl">
-                  <MapPin className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
+                  <MapPin className="w-6 h-6 text-[var(--cl-primary)]" />
                 </div>
-                <span className="text-2xl font-black text-purple-600">{metrics?.roadmapsCreated || 0}</span>
+                <span className="text-2xl font-semibold text-[var(--cl-primary)]">{metrics?.roadmapsCreated || 0}</span>
               </div>
-              <p className="text-sm font-bold text-slate-600 mb-1">Roadmaps Created</p>
-              <p className="text-xs text-slate-500">{metrics?.roadmapsCreated === 0 ? 'No learning paths yet' : 'Learning paths designed'}</p>
+              <p className="text-sm font-semibold text-[var(--cl-body)] mb-1">Roadmaps Created</p>
+              <p className="text-xs text-[var(--cl-muted)]">{metrics?.roadmapsCreated === 0 ? 'No learning paths yet' : 'Learning paths designed'}</p>
             </div>
 
             {/* Courses Completed */}
-            <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm hover:shadow-lg transition-all">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-hairline)] transition-all">
               <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-green-100 rounded-xl">
-                  <BookOpen className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)]">
+                  <BookOpen className="w-6 h-6 text-[var(--cl-success)]" />
                 </div>
-                <span className="text-2xl font-black text-green-600">
+                <span className="text-2xl font-semibold text-[var(--cl-success)]">
                   {metrics?.coursesCompleted || 0}/{metrics?.coursesEnrolled || 0}
                 </span>
               </div>
-              <p className="text-sm font-bold text-slate-600 mb-1">Courses Completed</p>
-              <p className="text-xs text-slate-500">{metrics?.coursesEnrolled === 0 ? 'Not enrolled in courses' : 'Out of enrolled courses'}</p>
+              <p className="text-sm font-semibold text-[var(--cl-body)] mb-1">Courses Completed</p>
+              <p className="text-xs text-[var(--cl-muted)]">{metrics?.coursesEnrolled === 0 ? 'Not enrolled in courses' : 'Out of enrolled courses'}</p>
             </div>
 
             {/* Tasks Completed */}
-            <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm hover:shadow-lg transition-all">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-hairline)] transition-all">
               <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-blue-100 rounded-xl">
-                  <CheckCircle className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-[rgba(13,116,206,0.12)] rounded-[var(--cl-r-lg)]">
+                  <CheckCircle className="w-6 h-6 text-[var(--cl-info)]" />
                 </div>
-                <span className="text-2xl font-black text-blue-600">
+                <span className="text-2xl font-semibold text-[var(--cl-info)]">
                   {metrics?.tasksCompleted || 0}
                 </span>
               </div>
-              <p className="text-sm font-bold text-slate-600 mb-1">Tasks Completed</p>
-              <p className="text-xs text-slate-500">{completionPercentage}% completion rate</p>
+              <p className="text-sm font-semibold text-[var(--cl-body)] mb-1">Tasks Completed</p>
+              <p className="text-xs text-[var(--cl-muted)]">{completionPercentage}% completion rate</p>
             </div>
 
             {/* GitHub Connected */}
-            <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm hover:shadow-lg transition-all">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-hairline)] transition-all">
               <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-xl ${metrics?.githubConnected ? 'bg-gray-100' : 'bg-slate-100'}`}>
-                  <Github className={`w-6 h-6 ${metrics?.githubConnected ? 'text-gray-800' : 'text-slate-400'}`} />
+                <div className={`p-3 rounded-[var(--cl-r-lg)] ${metrics?.githubConnected ? 'bg-[var(--cl-surface-strong)]' : 'bg-[var(--cl-surface-strong)]'}`}>
+                  <Github className={`w-6 h-6 ${metrics?.githubConnected ? 'text-[var(--cl-ink)]' : 'text-[var(--cl-muted-soft)]'}`} />
                 </div>
-                <span className={`text-xs font-black uppercase tracking-widest px-2 py-1 rounded-lg ${
+                <span className={`text-xs font-semibold uppercase tracking-widest px-2 py-1 rounded-lg ${
                   metrics?.githubConnected
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-slate-100 text-slate-500'
+                    ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-muted)]'
                 }`}>
                   {metrics?.githubConnected ? 'Connected' : 'Not Connected'}
                 </span>
               </div>
-              <p className="text-sm font-bold text-slate-600 mb-1">GitHub Account</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm font-semibold text-[var(--cl-body)] mb-1">GitHub Account</p>
+              <p className="text-xs text-[var(--cl-muted)]">
                 {metrics?.githubUsername ? `@${metrics.githubUsername}` : 'No GitHub profile linked'}
               </p>
             </div>
@@ -365,23 +365,23 @@ export function StudentAnalyticsClient({
           {/* Activity & Engagement Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Progress Bar */}
-            <div className="lg:col-span-2 bg-white rounded-3xl p-8 border-2 border-slate-200 shadow-sm">
+            <div className="lg:col-span-2 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 border-2 border-[var(--cl-hairline)]">
               <div className="mb-8">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-lg font-black text-slate-900">Learning Progress</h3>
-                    <p className="text-sm text-slate-500 font-medium mt-1">Task completion & engagement</p>
+                    <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Learning Progress</h3>
+                    <p className="text-sm text-[var(--cl-muted)] font-medium mt-1">Task completion & engagement</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-black text-indigo-600">{completionPercentage}%</p>
-                    <p className="text-xs text-slate-500 font-bold mt-1">Overall Progress</p>
+                    <p className="text-3xl font-semibold text-[var(--cl-primary)]">{completionPercentage}%</p>
+                    <p className="text-xs text-[var(--cl-muted)] font-semibold mt-1">Overall Progress</p>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-full h-3 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-500 rounded-full"
+                    className="h-full transition-all duration-500 rounded-full bg-[var(--cl-primary)]"
                     style={{ width: `${completionPercentage}%` }}
                   />
                 </div>
@@ -389,42 +389,42 @@ export function StudentAnalyticsClient({
 
               {/* Detailed Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
                   <div className="flex items-center gap-2 mb-2">
-                    <Zap className="w-4 h-4 text-yellow-500" />
-                    <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Streak</p>
+                    <Zap className="w-4 h-4 text-[var(--cl-warning)]" />
+                    <p className="text-xs font-semibold text-[var(--cl-body)] uppercase tracking-widest">Streak</p>
                   </div>
-                  <p className="text-2xl font-black text-slate-900">{metrics?.streakDays || 0}</p>
-                  <p className="text-xs text-slate-500 mt-1">Days</p>
+                  <p className="text-2xl font-semibold text-[var(--cl-ink)]">{metrics?.streakDays || 0}</p>
+                  <p className="text-xs text-[var(--cl-muted)] mt-1">Days</p>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
                   <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Hours</p>
+                    <Clock className="w-4 h-4 text-[var(--cl-info)]" />
+                    <p className="text-xs font-semibold text-[var(--cl-body)] uppercase tracking-widest">Hours</p>
                   </div>
-                  <p className="text-2xl font-black text-slate-900">{metrics?.totalHours || 0}</p>
-                  <p className="text-xs text-slate-500 mt-1">Total Spent</p>
+                  <p className="text-2xl font-semibold text-[var(--cl-ink)]">{metrics?.totalHours || 0}</p>
+                  <p className="text-xs text-[var(--cl-muted)] mt-1">Total Spent</p>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
                   <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-4 h-4 text-indigo-500" />
-                    <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Messages</p>
+                    <MessageSquare className="w-4 h-4 text-[var(--cl-primary)]" />
+                    <p className="text-xs font-semibold text-[var(--cl-body)] uppercase tracking-widest">Messages</p>
                   </div>
-                  <p className="text-2xl font-black text-slate-900">{metrics?.messagesCount || 0}</p>
-                  <p className="text-xs text-slate-500 mt-1">With Mentor</p>
+                  <p className="text-2xl font-semibold text-[var(--cl-ink)]">{metrics?.messagesCount || 0}</p>
+                  <p className="text-xs text-[var(--cl-muted)] mt-1">With Mentor</p>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="p-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
                   <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">Activity</p>
+                    <TrendingUp className="w-4 h-4 text-[var(--cl-success)]" />
+                    <p className="text-xs font-semibold text-[var(--cl-body)] uppercase tracking-widest">Activity</p>
                   </div>
-                  <p className="text-2xl font-black text-slate-900">
+                  <p className="text-2xl font-semibold text-[var(--cl-ink)]">
                     {metrics && metrics.lastActive === 'Today' ? '🔥' : '📊'}
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">{metrics?.lastActive || 'N/A'}</p>
+                  <p className="text-xs text-[var(--cl-muted)] mt-1">{metrics?.lastActive || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -432,23 +432,23 @@ export function StudentAnalyticsClient({
             {/* Summary Card */}
             <div className="space-y-4">
               {/* Performance Summary */}
-              <div className="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-hairline)]">
                 <div className="flex items-center gap-2 mb-4">
-                  <Award className="w-5 h-5 text-indigo-600" />
-                  <h3 className="font-black text-slate-900">Performance Summary</h3>
+                  <Award className="w-5 h-5 text-[var(--cl-primary)]" />
+                  <h3 className="font-semibold text-[var(--cl-ink)]">Performance Summary</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-slate-600">Engagement</span>
-                      <span className="text-xs font-black text-indigo-600">
+                      <span className="text-xs font-semibold text-[var(--cl-body)]">Engagement</span>
+                      <span className="text-xs font-semibold text-[var(--cl-primary)]">
                         {Math.min(Math.round((metrics?.streakDays || 0) * 3.33), 100)}%
                       </span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-indigo-500 rounded-full"
+                        className="h-full bg-[var(--cl-primary)] rounded-full"
                         style={{ width: `${Math.min(Math.round((metrics?.streakDays || 0) * 3.33), 100)}%` }}
                       />
                     </div>
@@ -456,24 +456,24 @@ export function StudentAnalyticsClient({
 
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-slate-600">Learning</span>
-                      <span className="text-xs font-black text-indigo-600">{completionPercentage}%</span>
+                      <span className="text-xs font-semibold text-[var(--cl-body)]">Learning</span>
+                      <span className="text-xs font-semibold text-[var(--cl-primary)]">{completionPercentage}%</span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${completionPercentage}%` }} />
+                    <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                      <div className="h-full bg-[var(--cl-primary)] rounded-full" style={{ width: `${completionPercentage}%` }} />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-slate-600">Courses</span>
-                      <span className="text-xs font-black text-indigo-600">
+                      <span className="text-xs font-semibold text-[var(--cl-body)]">Courses</span>
+                      <span className="text-xs font-semibold text-[var(--cl-primary)]">
                         {metrics ? Math.round((metrics.coursesCompleted / Math.max(metrics.coursesEnrolled, 1)) * 100) : 0}%
                       </span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-indigo-500 rounded-full"
+                        className="h-full bg-[var(--cl-primary)] rounded-full"
                         style={{
                           width: `${metrics ? Math.round((metrics.coursesCompleted / Math.max(metrics.coursesEnrolled, 1)) * 100) : 0}%`,
                         }}
@@ -486,7 +486,7 @@ export function StudentAnalyticsClient({
               {/* Action Button */}
               <Link
                 href={`/dashboard/mentor/messages?userId=${selectedStudent.id}`}
-                className="w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-black rounded-2xl text-center transition-all shadow-lg shadow-indigo-600/30 active:scale-95"
+                className="w-full px-6 py-4 text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-xl)] text-center transition-all active:scale-95 bg-[var(--cl-primary)]"
               >
                 💬 Message Student
               </Link>
@@ -494,9 +494,9 @@ export function StudentAnalyticsClient({
           </div>
 
           {/* Pie Chart Section */}
-          <div className="bg-white rounded-3xl p-8 border-2 border-slate-200 shadow-sm">
-            <h3 className="text-xl font-black text-slate-900 mb-2">Teaching Distribution</h3>
-            <p className="text-sm text-slate-500 font-medium mb-8">Overview of student engagement across different areas</p>
+          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 border-2 border-[var(--cl-hairline)]">
+            <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">Teaching Distribution</h3>
+            <p className="text-sm text-[var(--cl-muted)] font-medium mb-8">Overview of student engagement across different areas</p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-12">
               {/* Pie Chart Simulation */}
@@ -529,7 +529,7 @@ export function StudentAnalyticsClient({
                     </linearGradient>
                   </defs>
 
-                  <text x="50" y="48" textAnchor="middle" className="text-2xl font-black" fill="#1f2937">
+                  <text x="50" y="48" textAnchor="middle" className="text-2xl font-semibold" fill="#1f2937">
                     {metrics?.coursesCompleted || 0}
                   </text>
                   <text x="50" y="58" textAnchor="middle" className="text-xs" fill="#6b7280">
@@ -541,20 +541,20 @@ export function StudentAnalyticsClient({
               {/* Legend */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-green-500" />
-                  <span className="font-bold text-slate-700">{metrics?.coursesCompleted || 0} Courses Completed</span>
+                  <div className="w-4 h-4 rounded-full bg-[var(--cl-success)]" />
+                  <span className="font-semibold text-[var(--cl-body)]">{metrics?.coursesCompleted || 0} Courses Completed</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-blue-500" />
-                  <span className="font-bold text-slate-700">{metrics?.roadmapsCreated || 0} Roadmaps Created</span>
+                  <div className="w-4 h-4 rounded-full bg-[var(--cl-info)]" />
+                  <span className="font-semibold text-[var(--cl-body)]">{metrics?.roadmapsCreated || 0} Roadmaps Created</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-purple-500" />
-                  <span className="font-bold text-slate-700">{metrics?.tasksCompleted || 0} Tasks Done</span>
+                  <div className="w-4 h-4 rounded-full bg-[var(--cl-primary)]" />
+                  <span className="font-semibold text-[var(--cl-body)]">{metrics?.tasksCompleted || 0} Tasks Done</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-pink-500" />
-                  <span className="font-bold text-slate-700">
+                  <div className="w-4 h-4 rounded-full bg-[var(--cl-primary)]" />
+                  <span className="font-semibold text-[var(--cl-body)]">
                     {(metrics?.tasksTotal || 0) - (metrics?.tasksCompleted || 0)} Tasks Pending
                   </span>
                 </div>

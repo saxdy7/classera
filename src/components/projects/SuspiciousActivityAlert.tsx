@@ -14,28 +14,28 @@ interface SuspiciousActivityAlertProps {
 
 const severityConfig = {
   critical: {
-    border: 'border-red-400 bg-red-100',
-    icon: <AlertOctagon className="w-5 h-5 text-red-600 flex-shrink-0" />,
-    label: 'bg-red-200 text-red-800',
-    text: 'text-red-900',
+    border: 'border-[var(--cl-error)] bg-[rgba(239,68,68,0.12)]',
+    icon: <AlertOctagon className="w-5 h-5 text-[var(--cl-error)] flex-shrink-0" />,
+    label: 'bg-[var(--cl-error)] text-[var(--cl-error)]',
+    text: 'text-[var(--cl-error)]',
   },
   high: {
-    border: 'border-red-200 bg-red-50',
-    icon: <AlertOctagon className="w-5 h-5 text-red-500 flex-shrink-0" />,
-    label: 'bg-red-100 text-red-700',
-    text: 'text-red-800',
+    border: 'border-[var(--cl-error)] bg-[rgba(239,68,68,0.12)]',
+    icon: <AlertOctagon className="w-5 h-5 text-[var(--cl-error)] flex-shrink-0" />,
+    label: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]',
+    text: 'text-[var(--cl-error)]',
   },
   medium: {
-    border: 'border-amber-200 bg-amber-50',
-    icon: <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />,
-    label: 'bg-amber-100 text-amber-700',
-    text: 'text-amber-800',
+    border: 'border-[var(--cl-warning)] bg-[rgba(171,100,0,0.12)]',
+    icon: <AlertTriangle className="w-5 h-5 text-[var(--cl-warning)] flex-shrink-0" />,
+    label: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]',
+    text: 'text-[var(--cl-warning)]',
   },
   low: {
-    border: 'border-blue-200 bg-blue-50',
-    icon: <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />,
-    label: 'bg-blue-100 text-blue-700',
-    text: 'text-blue-800',
+    border: 'border-[var(--cl-info)] bg-[rgba(13,116,206,0.12)]',
+    icon: <Info className="w-5 h-5 text-[var(--cl-info)] flex-shrink-0" />,
+    label: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]',
+    text: 'text-[var(--cl-info)]',
   },
 };
 
@@ -49,9 +49,9 @@ const typeLabels: Record<string, string> = {
 export default function SuspiciousActivityAlert({ flags }: SuspiciousActivityAlertProps) {
   if (!flags || flags.length === 0) {
     return (
-      <div className="flex items-center gap-2 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-        <span className="text-emerald-500 text-lg">✓</span>
-        <p className="text-sm text-emerald-700 font-medium">No suspicious activity detected</p>
+      <div className="flex items-center gap-2 px-4 py-3 bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] rounded-[var(--cl-r-lg)]">
+        <span className="text-[var(--cl-success)] text-lg">✓</span>
+        <p className="text-sm text-[var(--cl-success)] font-medium">No suspicious activity detected</p>
       </div>
     );
   }
@@ -63,20 +63,20 @@ export default function SuspiciousActivityAlert({ flags }: SuspiciousActivityAle
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-slate-700">
+      <p className="text-sm font-semibold text-[var(--cl-body)]">
         {flags.length} suspicious pattern{flags.length !== 1 ? 's' : ''} detected
       </p>
       {sorted.map((flag, i) => {
         const cfg = severityConfig[flag.severity];
         return (
-          <div key={i} className={`flex items-start gap-3 p-3 rounded-xl border ${cfg.border}`}>
+          <div key={i} className={`flex items-start gap-3 p-3 rounded-[var(--cl-r-lg)] border ${cfg.border}`}>
             {cfg.icon}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.label}`}>
                   {flag.severity.toUpperCase()}
                 </span>
-                <span className="text-xs font-medium text-slate-600">
+                <span className="text-xs font-medium text-[var(--cl-body)]">
                   {typeLabels[flag.type] ?? flag.type}
                 </span>
               </div>

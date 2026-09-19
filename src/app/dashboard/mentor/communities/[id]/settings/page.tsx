@@ -16,7 +16,7 @@ export default async function CommunitySettingsPage({
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect('/auth/sign-in');
+    if (!user) redirect('/signin');
 
     const { data: profile } = await supabase
         .from('users')
@@ -39,16 +39,16 @@ export default async function CommunitySettingsPage({
     }
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[var(--cl-surface-card)]">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="mentor" />
-                <main className="flex-1 p-4 md:p-8 md:ml-24">
+                <main className="flex-1 p-4 md:p-8 cl-main">
                     <div className="max-w-4xl mx-auto">
                         {/* Back Button */}
                         <Link
                             href={`/dashboard/mentor/communities/${id}`}
-                            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back to Community
@@ -56,19 +56,19 @@ export default async function CommunitySettingsPage({
 
                         {/* Header */}
                         <div className="mb-8">
-                            <h1 className="text-4xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                            <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
                                 Community Settings
                             </h1>
-                            <p className="text-slate-600">Manage your community details and settings</p>
+                            <p className="text-[var(--cl-body)]">Manage your community details and settings</p>
                         </div>
 
                         {/* Settings Form */}
                         <EditCommunityForm communityId={id} initialData={community} />
 
                         {/* Danger Zone */}
-                        <div className="mt-8 bg-red-50 rounded-3xl border border-red-200 p-8">
-                            <h2 className="text-2xl font-bold text-red-900 mb-4">Danger Zone</h2>
-                            <p className="text-red-700 mb-6">
+                        <div className="mt-8 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-xl)] border border-[var(--cl-error)] p-8">
+                            <h2 className="text-2xl font-semibold text-[var(--cl-error)] mb-4">Danger Zone</h2>
+                            <p className="text-[var(--cl-error)] mb-6">
                                 Once you delete a community, there is no going back. All messages, members, and data will be permanently deleted.
                             </p>
                             <DeleteCommunityButton id={id} />

@@ -11,7 +11,7 @@ const TOTAL_STEPS = 7;
 const STEPS = [
     {
         icon: Target,
-        gradient: 'from-fuchsia-500 to-purple-600',
+        gradient: '',
         title: 'What is your career goal?',
         subtitle: 'Pick the path you\'re most excited about',
         key: 'career_goal',
@@ -29,7 +29,7 @@ const STEPS = [
     },
     {
         icon: Zap,
-        gradient: 'from-blue-500 to-indigo-600',
+        gradient: '',
         title: 'What is your current skill level?',
         subtitle: 'Be honest — there are no wrong answers',
         key: 'skill_level',
@@ -43,7 +43,7 @@ const STEPS = [
     },
     {
         icon: Heart,
-        gradient: 'from-pink-500 to-rose-600',
+        gradient: '',
         title: 'What topics interest you most?',
         subtitle: 'Select all that apply',
         key: 'interests',
@@ -61,7 +61,7 @@ const STEPS = [
     },
     {
         icon: BookOpen,
-        gradient: 'from-emerald-500 to-teal-600',
+        gradient: '',
         title: 'How do you learn best?',
         subtitle: 'This helps us recommend the right content format',
         key: 'learning_style',
@@ -75,7 +75,7 @@ const STEPS = [
     },
     {
         icon: Clock,
-        gradient: 'from-amber-500 to-orange-600',
+        gradient: '',
         title: 'How many hours per week can you study?',
         subtitle: 'We\'ll build a realistic plan around your schedule',
         key: 'weekly_hours',
@@ -89,7 +89,7 @@ const STEPS = [
     },
     {
         icon: TrendingUp,
-        gradient: 'from-violet-500 to-purple-600',
+        gradient: '',
         title: 'What is your biggest challenge right now?',
         subtitle: 'We\'ll focus on solving this for you',
         key: 'biggest_challenge',
@@ -104,7 +104,7 @@ const STEPS = [
     },
     {
         icon: Calendar,
-        gradient: 'from-cyan-500 to-blue-600',
+        gradient: '',
         title: 'What is your goal timeline?',
         subtitle: 'When do you want to achieve your goal?',
         key: 'goal_timeline',
@@ -177,19 +177,19 @@ export default function QuizClient() {
     const progress = ((step + 1) / TOTAL_STEPS) * 100;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-purple-50 to-fuchsia-50 p-4">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
             <div className="w-full max-w-2xl">
-                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 md:p-12">
 
                     {/* Progress bar */}
                     <div className="mb-8">
-                        <div className="flex justify-between text-xs text-slate-400 mb-2">
+                        <div className="flex justify-between text-xs text-[var(--cl-muted-soft)] mb-2">
                             <span>Question {step + 1} of {TOTAL_STEPS}</span>
                             <span>{Math.round(progress)}% complete</span>
                         </div>
-                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 rounded-full transition-all duration-500"
+                                className="h-full rounded-full transition-all duration-500 bg-[var(--cl-primary)]"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
@@ -198,11 +198,11 @@ export default function QuizClient() {
                     {/* Question */}
                     <div className="animate-in fade-in slide-in-from-right duration-300">
                         <div className="text-center mb-8">
-                            <div className={`w-20 h-20 bg-gradient-to-br ${current.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                                <Icon className="w-10 h-10 text-white" />
+                            <div className={`w-20 h-20 ${current.gradient} rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4`}>
+                                <Icon className="w-10 h-10 text-[var(--cl-on-dark)]" />
                             </div>
-                            <h2 className="text-2xl font-bold text-slate-900 mb-2">{current.title}</h2>
-                            <p className="text-slate-500 text-sm">{current.subtitle}</p>
+                            <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">{current.title}</h2>
+                            <p className="text-[var(--cl-muted)] text-sm">{current.subtitle}</p>
                         </div>
 
                         {/* Options */}
@@ -215,16 +215,16 @@ export default function QuizClient() {
                                     <button
                                         key={opt}
                                         onClick={() => current.type === 'single' ? selectSingle(opt) : toggleMulti(opt)}
-                                        className={`relative flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left text-sm font-medium transition-all ${selected
-                                            ? 'border-purple-500 bg-purple-50 text-purple-800'
-                                            : 'border-slate-200 text-slate-700 hover:border-purple-300 hover:bg-slate-50'
+                                        className={`relative flex items-center gap-3 px-4 py-3 rounded-[var(--cl-r-lg)] border-2 text-left text-sm font-medium transition-all ${selected
+                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                            : 'border-[var(--cl-hairline)] text-[var(--cl-body)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-canvas-soft)]'
                                             }`}
                                     >
                                         <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${selected
-                                            ? 'border-purple-500 bg-purple-500'
-                                            : 'border-slate-300'
+                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary)]'
+                                            : 'border-[var(--cl-hairline-strong)]'
                                             }`}>
-                                            {selected && <CheckCircle className="w-3 h-3 text-white" />}
+                                            {selected && <CheckCircle className="w-3 h-3 text-[var(--cl-on-dark)]" />}
                                         </div>
                                         {opt}
                                     </button>
@@ -233,18 +233,18 @@ export default function QuizClient() {
                         </div>
 
                         {error && (
-                            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">{error}</div>
+                            <div className="mb-4 p-3 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] text-[var(--cl-error)] rounded-[var(--cl-r-lg)] text-sm">{error}</div>
                         )}
                     </div>
 
                     {/* Navigation */}
-                    <div className="flex items-center justify-between gap-4 pt-6 border-t border-slate-100">
+                    <div className="flex items-center justify-between gap-4 pt-6 border-t border-[var(--cl-hairline)]">
                         <button
                             onClick={handleBack}
                             disabled={step === 0}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${step === 0
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-[var(--cl-r-lg)] text-sm font-medium transition-all ${step === 0
                                 ? 'invisible'
-                                : 'text-slate-600 hover:bg-slate-100'
+                                : 'text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
                                 }`}
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -255,7 +255,7 @@ export default function QuizClient() {
                             <button
                                 onClick={handleNext}
                                 disabled={!isAnswered}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white font-semibold rounded-xl hover:from-fuchsia-700 hover:to-purple-700 transition-all disabled:opacity-40 shadow-md shadow-purple-200"
+                                className="flex items-center gap-2 px-6 py-2.5 text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-all disabled:opacity-40 bg-[var(--cl-primary)]"
                             >
                                 Next
                                 <ArrowRight className="w-4 h-4" />
@@ -264,7 +264,7 @@ export default function QuizClient() {
                             <button
                                 onClick={handleSubmit}
                                 disabled={!isAnswered || submitting}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white font-semibold rounded-xl hover:from-fuchsia-700 hover:to-purple-700 transition-all disabled:opacity-40 shadow-md shadow-purple-200"
+                                className="flex items-center gap-2 px-6 py-2.5 text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-all disabled:opacity-40 bg-[var(--cl-primary)]"
                             >
                                 {submitting ? 'Saving…' : 'Go to Dashboard'}
                                 <ArrowRight className="w-4 h-4" />

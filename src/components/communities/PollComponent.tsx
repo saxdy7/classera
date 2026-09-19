@@ -123,9 +123,9 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200">
+      <div className="rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]">
         <div className="flex items-center justify-center py-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--cl-primary)]"></div>
         </div>
       </div>
     );
@@ -136,26 +136,26 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200">
+    <div className="rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]">
       {/* Poll Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-purple-600" />
-          <span className="text-sm font-semibold text-purple-600">Poll</span>
+          <BarChart3 className="w-5 h-5 text-[var(--cl-primary)]" />
+          <span className="text-sm font-semibold text-[var(--cl-primary)]">Poll</span>
         </div>
         {poll.expires_at && !isExpired && (
-          <div className="flex items-center gap-1 text-xs text-slate-500">
+          <div className="flex items-center gap-1 text-xs text-[var(--cl-muted)]">
             <Clock className="w-4 h-4" />
             Ends {formatDistanceToNow(new Date(poll.expires_at), { addSuffix: true })}
           </div>
         )}
         {isExpired && (
-          <span className="text-xs text-red-600 font-semibold">Expired</span>
+          <span className="text-xs text-[var(--cl-error)] font-semibold">Expired</span>
         )}
       </div>
 
       {/* Question */}
-      <h3 className="text-lg font-bold text-slate-900 mb-4">{poll.question}</h3>
+      <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">{poll.question}</h3>
 
       {/* Options */}
       <div className="space-y-3">
@@ -170,16 +170,16 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
               disabled={voting || isExpired || showResults}
               className={`w-full text-left transition-all ${showResults
                   ? 'cursor-default'
-                  : 'hover:bg-white hover:shadow-md cursor-pointer'
+                  : 'hover:bg-[var(--cl-surface-card)] hover:shadow-md cursor-pointer'
                 } ${isSelected && showResults
-                  ? 'bg-purple-100 border-purple-400'
-                  : 'bg-white border-slate-200'
-                } rounded-xl border-2 p-4 relative overflow-hidden`}
+                  ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]'
+                  : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]'
+                } rounded-[var(--cl-r-lg)] border-2 p-4 relative overflow-hidden`}
             >
               {/* Progress Bar */}
               {showResults && (
                 <div
-                  className={`absolute inset-0 ${isSelected ? 'bg-purple-200' : 'bg-slate-100'
+                  className={`absolute inset-0 ${isSelected ? 'bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-strong)]'
                     } transition-all duration-500`}
                   style={{ width: `${percentage}%` }}
                 />
@@ -189,16 +189,16 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {isSelected && showResults && (
-                    <CheckCircle2 className="w-5 h-5 text-purple-600" />
+                    <CheckCircle2 className="w-5 h-5 text-[var(--cl-primary)]" />
                   )}
-                  <span className="font-medium text-slate-900">{option.text}</span>
+                  <span className="font-medium text-[var(--cl-ink)]">{option.text}</span>
                 </div>
                 {showResults && (
                   <div className="flex items-center gap-3">
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-[var(--cl-body)]">
                       {option.votes.length} {option.votes.length === 1 ? 'vote' : 'votes'}
                     </span>
-                    <span className="text-lg font-bold text-purple-600">{percentage}%</span>
+                    <span className="text-lg font-semibold text-[var(--cl-primary)]">{percentage}%</span>
                   </div>
                 )}
               </div>
@@ -208,14 +208,14 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
       </div>
 
       {/* Footer */}
-      <div className="mt-4 pt-4 border-t border-purple-200 flex items-center justify-between text-sm">
-        <span className="text-slate-600">
+      <div className="mt-4 pt-4 border-t border-[var(--cl-primary)] flex items-center justify-between text-sm">
+        <span className="text-[var(--cl-body)]">
           {totalVotes} {totalVotes === 1 ? 'vote' : 'votes'}
         </span>
         {!showResults && hasVoted && !isExpired && (
           <button
             onClick={() => setShowResults(true)}
-            className="text-purple-600 hover:text-purple-700 font-semibold"
+            className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-semibold"
           >
             View Results
           </button>
@@ -223,7 +223,7 @@ export function PollComponent({ poll: initialPoll, postId, communityId, userId, 
         {showResults && !hasVoted && !isExpired && (
           <button
             onClick={() => setShowResults(false)}
-            className="text-purple-600 hover:text-purple-700 font-semibold"
+            className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-semibold"
           >
             Hide Results
           </button>

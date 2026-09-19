@@ -130,27 +130,27 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
     if (loading) {
         return (
             <div className="flex items-center justify-center py-16">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
             </div>
         );
     }
 
     return (
         <>
-            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <h2 className="text-2xl font-bold text-slate-900">Members</h2>
-                        <div className="flex items-center gap-2 px-3 py-1 bg-indigo-50 rounded-lg">
-                            <Users className="w-4 h-4 text-indigo-600" />
-                            <span className="text-sm font-semibold text-indigo-600">{members.length} total</span>
+                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Members</h2>
+                        <div className="flex items-center gap-2 px-3 py-1 bg-[var(--cl-primary-soft)] rounded-lg">
+                            <Users className="w-4 h-4 text-[var(--cl-primary)]" />
+                            <span className="text-sm font-semibold text-[var(--cl-primary)]">{members.length} total</span>
                         </div>
                     </div>
                     {currentUserRole === 'mentor' && (
                         <button
                             onClick={() => setShowAddModal(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium transition-colors"
                         >
                             <UserPlus className="w-4 h-4" />
                             Add Students
@@ -161,24 +161,24 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                 {/* Search */}
                 <div className="mb-6">
                     <div className="relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
                         <input
                             type="text"
                             placeholder="Search members..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-12 pr-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
                         />
                     </div>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-4 mb-6 border-b border-slate-200">
+                <div className="flex gap-4 mb-6 border-b border-[var(--cl-hairline)]">
                     <button
                         onClick={() => setActiveTab('all')}
                         className={`pb-3 px-1 font-semibold transition-colors ${activeTab === 'all'
-                            ? 'text-indigo-600 border-b-2 border-indigo-600'
-                            : 'text-slate-500 hover:text-slate-700'
+                            ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                            : 'text-[var(--cl-muted)] hover:text-[var(--cl-body)]'
                             }`}
                     >
                         All ({members.length})
@@ -186,8 +186,8 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                     <button
                         onClick={() => setActiveTab('pending')}
                         className={`pb-3 px-1 font-semibold transition-colors ${activeTab === 'pending'
-                            ? 'text-indigo-600 border-b-2 border-indigo-600'
-                            : 'text-slate-500 hover:text-slate-700'
+                            ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                            : 'text-[var(--cl-muted)] hover:text-[var(--cl-body)]'
                             }`}
                     >
                         Pending ({pendingCount})
@@ -195,8 +195,8 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                     <button
                         onClick={() => setActiveTab('approved')}
                         className={`pb-3 px-1 font-semibold transition-colors ${activeTab === 'approved'
-                            ? 'text-indigo-600 border-b-2 border-indigo-600'
-                            : 'text-slate-500 hover:text-slate-700'
+                            ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
+                            : 'text-[var(--cl-muted)] hover:text-[var(--cl-body)]'
                             }`}
                     >
                         Approved ({approvedCount})
@@ -206,45 +206,45 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                 {/* Members List */}
                 {filteredMembers.length === 0 ? (
                     <div className="text-center py-12">
-                        <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                        <p className="text-slate-600">No members found</p>
+                        <Users className="w-16 h-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
+                        <p className="text-[var(--cl-body)]">No members found</p>
                     </div>
                 ) : (
                     <div className="space-y-3">
                         {filteredMembers.map((member) => (
                             <div
                                 key={member.id}
-                                className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                                className="flex items-center justify-between p-4 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
                             >
                                 <div className="flex items-center gap-4 flex-1">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
                                         {member.student.full_name.charAt(0)}
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-semibold text-slate-900">{member.student.full_name}</h3>
-                                        <p className="text-sm text-slate-600">{member.student.email}</p>
+                                        <h3 className="font-semibold text-[var(--cl-ink)]">{member.student.full_name}</h3>
+                                        <p className="text-sm text-[var(--cl-body)]">{member.student.email}</p>
                                         {member.student.degree_type && (
-                                            <p className="text-xs text-slate-500 mt-1">
+                                            <p className="text-xs text-[var(--cl-muted)] mt-1">
                                                 {member.student.degree_type} {member.student.specialization_board && `• ${member.student.specialization_board}`}
                                             </p>
                                         )}
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-xs text-slate-500">Joined {formatDate(member.joined_at)}</p>
+                                        <p className="text-xs text-[var(--cl-muted)]">Joined {formatDate(member.joined_at)}</p>
                                         {member.status === 'pending' && (
-                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full">
+                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] text-xs font-semibold rounded-full">
                                                 <Clock className="w-3 h-3" />
                                                 Pending
                                             </span>
                                         )}
                                         {member.status === 'approved' && (
-                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] text-xs font-semibold rounded-full">
                                                 <Check className="w-3 h-3" />
                                                 Approved
                                             </span>
                                         )}
                                         {member.status === 'rejected' && (
-                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+                                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-1 bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] text-xs font-semibold rounded-full">
                                                 <X className="w-3 h-3" />
                                                 Rejected
                                             </span>
@@ -260,7 +260,7 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                                                 <button
                                                     onClick={() => handleApprove(member.id)}
                                                     disabled={processingId === member.id}
-                                                    className="p-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-2 bg-[rgba(22,163,74,0.12)] hover:bg-[var(--cl-success)] text-[var(--cl-success)] rounded-lg transition-colors disabled:opacity-50"
                                                     title="Approve"
                                                 >
                                                     <Check className="w-5 h-5" />
@@ -268,7 +268,7 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                                                 <button
                                                     onClick={() => handleReject(member.id)}
                                                     disabled={processingId === member.id}
-                                                    className="p-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-2 bg-[rgba(239,68,68,0.12)] hover:bg-[var(--cl-error)] text-[var(--cl-error)] rounded-lg transition-colors disabled:opacity-50"
                                                     title="Reject"
                                                 >
                                                     <X className="w-5 h-5" />
@@ -283,7 +283,7 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                                                         setShowMuteModal(true);
                                                     }}
                                                     disabled={processingId === member.id}
-                                                    className="p-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-2 bg-[rgba(171,100,0,0.12)] hover:bg-[var(--cl-warning)] text-[var(--cl-warning)] rounded-lg transition-colors disabled:opacity-50"
                                                     title="Mute member"
                                                 >
                                                     <UserX className="w-5 h-5" />
@@ -291,7 +291,7 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                                                 <button
                                                     onClick={() => handleRemove(member.id)}
                                                     disabled={processingId === member.id}
-                                                    className="p-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors disabled:opacity-50"
+                                                    className="p-2 bg-[rgba(239,68,68,0.12)] hover:bg-[var(--cl-error)] text-[var(--cl-error)] rounded-lg transition-colors disabled:opacity-50"
                                                     title="Remove member"
                                                 >
                                                     <Trash2 className="w-5 h-5" />

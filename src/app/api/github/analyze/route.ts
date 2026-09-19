@@ -9,13 +9,20 @@ import {
   getLanguages,
   getBranches,
   getFileTree,
+  getFileContent,
   buildDailyActivity,
   countActiveDays,
   detectSuspiciousActivity,
   calculateScores,
   classifyComplexity,
   buildNestedTree,
+  pickComparableFiles,
+  flattenTreePaths,
+  jaccardSimilarity,
 } from '@/lib/github';
+
+const SIMILARITY_THRESHOLD = 0.6; // 60% shingle overlap flags a pair for mentor review
+const MAX_PEERS_COMPARED = 5; // cap comparisons for large rosters
 
 /**
  * POST /api/github/analyze
@@ -28,7 +35,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient();
-    const { data: { user, session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json() as { submission_id: string };
@@ -246,6 +254,80 @@ export async function POST(request: NextRequest) {
       .from('assignment_submissions')
       .update({ status: 'analyzed', updated_at: new Date().toISOString() })
       .eq('id', submission_id);
+
+    // Cross-submission similarity check (best-effort - never fails the main analysis).
+    try {
+      const { data: peerSubs } = await admin
+        .from('assignment_submissions')
+        .select('id, student_id, repo_full_name')
+        .eq('assignment_id', submission.assignment_id)
+        .neq('id', submission_id)
+        .not('repo_full_name', 'is', null);
+
+      if (peerSubs && peerSubs.length > 0) {
+        const { data: peerAnalytics } = await admin
+          .from('repo_analytics')
+          .select('submission_id, student_id, file_tree, analyzed_at, similarity_flags')
+          .in('submission_id', peerSubs.map((p) => p.id))
+          .order('analyzed_at', { ascending: false })
+          .limit(MAX_PEERS_COMPARED);
+
+        const myComparableFiles = pickComparableFiles(allFiles);
+        const myNewFlags: Array<{ peer_submission_id: string; peer_student_id: string; similarity: number; files_compared: string[] }> = [];
+
+        for (const peer of peerAnalytics ?? []) {
+          const peerPaths = new Set(flattenTreePaths((peer.file_tree as any) ?? []));
+          const sharedPaths = myComparableFiles.filter((p) => peerPaths.has(p)).slice(0, 2);
+          if (sharedPaths.length === 0) continue;
+
+          const peerSub = peerSubs.find((p) => p.id === peer.submission_id);
+          if (!peerSub) continue;
+
+          let totalSim = 0;
+          let compared = 0;
+          for (const path of sharedPaths) {
+            const [mine, theirs] = await Promise.all([
+              getFileContent(repoFullName, path, token),
+              getFileContent(peerSub.repo_full_name, path, token),
+            ]);
+            if (mine?.content && theirs?.content) {
+              totalSim += jaccardSimilarity(mine.content.slice(0, 4000), theirs.content.slice(0, 4000));
+              compared += 1;
+            }
+          }
+
+          if (compared > 0) {
+            const avgSim = totalSim / compared;
+            if (avgSim >= SIMILARITY_THRESHOLD) {
+              myNewFlags.push({
+                peer_submission_id: peerSub.id,
+                peer_student_id: peerSub.student_id,
+                similarity: Math.round(avgSim * 100),
+                files_compared: sharedPaths,
+              });
+
+              // Mirror the flag onto the peer's record too, so either submission's mentor view surfaces it.
+              const existingPeerFlags = (peer.similarity_flags as any[]) ?? [];
+              await admin
+                .from('repo_analytics')
+                .update({
+                  similarity_flags: [
+                    ...existingPeerFlags.filter((f) => f.peer_submission_id !== submission_id),
+                    { peer_submission_id: submission_id, peer_student_id: submission.student_id, similarity: Math.round(avgSim * 100), files_compared: sharedPaths },
+                  ],
+                })
+                .eq('submission_id', peer.submission_id);
+            }
+          }
+        }
+
+        if (myNewFlags.length > 0) {
+          await admin.from('repo_analytics').update({ similarity_flags: myNewFlags }).eq('submission_id', submission_id);
+        }
+      }
+    } catch (simErr) {
+      console.warn('Similarity check failed (non-fatal):', simErr);
+    }
 
     return NextResponse.json({ success: true, overall_score: scores.overall });
   } catch (err) {

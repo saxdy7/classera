@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import SubmissionsList from './SubmissionsList';
 import BatchToolbar from '@/components/projects/BatchToolbar';
+import AddStudentsButton from './AddStudentsButton';
+import MilestonesSection from './MilestonesSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,12 +50,12 @@ type AssignedStudent = {
 
 function statusColor(status: string) {
   switch (status) {
-    case 'graded': return 'bg-violet-100 text-violet-700';
-    case 'reviewed': return 'bg-blue-100 text-blue-700';
-    case 'analyzed': return 'bg-emerald-100 text-emerald-700';
-    case 'analyzing': return 'bg-amber-100 text-amber-700';
-    case 'submitted': return 'bg-slate-100 text-slate-600';
-    default: return 'bg-slate-100 text-slate-500';
+    case 'graded': return 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]';
+    case 'reviewed': return 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]';
+    case 'analyzed': return 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]';
+    case 'analyzing': return 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]';
+    case 'submitted': return 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]';
+    default: return 'bg-[var(--cl-surface-strong)] text-[var(--cl-muted)]';
   }
 }
 
@@ -99,6 +101,16 @@ export default async function AssignmentDetailPage({
   const subList = (submissions ?? []) as unknown as Submission[];
   const assigned = (assignedStudents ?? []) as unknown as AssignedStudent[];
 
+  // Students at the same university not yet on this assignment's roster.
+  const assignedIds = new Set(assigned.map((a) => a.student_id));
+  const { data: universityStudents } = await admin
+    .from('users')
+    .select('id, full_name, email, avatar_url')
+    .eq('role', 'student')
+    .eq('university_id', profile.university_id)
+    .order('full_name');
+  const eligibleStudents = (universityStudents ?? []).filter((s) => !assignedIds.has(s.id));
+
   const submittedIds = new Set(subList.map((s) => s.student_id));
   const notSubmitted = assigned.filter((a) => !submittedIds.has(a.student_id));
 
@@ -115,37 +127,37 @@ export default async function AssignmentDetailPage({
       : null;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24 p-6 md:p-8">
+        <main className="flex-1 cl-main p-6 md:p-8">
           <div className="max-w-5xl mx-auto space-y-6">
             {/* Back */}
             <Link
               href="/dashboard/mentor/projects"
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Projects
             </Link>
 
             {/* Assignment header */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-violet-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <GitBranch className="w-6 h-6 text-violet-600" />
+                  <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-xl)] flex items-center justify-center flex-shrink-0">
+                    <GitBranch className="w-6 h-6 text-[var(--cl-primary)]" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold text-slate-900">{assignment.title}</h1>
+                    <h1 className="text-xl font-semibold text-[var(--cl-ink)]">{assignment.title}</h1>
                     {assignment.description && (
-                      <p className="text-slate-500 text-sm mt-1">{assignment.description}</p>
+                      <p className="text-[var(--cl-muted)] text-sm mt-1">{assignment.description}</p>
                     )}
                     {assignment.technologies?.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {(assignment.technologies as string[]).map((t) => (
-                          <span key={t} className="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+                          <span key={t} className="text-xs px-2 py-0.5 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-full">
                             {t}
                           </span>
                         ))}
@@ -153,21 +165,21 @@ export default async function AssignmentDetailPage({
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1 text-sm text-slate-500 flex-shrink-0">
+                <div className="flex flex-col items-end gap-1 text-sm text-[var(--cl-muted)] flex-shrink-0">
                   {assignment.deadline && (
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
                       Due {new Date(assignment.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   )}
-                  <span className="text-slate-400 text-xs">Max score: {assignment.max_score}</span>
+                  <span className="text-[var(--cl-muted)] text-xs">Max score: {assignment.max_score}</span>
                 </div>
               </div>
 
               {assignment.requirements && (
-                <div className="mt-4 p-3 bg-slate-50 rounded-xl">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Requirements</p>
-                  <p className="text-sm text-slate-700 whitespace-pre-wrap">{assignment.requirements}</p>
+                <div className="mt-4 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)]">
+                  <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wide mb-1">Requirements</p>
+                  <p className="text-sm text-[var(--cl-body)] whitespace-pre-wrap">{assignment.requirements}</p>
                 </div>
               )}
             </div>
@@ -175,16 +187,16 @@ export default async function AssignmentDetailPage({
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { label: 'Assigned', value: assigned.length, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-                { label: 'Submitted', value: subList.length, icon: FileCode, color: 'text-violet-600', bg: 'bg-violet-50' },
-                { label: 'Avg Score', value: avgScore !== null ? `${avgScore}/100` : '—', icon: Star, color: 'text-amber-600', bg: 'bg-amber-50' },
-                { label: 'Alerts', value: totalSuspicious, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
+                { label: 'Assigned', value: assigned.length, icon: Users, color: 'text-[var(--cl-primary)]', bg: 'bg-[var(--cl-primary-soft)]' },
+                { label: 'Submitted', value: subList.length, icon: FileCode, color: 'text-[var(--cl-primary)]', bg: 'bg-[var(--cl-primary-soft)]' },
+                { label: 'Avg Score', value: avgScore !== null ? `${avgScore}/100` : '—', icon: Star, color: 'text-[var(--cl-warning)]', bg: 'bg-[rgba(171,100,0,0.12)]' },
+                { label: 'Alerts', value: totalSuspicious, icon: AlertTriangle, color: 'text-[var(--cl-error)]', bg: 'bg-[rgba(239,68,68,0.12)]' },
               ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} className={`${bg} rounded-2xl p-4 flex items-center gap-3`}>
+                <div key={label} className={`${bg} rounded-[var(--cl-r-xl)] p-4 flex items-center gap-3`}>
                   <Icon className={`${color} w-5 h-5 flex-shrink-0`} />
                   <div>
-                    <p className="text-xl font-bold text-slate-900">{value}</p>
-                    <p className="text-xs text-slate-500">{label}</p>
+                    <p className="text-xl font-semibold text-[var(--cl-ink)]">{value}</p>
+                    <p className="text-xs text-[var(--cl-muted)]">{label}</p>
                   </div>
                 </div>
               ))}
@@ -195,18 +207,19 @@ export default async function AssignmentDetailPage({
               <div className="flex gap-2">
                 <Link
                   href={`/dashboard/mentor/projects/${id}/compare`}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
                 >
-                  <BarChart2 size={15} className="text-violet-500" />
+                  <BarChart2 size={15} className="text-[var(--cl-primary)]" />
                   Compare All
                 </Link>
                 <Link
                   href={`/dashboard/mentor/projects/${id}/rubric`}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
                 >
-                  <BookOpen size={15} className="text-violet-500" />
+                  <BookOpen size={15} className="text-[var(--cl-primary)]" />
                   Rubric
                 </Link>
+                <AddStudentsButton assignmentId={id} eligibleStudents={eligibleStudents} />
               </div>
               <BatchToolbar
                 assignmentId={id}
@@ -221,6 +234,8 @@ export default async function AssignmentDetailPage({
               />
             </div>
 
+            <MilestonesSection assignmentId={id} />
+
             <SubmissionsList
               assignmentId={id}
               maxScore={assignment.max_score}
@@ -229,9 +244,9 @@ export default async function AssignmentDetailPage({
             />
 
             {subList.length === 0 && notSubmitted.length === 0 && (
-              <div className="bg-white rounded-2xl border border-slate-100 p-16 text-center">
-                <CheckCircle2 className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-                <p className="text-slate-500">No students assigned to this project yet.</p>
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-16 text-center">
+                <CheckCircle2 className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
+                <p className="text-[var(--cl-muted)]">No students assigned to this project yet.</p>
               </div>
             )}
           </div>

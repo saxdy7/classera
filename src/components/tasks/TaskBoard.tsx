@@ -30,17 +30,17 @@ interface Task {
 }
 
 const columns = [
-  { id: 'todo', title: 'To Do', color: 'bg-gray-500' },
-  { id: 'in_progress', title: 'In Progress', color: 'bg-blue-500' },
-  { id: 'review', title: 'Review', color: 'bg-yellow-500' },
-  { id: 'done', title: 'Done', color: 'bg-green-500' },
+  { id: 'todo', title: 'To Do', color: 'bg-[var(--cl-surface-strong)]' },
+  { id: 'in_progress', title: 'In Progress', color: 'bg-[var(--cl-info)]' },
+  { id: 'review', title: 'Review', color: 'bg-[var(--cl-warning)]' },
+  { id: 'done', title: 'Done', color: 'bg-[var(--cl-success)]' },
 ];
 
 const priorityColors = {
-  low: 'bg-gray-200 text-gray-700',
-  medium: 'bg-blue-200 text-blue-700',
-  high: 'bg-orange-200 text-orange-700',
-  urgent: 'bg-red-200 text-red-700',
+  low: 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]',
+  medium: 'bg-[var(--cl-info)] text-[var(--cl-info)]',
+  high: 'bg-[var(--cl-warning)] text-[var(--cl-warning)]',
+  urgent: 'bg-[var(--cl-error)] text-[var(--cl-error)]',
 };
 
 export default function TaskBoard() {
@@ -156,10 +156,10 @@ export default function TaskBoard() {
     return (
       <div className="p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-[var(--cl-surface-strong)] rounded w-1/4"></div>
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-64 bg-gray-200 rounded"></div>
+              <div key={i} className="h-64 bg-[var(--cl-surface-strong)] rounded"></div>
             ))}
           </div>
         </div>
@@ -170,22 +170,22 @@ export default function TaskBoard() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-semibold text-[var(--cl-ink)]">
           Task Board
         </h1>
-        <p className="text-gray-600 mt-2">Organize and track your tasks</p>
+        <p className="text-[var(--cl-body)] mt-2">Organize and track your tasks</p>
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {columns.map((column) => (
-            <div key={column.id} className="bg-gray-50 rounded-lg p-4">
+            <div key={column.id} className="bg-[var(--cl-canvas-soft)] rounded-lg p-4">
               {/* Column Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
                   <div className={`w-3 h-3 rounded-full ${column.color}`}></div>
-                  <h3 className="font-semibold text-gray-900">{column.title}</h3>
-                  <span className="text-sm text-gray-500">
+                  <h3 className="font-semibold text-[var(--cl-ink)]">{column.title}</h3>
+                  <span className="text-sm text-[var(--cl-muted)]">
                     {getTasksByStatus(column.id).length}
                   </span>
                 </div>
@@ -258,7 +258,7 @@ export default function TaskBoard() {
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     className={`space-y-2 min-h-[200px] ${
-                      snapshot.isDraggingOver ? 'bg-purple-50' : ''
+                      snapshot.isDraggingOver ? 'bg-[var(--cl-primary-soft)]' : ''
                     } rounded-lg transition-colors`}
                   >
                     {getTasksByStatus(column.id).map((task, index) => (
@@ -269,12 +269,12 @@ export default function TaskBoard() {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             className={`p-3 cursor-move ${
-                              snapshot.isDragging ? 'shadow-lg' : ''
+                              snapshot.isDragging ? '' : ''
                             }`}
                           >
                             <div className="space-y-2">
                               <div className="flex items-start justify-between">
-                                <h4 className="font-medium text-sm text-gray-900 flex-1">
+                                <h4 className="font-medium text-sm text-[var(--cl-ink)] flex-1">
                                   {task.title}
                                 </h4>
                                 <Button
@@ -283,12 +283,12 @@ export default function TaskBoard() {
                                   onClick={() => handleDeleteTask(task.id)}
                                   className="h-6 w-6 p-0"
                                 >
-                                  <Trash2 className="w-3 h-3 text-gray-400" />
+                                  <Trash2 className="w-3 h-3 text-[var(--cl-muted-soft)]" />
                                 </Button>
                               </div>
 
                               {task.description && (
-                                <p className="text-xs text-gray-600 line-clamp-2">
+                                <p className="text-xs text-[var(--cl-body)] line-clamp-2">
                                   {task.description}
                                 </p>
                               )}
@@ -303,7 +303,7 @@ export default function TaskBoard() {
                                 </span>
 
                                 {task.due_date && (
-                                  <div className="flex items-center text-xs text-gray-500">
+                                  <div className="flex items-center text-xs text-[var(--cl-muted)]">
                                     <Calendar className="w-3 h-3 mr-1" />
                                     {format(new Date(task.due_date), 'MMM d')}
                                   </div>

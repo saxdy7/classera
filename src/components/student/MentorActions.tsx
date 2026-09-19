@@ -86,8 +86,8 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
   if (checking) {
     return (
       <div className="flex gap-3">
-        <div className="flex-1 px-6 py-3 bg-slate-200 rounded-xl animate-pulse"></div>
-        <div className="px-6 py-3 bg-slate-200 rounded-xl animate-pulse"></div>
+        <div className="flex-1 px-6 py-3 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] animate-pulse"></div>
+        <div className="px-6 py-3 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] animate-pulse"></div>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
       {connectionStatus === 'accepted' ? (
         <button
           onClick={handleMessage}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
         >
           <MessageSquare className="w-5 h-5" />
           Send Message
@@ -106,7 +106,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
       ) : connectionStatus === 'pending' ? (
         <button
           disabled
-          className="flex-1 px-6 py-3 bg-slate-300 text-slate-600 rounded-xl font-medium cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-medium cursor-not-allowed flex items-center justify-center gap-2"
         >
           <MessageSquare className="w-5 h-5" />
           Request Pending
@@ -115,7 +115,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
         <button
           onClick={handleConnect}
           disabled={loading}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+          className="flex-1 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 bg-[var(--cl-warning)]"
         >
           <MessageSquare className="w-5 h-5" />
           {loading ? 'Sending...' : 'Request Again'}
@@ -124,7 +124,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
         <button
           onClick={handleConnect}
           disabled={loading}
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
+          className="flex-1 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 bg-[var(--cl-primary)]"
         >
           <MessageSquare className="w-5 h-5" />
           {loading ? 'Connecting...' : 'Connect'}
@@ -135,7 +135,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
       {connectionStatus === 'accepted' ? (
         <button
           onClick={handleSchedule}
-          className="px-6 py-3 border-2 border-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 text-black"
+          className="px-6 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-canvas-soft)] transition-colors flex items-center gap-2 text-black"
         >
           <Calendar className="w-5 h-5" />
           Schedule Session
@@ -143,7 +143,7 @@ export function MentorActions({ mentorId, mentorEmail }: MentorActionsProps) {
       ) : (
         <button
           onClick={handleEmail}
-          className="px-6 py-3 border-2 border-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 text-black"
+          className="px-6 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-canvas-soft)] transition-colors flex items-center gap-2 text-black"
         >
           <Mail className="w-5 h-5" />
           Email

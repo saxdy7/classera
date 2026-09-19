@@ -21,6 +21,9 @@ export function SmartReplies() {
 
     useEffect(() => {
         if (!activeConversation || !activeConversation.last_message || !currentUserId) return;
+        // Captured locally: the guard above does not narrow inside the async
+        // callback below, so the optional field reads as possibly-undefined.
+        const lastMessage = activeConversation.last_message;
 
         // Only generate replies if last message is NOT from current user
         if (activeConversation.last_message.sender_id === currentUserId) {
@@ -37,10 +40,10 @@ export function SmartReplies() {
                 const response = await fetch('/api/ai/replies', {
                     method: 'POST',
                     body: JSON.stringify({
-                        message: activeConversation.last_message,
+                        message: lastMessage,
                         conversationContext: {
-                            senderName: activeConversation.last_message.sender?.full_name,
-                            senderRole: activeConversation.last_message.sender?.role
+                            senderName: lastMessage.sender?.full_name,
+                            senderRole: lastMessage.sender?.role
                         }
                     })
                 });
@@ -61,7 +64,7 @@ export function SmartReplies() {
 
     return (
         <div id="smart-replies-container" className="flex gap-2 px-4 pb-2 overflow-x-auto no-scrollbar">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-fuchsia-500 to-indigo-500 text-white flex-shrink-0 animate-pulse">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full text-[var(--cl-on-dark)] flex-shrink-0 animate-pulse bg-[var(--cl-primary)]">
                 <Sparkles className="w-4 h-4" />
             </div>
             {replies.map((reply, i) => (
@@ -71,7 +74,7 @@ export function SmartReplies() {
                         sendMessage(reply);
                         setReplies([]); // Clear after sending
                     }}
-                    className="px-3 py-1.5 bg-white border border-indigo-100 rounded-full text-sm text-indigo-600 hover:bg-indigo-50 whitespace-nowrap shadow-sm transition-all"
+                    className="px-3 py-1.5 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-full text-sm text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] whitespace-nowrap transition-all"
                 >
                     {reply}
                 </button>

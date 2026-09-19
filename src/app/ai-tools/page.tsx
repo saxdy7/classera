@@ -123,11 +123,11 @@ export default function AIToolsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       {profile && <Header profile={profile} />}
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 md:ml-24 p-4 md:p-8 max-w-6xl">
+        <main className="flex-1 cl-main p-4 md:p-8 max-w-6xl">
           {/* Credits Section */}
           <div className="mb-8">
             {!creditsLoading && (
@@ -139,11 +139,11 @@ export default function AIToolsPage() {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                  <Sparkles className="w-8 h-8 text-blue-600" />
+                <h1 className="text-3xl font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                  <Sparkles className="w-8 h-8 text-[var(--cl-info)]" />
                   AI Learning Tools
                 </h1>
-                <p className="text-gray-600 mt-1">
+                <p className="text-[var(--cl-body)] mt-1">
                   Enhance your learning with AI-powered tools. Each tool costs credits.
                 </p>
               </div>
@@ -163,14 +163,14 @@ export default function AIToolsPage() {
                       <div className="flex items-start justify-between mb-4">
                         <span className="text-4xl">{tool.icon}</span>
                         {tool.pro && (
-                          <Badge className="bg-amber-500 text-white">Pro</Badge>
+                          <Badge className="bg-[var(--cl-warning)] text-[var(--cl-on-dark)]">Pro</Badge>
                         )}
                       </div>
 
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">
                         {tool.name}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-4">
+                      <p className="text-[var(--cl-body)] text-sm mb-4">
                         {tool.description}
                       </p>
 
@@ -178,8 +178,8 @@ export default function AIToolsPage() {
                       <div className="space-y-2 mb-6">
                         {tool.features.map((feature, idx) => (
                           <div key={idx} className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-600" />
-                            <span className="text-sm text-gray-700">{feature}</span>
+                            <CheckCircle2 className="w-4 h-4 text-[var(--cl-success)]" />
+                            <span className="text-sm text-[var(--cl-body)]">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -187,18 +187,18 @@ export default function AIToolsPage() {
                       {/* Cost & Button */}
                       <div className="flex items-center justify-between pt-4 border-t">
                         <div className="flex items-center gap-2">
-                          <span className="text-2xl font-bold text-blue-600">
+                          <span className="text-2xl font-semibold text-[var(--cl-info)]">
                             {tool.cost}
                           </span>
-                          <span className="text-sm text-gray-500">credits</span>
+                          <span className="text-sm text-[var(--cl-muted)]">credits</span>
                         </div>
                         <Button
                           onClick={() => handleToolClick(tool)}
                           disabled={creditsLoading}
                           className={
                             canUse
-                              ? 'bg-blue-600 hover:bg-blue-700'
-                              : 'bg-gray-400 cursor-not-allowed'
+                              ? 'bg-[var(--cl-info)] hover:bg-[var(--cl-info)]'
+                              : 'bg-[var(--cl-surface-strong)] cursor-not-allowed'
                           }
                         >
                           {canUse ? (
@@ -213,7 +213,7 @@ export default function AIToolsPage() {
                       </div>
 
                       {!canUse && (
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-xs text-[var(--cl-muted)] mt-2">
                           Need {tool.cost - balance} more credit{tool.cost - balance === 1 ? '' : 's'}
                         </p>
                       )}
@@ -225,15 +225,15 @@ export default function AIToolsPage() {
           </div>
 
           {/* Free Tier Info */}
-          <Card className="bg-blue-50 border-blue-200">
+          <Card className="bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]">
             <CardContent className="pt-6">
               <div className="flex items-start gap-4">
-                <Brain className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Brain className="w-6 h-6 text-[var(--cl-info)] flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">
+                  <h3 className="font-semibold text-[var(--cl-info)] mb-1">
                     Free Trial: 5 Credits
                   </h3>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-sm text-[var(--cl-info)]">
                     Every new student gets 5 free credits to try our AI tools. Once you
                     run out, purchase more credits to continue learning with AI.
                   </p>

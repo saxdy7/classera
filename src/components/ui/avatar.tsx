@@ -24,7 +24,7 @@ export function Avatar({ src, alt, fallback, className = "", ...props }: AvatarP
           onError={() => setImgError(true)}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+        <div className="flex h-full w-full items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-info)]">
           {initials}
         </div>
       )}
@@ -38,7 +38,7 @@ export const AvatarImage = ({ src, alt, className, ...props }: React.ImgHTMLAttr
 );
 
 export const AvatarFallback = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold ${className || ''}`} {...props}>
+  <div className={`flex h-full w-full items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-info)] ${className || ''}`} {...props}>
     {children}
   </div>
 );

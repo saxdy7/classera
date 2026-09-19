@@ -13,7 +13,19 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
+    // Body may be JSON (student-to-student flow) or an empty form POST from the
+    // mentor students page. Parse defensively so neither caller 500s.
+    let body: any = {};
+    try {
+      const ct = request.headers.get('content-type') || '';
+      if (ct.includes('application/json')) {
+        body = await request.json();
+      } else if (ct.includes('form')) {
+        body = Object.fromEntries((await request.formData()).entries());
+      }
+    } catch {
+      body = {};
+    }
     const requestId = (await params).id;
     const { studentId } = body;
 

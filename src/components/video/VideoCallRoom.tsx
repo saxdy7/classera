@@ -186,9 +186,9 @@ export default function VideoCallRoom({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-900">
+      <div className="flex items-center justify-center h-screen bg-[var(--cl-surface-inverse)]">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">{error}</div>
+          <div className="text-[var(--cl-error)] text-xl mb-4">{error}</div>
           <Button onClick={onLeave} variant="outline">
             Go Back
           </Button>
@@ -198,25 +198,25 @@ export default function VideoCallRoom({
   }
 
   return (
-    <div className="relative w-full h-screen bg-gray-900">
+    <div className="relative w-full h-screen bg-[var(--cl-surface-inverse)]">
       {/* Video Container */}
       <div ref={containerRef} className="w-full h-full" />
 
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90">
+        <div className="absolute inset-0 flex items-center justify-center bg-[rgba(10,10,10,0.9)]">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-4"></div>
-            <p className="text-white text-lg">Connecting to video call...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--cl-primary)] mx-auto mb-4"></div>
+            <p className="text-[var(--cl-on-dark)] text-lg">Connecting to video call...</p>
           </div>
         </div>
       )}
 
       {/* Call Info Bar */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 bg-opacity-90 px-6 py-3 rounded-full shadow-lg">
-        <div className="flex items-center space-x-6 text-white">
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-[rgba(10,10,10,0.9)] px-6 py-3 rounded-full">
+        <div className="flex items-center space-x-6 text-[var(--cl-on-dark)]">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-[var(--cl-error)] rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">{formatDuration(callDuration)}</span>
           </div>
           <div className="text-sm">
@@ -231,7 +231,7 @@ export default function VideoCallRoom({
           onClick={toggleMute}
           size="lg"
           className={`rounded-full w-14 h-14 ${
-            isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-700 hover:bg-gray-600'
+            isMuted ? 'bg-[var(--cl-error)] hover:bg-[var(--cl-error)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
           }`}
         >
           {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -241,7 +241,7 @@ export default function VideoCallRoom({
           onClick={toggleVideo}
           size="lg"
           className={`rounded-full w-14 h-14 ${
-            isVideoOff ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-700 hover:bg-gray-600'
+            isVideoOff ? 'bg-[var(--cl-error)] hover:bg-[var(--cl-error)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
           }`}
         >
           {isVideoOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
@@ -252,7 +252,7 @@ export default function VideoCallRoom({
             onClick={toggleScreenShare}
             size="lg"
             className={`rounded-full w-14 h-14 ${
-              isScreenSharing ? 'bg-purple-500 hover:bg-purple-600' : 'bg-gray-700 hover:bg-gray-600'
+              isScreenSharing ? 'bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
             }`}
           >
             {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
@@ -262,7 +262,7 @@ export default function VideoCallRoom({
         <Button
           onClick={leaveCall}
           size="lg"
-          className="rounded-full w-14 h-14 bg-red-600 hover:bg-red-700"
+          className="rounded-full w-14 h-14 bg-[var(--cl-error)] hover:bg-[var(--cl-error)]"
         >
           <PhoneOff className="w-6 h-6" />
         </Button>

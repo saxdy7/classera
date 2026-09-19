@@ -50,6 +50,12 @@ export interface Conversation {
         content: string;
         type: string;
         created_at: string;
+        // Joined by the conversations query; optional because a conversation
+        // can exist before its first message is loaded.
+        sender?: {
+            full_name?: string;
+            role?: string;
+        };
     };
     last_message_at?: string;
     unread_count?: number;

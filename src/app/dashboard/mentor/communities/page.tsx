@@ -29,11 +29,11 @@ export default async function MentorCommunitiesPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex h-[calc(100vh-64px)]">
         <Sidebar role="mentor" />
-        <div className="flex-1 md:ml-24">
+        <div className="flex-1 cl-main">
           <MentorCommunitiesLayout
             communities={communities || []}
             profile={profile}

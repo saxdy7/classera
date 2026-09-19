@@ -113,15 +113,15 @@ export function FileUpload({
                 />
 
                 {selectedFile ? (
-                    <div className="absolute bottom-full left-0 mb-2 p-2 bg-indigo-50 border border-indigo-100 rounded-lg flex items-center gap-2 max-w-xs shadow-sm">
-                        <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <FileIcon className="w-4 h-4 text-indigo-600" />
+                    <div className="absolute bottom-full left-0 mb-2 p-2 bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] rounded-lg flex items-center gap-2 max-w-xs">
+                        <div className="w-8 h-8 bg-[var(--cl-primary-soft)] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <FileIcon className="w-4 h-4 text-[var(--cl-primary)]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-indigo-900 truncate">
+                            <p className="text-xs font-semibold text-[var(--cl-primary)] truncate">
                                 {selectedFile.name}
                             </p>
-                            <p className="text-[10px] text-indigo-600">
+                            <p className="text-[10px] text-[var(--cl-primary)]">
                                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                             </p>
                         </div>
@@ -130,9 +130,9 @@ export function FileUpload({
                                 e.preventDefault();
                                 onClear?.();
                             }}
-                            className="p-1 hover:bg-indigo-200 rounded-full transition-colors"
+                            className="p-1 hover:bg-[var(--cl-primary)] rounded-full transition-colors"
                         >
-                            <X className="w-3 h-3 text-indigo-700" />
+                            <X className="w-3 h-3 text-[var(--cl-primary)]" />
                         </button>
                     </div>
                 ) : null}
@@ -141,7 +141,7 @@ export function FileUpload({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={disabled}
-                    className="p-3 text-slate-400 hover:text-indigo-600 transition-colors disabled:opacity-50"
+                    className="p-3 text-[var(--cl-muted-soft)] hover:text-[var(--cl-primary)] transition-colors disabled:opacity-50"
                     title="Attach file"
                 >
                     <Paperclip className="w-5 h-5" />
@@ -175,7 +175,7 @@ export function FileUpload({
                             <button
                                 type="button"
                                 onClick={() => removeImage(idx)}
-                                className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                                className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-full flex items-center justify-center"
                             >
                                 <X className="w-3 h-3" />
                             </button>
@@ -188,16 +188,16 @@ export function FileUpload({
             {files.length > 0 && (
                 <div className="space-y-2">
                     {files.map((file, idx) => (
-                        <div key={idx} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
-                            <FileIcon className="w-4 h-4 text-slate-500" />
-                            <span className="text-sm text-slate-700 flex-1 truncate">{file.name}</span>
-                            <span className="text-xs text-slate-500">{(file.size / 1024 / 1024).toFixed(2)}MB</span>
+                        <div key={idx} className="flex items-center gap-2 p-2 bg-[var(--cl-canvas-soft)] rounded-lg">
+                            <FileIcon className="w-4 h-4 text-[var(--cl-muted)]" />
+                            <span className="text-sm text-[var(--cl-body)] flex-1 truncate">{file.name}</span>
+                            <span className="text-xs text-[var(--cl-muted)]">{(file.size / 1024 / 1024).toFixed(2)}MB</span>
                             <button
                                 type="button"
                                 onClick={() => removeFile(idx)}
-                                className="p-1 hover:bg-red-100 rounded"
+                                className="p-1 hover:bg-[rgba(239,68,68,0.12)] rounded"
                             >
-                                <X className="w-3 h-3 text-red-500" />
+                                <X className="w-3 h-3 text-[var(--cl-error)]" />
                             </button>
                         </div>
                     ))}
@@ -210,14 +210,14 @@ export function FileUpload({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={disabled || uploading}
-                    className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 border border-[var(--cl-hairline)] rounded-lg hover:bg-[var(--cl-canvas-soft)] transition-colors disabled:opacity-50"
                 >
                     {uploading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                         <>
-                            <ImageIcon className="w-4 h-4 text-slate-500" />
-                            <span className="text-sm text-slate-700">Add Image</span>
+                            <ImageIcon className="w-4 h-4 text-[var(--cl-muted)]" />
+                            <span className="text-sm text-[var(--cl-body)]">Add Image</span>
                         </>
                     )}
                 </button>
@@ -225,10 +225,10 @@ export function FileUpload({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={disabled || uploading}
-                    className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 border border-[var(--cl-hairline)] rounded-lg hover:bg-[var(--cl-canvas-soft)] transition-colors disabled:opacity-50"
                 >
-                    <Paperclip className="w-4 h-4 text-slate-500" />
-                    <span className="text-sm text-slate-700">Add File</span>
+                    <Paperclip className="w-4 h-4 text-[var(--cl-muted)]" />
+                    <span className="text-sm text-[var(--cl-body)]">Add File</span>
                 </button>
             </div>
         </div>

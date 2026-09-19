@@ -116,19 +116,19 @@ export default function StudentAuth() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-950 relative overflow-hidden">
+    <div className="min-h-screen flex bg-[var(--cl-canvas)] relative overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/10 via-transparent to-purple-500/10"></div>
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-fuchsia-500/20 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px]"></div>
+      <div className="absolute inset-0"></div>
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px]"></div>
 
       {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative z-10">
-        <div className="w-full max-w-xl bg-slate-900/50 backdrop-blur-2xl border border-slate-800/50 rounded-3xl p-8 shadow-2xl">
+        <div className="cl-pop w-full max-w-xl bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-8 shadow-[var(--cl-shadow-card)]">
           {/* Back Button */}
           <Link
             href="/signin"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-400 hover:text-fuchsia-400 hover:bg-slate-800/50 rounded-lg mb-8 transition-all group"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--cl-muted)] hover:text-[var(--cl-primary)] hover:bg-[var(--cl-surface-card)] rounded-lg mb-8 transition-all group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to role selection
@@ -136,19 +136,19 @@ export default function StudentAuth() {
 
           {/* Header */}
           <div className="mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-fuchsia-500/10 to-purple-500/10 border border-fuchsia-500/20 text-fuchsia-400 rounded-full text-sm font-semibold mb-6">
-              <div className="w-2 h-2 bg-fuchsia-400 rounded-full animate-pulse"></div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--cl-primary)] text-[var(--cl-primary)] rounded-full text-sm font-semibold mb-6">
+              <div className="w-2 h-2 bg-[var(--cl-primary)] rounded-full animate-pulse"></div>
               Student Portal
             </div>
             {error && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-[rgba(239,68,68,0.1)] border border-[var(--cl-error)] text-[var(--cl-error)] rounded-lg text-sm">
                 {error}
               </div>
             )}
-            <h1 className="text-4xl font-bold text-white mb-3">
+            <h1 className="text-4xl font-semibold text-[var(--cl-ink)] mb-3">
               {isSignIn ? 'Welcome back!' : 'Create your account'}
             </h1>
-            <p className="text-slate-400">
+            <p className="text-[var(--cl-muted)]">
               {isSignIn
                 ? 'Sign in to access your learning dashboard'
                 : 'Join Classera to start your learning journey'}
@@ -159,7 +159,7 @@ export default function StudentAuth() {
           <button
             onClick={handleGoogleAuth}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-xl font-medium text-slate-300 hover:border-fuchsia-500/50 hover:bg-slate-800 transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] font-medium text-[var(--cl-muted)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-canvas)] transition-all mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -174,7 +174,7 @@ export default function StudentAuth() {
           <button
             onClick={handleGitHubAuth}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-slate-800/50 border border-slate-700/50 rounded-xl font-medium text-slate-300 hover:border-fuchsia-500/50 hover:bg-slate-800 transition-all mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] font-medium text-[var(--cl-muted)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-canvas)] transition-all mb-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
@@ -185,9 +185,9 @@ export default function StudentAuth() {
           {/* Divider */}
           <div className="relative flex items-center justify-center my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-800"></div>
+              <div className="w-full border-t border-[var(--cl-hairline-strong)]"></div>
             </div>
-            <div className="relative px-4 bg-slate-900/50 text-sm text-slate-500">or</div>
+            <div className="relative px-4 bg-[var(--cl-surface-card)] text-sm text-[var(--cl-muted)]">or</div>
           </div>
 
           {/* Form */}
@@ -195,7 +195,7 @@ export default function StudentAuth() {
             {/* Name (Sign Up only) */}
             {!isSignIn && (
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                   Full Name
                 </label>
                 <input
@@ -203,7 +203,7 @@ export default function StudentAuth() {
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white placeholder:text-slate-500"
+                  className="w-full px-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)]"
                   required
                 />
               </div>
@@ -211,17 +211,17 @@ export default function StudentAuth() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
                 <input
                   type="email"
                   placeholder="student@university.edu"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white placeholder:text-slate-500"
+                  className="w-full pl-12 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)]"
                   required
                 />
               </div>
@@ -229,23 +229,23 @@ export default function StudentAuth() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white placeholder:text-slate-500"
+                  className="w-full pl-12 pr-12 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)]"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--cl-muted)] hover:text-[var(--cl-muted)]"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -255,17 +255,17 @@ export default function StudentAuth() {
             {/* Confirm Password (Sign Up only) */}
             {!isSignIn && (
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-white placeholder:text-slate-500"
+                    className="w-full pl-12 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)]"
                     required
                   />
                 </div>
@@ -277,7 +277,7 @@ export default function StudentAuth() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-fuchsia-400 hover:text-fuchsia-300 font-medium"
+                  className="text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium"
                 >
                   Forgot password?
                 </Link>
@@ -290,16 +290,16 @@ export default function StudentAuth() {
                 <input
                   type="checkbox"
                   id="terms"
-                  className="mt-1 w-4 h-4 text-fuchsia-500 bg-slate-800 border-slate-600 rounded focus:ring-fuchsia-500"
+                  className="mt-1 w-4 h-4 text-[var(--cl-primary)] bg-[var(--cl-canvas)] border-[var(--cl-hairline-strong)] rounded focus:ring-[var(--cl-primary)]"
                   required
                 />
-                <label htmlFor="terms" className="text-sm text-slate-400">
+                <label htmlFor="terms" className="text-sm text-[var(--cl-muted)]">
                   I agree to the{' '}
-                  <Link href="/terms" className="text-fuchsia-600 hover:underline">
+                  <Link href="/terms" className="text-[var(--cl-primary)] hover:underline">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-fuchsia-600 hover:underline">
+                  <Link href="/privacy" className="text-[var(--cl-primary)] hover:underline">
                     Privacy Policy
                   </Link>
                 </label>
@@ -310,7 +310,7 @@ export default function StudentAuth() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white rounded-xl font-semibold hover:from-fuchsia-600 hover:to-purple-600 transition-all shadow-lg shadow-fuchsia-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 text-[var(--cl-on-primary)] rounded-[var(--cl-r-lg)] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--cl-primary)]"
             >
               {loading ? 'Loading...' : (isSignIn ? 'Sign In' : 'Create Account')}
               <ArrowRight className="w-5 h-5" />
@@ -321,10 +321,10 @@ export default function StudentAuth() {
           <div className="mt-6 text-center">
             <button
               onClick={() => setIsSignIn(!isSignIn)}
-              className="text-sm text-slate-400"
+              className="text-sm text-[var(--cl-muted)]"
             >
               {isSignIn ? "Don't have an account? " : 'Already have an account? '}
-              <span className="text-fuchsia-400 font-semibold hover:text-fuchsia-300">
+              <span className="text-[var(--cl-primary)] font-semibold hover:text-[var(--cl-primary)]">
                 {isSignIn ? 'Sign up' : 'Sign in'}
               </span>
             </button>
@@ -334,13 +334,13 @@ export default function StudentAuth() {
 
       {/* Right Side - Visual */}
       <div className="hidden lg:flex lg:w-1/2 p-12 items-center justify-center relative z-10">
-        <div className="relative text-white max-w-md">
+        <div className="relative text-[var(--cl-ink)] max-w-md">
           <div className="mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-fuchsia-500/20 to-purple-500/20 backdrop-blur-sm border border-fuchsia-500/20 rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-16 h-16 backdrop-blur-sm border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] flex items-center justify-center mb-6">
               <span className="text-4xl">🎓</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">Start Your Learning Journey</h2>
-            <p className="text-slate-400 text-lg">
+            <h2 className="text-4xl font-semibold mb-4 text-[var(--cl-ink)]">Start Your Learning Journey</h2>
+            <p className="text-[var(--cl-muted)] text-lg">
               Join thousands of students already learning on Classera. Access live classes,
               complete assignments, and track your progress all in one place.
             </p>
@@ -349,9 +349,9 @@ export default function StudentAuth() {
           {/* Features */}
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-fuchsia-500/20 border border-fuchsia-500/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg
-                  className="w-4 h-4 text-white"
+                  className="w-4 h-4 text-[var(--cl-ink)]"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -363,17 +363,17 @@ export default function StudentAuth() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold mb-1 text-white">Live Interactive Classes</h3>
-                <p className="text-slate-400 text-sm">
+                <h3 className="font-semibold mb-1 text-[var(--cl-ink)]">Live Interactive Classes</h3>
+                <p className="text-[var(--cl-muted)] text-sm">
                   Join real-time sessions with mentors and peers
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-fuchsia-500/20 border border-fuchsia-500/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg
-                  className="w-4 h-4 text-white"
+                  className="w-4 h-4 text-[var(--cl-ink)]"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -385,17 +385,17 @@ export default function StudentAuth() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold mb-1 text-white">Track Your Progress</h3>
-                <p className="text-slate-400 text-sm">
+                <h3 className="font-semibold mb-1 text-[var(--cl-ink)]">Track Your Progress</h3>
+                <p className="text-[var(--cl-muted)] text-sm">
                   Monitor your learning journey with detailed analytics
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 bg-fuchsia-500/20 border border-fuchsia-500/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg
-                  className="w-4 h-4 text-white"
+                  className="w-4 h-4 text-[var(--cl-ink)]"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -407,8 +407,8 @@ export default function StudentAuth() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold mb-1 text-white">AI-Powered Assistance</h3>
-                <p className="text-slate-400 text-sm">
+                <h3 className="font-semibold mb-1 text-[var(--cl-ink)]">AI-Powered Assistance</h3>
+                <p className="text-[var(--cl-muted)] text-sm">
                   Get instant help and explanations when you need them
                 </p>
               </div>

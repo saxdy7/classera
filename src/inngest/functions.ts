@@ -121,3 +121,84 @@ export const newCommentNotification = inngest.createFunction(
     return { success: true, notified: true };
   },
 );
+
+// Nudge students whose project deadline is coming up and who haven't submitted yet.
+// Runs hourly; checks a 24-48h window so each student is caught once as they enter
+// it, and skips anyone already notified for that assignment to avoid re-notifying
+// every run.
+export const projectDeadlineReminder = inngest.createFunction(
+  { id: 'project-deadline-reminder', triggers: [{ cron: '0 * * * *' }] },
+  async () => {
+    const now = new Date();
+    const windowStart = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const windowEnd = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+
+    const { data: assignments, error: assignmentsError } = await supabase
+      .from('project_assignments')
+      .select('id, title, deadline')
+      .eq('is_active', true)
+      .gte('deadline', windowStart.toISOString())
+      .lte('deadline', windowEnd.toISOString());
+
+    if (assignmentsError) {
+      console.error('Error fetching assignments for deadline reminder:', assignmentsError);
+      throw assignmentsError;
+    }
+    if (!assignments || assignments.length === 0) {
+      return { success: true, remindersSent: 0 };
+    }
+
+    let remindersSent = 0;
+
+    for (const assignment of assignments) {
+      const { data: roster } = await supabase
+        .from('assignment_students')
+        .select('student_id')
+        .eq('assignment_id', assignment.id);
+
+      const { data: submitted } = await supabase
+        .from('assignment_submissions')
+        .select('student_id')
+        .eq('assignment_id', assignment.id);
+
+      const submittedIds = new Set((submitted ?? []).map((s) => s.student_id));
+      const pendingStudentIds = (roster ?? [])
+        .map((r) => r.student_id)
+        .filter((id) => !submittedIds.has(id));
+
+      if (pendingStudentIds.length === 0) continue;
+
+      const { data: alreadyNotified } = await supabase
+        .from('notifications')
+        .select('user_id')
+        .eq('type', 'project_deadline_reminder')
+        .eq('related_id', assignment.id)
+        .in('user_id', pendingStudentIds);
+
+      const alreadyNotifiedIds = new Set((alreadyNotified ?? []).map((n) => n.user_id));
+      const toNotify = pendingStudentIds.filter((id) => !alreadyNotifiedIds.has(id));
+      if (toNotify.length === 0) continue;
+
+      const notifications = toNotify.map((student_id) => ({
+        user_id: student_id,
+        type: 'project_deadline_reminder',
+        title: 'Deadline Approaching',
+        message: `"${assignment.title}" is due ${new Date(assignment.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} and you haven't submitted yet.`,
+        related_id: assignment.id,
+        related_type: 'project_assignment',
+        action_url: `/dashboard/student/projects/${assignment.id}`,
+        metadata: { assignment_id: assignment.id },
+        is_read: false,
+      }));
+
+      const { error: insertError } = await supabase.from('notifications').insert(notifications);
+      if (insertError) {
+        console.error(`Error sending deadline reminders for assignment ${assignment.id}:`, insertError);
+        continue;
+      }
+      remindersSent += notifications.length;
+    }
+
+    return { success: true, remindersSent };
+  },
+);

@@ -26,9 +26,9 @@ interface AIReviewPanelProps {
 }
 
 const SEV_CONFIG = {
-  critical: { label: 'Critical', icon: Zap, bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', iconColor: 'text-red-500' },
-  warning:  { label: 'Warning',  icon: AlertCircle, bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', iconColor: 'text-amber-500' },
-  info:     { label: 'Info',     icon: Info, bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', iconColor: 'text-blue-500' },
+  critical: { label: 'Critical', icon: Zap, bg: 'bg-[rgba(239,68,68,0.12)]', border: 'border-[var(--cl-error)]', text: 'text-[var(--cl-error)]', iconColor: 'text-[var(--cl-error)]' },
+  warning:  { label: 'Warning',  icon: AlertCircle, bg: 'bg-[rgba(171,100,0,0.12)]', border: 'border-[var(--cl-warning)]', text: 'text-[var(--cl-warning)]', iconColor: 'text-[var(--cl-warning)]' },
+  info:     { label: 'Info',     icon: Info, bg: 'bg-[rgba(13,116,206,0.12)]', border: 'border-[var(--cl-info)]', text: 'text-[var(--cl-info)]', iconColor: 'text-[var(--cl-info)]' },
 };
 
 function IssueGroup({ severity, issues }: { severity: keyof typeof SEV_CONFIG; issues: ReviewIssue[] }) {
@@ -38,18 +38,18 @@ function IssueGroup({ severity, issues }: { severity: keyof typeof SEV_CONFIG; i
   const visible = showAll ? issues : issues.slice(0, 5);
 
   return (
-    <div className={`rounded-xl border p-3 space-y-2 ${config.bg} ${config.border}`}>
+    <div className={`rounded-[var(--cl-r-lg)] border p-3 space-y-2 ${config.bg} ${config.border}`}>
       <div className={`flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide ${config.iconColor}`}>
         <Icon size={13} />
         {config.label} ({issues.length})
       </div>
       {visible.map((issue, i) => (
-        <div key={i} className="bg-white/70 rounded-lg p-2.5 space-y-1">
+        <div key={i} className="bg-[rgba(255,255,255,0.7)] rounded-lg p-2.5 space-y-1">
           <p className={`text-xs font-medium ${config.text}`}>
             {issue.line !== undefined && <span className="font-mono mr-1">L{issue.line}:</span>}
             {issue.description}
           </p>
-          <p className="text-xs text-slate-500">💡 {issue.suggestion}</p>
+          <p className="text-xs text-[var(--cl-muted)]">💡 {issue.suggestion}</p>
         </div>
       ))}
       {issues.length > 5 && (
@@ -113,7 +113,7 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
           <button
             onClick={() => handleReview(pendingFilePath, false)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-sm font-medium rounded-lg hover:bg-[var(--cl-primary)] disabled:opacity-50 transition-colors"
           >
             <Sparkles size={14} />
             Review Selected File
@@ -122,7 +122,7 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
         <button
           onClick={() => handleReview(null, false)}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-body)] text-sm font-medium rounded-lg hover:bg-[var(--cl-canvas-soft)] disabled:opacity-50 transition-colors"
         >
           <Sparkles size={14} />
           Review Entire Project
@@ -131,7 +131,7 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
           <button
             onClick={() => handleReview(currentFilePath, true)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-500 text-xs rounded-lg hover:bg-slate-50 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-muted)] text-xs rounded-lg hover:bg-[var(--cl-canvas-soft)] disabled:opacity-50 transition-colors"
           >
             <RefreshCw size={12} />
             Refresh
@@ -141,22 +141,22 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
 
       {/* Current scope indicator */}
       {currentFilePath && !loading && review && (
-        <p className="text-xs text-slate-400 font-mono">
-          Reviewing: <span className="text-slate-600">{currentFilePath}</span>
+        <p className="text-xs text-[var(--cl-muted-soft)] font-mono">
+          Reviewing: <span className="text-[var(--cl-body)]">{currentFilePath}</span>
         </p>
       )}
 
       {/* Loading state */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-12 gap-3">
-          <div className="w-10 h-10 rounded-full border-2 border-violet-200 border-t-violet-600 animate-spin" />
-          <p className="text-sm text-slate-400">Analyzing with AI…</p>
+          <div className="w-10 h-10 rounded-full border-2 border-[var(--cl-primary)] border-t-[var(--cl-primary)] animate-spin" />
+          <p className="text-sm text-[var(--cl-muted-soft)]">Analyzing with AI…</p>
         </div>
       )}
 
       {/* Error state */}
       {error && !loading && (
-        <div className="rounded-xl bg-red-50 border border-red-100 p-4 text-sm text-red-600">
+        <div className="rounded-[var(--cl-r-lg)] bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] p-4 text-sm text-[var(--cl-error)]">
           {error}
         </div>
       )}
@@ -167,41 +167,41 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
           {/* Header: rating + cache badge */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-violet-600 flex items-center justify-center">
-                <span className="text-white text-lg font-bold">{review.overall_rating}</span>
+              <div className="w-12 h-12 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center">
+                <span className="text-[var(--cl-on-dark)] text-lg font-semibold">{review.overall_rating}</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-800">Overall Rating</p>
+                <p className="text-sm font-semibold text-[var(--cl-ink)]">Overall Rating</p>
                 <div className="flex gap-0.5 mt-0.5">
                   {[...Array(10)].map((_, i) => (
                     <Star
                       key={i}
                       size={10}
-                      className={i < review.overall_rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200 fill-slate-200'}
+                      className={i < review.overall_rating ? 'text-[var(--cl-warning)] fill-[var(--cl-warning)]' : 'text-[var(--cl-muted-soft)] fill-[var(--cl-muted)]'}
                     />
                   ))}
                 </div>
               </div>
             </div>
             {review.is_cached && review.cached_at && (
-              <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
+              <span className="text-xs text-[var(--cl-muted-soft)] bg-[var(--cl-surface-strong)] px-2 py-1 rounded-lg">
                 Cached · {new Date(review.cached_at).toLocaleString()}
               </span>
             )}
           </div>
 
           {/* Summary */}
-          <div className="bg-slate-50 rounded-xl p-4">
-            <p className="text-sm text-slate-700 leading-relaxed">{review.summary}</p>
+          <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-4">
+            <p className="text-sm text-[var(--cl-body)] leading-relaxed">{review.summary}</p>
           </div>
 
           {/* Strengths */}
           {review.strengths.length > 0 && (
-            <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 space-y-1.5">
-              <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Strengths</p>
+            <div className="bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] rounded-[var(--cl-r-lg)] p-3 space-y-1.5">
+              <p className="text-xs font-semibold text-[var(--cl-success)] uppercase tracking-wide">Strengths</p>
               {review.strengths.map((s, i) => (
-                <div key={i} className="flex items-start gap-2 text-sm text-emerald-800">
-                  <span className="mt-0.5 text-emerald-500">✓</span>
+                <div key={i} className="flex items-start gap-2 text-sm text-[var(--cl-success)]">
+                  <span className="mt-0.5 text-[var(--cl-success)]">✓</span>
                   <span>{s}</span>
                 </div>
               ))}
@@ -214,7 +214,7 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
           {infoIssues.length > 0     && <IssueGroup severity="info"     issues={infoIssues} />}
 
           {review.issues.length === 0 && (
-            <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm text-emerald-700 text-center">
+            <div className="bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] rounded-[var(--cl-r-lg)] p-4 text-sm text-[var(--cl-success)] text-center">
               No issues detected — clean code!
             </div>
           )}
@@ -223,7 +223,7 @@ export default function AIReviewPanel({ submissionId, pendingFilePath, onClearPe
 
       {/* Empty state */}
       {!review && !loading && !error && (
-        <div className="text-center py-12 text-slate-400">
+        <div className="text-center py-12 text-[var(--cl-muted-soft)]">
           <Sparkles className="mx-auto mb-2 opacity-40" size={32} />
           <p className="text-sm">Click a button above to start an AI review</p>
           <p className="text-xs mt-1">Or open a file and click &quot;Review with AI&quot;</p>

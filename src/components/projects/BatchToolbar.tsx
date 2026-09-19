@@ -103,7 +103,7 @@ export default function BatchToolbar({ assignmentId, submissions }: BatchToolbar
       <button
         onClick={handleReanalyzeAll}
         disabled={reanalyzing}
-        className="flex items-center gap-2 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-xl hover:bg-violet-700 disabled:opacity-60 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-primary)] disabled:opacity-60 transition-colors"
       >
         <RefreshCw size={14} className={reanalyzing ? 'animate-spin' : ''} />
         {reanalyzing ? `Re-analyzing… ${done}/${submissions.length}` : 'Re-analyze All'}
@@ -112,7 +112,7 @@ export default function BatchToolbar({ assignmentId, submissions }: BatchToolbar
       {/* Export CSV */}
       <button
         onClick={handleExportCSV}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
       >
         <Download size={14} />
         Export CSV
@@ -121,19 +121,19 @@ export default function BatchToolbar({ assignmentId, submissions }: BatchToolbar
       {/* Progress bar */}
       {reanalyzing && (
         <div className="flex items-center gap-2">
-          <div className="w-32 h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div className="w-32 h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
             <div
-              className="h-full bg-violet-500 rounded-full transition-all"
+              className="h-full bg-[var(--cl-primary)] rounded-full transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-slate-500">{progress}%</span>
+          <span className="text-xs text-[var(--cl-muted)]">{progress}%</span>
         </div>
       )}
 
       {/* Finished state */}
       {finished && !reanalyzing && (
-        <div className={`flex items-center gap-1.5 text-sm ${errors > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+        <div className={`flex items-center gap-1.5 text-sm ${errors > 0 ? 'text-[var(--cl-warning)]' : 'text-[var(--cl-success)]'}`}>
           {errors > 0 ? <AlertTriangle size={14} /> : <CheckCircle size={14} />}
           {errors > 0
             ? `${done} analyzed, ${errors} failed`

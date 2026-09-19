@@ -8,7 +8,7 @@ export default async function StudentTasksPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/sign-in');
+  if (!user) redirect('/signin');
 
   const { data: profile } = await supabase
     .from('users')
@@ -25,17 +25,17 @@ export default async function StudentTasksPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 cl-main p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-semibold mb-2 text-[var(--cl-ink)]">
                 My Tasks
               </h1>
-              <p className="text-slate-600">Manage your tasks with Kanban board</p>
+              <p className="text-[var(--cl-body)]">Manage your tasks with Kanban board</p>
             </div>
 
             <TaskBoardClient initialTasks={tasks || []} userId={user.id} />

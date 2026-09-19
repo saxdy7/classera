@@ -73,7 +73,8 @@ async function callAI(prompt: string): Promise<AIReviewResult> {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user, session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json() as {

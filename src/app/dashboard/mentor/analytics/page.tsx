@@ -20,11 +20,11 @@ export default async function MentorAnalyticsPage() {
   if (!profile?.full_name || !profile?.university_id) redirect('/onboarding/mentor');
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 md:ml-24">
+        <main className="flex-1 cl-main">
           <AnalyticsDashboard role="mentor" />
         </main>
       </div>

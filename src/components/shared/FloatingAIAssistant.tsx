@@ -193,26 +193,26 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center group transition-all duration-500 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center group transition-all duration-500 bg-[var(--cl-primary)] ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
           }`}
         aria-label="Open AI Assistant"
       >
-        <Sparkles className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse"></span>
+        <Sparkles className="w-6 h-6 text-[var(--cl-on-dark)] group-hover:rotate-12 transition-transform" />
+        <span className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--cl-success)] rounded-full border-2 border-[var(--cl-on-dark)] animate-pulse"></span>
       </button>
 
       {/* Chat Container */}
-      <div className={`fixed bottom-6 right-6 z-50 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'
+      <div className={`fixed bottom-6 right-6 z-50 w-96 h-[600px] bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] flex flex-col border border-[var(--cl-hairline)] overflow-hidden transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'
         }`}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-fuchsia-500 to-purple-600 p-4 flex items-center justify-between">
+        <div className="p-4 flex items-center justify-between bg-[var(--cl-primary)]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-[var(--cl-on-dark)]" />
             </div>
             <div>
-              <h3 className="text-white font-semibold">AI Assistant</h3>
-              <p className="text-white/80 text-xs flex items-center gap-1">
+              <h3 className="text-[var(--cl-on-dark)] font-semibold">AI Assistant</h3>
+              <p className="text-[rgba(255,255,255,0.8)] text-xs flex items-center gap-1">
                 Powered by Groq & Tavily
               </p>
             </div>
@@ -220,14 +220,14 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
           <div className="flex items-center gap-1">
             <button
               onClick={handleClearChat}
-              className="text-white/80 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-lg"
+              className="text-[rgba(255,255,255,0.8)] hover:text-[var(--cl-on-dark)] transition-colors p-1 hover:bg-[rgba(255,255,255,0.1)] rounded-lg"
               title="Clear chat"
             >
               <Trash2 className="w-4 h-4" />
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-lg"
+              className="text-[rgba(255,255,255,0.8)] hover:text-[var(--cl-on-dark)] transition-colors p-1 hover:bg-[rgba(255,255,255,0.1)] rounded-lg"
               aria-label="Close chat"
             >
               <Minimize2 className="w-5 h-5" />
@@ -236,18 +236,18 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--cl-canvas-soft)]">
           {messages.length === 0 && (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-fuchsia-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Sparkles className="w-8 h-8 text-fuchsia-500" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 bg-[var(--cl-primary-soft)]">
+                <Sparkles className="w-8 h-8 text-[var(--cl-primary)]" />
               </div>
-              <h4 className="text-slate-900 font-semibold mb-1">How can I help you?</h4>
-              <p className="text-slate-500 text-sm mb-4">I can search the web and answer questions about anything!</p>
+              <h4 className="text-[var(--cl-ink)] font-semibold mb-1">How can I help you?</h4>
+              <p className="text-[var(--cl-muted)] text-sm mb-4">I can search the web and answer questions about anything!</p>
               <div className="flex flex-wrap justify-center gap-2 text-xs">
-                <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-slate-600">Find React courses</span>
-                <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-slate-600">Latest AI news</span>
-                <span className="px-3 py-1 bg-white border border-slate-200 rounded-full text-slate-600">Help with code</span>
+                <span className="px-3 py-1 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-full text-[var(--cl-body)]">Find React courses</span>
+                <span className="px-3 py-1 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-full text-[var(--cl-body)]">Latest AI news</span>
+                <span className="px-3 py-1 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-full text-[var(--cl-body)]">Help with code</span>
               </div>
             </div>
           )}
@@ -262,7 +262,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
             >
               {/* User Message */}
               {msg.role === 'user' && (
-                <div className="max-w-[85%] rounded-2xl px-4 py-3 shadow-sm bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white">
+                <div className="max-w-[85%] rounded-[var(--cl-r-xl)] px-4 py-3 text-[var(--cl-on-dark)] bg-[var(--cl-primary)]">
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</div>
                 </div>
               )}
@@ -271,21 +271,21 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
               {msg.role === 'assistant' && structured && (
                 <div className="max-w-[90%] w-full">
                   {structured.type === 'roadmap' && (
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-indigo-200 rounded-2xl p-4 shadow-lg">
+                    <div className="border-2 border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] p-4 bg-[rgba(13,116,206,0.12)]">
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-2xl">🗺️</span>
                         <div>
-                          <h4 className="font-bold text-slate-900 text-base">{structured.data.goal}</h4>
-                          <p className="text-xs text-slate-600 mt-1">{structured.data.description}</p>
+                          <h4 className="font-semibold text-[var(--cl-ink)] text-base">{structured.data.goal}</h4>
+                          <p className="text-xs text-[var(--cl-body)] mt-1">{structured.data.description}</p>
                         </div>
                       </div>
                       
                       {/* Steps */}
-                      <div className="space-y-2 mb-3 bg-white/60 rounded-lg p-3">
+                      <div className="space-y-2 mb-3 bg-[rgba(255,255,255,0.6)] rounded-lg p-3">
                         {structured.data.steps?.map((step: string, i: number) => (
                           <div key={i} className="flex items-start gap-2">
-                            <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full flex-shrink-0">{i + 1}</span>
-                            <span className="text-sm text-slate-700">{step}</span>
+                            <span className="inline-flex items-center justify-center w-6 h-6 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-xs font-semibold rounded-full flex-shrink-0">{i + 1}</span>
+                            <span className="text-sm text-[var(--cl-body)]">{step}</span>
                           </div>
                         ))}
                       </div>
@@ -294,17 +294,17 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
                       <div className="space-y-2 mb-3 text-xs">
                         {structured.data.recommended_courses?.length > 0 && (
                           <div>
-                            <p className="font-semibold text-slate-800">📚 Courses:</p>
+                            <p className="font-semibold text-[var(--cl-ink)]">📚 Courses:</p>
                             <div className="flex flex-wrap gap-1">
                               {structured.data.recommended_courses.map((course: string, i: number) => (
-                                <span key={i} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">{course}</span>
+                                <span key={i} className="px-2 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-full text-xs">{course}</span>
                               ))}
                             </div>
                           </div>
                         )}
                         {structured.data.recommended_mentor && (
                           <div>
-                            <p className="font-semibold text-slate-800">👨‍🏫 Mentor: <span className="text-indigo-600">{structured.data.recommended_mentor}</span></p>
+                            <p className="font-semibold text-[var(--cl-ink)]">👨‍🏫 Mentor: <span className="text-[var(--cl-primary)]">{structured.data.recommended_mentor}</span></p>
                           </div>
                         )}
                       </div>
@@ -312,7 +312,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
                       {/* Action Button */}
                       <button
                         onClick={() => router.push('/roadmaps')}
-                        className="w-full mt-3 px-3 py-2 bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                        className="w-full mt-3 px-3 py-2 text-[var(--cl-on-dark)] rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
                       >
                         <ArrowRight className="w-4 h-4" />
                         Create Roadmap
@@ -321,24 +321,24 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
                   )}
 
                   {structured.type === 'course' && (
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-4 shadow-lg">
+                    <div className="border-2 border-[var(--cl-success)] rounded-[var(--cl-r-xl)] p-4 bg-[rgba(22,163,74,0.12)]">
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-2xl">📖</span>
                         <div>
-                          <h4 className="font-bold text-slate-900 text-base">{structured.data.title}</h4>
-                          <p className="text-xs text-slate-600 mt-1">{structured.data.description}</p>
+                          <h4 className="font-semibold text-[var(--cl-ink)] text-base">{structured.data.title}</h4>
+                          <p className="text-xs text-[var(--cl-body)] mt-1">{structured.data.description}</p>
                         </div>
                       </div>
                       
                       <div className="space-y-2 mb-3 text-xs">
-                        <p className="font-semibold text-slate-800">📝 Modules: <span className="text-emerald-600">{structured.data.modules?.length || 0}</span></p>
-                        <p className="font-semibold text-slate-800">⏱️ Duration: <span className="text-emerald-600">{structured.data.duration_hours}h</span></p>
-                        <p className="font-semibold text-slate-800">📊 Level: <span className="text-emerald-600 capitalize">{structured.data.difficulty}</span></p>
+                        <p className="font-semibold text-[var(--cl-ink)]">📝 Modules: <span className="text-[var(--cl-success)]">{structured.data.modules?.length || 0}</span></p>
+                        <p className="font-semibold text-[var(--cl-ink)]">⏱️ Duration: <span className="text-[var(--cl-success)]">{structured.data.duration_hours}h</span></p>
+                        <p className="font-semibold text-[var(--cl-ink)]">📊 Level: <span className="text-[var(--cl-success)] capitalize">{structured.data.difficulty}</span></p>
                       </div>
 
                       <button
                         onClick={() => router.push('/courses')}
-                        className="w-full mt-3 px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                        className="w-full mt-3 px-3 py-2 text-[var(--cl-on-dark)] rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-[var(--cl-success)]"
                       >
                         <ArrowRight className="w-4 h-4" />
                         Create Course
@@ -347,20 +347,20 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
                   )}
 
                   {structured.type === 'guide' && (
-                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-4 shadow-lg">
+                    <div className="border-2 border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] p-4 bg-[var(--cl-primary-soft)]">
                       <div className="flex items-start gap-3 mb-3">
                         <span className="text-2xl">📚</span>
                         <div>
-                          <h4 className="font-bold text-slate-900 text-base">{structured.data.title}</h4>
+                          <h4 className="font-semibold text-[var(--cl-ink)] text-base">{structured.data.title}</h4>
                         </div>
                       </div>
                       
                       {structured.data.topics?.length > 0 && (
                         <div className="mb-3">
-                          <p className="font-semibold text-slate-800 text-xs mb-1">Topics:</p>
+                          <p className="font-semibold text-[var(--cl-ink)] text-xs mb-1">Topics:</p>
                           <div className="flex flex-wrap gap-1">
                             {structured.data.topics.map((topic: string, i: number) => (
-                              <span key={i} className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">{topic}</span>
+                              <span key={i} className="px-2 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-xs">{topic}</span>
                             ))}
                           </div>
                         </div>
@@ -368,7 +368,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
 
                       <button
                         onClick={() => router.push('/guides')}
-                        className="w-full mt-3 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                        className="w-full mt-3 px-3 py-2 text-[var(--cl-on-dark)] rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
                       >
                         <ArrowRight className="w-4 h-4" />
                         Create Guide
@@ -380,14 +380,14 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
 
               {/* Assistant Message - Regular Chat */}
               {msg.role === 'assistant' && !structured && msg.actionType === 'navigation' && msg.actionUrl && (
-                <div className="max-w-[85%] rounded-2xl px-4 py-3 shadow-sm bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">{msg.content}</div>
+                <div className="max-w-[85%] rounded-[var(--cl-r-xl)] px-4 py-3 border border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]">
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--cl-ink)]">{msg.content}</div>
                   <button
                     onClick={() => {
                       router.push(msg.actionUrl!);
                       setIsOpen(false);
                     }}
-                    className="mt-3 flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white rounded-lg font-medium text-xs hover:shadow-lg transition-all"
+                    className="mt-3 flex items-center gap-2 px-3 py-2 text-[var(--cl-on-dark)] rounded-lg font-medium text-xs transition-all bg-[var(--cl-primary)]"
                   >
                     <span>Open Now</span>
                     <ArrowRight className="w-3 h-3" />
@@ -397,7 +397,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
 
               {/* Assistant Message - Regular Reply */}
               {msg.role === 'assistant' && !structured && !msg.actionUrl && (
-                <div className="max-w-[85%] rounded-2xl px-4 py-3 shadow-sm bg-white text-slate-800 border border-slate-200">
+                <div className="max-w-[85%] rounded-[var(--cl-r-xl)] px-4 py-3 bg-[var(--cl-surface-card)] text-[var(--cl-ink)] border border-[var(--cl-hairline)]">
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</div>
                 </div>
               )}
@@ -407,14 +407,14 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
 
           {isLoading && !messages[messages.length - 1]?.content && (
             <div className="flex justify-start">
-              <div className="bg-white rounded-2xl px-4 py-3 border border-slate-200 shadow-sm">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] px-4 py-3 border border-[var(--cl-hairline)]">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-[var(--cl-primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-[var(--cl-primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-[var(--cl-primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">Thinking...</span>
+                  <span className="text-xs text-[var(--cl-muted-soft)] font-medium">Thinking...</span>
                 </div>
               </div>
             </div>
@@ -424,7 +424,7 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
         </div>
 
         {/* Input Area */}
-        <div className="p-4 bg-white border-t border-slate-200">
+        <div className="p-4 bg-[var(--cl-surface-card)] border-t border-[var(--cl-hairline)]">
           <div className="flex gap-2">
             <input
               type="text"
@@ -433,19 +433,19 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
               onKeyDown={handleKeyPress}
               placeholder="Ask anything..."
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent text-sm disabled:opacity-50 transition-all"
+              className="flex-1 px-4 py-3 bg-[var(--cl-surface-strong)] border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-md)] focus:outline-none focus:border-[var(--cl-ink)] focus:ring-[3px] focus:ring-[rgba(10,10,10,0.12)] text-sm disabled:opacity-50 transition-all"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="px-4 py-3 bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white rounded-xl hover:shadow-lg hover:translate-y-[-1px] active:translate-y-[1px] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] hover:translate-y-[-1px] active:translate-y-[1px] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 bg-[var(--cl-primary)]"
               aria-label="Send message"
             >
               <Send className="w-4 h-4" />
             </button>
           </div>
           <div className="text-center mt-2">
-            <p className="text-[10px] text-slate-400">
+            <p className="text-[10px] text-[var(--cl-muted-soft)]">
               AI can make mistakes. Check important info.
             </p>
           </div>

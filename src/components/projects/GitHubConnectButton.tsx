@@ -32,17 +32,17 @@ export default function GitHubConnectButton({
 
   if (connected && username) {
     return (
-      <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+      <div className="flex items-center gap-3 p-3 bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] rounded-[var(--cl-r-lg)]">
         {avatarUrl ? (
           <img src={avatarUrl} alt={username} className="w-8 h-8 rounded-full" />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
-            <Github className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-full bg-[var(--cl-surface-inverse)] flex items-center justify-center">
+            <Github className="w-4 h-4 text-[var(--cl-on-dark)]" />
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-slate-800">@{username}</p>
-          <p className="text-xs text-emerald-600 flex items-center gap-1">
+          <p className="text-sm font-semibold text-[var(--cl-ink)]">@{username}</p>
+          <p className="text-xs text-[var(--cl-success)] flex items-center gap-1">
             <CheckCircle className="w-3 h-3" />
             GitHub connected
           </p>
@@ -50,7 +50,7 @@ export default function GitHubConnectButton({
         <button
           onClick={handleDisconnect}
           disabled={disconnecting}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[var(--cl-body)] border border-[var(--cl-hairline)] rounded-lg hover:bg-[var(--cl-canvas-soft)] transition-colors"
         >
           {disconnecting ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -71,7 +71,7 @@ export default function GitHubConnectButton({
     <a
       href={href}
       onClick={() => setConnecting(true)}
-      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-medium transition-colors"
+      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] text-sm font-medium transition-colors"
     >
       {connecting ? (
         <Loader2 className="w-4 h-4 animate-spin" />

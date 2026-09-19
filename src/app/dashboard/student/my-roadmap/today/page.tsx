@@ -69,20 +69,20 @@ export default function TodayPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br bg-slate-50">
+        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
             {/* Header */}
-            <div className="bg-white border-b">
+            <div className="bg-[var(--cl-surface-card)] border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">
                         Today's Learning Tasks
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-[var(--cl-body)]">
                         {new Date().toLocaleDateString('en-US', {
                             weekday: 'long',
                             year: 'numeric',
@@ -97,29 +97,29 @@ export default function TodayPage() {
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <Card className="p-6">
-                        <p className="text-sm text-gray-600 mb-1">Total Tasks</p>
-                        <p className="text-3xl font-bold text-gray-900">
+                        <p className="text-sm text-[var(--cl-body)] mb-1">Total Tasks</p>
+                        <p className="text-3xl font-semibold text-[var(--cl-ink)]">
                             {stats.totalTasks || 0}
                         </p>
                     </Card>
 
                     <Card className="p-6">
-                        <p className="text-sm text-gray-600 mb-1">Completed</p>
-                        <p className="text-3xl font-bold text-green-600">
+                        <p className="text-sm text-[var(--cl-body)] mb-1">Completed</p>
+                        <p className="text-3xl font-semibold text-[var(--cl-success)]">
                             {stats.completedTasks || 0}
                         </p>
                     </Card>
 
                     <Card className="p-6">
-                        <p className="text-sm text-gray-600 mb-1">Time Goal</p>
-                        <p className="text-3xl font-bold text-blue-600">
+                        <p className="text-sm text-[var(--cl-body)] mb-1">Time Goal</p>
+                        <p className="text-3xl font-semibold text-[var(--cl-info)]">
                             {stats.totalMinutes || 0}m
                         </p>
                     </Card>
 
                     <Card className="p-6">
-                        <p className="text-sm text-gray-600 mb-1">Progress</p>
-                        <p className="text-3xl font-bold text-purple-600">
+                        <p className="text-sm text-[var(--cl-body)] mb-1">Progress</p>
+                        <p className="text-3xl font-semibold text-[var(--cl-primary)]">
                             {stats.progress || 0}%
                         </p>
                     </Card>
@@ -130,13 +130,13 @@ export default function TodayPage() {
                     <Card className="p-6 mb-8">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold">Daily Progress</h3>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-[var(--cl-body)]">
                                 {stats.completedTasks}/{stats.totalTasks} tasks
                             </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="w-full bg-[var(--cl-surface-strong)] rounded-full h-3">
                             <div
-                                className="bg-gradient-to-r from-purple-600 to-blue-600 h-3 rounded-full transition-all duration-500"
+                                className="h-3 rounded-full transition-all duration-500 bg-[var(--cl-primary)]"
                                 style={{ width: `${stats.progress || 0}%` }}
                             ></div>
                         </div>
@@ -145,10 +145,10 @@ export default function TodayPage() {
 
                 {/* Overdue Tasks */}
                 {overdueTasks.length > 0 && (
-                    <Card className="p-6 mb-8 border-2 border-red-200 bg-red-50">
+                    <Card className="p-6 mb-8 border-2 border-[var(--cl-error)] bg-[rgba(239,68,68,0.12)]">
                         <div className="flex items-center gap-2 mb-4">
-                            <AlertCircle className="h-5 w-5 text-red-600" />
-                            <h3 className="font-semibold text-red-900">
+                            <AlertCircle className="h-5 w-5 text-[var(--cl-error)]" />
+                            <h3 className="font-semibold text-[var(--cl-error)]">
                                 Overdue Tasks ({overdueTasks.length})
                             </h3>
                         </div>
@@ -156,13 +156,13 @@ export default function TodayPage() {
                             {overdueTasks.map((task) => (
                                 <div
                                     key={task.id}
-                                    className="flex items-center justify-between p-3 bg-white rounded-lg"
+                                    className="flex items-center justify-between p-3 bg-[var(--cl-surface-card)] rounded-lg"
                                 >
                                     <div className="flex items-center gap-3">
                                         {getTaskIcon(task.task_type)}
                                         <div>
-                                            <p className="font-medium text-gray-900">{task.title}</p>
-                                            <p className="text-sm text-gray-600">
+                                            <p className="font-medium text-[var(--cl-ink)]">{task.title}</p>
+                                            <p className="text-sm text-[var(--cl-body)]">
                                                 Due: {new Date(task.scheduled_date).toLocaleDateString()}
                                             </p>
                                         </div>
@@ -185,8 +185,8 @@ export default function TodayPage() {
 
                     {tasks.length === 0 ? (
                         <div className="text-center py-12">
-                            <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                            <p className="text-gray-600">
+                            <CheckCircle2 className="h-16 w-16 text-[var(--cl-success)] mx-auto mb-4" />
+                            <p className="text-[var(--cl-body)]">
                                 {stats.completedTasks > 0
                                     ? "All tasks completed! Great job! 🎉"
                                     : "No tasks scheduled for today"}
@@ -198,22 +198,22 @@ export default function TodayPage() {
                                 <div
                                     key={task.id}
                                     className={`p-6 rounded-lg border-2 transition-all ${task.status === 'completed'
-                                            ? 'bg-green-50 border-green-200'
-                                            : 'bg-white border-gray-200 hover:border-purple-300'
+                                            ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
+                                            : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
                                         }`}
                                 >
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-start gap-4 flex-1">
                                             <div className="mt-1">
                                                 {task.status === 'completed' ? (
-                                                    <CheckCircle2 className="h-6 w-6 text-green-600" />
+                                                    <CheckCircle2 className="h-6 w-6 text-[var(--cl-success)]" />
                                                 ) : (
-                                                    <Circle className="h-6 w-6 text-gray-400" />
+                                                    <Circle className="h-6 w-6 text-[var(--cl-muted-soft)]" />
                                                 )}
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <h4 className="font-semibold text-gray-900">
+                                                    <h4 className="font-semibold text-[var(--cl-ink)]">
                                                         {task.title}
                                                     </h4>
                                                     <Badge variant="outline">
@@ -224,11 +224,11 @@ export default function TodayPage() {
                                                     )}
                                                 </div>
                                                 {task.description && (
-                                                    <p className="text-sm text-gray-600 mb-3">
+                                                    <p className="text-sm text-[var(--cl-body)] mb-3">
                                                         {task.description}
                                                     </p>
                                                 )}
-                                                <div className="flex items-center gap-4 text-sm text-gray-500">
+                                                <div className="flex items-center gap-4 text-sm text-[var(--cl-muted)]">
                                                     <div className="flex items-center gap-1">
                                                         <Clock className="h-4 w-4" />
                                                         <span>{task.estimated_minutes} min</span>

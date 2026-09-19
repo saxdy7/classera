@@ -26,12 +26,12 @@ type NotSubmittedStudent = {
 
 function statusColor(status: string) {
   switch (status) {
-    case 'graded':    return 'bg-violet-100 text-violet-700';
-    case 'reviewed':  return 'bg-blue-100 text-blue-700';
-    case 'analyzed':  return 'bg-emerald-100 text-emerald-700';
-    case 'analyzing': return 'bg-amber-100 text-amber-700';
-    case 'submitted': return 'bg-slate-100 text-slate-600';
-    default:          return 'bg-slate-100 text-slate-500';
+    case 'graded':    return 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]';
+    case 'reviewed':  return 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]';
+    case 'analyzed':  return 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]';
+    case 'analyzing': return 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]';
+    case 'submitted': return 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]';
+    default:          return 'bg-[var(--cl-surface-strong)] text-[var(--cl-muted)]';
   }
 }
 
@@ -47,18 +47,18 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
     <>
       {/* Submissions */}
       {submissions.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="font-semibold text-slate-900">Submissions</h2>
-            <span className="text-sm text-slate-500">{submissions.length} total</span>
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[var(--cl-hairline)] flex items-center justify-between">
+            <h2 className="font-semibold text-[var(--cl-ink)]">Submissions</h2>
+            <span className="text-sm text-[var(--cl-muted)]">{submissions.length} total</span>
           </div>
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-[var(--cl-hairline)]">
             {submissions.map((sub) => {
               const hasSuspicious = sub.analytics?.suspicious_flags?.some((f) => f.severity === 'high');
               const score = sub.analytics?.overall_score;
 
               return (
-                <div key={sub.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors">
+                <div key={sub.id} className="flex items-center gap-4 px-6 py-4 hover:bg-[var(--cl-canvas-soft)] transition-colors">
                   {/* Avatar */}
                   {sub.student?.avatar_url ? (
                     <img
@@ -67,7 +67,7 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                       className="w-9 h-9 rounded-full object-cover flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center text-sm font-bold text-violet-700 flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-[var(--cl-primary-soft)] flex items-center justify-center text-sm font-semibold text-[var(--cl-primary)] flex-shrink-0">
                       {sub.student?.full_name?.[0]?.toUpperCase() ?? '?'}
                     </div>
                   )}
@@ -77,13 +77,13 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/dashboard/mentor/projects/${assignmentId}/${sub.student_id}`}
-                        className="font-medium text-slate-800 hover:text-violet-700 truncate transition-colors"
+                        className="font-medium text-[var(--cl-ink)] hover:text-[var(--cl-primary)] truncate transition-colors"
                       >
                         {sub.student?.full_name ?? 'Unknown Student'}
                       </Link>
                       {hasSuspicious && (
                         <span title="Suspicious activity detected">
-                          <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                          <AlertTriangle className="w-4 h-4 text-[var(--cl-error)] flex-shrink-0" />
                         </span>
                       )}
                     </div>
@@ -91,7 +91,7 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                       href={`https://github.com/${sub.repo_full_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-violet-600 hover:underline truncate block mt-0.5"
+                      className="text-xs text-[var(--cl-primary)] hover:underline truncate block mt-0.5"
                     >
                       {sub.repo_full_name}
                     </a>
@@ -102,11 +102,11 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                     {sub.analytics ? (
                       <>
                         <div className="text-center hidden sm:block">
-                          <p className="font-bold text-slate-800">{sub.analytics.total_commits}</p>
-                          <p className="text-xs text-slate-400">commits</p>
+                          <p className="font-semibold text-[var(--cl-ink)]">{sub.analytics.total_commits}</p>
+                          <p className="text-xs text-[var(--cl-muted)]">commits</p>
                         </div>
                         {score !== undefined && (
-                          <div className="w-10 h-10 rounded-full border-2 border-violet-200 flex items-center justify-center text-sm font-bold text-violet-700">
+                          <div className="w-10 h-10 rounded-full border-2 border-[var(--cl-primary)] flex items-center justify-center text-sm font-semibold text-[var(--cl-primary)]">
                             {score}
                           </div>
                         )}
@@ -116,7 +116,7 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                       {sub.status}
                     </span>
                     {sub.evaluation?.score !== null && sub.evaluation?.score !== undefined && (
-                      <span className="text-xs font-semibold text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-semibold text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-0.5 rounded-full">
                         {sub.evaluation.score}/{maxScore}
                       </span>
                     )}
@@ -126,7 +126,7 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                     href={`/dashboard/mentor/projects/${assignmentId}/${sub.student_id}`}
                     className="flex-shrink-0"
                   >
-                    <ChevronRight className="w-4 h-4 text-slate-300" />
+                    <ChevronRight className="w-4 h-4 text-[var(--cl-muted-soft)]" />
                   </Link>
                 </div>
               );
@@ -137,14 +137,14 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
 
       {/* Not yet submitted */}
       {notSubmitted.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100">
-            <h2 className="font-semibold text-slate-900 flex items-center gap-2">
-              <Circle className="w-4 h-4 text-slate-400" />
+        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[var(--cl-hairline)]">
+            <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+              <Circle className="w-4 h-4 text-[var(--cl-muted-soft)]" />
               Not Submitted ({notSubmitted.length})
             </h2>
           </div>
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-[var(--cl-hairline)]">
             {notSubmitted.map(({ student }) => (
               <div key={student?.id} className="flex items-center gap-4 px-6 py-3.5">
                 {student?.avatar_url ? (
@@ -154,15 +154,15 @@ export default function SubmissionsList({ assignmentId, maxScore, submissions, n
                     className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[var(--cl-surface-strong)] flex items-center justify-center text-xs font-semibold text-[var(--cl-muted)] flex-shrink-0">
                     {student?.full_name?.[0]?.toUpperCase() ?? '?'}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-600">{student?.full_name}</p>
-                  <p className="text-xs text-slate-400">{student?.email}</p>
+                  <p className="text-sm font-medium text-[var(--cl-body)]">{student?.full_name}</p>
+                  <p className="text-xs text-[var(--cl-muted)]">{student?.email}</p>
                 </div>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
+                <span className="text-xs text-[var(--cl-muted)] flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5" />
                   Pending
                 </span>

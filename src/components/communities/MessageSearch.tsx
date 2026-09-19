@@ -48,9 +48,9 @@ export function MessageSearch({ channelId, onClose }: MessageSearchProps) {
     };
 
     return (
-        <div className="absolute top-0 right-0 w-80 h-full bg-white border-l border-slate-200 shadow-xl z-20 flex flex-col">
-            <div className="p-4 border-b border-slate-200 flex items-center gap-2">
-                <Search className="w-5 h-5 text-slate-400" />
+        <div className="absolute top-0 right-0 w-80 h-full bg-[var(--cl-surface-card)] border-l border-[var(--cl-hairline)] z-20 flex flex-col">
+            <div className="p-4 border-b border-[var(--cl-hairline)] flex items-center gap-2">
+                <Search className="w-5 h-5 text-[var(--cl-muted-soft)]" />
                 <input
                     type="text"
                     value={query}
@@ -61,47 +61,47 @@ export function MessageSearch({ channelId, onClose }: MessageSearchProps) {
                 />
                 <button
                     onClick={onClose}
-                    className="p-1 hover:bg-slate-100 rounded-full transition-colors"
+                    className="p-1 hover:bg-[var(--cl-surface-strong)] rounded-full transition-colors"
                 >
-                    <X className="w-5 h-5 text-slate-500" />
+                    <X className="w-5 h-5 text-[var(--cl-muted)]" />
                 </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4">
                 {loading ? (
                     <div className="flex justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-indigo-600" />
+                        <Loader2 className="w-6 h-6 animate-spin text-[var(--cl-primary)]" />
                     </div>
                 ) : results.length > 0 ? (
                     <div className="space-y-4">
-                        <p className="text-xs font-semibold text-slate-500 uppercase">
+                        <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase">
                             {results.length} results found
                         </p>
                         {results.map((msg) => (
                             <div
                                 key={msg.id}
-                                className="p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer group"
+                                className="p-3 rounded-lg border border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-colors cursor-pointer group"
                             >
                                 <div className="flex items-center justify-between mb-1">
-                                    <span className="font-semibold text-sm text-slate-900">
+                                    <span className="font-semibold text-sm text-[var(--cl-ink)]">
                                         {msg.sender?.full_name}
                                     </span>
-                                    <span className="text-xs text-slate-500">
+                                    <span className="text-xs text-[var(--cl-muted)]">
                                         {formatDate(msg.created_at)}
                                     </span>
                                 </div>
-                                <p className="text-sm text-slate-600 line-clamp-3">
+                                <p className="text-sm text-[var(--cl-body)] line-clamp-3">
                                     {msg.content}
                                 </p>
                             </div>
                         ))}
                     </div>
                 ) : query ? (
-                    <div className="text-center py-8 text-slate-500 text-sm">
+                    <div className="text-center py-8 text-[var(--cl-muted)] text-sm">
                         No messages found
                     </div>
                 ) : (
-                    <div className="text-center py-8 text-slate-400 text-sm">
+                    <div className="text-center py-8 text-[var(--cl-muted-soft)] text-sm">
                         Type to search in this channel
                     </div>
                 )}

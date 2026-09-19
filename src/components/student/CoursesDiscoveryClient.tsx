@@ -224,12 +224,12 @@ export function CoursesDiscoveryClient() {
     return (
         <div className="space-y-8">
             {/* Advanced Search and Filters Section */}
-            <div className="bg-white rounded-2xl p-4 md:p-6 border border-slate-200 shadow-sm">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-4 md:p-6 border border-[var(--cl-hairline)]">
                 <div className="flex flex-col gap-4">
                     {/* Search Bar */}
                     <div className="flex flex-col lg:flex-row gap-3">
                         <div className="flex-1 relative min-w-0">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
                             <input
                                 type="text"
                                 placeholder="Search courses... (Press Enter for live web search)"
@@ -240,7 +240,7 @@ export function CoursesDiscoveryClient() {
                                         liveSearchCourses(searchQuery);
                                     }
                                 }}
-                                className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-fuchsia-500 transition-colors text-base"
+                                className="w-full pl-12 pr-4 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-base"
                             />
                         </div>
 
@@ -250,11 +250,11 @@ export function CoursesDiscoveryClient() {
                             <button
                                 onClick={() => liveSearchCourses(searchQuery)}
                                 disabled={liveSearching || !searchQuery.trim()}
-                                className="px-4 md:px-5 py-3 rounded-xl font-medium transition-all flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90 disabled:opacity-50"
+                                className="px-4 md:px-5 py-3 rounded-[var(--cl-r-lg)] font-medium transition-all flex items-center gap-2 whitespace-nowrap text-[var(--cl-on-dark)] hover:opacity-90 disabled:opacity-50 bg-[var(--cl-success)]"
                             >
                                 {liveSearching ? (
                                     <>
-                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        <div className="w-4 h-4 border-2 border-[var(--cl-on-dark)] border-t-transparent rounded-full animate-spin" />
                                         <span className="hidden sm:inline">Searching...</span>
                                     </>
                                 ) : (
@@ -267,7 +267,7 @@ export function CoursesDiscoveryClient() {
 
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`px-4 md:px-6 py-3 rounded-xl font-medium transition-all flex items-center gap-2 whitespace-nowrap ${showFilters ? 'bg-fuchsia-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                className={`px-4 md:px-6 py-3 rounded-[var(--cl-r-lg)] font-medium transition-all flex items-center gap-2 whitespace-nowrap ${showFilters ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
                                     }`}
                             >
                                 <SlidersHorizontal className="w-5 h-5" />
@@ -276,7 +276,7 @@ export function CoursesDiscoveryClient() {
 
                             <button
                                 onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                                className="w-12 h-12 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center justify-center text-lg"
+                                className="w-12 h-12 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] transition-colors flex items-center justify-center text-lg"
                                 title={viewMode === 'grid' ? 'List view' : 'Grid view'}
                             >
                                 {viewMode === 'grid' ? '☰' : '⊞'}
@@ -286,15 +286,15 @@ export function CoursesDiscoveryClient() {
 
                     {/* Advanced Filters Panel */}
                     {showFilters && (
-                        <div className="pt-4 border-t border-slate-200">
+                        <div className="pt-4 border-t border-[var(--cl-hairline)]">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 {/* Type Filter */}
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Type</label>
+                                    <label className="block text-xs font-semibold text-[var(--cl-body)] mb-1.5 uppercase tracking-wide">Type</label>
                                     <select
                                         value={selectedType}
                                         onChange={(e) => setSelectedType(e.target.value)}
-                                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent text-sm cursor-pointer appearance-none"
+                                        className="w-full h-11 px-3 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent text-sm cursor-pointer appearance-none"
                                         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         <option value="all">All Types</option>
@@ -305,11 +305,11 @@ export function CoursesDiscoveryClient() {
 
                                 {/* Platform Filter */}
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Platform</label>
+                                    <label className="block text-xs font-semibold text-[var(--cl-body)] mb-1.5 uppercase tracking-wide">Platform</label>
                                     <select
                                         value={selectedPlatform}
                                         onChange={(e) => setSelectedPlatform(e.target.value)}
-                                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent text-sm cursor-pointer appearance-none"
+                                        className="w-full h-11 px-3 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent text-sm cursor-pointer appearance-none"
                                         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         {platforms.map((platform) => (
@@ -322,11 +322,11 @@ export function CoursesDiscoveryClient() {
 
                                 {/* Level Filter */}
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Level</label>
+                                    <label className="block text-xs font-semibold text-[var(--cl-body)] mb-1.5 uppercase tracking-wide">Level</label>
                                     <select
                                         value={selectedLevel}
                                         onChange={(e) => setSelectedLevel(e.target.value)}
-                                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent text-sm cursor-pointer appearance-none"
+                                        className="w-full h-11 px-3 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent text-sm cursor-pointer appearance-none"
                                         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         {levels.map((level) => (
@@ -339,11 +339,11 @@ export function CoursesDiscoveryClient() {
 
                                 {/* Sort By */}
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Sort By</label>
+                                    <label className="block text-xs font-semibold text-[var(--cl-body)] mb-1.5 uppercase tracking-wide">Sort By</label>
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent text-sm cursor-pointer appearance-none"
+                                        className="w-full h-11 px-3 bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent text-sm cursor-pointer appearance-none"
                                         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         <option value="popular">Most Popular</option>
@@ -363,7 +363,7 @@ export function CoursesDiscoveryClient() {
                                         setSelectedLevel('all');
                                         setSortBy('popular');
                                     }}
-                                    className="mt-3 px-4 py-2 text-sm text-fuchsia-600 hover:text-fuchsia-700 hover:bg-fuchsia-50 rounded-lg transition-colors"
+                                    className="mt-3 px-4 py-2 text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] rounded-lg transition-colors"
                                 >
                                     ✕ Clear all filters
                                 </button>
@@ -376,25 +376,25 @@ export function CoursesDiscoveryClient() {
                 {(searchQuery || selectedType !== 'all' || selectedPlatform !== 'all' || selectedLevel !== 'all') && (
                     <div className="mt-4 flex flex-wrap gap-2">
                         {searchQuery && (
-                            <span className="px-3 py-1 bg-fuchsia-100 text-fuchsia-700 rounded-full text-sm flex items-center gap-2">
+                            <span className="px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-sm flex items-center gap-2">
                                 Search: "{searchQuery}"
                                 <button onClick={() => setSearchQuery('')} className="hover:text-fuchsia-900">×</button>
                             </span>
                         )}
                         {selectedType !== 'all' && (
-                            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-2">
+                            <span className="px-3 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-full text-sm flex items-center gap-2">
                                 {selectedType === 'free' ? 'Free' : 'Paid'}
                                 <button onClick={() => setSelectedType('all')} className="hover:text-blue-900">×</button>
                             </span>
                         )}
                         {selectedPlatform !== 'all' && (
-                            <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm flex items-center gap-2">
+                            <span className="px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-sm flex items-center gap-2">
                                 {selectedPlatform}
                                 <button onClick={() => setSelectedPlatform('all')} className="hover:text-purple-900">×</button>
                             </span>
                         )}
                         {selectedLevel !== 'all' && (
-                            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm flex items-center gap-2">
+                            <span className="px-3 py-1 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] rounded-full text-sm flex items-center gap-2">
                                 {selectedLevel}
                                 <button onClick={() => setSelectedLevel('all')} className="hover:text-green-900">×</button>
                             </span>
@@ -405,14 +405,14 @@ export function CoursesDiscoveryClient() {
 
             {/* Results Header */}
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-slate-900">
+                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">
                     {searchQuery ? `Results for "${searchQuery}"` : 'Discover Courses'}
                 </h2>
                 <div className="flex items-center gap-4">
-                    <p className="text-slate-600">{filteredCourses.length} courses</p>
+                    <p className="text-[var(--cl-body)]">{filteredCourses.length} courses</p>
                     {favorites.size > 0 && (
-                        <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold flex items-center gap-1">
-                            <Heart className="w-4 h-4 fill-red-700" />
+                        <span className="px-3 py-1 bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] rounded-full text-sm font-semibold flex items-center gap-1">
+                            <Heart className="w-4 h-4 fill-[var(--cl-error)]" />
                             {favorites.size} saved
                         </span>
                     )}
@@ -423,21 +423,21 @@ export function CoursesDiscoveryClient() {
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
-                            <div className="w-full h-48 bg-slate-200"></div>
+                        <div key={i} className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden animate-pulse">
+                            <div className="w-full h-48 bg-[var(--cl-surface-strong)]"></div>
                             <div className="p-6 space-y-3">
-                                <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-                                <div className="h-3 bg-slate-200 rounded w-1/2"></div>
-                                <div className="h-3 bg-slate-200 rounded w-full"></div>
+                                <div className="h-4 bg-[var(--cl-surface-strong)] rounded w-3/4"></div>
+                                <div className="h-3 bg-[var(--cl-surface-strong)] rounded w-1/2"></div>
+                                <div className="h-3 bg-[var(--cl-surface-strong)] rounded w-full"></div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : filteredCourses.length === 0 ? (
-                <div className="bg-white rounded-xl p-12 border border-slate-200 text-center">
-                    <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">No courses found</h3>
-                    <p className="text-slate-600 mb-4">Try adjusting your search or filters</p>
+                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-12 border border-[var(--cl-hairline)] text-center">
+                    <BookOpen className="w-16 h-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No courses found</h3>
+                    <p className="text-[var(--cl-body)] mb-4">Try adjusting your search or filters</p>
                     <button
                         onClick={() => {
                             setSearchQuery('');
@@ -445,7 +445,7 @@ export function CoursesDiscoveryClient() {
                             setSelectedPlatform('all');
                             setSelectedLevel('all');
                         }}
-                        className="px-6 py-2 bg-fuchsia-500 text-white rounded-lg hover:bg-fuchsia-600 transition-colors"
+                        className="px-6 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] transition-colors"
                     >
                         Clear all filters
                     </button>
@@ -455,7 +455,7 @@ export function CoursesDiscoveryClient() {
                     {filteredCourses.map((course) => (
                         <div
                             key={course.id}
-                            className={`bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all group ${viewMode === 'list' ? 'flex' : ''
+                            className={`bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden transition-all group ${viewMode === 'list' ? 'flex' : ''
                                 }`}
                         >
                             {/* Course Image */}
@@ -468,17 +468,17 @@ export function CoursesDiscoveryClient() {
                                 />
                                 <div className="absolute top-3 right-3 flex gap-2">
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm ${course.type === 'free'
-                                        ? 'bg-green-500/90 text-white'
-                                        : 'bg-blue-500/90 text-white'
+                                        ? 'bg-[rgba(22,163,74,0.9)] text-[var(--cl-on-dark)]'
+                                        : 'bg-[rgba(13,116,206,0.9)] text-[var(--cl-on-dark)]'
                                         }`}>
                                         {course.type === 'free' ? 'FREE' : course.price}
                                     </span>
                                 </div>
                                 <button
                                     onClick={() => toggleFavorite(course.id)}
-                                    className="absolute top-3 left-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                    className="absolute top-3 left-3 w-8 h-8 bg-[rgba(255,255,255,0.9)] backdrop-blur-sm rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                                 >
-                                    <Heart className={`w-4 h-4 ${favorites.has(course.id) ? 'fill-red-500 text-red-500' : 'text-slate-600'}`} />
+                                    <Heart className={`w-4 h-4 ${favorites.has(course.id) ? 'fill-[var(--cl-error)] text-[var(--cl-error)]' : 'text-[var(--cl-body)]'}`} />
                                 </button>
                             </div>
 
@@ -486,14 +486,14 @@ export function CoursesDiscoveryClient() {
                             <div className="p-6 flex-1">
                                 {/* Platform & Level Badge */}
                                 <div className="flex items-center gap-2 mb-3 flex-wrap">
-                                    <span className="text-xs font-semibold text-fuchsia-600 bg-fuchsia-50 px-2 py-1 rounded">
+                                    <span className="text-xs font-semibold text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-1 rounded">
                                         {course.platform}
                                     </span>
-                                    <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                    <span className="text-xs text-[var(--cl-muted)] bg-[var(--cl-surface-strong)] px-2 py-1 rounded">
                                         {course.level}
                                     </span>
                                     {course.rating >= 4.5 && (
-                                        <span className="text-xs font-semibold text-yellow-600 bg-yellow-50 px-2 py-1 rounded flex items-center gap-1">
+                                        <span className="text-xs font-semibold text-[var(--cl-warning)] bg-[rgba(171,100,0,0.12)] px-2 py-1 rounded flex items-center gap-1">
                                             <Award className="w-3 h-3" />
                                             Top Rated
                                         </span>
@@ -501,17 +501,17 @@ export function CoursesDiscoveryClient() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-fuchsia-600 transition-colors">
+                                <h3 className="font-semibold text-[var(--cl-ink)] mb-2 line-clamp-2 group-hover:text-[var(--cl-primary)] transition-colors">
                                     {course.title}
                                 </h3>
 
                                 {/* Instructor */}
-                                <p className="text-sm text-slate-600 mb-3">{course.instructor}</p>
+                                <p className="text-sm text-[var(--cl-body)] mb-3">{course.instructor}</p>
 
                                 {/* Stats */}
-                                <div className="flex items-center gap-4 text-sm text-slate-600 mb-4 flex-wrap">
+                                <div className="flex items-center gap-4 text-sm text-[var(--cl-body)] mb-4 flex-wrap">
                                     <div className="flex items-center gap-1">
-                                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                        <Star className="w-4 h-4 text-[var(--cl-warning)] fill-[var(--cl-warning)]" />
                                         <span className="font-semibold">{course.rating}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
@@ -525,17 +525,17 @@ export function CoursesDiscoveryClient() {
                                 </div>
 
                                 {/* Description */}
-                                <p className="text-sm text-slate-600 mb-4 line-clamp-2">{course.description}</p>
+                                <p className="text-sm text-[var(--cl-body)] mb-4 line-clamp-2">{course.description}</p>
 
                                 {/* Skills */}
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {course.skills.slice(0, 3).map((skill, idx) => (
-                                        <span key={idx} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                                        <span key={idx} className="text-xs bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-1 rounded">
                                             {skill}
                                         </span>
                                     ))}
                                     {course.skills.length > 3 && (
-                                        <span className="text-xs text-slate-500">+{course.skills.length - 3} more</span>
+                                        <span className="text-xs text-[var(--cl-muted)]">+{course.skills.length - 3} more</span>
                                     )}
                                 </div>
 
@@ -545,8 +545,8 @@ export function CoursesDiscoveryClient() {
                                         onClick={() => handleEnroll(course)}
                                         disabled={enrolling === course.id || enrolled.has(course.id)}
                                         className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${enrolled.has(course.id)
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white hover:opacity-90'
+                                            ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                                            : 'text-[var(--cl-on-dark)] hover:opacity-90 bg-[var(--cl-primary)]'
                                             }`}
                                     >
                                         {enrolled.has(course.id) ? (
@@ -564,10 +564,10 @@ export function CoursesDiscoveryClient() {
                                         href={course.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center justify-center"
+                                        className="px-4 py-2 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors flex items-center justify-center"
                                         title="View on platform"
                                     >
-                                        <ExternalLink className="w-4 h-4 text-slate-600" />
+                                        <ExternalLink className="w-4 h-4 text-[var(--cl-body)]" />
                                     </a>
                                 </div>
                             </div>
@@ -577,15 +577,15 @@ export function CoursesDiscoveryClient() {
             )}
 
             {/* YouTube Videos Section */}
-            <div className="pt-8 border-t border-slate-200">
+            <div className="pt-8 border-t border-[var(--cl-hairline)]">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                            <Play className="w-5 h-5 text-red-600" />
+                        <div className="w-10 h-10 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
+                            <Play className="w-5 h-5 text-[var(--cl-error)]" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-slate-900">YouTube Tutorials</h2>
-                            <p className="text-sm text-slate-600">Educational content only • Filtered for quality</p>
+                            <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">YouTube Tutorials</h2>
+                            <p className="text-sm text-[var(--cl-body)]">Educational content only • Filtered for quality</p>
                         </div>
                     </div>
 
@@ -597,8 +597,8 @@ export function CoursesDiscoveryClient() {
                                 onClick={() => fetchVideos(topic)}
                                 disabled={videosLoading}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${videoTopic === topic
-                                    ? 'bg-red-500 text-white'
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                    ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)]'
+                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
                                     }`}
                             >
                                 {topic.charAt(0).toUpperCase() + topic.slice(1)}
@@ -610,11 +610,11 @@ export function CoursesDiscoveryClient() {
                 {videosLoading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
-                                <div className="h-48 bg-slate-200" />
+                            <div key={i} className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden animate-pulse">
+                                <div className="h-48 bg-[var(--cl-surface-strong)]" />
                                 <div className="p-4 space-y-2">
-                                    <div className="h-4 bg-slate-200 rounded w-3/4" />
-                                    <div className="h-3 bg-slate-200 rounded w-1/2" />
+                                    <div className="h-4 bg-[var(--cl-surface-strong)] rounded w-3/4" />
+                                    <div className="h-3 bg-[var(--cl-surface-strong)] rounded w-1/2" />
                                 </div>
                             </div>
                         ))}
@@ -625,10 +625,10 @@ export function CoursesDiscoveryClient() {
                             <div
                                 key={video.id}
                                 onClick={() => setSelectedVideo(video.id)}
-                                className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer group"
+                                className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden transition-all cursor-pointer group"
                             >
                                 {/* Video Thumbnail */}
-                                <div className="relative h-48 overflow-hidden bg-slate-900">
+                                <div className="relative h-48 overflow-hidden bg-[var(--cl-surface-inverse)]">
                                     <Image
                                         src={video.thumbnail}
                                         alt={video.title}
@@ -636,22 +636,22 @@ export function CoursesDiscoveryClient() {
                                         className="object-cover group-hover:opacity-75 transition-opacity"
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl">
-                                            <Play className="w-8 h-8 text-white fill-white ml-1" />
+                                        <div className="w-16 h-16 bg-[var(--cl-error)] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Play className="w-8 h-8 text-[var(--cl-on-dark)] fill-white ml-1" />
                                         </div>
                                     </div>
-                                    <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded font-semibold">
+                                    <div className="absolute bottom-2 right-2 bg-black/80 text-[var(--cl-on-dark)] text-xs px-2 py-1 rounded font-semibold">
                                         {video.duration}
                                     </div>
                                 </div>
 
                                 {/* Video Info */}
                                 <div className="p-4">
-                                    <h3 className="font-semibold text-slate-900 mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
+                                    <h3 className="font-semibold text-[var(--cl-ink)] mb-2 line-clamp-2 group-hover:text-[var(--cl-error)] transition-colors">
                                         {video.title}
                                     </h3>
-                                    <p className="text-sm text-slate-600 mb-1 font-medium">{video.channel}</p>
-                                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                                    <p className="text-sm text-[var(--cl-body)] mb-1 font-medium">{video.channel}</p>
+                                    <div className="flex items-center gap-2 text-xs text-[var(--cl-muted)]">
                                         <TrendingUp className="w-3 h-3" />
                                         <span>{video.views} views</span>
                                     </div>
@@ -665,12 +665,12 @@ export function CoursesDiscoveryClient() {
             {/* Video Modal */}
             {selectedVideo && (
                 <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setSelectedVideo(null)}>
-                    <div className="relative w-full max-w-5xl bg-black rounded-2xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="relative w-full max-w-5xl bg-black rounded-[var(--cl-r-xl)] overflow-hidden" onClick={(e) => e.stopPropagation()}>
                         <button
                             onClick={() => setSelectedVideo(null)}
-                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
+                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center transition-colors backdrop-blur-sm"
                         >
-                            <X className="w-6 h-6 text-white" />
+                            <X className="w-6 h-6 text-[var(--cl-on-dark)]" />
                         </button>
                         <div className="relative pt-[56.25%]">
                             <iframe

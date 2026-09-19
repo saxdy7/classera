@@ -1,77 +1,134 @@
-import { ArrowRight, Play, Sparkles, Code2, Star } from 'lucide-react';
-import DisplayCards from '@/components/ui/display-cards';
+import { ArrowRight, Play, Sparkles, Users, Video, CheckCircle2 } from 'lucide-react';
 
+/**
+ * Landing hero - Classera design system v2.
+ *
+ * Follows the reference dashboards rather than the old marketing treatment:
+ * white canvas, one black pill CTA paired with a white secondary, and a real
+ * product preview built from the same tokens the app uses - so the hero shows
+ * the actual interface instead of an abstract illustration.
+ *
+ * The previous version leaned on large fuchsia blur blobs, gradient CTAs and
+ * scale-on-hover. All three are gone: this system has one action colour, no
+ * gradients, and no lift.
+ */
 export default function HeroSection() {
   return (
-    <header className="relative pt-35 md:pt-32 lg:pt-40 pb-12 md:pb-16 lg:pb-20 px-4 md:px-6 overflow-hidden">
-      {/* Background Blobs */}
-      <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-purple-200 rounded-full blur-3xl opacity-40 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[70vw] md:w-[40vw] h-[70vw] md:h-[40vw] bg-lime-200 rounded-full blur-3xl opacity-40 animate-float"></div>
+    <header className="relative overflow-hidden bg-[var(--cl-canvas)] px-4 pb-16 pt-32 md:px-6 md:pt-28 lg:pb-24">
+      <div className="relative z-10 mx-auto max-w-[1280px]">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Left Content */}
-          <div className="text-center lg:text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold uppercase tracking-wide mb-6 md:mb-8 hover:bg-orange-200 transition-colors cursor-default animate-fade-in-up stagger-1">
-              <span className="w-2 h-2 rounded-full bg-orange-500 animate-bounce"></span>
-              Freshly Baked Learning
-            </div>
+          {/* Copy */}
+          <div className="cl-rise text-center lg:text-left">
+            <span className="mb-7 inline-flex items-center gap-2 rounded-[var(--cl-r-pill)] border border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] px-3 py-1.5 text-[13px] font-medium text-[var(--cl-body)]">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Live classes and an LMS in one place
+            </span>
 
-            {/* Main Heading */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.9] mb-6 md:mb-8 text-slate-900 animate-fade-in-up stagger-2">
-              We craft <br />
-              <span className="bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text italic pr-4">
-                digital learning.
-              </span>
+            <h1 className="mb-6 text-[40px] font-semibold leading-[1.05] tracking-[-1.5px] text-[var(--cl-ink)] sm:text-[52px] lg:text-[64px] lg:tracking-[-2px]">
+              Teach live.
+              <br />
+              Track everything.
             </h1>
 
-            {/* Subtitle */}
-            <p className="text-base md:text-lg lg:text-xl text-slate-500 max-w-xl leading-relaxed mb-8 md:mb-12 animate-fade-in-up stagger-3">
-              Classera is the learning platform for educators who refuse to be boring. We mix pedagogy with technology to build experiences that inspire.
+            <p className="mx-auto mb-9 max-w-xl text-[17px] leading-[1.6] text-[var(--cl-muted)] lg:mx-0 lg:text-[18px]">
+              Classera pairs live video classrooms with course building, projects,
+              assessments and analytics — so you can run a cohort end to end
+              without stitching five tools together.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start items-center animate-fade-in-up stagger-4">
-              <a href="/signin" className="w-full sm:w-auto group px-10 md:px-8 py-3 md:py-4 bg-slate-900 text-white rounded-full text-base md:text-lg font-medium hover:bg-fuchsia-500 hover:scale-105 hover:shadow-2xl hover:shadow-fuchsia-500/40 transition-all duration-500 ease-out shadow-xl shadow-fuchsia-500/20 flex items-center justify-center gap-2">
-                Get Started
-                <ArrowRight className="w-5 h-5" />
+            <div className="mb-10 flex flex-col items-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
+              <a
+                href="/signin"
+                className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--cl-r-pill)] bg-[var(--cl-primary)] px-7 text-[15px] font-semibold text-[var(--cl-on-primary)] transition-colors duration-[var(--cl-dur-micro)] hover:bg-[var(--cl-primary-active)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)] sm:w-auto"
+              >
+                Get started free
+                <ArrowRight className="h-4 w-4 transition-transform duration-[var(--cl-dur-micro)] group-hover:translate-x-0.5" aria-hidden="true" />
               </a>
-              <button className="w-full sm:w-auto group px-6 md:px-8 py-3 md:py-4 bg-white border border-slate-200 text-slate-900 rounded-full text-base md:text-lg font-medium hover:bg-slate-50 hover:border-slate-300 hover:shadow-lg transition-all duration-500 ease-out flex items-center justify-center gap-2">
-                <Play className="w-5 h-5 text-slate-400" />
-                Platform Tour
-              </button>
+              <a
+                href="#features"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--cl-r-pill)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-6 text-[15px] font-semibold text-[var(--cl-ink)] transition-colors duration-[var(--cl-dur-micro)] hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)] sm:w-auto"
+              >
+                <Play className="h-4 w-4 text-[var(--cl-muted)]" aria-hidden="true" />
+                See how it works
+              </a>
             </div>
+
+            {/* Proof row - mono figures, per the system's rule on comparable numbers */}
+            <dl className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 lg:justify-start">
+              {[
+                { v: '12k+', l: 'Learners' },
+                { v: '480', l: 'Mentors' },
+                { v: '4.8', l: 'Avg. rating' },
+              ].map((s) => (
+                <div key={s.l} className="flex items-baseline gap-2">
+                  <dt className="sr-only">{s.l}</dt>
+                  <dd className="cl-mono text-[20px] font-medium text-[var(--cl-ink)]">{s.v}</dd>
+                  <span aria-hidden="true" className="text-[14px] text-[var(--cl-muted)]">{s.l}</span>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          {/* Right Content - Display Cards */}
-          <div className="hidden lg:flex justify-center lg:justify-start lg:ml-40 -mt-8 animate-fade-in-up stagger-3">
-            <DisplayCards cards={[
-              {
-                icon: <Sparkles className="size-4 text-fuchsia-600" />,
-                title: "Live Classes",
-                description: "Interactive learning sessions",
-                date: "Active now",
-                titleClassName: "text-fuchsia-600",
-                className: "[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
-              },
-              {
-                icon: <Code2 className="size-4 text-purple-600" />,
-                title: "Course Builder",
-                description: "Design engaging curricula",
-                date: "Updated today",
-                titleClassName: "text-purple-600",
-                className: "[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-3xl before:outline-gray-300 before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-gray-200/30 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
-              },
-              {
-                icon: <Star className="size-4 text-lime-600" />,
-                title: "Analytics Hub",
-                description: "Track student progress",
-                date: "Real-time",
-                titleClassName: "text-lime-600",
-                className: "[grid-area:stack] translate-x-24 translate-y-20 hover:translate-y-10",
-              },
-            ]} />
+          {/* Product preview - built from the same tokens as the real app */}
+          <div className="cl-fade relative">
+            <div className="overflow-hidden rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] shadow-[var(--cl-shadow-float)]">
+              {/* window chrome */}
+              <div className="flex items-center gap-2 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff6b5a]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#e8b94a]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#a4d4c5]" />
+                <span className="ml-3 text-[12px] text-[var(--cl-muted)]">Classera — Dashboard</span>
+              </div>
+
+              <div className="space-y-4 p-5">
+                {/* stat row */}
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { l: 'Courses', v: '12', tint: 'var(--cl-tint-blue)' },
+                    { l: 'Sessions', v: '34', tint: 'var(--cl-tint-mint)' },
+                    { l: 'Projects', v: '08', tint: 'var(--cl-tint-lavender)' },
+                  ].map((s) => (
+                    <div key={s.l} className="rounded-[var(--cl-r-md)] p-3" style={{ backgroundColor: s.tint }}>
+                      <p className="text-[11px] font-semibold uppercase tracking-[1px] text-[var(--cl-body)]">{s.l}</p>
+                      <p className="cl-mono mt-1 text-[22px] font-medium text-[var(--cl-ink)]">{s.v}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* live session row */}
+                <div className="flex items-center gap-3 rounded-[var(--cl-r-md)] border border-[var(--cl-hairline)] p-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-[var(--cl-r-sm)] bg-[var(--cl-surface-strong)]">
+                    <Video className="h-4 w-4 text-[var(--cl-ink)]" aria-hidden="true" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[14px] font-semibold text-[var(--cl-ink)]">Data Structures — Live</p>
+                    <p className="text-[12px] text-[var(--cl-muted)]">Starts in 12 min</p>
+                  </div>
+                  <span className="rounded-[var(--cl-r-pill)] bg-[rgba(22,163,74,0.12)] px-2.5 py-1 text-[12px] font-medium text-[var(--cl-success)]">
+                    Live
+                  </span>
+                </div>
+
+                {/* roster rows */}
+                {[
+                  { n: 'Assignment reviewed', m: 'Ananya · 2m ago', done: true },
+                  { n: 'New mentor request', m: 'Rahul · 18m ago', done: false },
+                ].map((r) => (
+                  <div key={r.n} className="flex items-center gap-3 rounded-[var(--cl-r-md)] px-1 py-1.5">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-[var(--cl-r-pill)] bg-[var(--cl-surface-strong)]">
+                      {r.done
+                        ? <CheckCircle2 className="h-4 w-4 text-[var(--cl-success)]" aria-hidden="true" />
+                        : <Users className="h-4 w-4 text-[var(--cl-muted)]" aria-hidden="true" />}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[13px] font-medium text-[var(--cl-ink)]">{r.n}</p>
+                      <p className="text-[12px] text-[var(--cl-muted)]">{r.m}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

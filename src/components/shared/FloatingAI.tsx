@@ -78,28 +78,28 @@ export function FloatingAI() {
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+        <div className="mb-4 w-[350px] sm:w-[400px] h-[500px] bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
-          <div className="px-5 py-4 bg-indigo-600 flex items-center justify-between text-white">
+          <div className="px-5 py-4 bg-[var(--cl-primary)] flex items-center justify-between text-[var(--cl-on-dark)]">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-md">
+              <div className="w-8 h-8 rounded-[var(--cl-r-lg)] bg-[rgba(255,255,255,0.2)] flex items-center justify-center backdrop-blur-md">
                 <Bot size={18} />
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+            <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-[rgba(255,255,255,0.1)] rounded-lg transition-colors">
               <X size={18} />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[rgba(250,250,247,0.5)]">
             {messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center px-6">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center mb-4 text-indigo-600">
+                <div className="w-12 h-12 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary-soft)] flex items-center justify-center mb-4 text-[var(--cl-primary)]">
                   <Sparkles size={24} />
                 </div>
-                <h4 className="text-sm font-black text-slate-800 uppercase tracking-tight mb-2">How can I help you?</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <h4 className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-tight mb-2">How can I help you?</h4>
+                <p className="text-xs text-[var(--cl-muted)] leading-relaxed">
                   Ask me about mentors, students count, university data, or finding a teammate!
                 </p>
               </div>
@@ -107,18 +107,18 @@ export function FloatingAI() {
               messages.map(m => (
                 <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {m.role === 'assistant' && (
-                    <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-sm">
+                    <div className="w-7 h-7 rounded-lg bg-[var(--cl-primary)] flex items-center justify-center text-[var(--cl-on-dark)] flex-shrink-0 mt-0.5">
                       <Bot size={12} />
                     </div>
                   )}
-                  <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-xs leading-relaxed ${
-                    m.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none shadow-sm'
+                  <div className={`max-w-[85%] px-3 py-2 rounded-[var(--cl-r-xl)] text-xs leading-relaxed ${
+                    m.role === 'user' ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-br-none' : 'bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-ink)] rounded-bl-none'
                   }`}>
                     {m.role === 'assistant' && !m.content ? (
                       <div className="flex gap-1 py-1">
-                        <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-1 h-1 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <span className="w-1 h-1 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1 h-1 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1 h-1 bg-[var(--cl-surface-strong)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
                     ) : (
                       <MarkdownMessage content={m.content} isUser={m.role === 'user'} />
@@ -131,20 +131,20 @@ export function FloatingAI() {
           </div>
 
           {/* Input */}
-          <div className="p-3 bg-white border-t border-slate-100">
-            <div className="flex items-center gap-2 bg-slate-50 rounded-2xl px-3 py-1.5 border border-slate-200 focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all">
+          <div className="p-3 bg-[var(--cl-surface-card)] border-t border-[var(--cl-hairline)]">
+            <div className="flex items-center gap-2 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] px-3 py-1.5 border border-[var(--cl-hairline)] focus-within:border-[var(--cl-primary)] focus-within:ring-2 focus-within:ring-[var(--cl-primary)] transition-all">
               <input
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Message AI..."
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xs font-medium text-slate-800 placeholder:text-slate-400 py-1.5"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-xs font-medium text-[var(--cl-ink)] placeholder:text-[var(--cl-muted)] py-1.5"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={loading || !input.trim()}
-                className="p-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-40 transition-colors shadow-sm"
+                className="p-1.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] disabled:opacity-40 transition-colors"
               >
                 <Send size={14} />
               </button>
@@ -156,19 +156,18 @@ export function FloatingAI() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group relative
-          ${isOpen ? 'bg-slate-900 border-2 border-white rotate-90' : 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none'}
+        className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 group relative ${isOpen ? 'bg-[var(--cl-surface-inverse)] border-2 border-[var(--cl-on-dark)] rotate-90' : 'text-[var(--cl-on-dark)] border-none bg-[var(--cl-primary)]'}
         `}
       >
         {isOpen ? (
-          <X className="text-white" />
+          <X className="text-[var(--cl-on-dark)]" />
         ) : (
           <>
             <Bot size={28} className="transition-transform group-hover:scale-110" />
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
-              <span className="text-[10px] font-black text-white">1</span>
+            <div className="absolute -top-1 -right-1 w-5 h-5 bg-[var(--cl-error)] rounded-full border-2 border-[var(--cl-on-dark)] flex items-center justify-center">
+              <span className="text-[10px] font-semibold text-[var(--cl-on-dark)]">1</span>
             </div>
-            <div className="absolute -inset-1 bg-indigo-400/20 rounded-full animate-ping pointer-events-none" />
+            <div className="absolute -inset-1 bg-[var(--cl-surface-card)] rounded-full animate-ping pointer-events-none" />
           </>
         )}
       </button>

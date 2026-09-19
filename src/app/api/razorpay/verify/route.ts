@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { razorpay } from '@/lib/razorpay';
+import { getRazorpay } from '@/lib/razorpay';
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     if (expectedSignature === razorpay_signature) {
       // Fetch order details to know how many tokens to add
-      const order = await razorpay.orders.fetch(razorpay_order_id);
+      const order = await getRazorpay().orders.fetch(razorpay_order_id);
       
       if (!order || !order.notes) {
           return NextResponse.json({ error: 'Order not found or missing notes' }, { status: 404 });

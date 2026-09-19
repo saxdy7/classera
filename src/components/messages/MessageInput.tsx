@@ -71,10 +71,10 @@ export function MessageInput({ onTyping }: MessageInputProps) {
         <div className="flex flex-col gap-2 max-w-4xl mx-auto">
             {/* Error Message */}
             {error && (
-                <div className="flex items-center gap-2 bg-red-50 text-red-600 px-3 py-2 rounded-lg text-sm border border-red-100">
+                <div className="flex items-center gap-2 bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] px-3 py-2 rounded-lg text-sm border border-[var(--cl-error)]">
                     <X className="w-4 h-4" />
                     <span>{error}</span>
-                    <button onClick={() => setError(null)} className="ml-auto text-red-400 hover:text-red-600">
+                    <button onClick={() => setError(null)} className="ml-auto text-[var(--cl-error)] hover:text-[var(--cl-error)]">
                         <X className="w-4 h-4" />
                     </button>
                 </div>
@@ -82,17 +82,17 @@ export function MessageInput({ onTyping }: MessageInputProps) {
 
             {/* Attachment Preview */}
             {attachment && (
-                <div className="flex items-center gap-2 bg-indigo-50 p-3 rounded-xl w-fit border border-indigo-100">
-                    <Paperclip className="w-4 h-4 text-indigo-600" />
-                    <div className="text-sm font-medium text-indigo-900 max-w-[200px] truncate">
+                <div className="flex items-center gap-2 bg-[var(--cl-primary-soft)] p-3 rounded-[var(--cl-r-lg)] w-fit border border-[var(--cl-primary)]">
+                    <Paperclip className="w-4 h-4 text-[var(--cl-primary)]" />
+                    <div className="text-sm font-medium text-[var(--cl-primary)] max-w-[200px] truncate">
                         {attachment.name}
                     </div>
-                    <span className="text-xs text-indigo-600">
+                    <span className="text-xs text-[var(--cl-primary)]">
                         ({(attachment.size / 1024 / 1024).toFixed(2)} MB)
                     </span>
                     <button
                         onClick={() => setAttachment(null)}
-                        className="text-indigo-500 hover:text-red-500 transition-colors p-1"
+                        className="text-[var(--cl-primary)] hover:text-[var(--cl-error)] transition-colors p-1"
                     >
                         <X className="w-4 h-4" />
                     </button>
@@ -100,7 +100,7 @@ export function MessageInput({ onTyping }: MessageInputProps) {
             )}
 
             <div className="flex items-end gap-2">
-                <div className="flex-1 bg-white border-2 border-slate-200 rounded-2xl flex items-center p-1.5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-100 focus-within:border-indigo-400 transition-all">
+                <div className="flex flex-1 items-end gap-1 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] p-1.5 transition-colors focus-within:border-[var(--cl-ink)] focus-within:ring-[3px] focus-within:ring-[rgba(10,10,10,0.12)]">
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -110,14 +110,14 @@ export function MessageInput({ onTyping }: MessageInputProps) {
                     />
 
                     <button 
-                        className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-full transition-colors flex-shrink-0"
+                        className="p-2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] hover:bg-[var(--cl-surface-strong)] rounded-full transition-colors flex-shrink-0"
                         title="Add emoji"
                     >
                         <Smile className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors flex-shrink-0"
+                        className="p-2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] hover:bg-[var(--cl-surface-strong)] rounded-full transition-colors flex-shrink-0"
                         title="Attach file"
                     >
                         <Paperclip className="w-5 h-5" />
@@ -134,9 +134,9 @@ export function MessageInput({ onTyping }: MessageInputProps) {
                             }
                         }}
                         placeholder="Type a message..."
-                        className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none max-h-32 min-h-[44px] py-3 px-2 text-[15px] text-slate-900 placeholder:text-slate-400 resize-none leading-relaxed"
+                        className="min-h-[40px] max-h-32 flex-1 resize-none border-0 bg-transparent px-2 py-2.5 text-[15px] leading-relaxed text-[var(--cl-ink)] shadow-none outline-none placeholder:text-[var(--cl-muted)] focus:border-0 focus:outline-none focus:ring-0"
                         rows={1}
-                        style={{ height: '44px' }}
+                        style={{ height: '40px' }}
                         disabled={isSending}
                     />
                 </div>
@@ -144,9 +144,9 @@ export function MessageInput({ onTyping }: MessageInputProps) {
                 <button
                     onClick={handleSend}
                     disabled={(!content.trim() && !attachment) || isSending}
-                    className={`p-3.5 rounded-full shadow-lg transition-all flex-shrink-0 min-w-[52px] min-h-[52px] flex items-center justify-center ${(content.trim() || attachment) && !isSending
-                            ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-xl hover:scale-105'
-                            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[var(--cl-r-md)] transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)] ${(content.trim() || attachment) && !isSending
+                            ? 'bg-[var(--cl-primary)] text-[var(--cl-on-primary)] hover:bg-[var(--cl-primary-active)]'
+                            : 'cursor-not-allowed bg-[var(--cl-surface-strong)] text-[var(--cl-muted)]'
                         }`}
                     title={isSending ? 'Sending...' : 'Send message'}
                 >

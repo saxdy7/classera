@@ -122,23 +122,23 @@ export default async function StudentProfilePage() {
     .toUpperCase();
 
   const difficultyColor: Record<string, string> = {
-    beginner:     'bg-emerald-100 text-emerald-700',
-    intermediate: 'bg-amber-100 text-amber-700',
-    advanced:     'bg-red-100 text-red-700',
+    beginner:     'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]',
+    intermediate: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]',
+    advanced:     'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]',
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 md:ml-24 p-6 md:p-8">
+        <main className="flex-1 cl-main p-6 md:p-8">
           <div className="max-w-5xl mx-auto space-y-8">
 
             {/* ── Profile Card ── */}
-            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] overflow-hidden border border-[var(--cl-hairline)]">
               {/* Banner */}
-              <div className="h-32 bg-gradient-to-br from-violet-500 via-purple-600 to-fuchsia-600" />
+              <div className="h-32 bg-[var(--cl-primary)]" />
               <div className="px-8 pb-8 -mt-14">
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                   <div className="flex items-end gap-5">
@@ -146,51 +146,51 @@ export default async function StudentProfilePage() {
                       <img
                         src={profile.avatar_url}
                         alt={profile.full_name}
-                        className="w-24 h-24 rounded-2xl border-4 border-white shadow-lg object-cover"
+                        className="w-24 h-24 rounded-[var(--cl-r-xl)] border-4 border-[var(--cl-on-dark)] object-cover"
                       />
                     ) : (
-                      <div className="w-24 h-24 rounded-2xl border-4 border-white shadow-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                      <div className="w-24 h-24 rounded-[var(--cl-r-xl)] border-4 border-[var(--cl-on-dark)] flex items-center justify-center text-[var(--cl-on-dark)] text-2xl font-semibold bg-[var(--cl-primary)]">
                         {initials}
                       </div>
                     )}
                     <div className="pb-1">
-                      <h1 className="text-2xl font-bold text-slate-900">{profile.full_name}</h1>
-                      <p className="text-slate-500 text-sm mt-0.5">
+                      <h1 className="text-2xl font-semibold text-[var(--cl-ink)]">{profile.full_name}</h1>
+                      <p className="text-[var(--cl-muted)] text-sm mt-0.5">
                         {profile.specialization_board || 'Student'} · {(profile.universities as any)?.name || 'University'}
                       </p>
                     </div>
                   </div>
                   <Link
                     href="/dashboard/student/settings"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm font-medium text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
                   >
                     Edit Profile
                   </Link>
                 </div>
 
                 {profile.bio && (
-                  <p className="mt-5 text-slate-600 text-sm max-w-2xl leading-relaxed">{profile.bio}</p>
+                  <p className="mt-5 text-[var(--cl-body)] text-sm max-w-2xl leading-relaxed">{profile.bio}</p>
                 )}
 
                 {/* Quick stats row */}
                 <div className="mt-6 flex flex-wrap gap-6">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <BookOpen className="w-4 h-4 text-violet-500" />
-                    <span><strong className="text-slate-900">{coursesEnrolled}</strong> courses enrolled</span>
+                  <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                    <BookOpen className="w-4 h-4 text-[var(--cl-primary)]" />
+                    <span><strong className="text-[var(--cl-ink)]">{coursesEnrolled}</strong> courses enrolled</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Trophy className="w-4 h-4 text-amber-500" />
-                    <span><strong className="text-slate-900">{testsTaken}</strong> tests taken</span>
+                  <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                    <Trophy className="w-4 h-4 text-[var(--cl-warning)]" />
+                    <span><strong className="text-[var(--cl-ink)]">{testsTaken}</strong> tests taken</span>
                   </div>
                   {avgScore !== null && (
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Star className="w-4 h-4 text-yellow-400" />
-                      <span><strong className="text-slate-900">{avgScore}%</strong> avg score</span>
+                    <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                      <Star className="w-4 h-4 text-[var(--cl-warning)]" />
+                      <span><strong className="text-[var(--cl-ink)]">{avgScore}%</strong> avg score</span>
                     </div>
                   )}
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Users className="w-4 h-4 text-emerald-500" />
-                    <span><strong className="text-slate-900">{communitiesJoined}</strong> communities</span>
+                  <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                    <Users className="w-4 h-4 text-[var(--cl-success)]" />
+                    <span><strong className="text-[var(--cl-ink)]">{communitiesJoined}</strong> communities</span>
                   </div>
                 </div>
               </div>
@@ -200,18 +200,18 @@ export default async function StudentProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
               {/* Enrolled Courses */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                 <div className="flex items-center justify-between mb-5">
-                  <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-violet-500" />
+                  <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[var(--cl-primary)]" />
                     Enrolled Courses
                   </h2>
-                  <Link href="/dashboard/student/courses" className="text-xs font-medium text-violet-600 hover:underline">
+                  <Link href="/dashboard/student/courses" className="text-xs font-medium text-[var(--cl-primary)] hover:underline">
                     View all
                   </Link>
                 </div>
                 {(enrollments?.length ?? 0) === 0 ? (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-[var(--cl-muted-soft)]">
                     <BookOpen className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">No courses enrolled yet</p>
                   </div>
@@ -221,23 +221,23 @@ export default async function StudentProfilePage() {
                       const course = (e as any).course;
                       const diff = course?.difficulty ?? 'beginner';
                       return (
-                        <div key={e.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors">
-                          <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
-                            <BookOpen className="w-5 h-5 text-violet-600" />
+                        <div key={e.id} className="flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors">
+                          <div className="w-10 h-10 rounded-lg bg-[var(--cl-primary-soft)] flex items-center justify-center flex-shrink-0">
+                            <BookOpen className="w-5 h-5 text-[var(--cl-primary)]" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 truncate">{course?.title ?? 'Course'}</p>
+                            <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{course?.title ?? 'Course'}</p>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div className="flex-1 h-1.5 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-violet-500 rounded-full"
+                                  className="h-full bg-[var(--cl-primary)] rounded-full"
                                   style={{ width: `${e.progress ?? 0}%` }}
                                 />
                               </div>
-                              <span className="text-xs text-slate-400 flex-shrink-0">{e.progress ?? 0}%</span>
+                              <span className="text-xs text-[var(--cl-muted-soft)] flex-shrink-0">{e.progress ?? 0}%</span>
                             </div>
                           </div>
-                          <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${difficultyColor[diff] ?? 'bg-slate-100 text-slate-600'}`}>
+                          <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${difficultyColor[diff] ?? 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'}`}>
                             {diff}
                           </span>
                         </div>
@@ -248,18 +248,18 @@ export default async function StudentProfilePage() {
               </div>
 
               {/* Recent Test Results */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                 <div className="flex items-center justify-between mb-5">
-                  <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-amber-500" />
+                  <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-[var(--cl-warning)]" />
                     Test Results
                   </h2>
-                  <Link href="/dashboard/student/tests" className="text-xs font-medium text-violet-600 hover:underline">
+                  <Link href="/dashboard/student/tests" className="text-xs font-medium text-[var(--cl-primary)] hover:underline">
                     View all
                   </Link>
                 </div>
                 {(testSubmissions?.length ?? 0) === 0 ? (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-[var(--cl-muted-soft)]">
                     <Trophy className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">No tests taken yet</p>
                   </div>
@@ -270,20 +270,20 @@ export default async function StudentProfilePage() {
                       const passed = pct >= 50;
                       const test = (sub as any).test;
                       return (
-                        <div key={sub.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${passed ? 'bg-emerald-100' : 'bg-red-100'}`}>
+                        <div key={sub.id} className="flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors">
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${passed ? 'bg-[rgba(22,163,74,0.12)]' : 'bg-[rgba(239,68,68,0.12)]'}`}>
                             {passed
-                              ? <CheckCircle className="w-5 h-5 text-emerald-600" />
-                              : <Trophy className="w-5 h-5 text-red-500" />
+                              ? <CheckCircle className="w-5 h-5 text-[var(--cl-success)]" />
+                              : <Trophy className="w-5 h-5 text-[var(--cl-error)]" />
                             }
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 truncate">{test?.title ?? 'Test'}</p>
-                            <p className="text-xs text-slate-400 mt-0.5">
+                            <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{test?.title ?? 'Test'}</p>
+                            <p className="text-xs text-[var(--cl-muted-soft)] mt-0.5">
                               {new Date(sub.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </p>
                           </div>
-                          <span className={`text-sm font-bold flex-shrink-0 ${passed ? 'text-emerald-600' : 'text-red-500'}`}>
+                          <span className={`text-sm font-semibold flex-shrink-0 ${passed ? 'text-[var(--cl-success)]' : 'text-[var(--cl-error)]'}`}>
                             {Math.round(pct)}%
                           </span>
                         </div>
@@ -294,18 +294,18 @@ export default async function StudentProfilePage() {
               </div>
 
               {/* Communities */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
                 <div className="flex items-center justify-between mb-5">
-                  <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-emerald-500" />
+                  <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                    <Users className="w-4 h-4 text-[var(--cl-success)]" />
                     Communities
                   </h2>
-                  <Link href="/dashboard/student/communities" className="text-xs font-medium text-violet-600 hover:underline">
+                  <Link href="/dashboard/student/communities" className="text-xs font-medium text-[var(--cl-primary)] hover:underline">
                     View all
                   </Link>
                 </div>
                 {(memberships?.length ?? 0) === 0 ? (
-                  <div className="text-center py-8 text-slate-400">
+                  <div className="text-center py-8 text-[var(--cl-muted-soft)]">
                     <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">Not a member of any community yet</p>
                   </div>
@@ -314,16 +314,16 @@ export default async function StudentProfilePage() {
                     {memberships!.map(m => {
                       const community = (m as any).community;
                       return (
-                        <div key={m.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors">
-                          <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0 text-sm font-bold text-emerald-700 overflow-hidden">
+                        <div key={m.id} className="flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors">
+                          <div className="w-10 h-10 rounded-lg bg-[rgba(22,163,74,0.12)] flex items-center justify-center flex-shrink-0 text-sm font-semibold text-[var(--cl-success)] overflow-hidden">
                             {community?.avatar_url
                               ? <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
                               : community?.name?.[0]?.toUpperCase() ?? 'C'
                             }
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 truncate">{community?.name ?? 'Community'}</p>
-                            <p className="text-xs text-slate-400 mt-0.5">
+                            <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{community?.name ?? 'Community'}</p>
+                            <p className="text-xs text-[var(--cl-muted-soft)] mt-0.5">
                               Joined {new Date(m.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                             </p>
                           </div>
@@ -335,22 +335,22 @@ export default async function StudentProfilePage() {
               </div>
 
               {/* Activity Summary */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-                <h2 className="font-bold text-slate-900 mb-5 flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-indigo-500" />
+              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
+                <h2 className="font-semibold text-[var(--cl-ink)] mb-5 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[var(--cl-primary)]" />
                   Activity Summary
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { icon: BookOpen, label: 'Enrolled', value: coursesEnrolled, color: 'from-violet-100 to-violet-50', text: 'text-violet-700' },
-                    { icon: CheckCircle, label: 'Completed', value: coursesCompleted, color: 'from-emerald-100 to-emerald-50', text: 'text-emerald-700' },
-                    { icon: Trophy, label: 'Tests Taken', value: testsTaken, color: 'from-amber-100 to-amber-50', text: 'text-amber-700' },
-                    { icon: Star, label: 'Avg Score', value: avgScore !== null ? `${avgScore}%` : '—', color: 'from-yellow-100 to-yellow-50', text: 'text-yellow-700' },
+                    { icon: BookOpen, label: 'Enrolled', value: coursesEnrolled, color: '', text: 'text-[var(--cl-primary)]' },
+                    { icon: CheckCircle, label: 'Completed', value: coursesCompleted, color: '', text: 'text-[var(--cl-success)]' },
+                    { icon: Trophy, label: 'Tests Taken', value: testsTaken, color: '', text: 'text-[var(--cl-warning)]' },
+                    { icon: Star, label: 'Avg Score', value: avgScore !== null ? `${avgScore}%` : '—', color: '', text: 'text-[var(--cl-warning)]' },
                   ].map(({ icon: Icon, label, value, color, text }) => (
-                    <div key={label} className={`rounded-xl p-4 bg-gradient-to-br ${color}`}>
+                    <div key={label} className={`rounded-[var(--cl-r-lg)] p-4 ${color}`}>
                       <Icon className={`w-5 h-5 ${text} mb-2`} />
-                      <p className={`text-2xl font-bold ${text}`}>{value}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+                      <p className={`text-2xl font-semibold ${text}`}>{value}</p>
+                      <p className="text-xs text-[var(--cl-muted)] mt-0.5">{label}</p>
                     </div>
                   ))}
                 </div>
@@ -361,10 +361,10 @@ export default async function StudentProfilePage() {
             {/* ── GitHub & LinkedIn Profiles ── */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* GitHub Section */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                  <Github className="w-4 h-4 text-slate-900" />
+                <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                  <Github className="w-4 h-4 text-[var(--cl-ink)]" />
                   GitHub Profile
                 </h2>
               </div>
@@ -378,62 +378,62 @@ export default async function StudentProfilePage() {
               {(githubConnection || githubUrlData) && (
                 <div className="mt-5 space-y-4">
                   {/* Profile Header */}
-                  <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
+                  <div className="flex items-center gap-4 pb-4 border-b border-[var(--cl-hairline)]">
                     {(githubConnection?.github_avatar_url || githubUrlData?.avatar_url) && (
                       <img 
                         src={githubConnection?.github_avatar_url || githubUrlData?.avatar_url || ''} 
                         alt="GitHub" 
-                        className="w-12 h-12 rounded-full border border-slate-200"
+                        className="w-12 h-12 rounded-full border border-[var(--cl-hairline)]"
                       />
                     )}
                     <div className="flex-1">
-                      <p className="font-bold text-slate-900 text-sm">@{githubConnection?.github_username || githubUrlData?.login}</p>
-                      {githubUrlData?.name && <p className="text-xs text-slate-600">{githubUrlData.name}</p>}
-                      {githubUrlData?.bio && <p className="text-xs text-slate-500 mt-0.5">{githubUrlData.bio}</p>}
+                      <p className="font-semibold text-[var(--cl-ink)] text-sm">@{githubConnection?.github_username || githubUrlData?.login}</p>
+                      {githubUrlData?.name && <p className="text-xs text-[var(--cl-body)]">{githubUrlData.name}</p>}
+                      {githubUrlData?.bio && <p className="text-xs text-[var(--cl-muted)] mt-0.5">{githubUrlData.bio}</p>}
                     </div>
                   </div>
 
                   {/* Key Stats */}
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-slate-50 rounded-lg p-3 text-center">
-                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.public_repos || 0}</p>
-                      <p className="text-xs text-slate-600">Public Repos</p>
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-3 text-center">
+                      <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubUrlData?.public_repos || 0}</p>
+                      <p className="text-xs text-[var(--cl-body)]">Public Repos</p>
                     </div>
-                    <div className="bg-slate-50 rounded-lg p-3 text-center">
-                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.followers || 0}</p>
-                      <p className="text-xs text-slate-600">Followers</p>
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-3 text-center">
+                      <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubUrlData?.followers || 0}</p>
+                      <p className="text-xs text-[var(--cl-body)]">Followers</p>
                     </div>
-                    <div className="bg-slate-50 rounded-lg p-3 text-center">
-                      <p className="text-lg font-bold text-slate-900">{githubUrlData?.following || 0}</p>
-                      <p className="text-xs text-slate-600">Following</p>
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-3 text-center">
+                      <p className="text-lg font-semibold text-[var(--cl-ink)]">{githubUrlData?.following || 0}</p>
+                      <p className="text-xs text-[var(--cl-body)]">Following</p>
                     </div>
                   </div>
 
                   {/* Additional Info */}
                   <div className="space-y-2">
                     {githubUrlData?.company && (
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Briefcase className="w-4 h-4 text-slate-400" />
+                      <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                        <Briefcase className="w-4 h-4 text-[var(--cl-muted-soft)]" />
                         <span>{githubUrlData.company}</span>
                       </div>
                     )}
                     {githubUrlData?.location && (
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <MapPin className="w-4 h-4 text-slate-400" />
+                      <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                        <MapPin className="w-4 h-4 text-[var(--cl-muted-soft)]" />
                         <span>{githubUrlData.location}</span>
                       </div>
                     )}
                     {githubUrlData?.blog && (
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <ExternalLink className="w-4 h-4 text-slate-400" />
-                        <a href={githubUrlData.blog} target="_blank" rel="noreferrer" className="text-violet-600 hover:underline">
+                      <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                        <ExternalLink className="w-4 h-4 text-[var(--cl-muted-soft)]" />
+                        <a href={githubUrlData.blog} target="_blank" rel="noreferrer" className="text-[var(--cl-primary)] hover:underline">
                           Personal Website
                         </a>
                       </div>
                     )}
                     {githubUrlData?.created_at && (
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Clock className="w-4 h-4 text-slate-400" />
+                      <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                        <Clock className="w-4 h-4 text-[var(--cl-muted-soft)]" />
                         <span>Joined {new Date(githubUrlData.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                       </div>
                     )}
@@ -441,13 +441,13 @@ export default async function StudentProfilePage() {
 
                   {/* Platform stats */}
                   {avgPlatformScore !== null && githubConnection && (
-                    <div className="pt-3 border-t border-slate-200">
+                    <div className="pt-3 border-t border-[var(--cl-hairline)]">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-slate-600 uppercase">Consistency Score</span>
-                        <span className="text-sm font-bold text-violet-700">{avgPlatformScore}%</span>
+                        <span className="text-xs font-semibold text-[var(--cl-body)] uppercase">Consistency Score</span>
+                        <span className="text-sm font-semibold text-[var(--cl-primary)]">{avgPlatformScore}%</span>
                       </div>
-                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-violet-500" style={{ width: `${avgPlatformScore}%` }} />
+                      <div className="h-1.5 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                        <div className="h-full bg-[var(--cl-primary)]" style={{ width: `${avgPlatformScore}%` }} />
                       </div>
                     </div>
                   )}
@@ -455,7 +455,7 @@ export default async function StudentProfilePage() {
                   {/* Activity heatmap */}
                   {githubConnection && Object.keys(mergedDailyActivity).length > 0 && (
                     <div>
-                      <p className="text-xs font-bold text-slate-600 uppercase mb-2">Coding Activity (26 weeks)</p>
+                      <p className="text-xs font-semibold text-[var(--cl-body)] uppercase mb-2">Coding Activity (26 weeks)</p>
                       <ActivityHeatmap dailyActivity={mergedDailyActivity} weeks={26} />
                     </div>
                   )}
@@ -473,16 +473,16 @@ export default async function StudentProfilePage() {
                       default: '#8b5cf6',
                     };
                     return (
-                      <div className="pt-3 border-t border-slate-200">
-                        <p className="text-xs font-bold text-slate-600 uppercase mb-2">Top Languages</p>
+                      <div className="pt-3 border-t border-[var(--cl-hairline)]">
+                        <p className="text-xs font-semibold text-[var(--cl-body)] uppercase mb-2">Top Languages</p>
                         <div className="space-y-2">
                           {topLangs.map(([lang, bytes]) => (
                             <div key={lang}>
                               <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-medium text-slate-700">{lang}</span>
-                                <span className="text-xs text-slate-500">{Math.round((bytes / total) * 100)}%</span>
+                                <span className="text-xs font-medium text-[var(--cl-body)]">{lang}</span>
+                                <span className="text-xs text-[var(--cl-muted)]">{Math.round((bytes / total) * 100)}%</span>
                               </div>
-                              <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                              <div className="h-1.5 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
                                 <div style={{ width: `${(bytes/total)*100}%`, backgroundColor: LANG_COLORS[lang] || LANG_COLORS.default }} className="h-full" />
                               </div>
                             </div>
@@ -496,52 +496,52 @@ export default async function StudentProfilePage() {
             </div>
 
             {/* LinkedIn Section */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-bold text-slate-900 flex items-center gap-2">
-                  <Linkedin className="w-4 h-4 text-blue-700" />
+                <h2 className="font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                  <Linkedin className="w-4 h-4 text-[var(--cl-info)]" />
                   LinkedIn Profile
                 </h2>
               </div>
 
               {profile.linkedin_url ? (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Linkedin className="w-6 h-6 text-blue-700" />
+                  <div className="flex items-center gap-4 pb-4 border-b border-[var(--cl-hairline)]">
+                    <div className="w-12 h-12 rounded-full bg-[rgba(13,116,206,0.12)] flex items-center justify-center">
+                      <Linkedin className="w-6 h-6 text-[var(--cl-info)]" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-bold text-slate-900 text-sm">LinkedIn Profile</p>
+                      <p className="font-semibold text-[var(--cl-ink)] text-sm">LinkedIn Profile</p>
                       <a 
                         href={profile.linkedin_url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                        className="text-xs text-[var(--cl-info)] hover:underline flex items-center gap-1 mt-1"
                       >
                         View Profile <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   </div>
 
-                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                    <p className="text-sm text-slate-600">
+                  <div className="bg-[rgba(13,116,206,0.12)] rounded-lg p-4 border border-[var(--cl-info)]">
+                    <p className="text-sm text-[var(--cl-body)]">
                       Connect with {profile.full_name} on LinkedIn to see detailed career information, endorsements, and recommendations.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-50 rounded-lg p-3 text-center">
-                      <MailIcon className="w-4 h-4 text-slate-400 mx-auto mb-2" />
-                      <p className="text-xs font-medium text-slate-600">Connect</p>
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-3 text-center">
+                      <MailIcon className="w-4 h-4 text-[var(--cl-muted-soft)] mx-auto mb-2" />
+                      <p className="text-xs font-medium text-[var(--cl-body)]">Connect</p>
                     </div>
-                    <div className="bg-slate-50 rounded-lg p-3 text-center">
-                      <Users className="w-4 h-4 text-slate-400 mx-auto mb-2" />
-                      <p className="text-xs font-medium text-slate-600">Network</p>
+                    <div className="bg-[var(--cl-canvas-soft)] rounded-lg p-3 text-center">
+                      <Users className="w-4 h-4 text-[var(--cl-muted-soft)] mx-auto mb-2" />
+                      <p className="text-xs font-medium text-[var(--cl-body)]">Network</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8 text-slate-400">
+                <div className="text-center py-8 text-[var(--cl-muted-soft)]">
                   <Linkedin className="w-10 h-10 mx-auto mb-3 opacity-30" />
                   <p className="text-sm font-medium">LinkedIn not connected</p>
                   <p className="text-xs mt-1">Add LinkedIn profile in settings to showcase professional experience</p>

@@ -3,115 +3,111 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
+const NAV_LINKS = [
+  { href: '#features', label: 'Features' },
+  { href: '#services', label: 'Services' },
+  { href: '/contact', label: 'Contact' },
+];
+
+/**
+ * Landing navigation - Classera design system v2.
+ *
+ * White sticky bar that gains a hairline once the page scrolls, matching the
+ * reference marketing headers: wordmark left, links centre, a text sign-in and
+ * one black pill CTA right.
+ *
+ * The mobile menu now traps nothing and closes on Escape or link activation;
+ * the previous version left it open after navigating to an in-page anchor.
+ */
 export default function Navigation() {
-  const [scrollY, setScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
-  const closeMobileMenu = () => setMobileMenuOpen(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-6 transition-all duration-500 ease-out animate-fade-in-up">
-      <div
-        className={`max-w-7xl mx-auto bg-white/80 backdrop-blur-md border border-slate-100 rounded-full px-4 md:px-6 py-4 flex justify-between items-center transition-all duration-500 ease-out ${
-          scrollY > 50 ? 'shadow-2xl bg-white/95 py-3' : 'shadow-sm'
-        }`}
-      >
-        {/* Logo */}
-        <a href="#" className="text-2xl font-semibold tracking-tighter flex items-center gap-2">
-          
+    <nav
+      className={`fixed inset-x-0 top-0 z-50 bg-[var(--cl-canvas)] transition-colors duration-[var(--cl-dur-micro)] ${
+        scrolled ? 'border-b border-[var(--cl-hairline)]' : 'border-b border-transparent'
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-6 px-4 md:px-6">
+        <a
+          href="/"
+          className="text-[20px] font-semibold tracking-[-0.5px] text-[var(--cl-ink)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+        >
           Classera
         </a>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8 items-center">
-          <a href="#work" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
-            Features
-          </a>
-          <a href="#services" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
-            Services
-          </a>
-          <a href="/contact" className="text-sm font-medium hover:text-fuchsia-600 transition-colors">
-            Contact
-          </a>
+        <div className="ml-4 hidden items-center gap-1 md:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="rounded-[var(--cl-r-md)] px-3 py-2 text-[14px] font-medium text-[var(--cl-body)] transition-colors hover:bg-[var(--cl-surface-strong)] hover:text-[var(--cl-ink)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="hidden md:flex gap-3 items-center">
+        <div className="ml-auto hidden items-center gap-2 md:flex">
           <a
             href="/signin"
-            className="px-6 py-2.5 border-2 border-black text-black rounded-full text-sm font-medium hover:bg-black hover:text-white transition-all duration-300"
+            className="rounded-[var(--cl-r-md)] px-3 py-2 text-[14px] font-medium text-[var(--cl-body)] transition-colors hover:text-[var(--cl-ink)]"
           >
-            Sign In
+            Sign in
           </a>
           <a
-            href="#contact"
-            className="group relative px-6 py-2.5 bg-black text-white rounded-full text-sm font-medium overflow-hidden hover:scale-105 transition-transform"
+            href="/signin"
+            className="inline-flex h-10 items-center rounded-[var(--cl-r-pill)] bg-[var(--cl-primary)] px-5 text-[14px] font-semibold text-[var(--cl-on-primary)] transition-colors hover:bg-[var(--cl-primary-active)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.2)]"
           >
-            <span className="relative z-10">Let&apos;s Talk</span>
-            <div className="absolute inset-0 bg-fuchsia-500 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+            Get started
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden p-2 hover:bg-slate-100 rounded-full transition-colors"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
+        <button
+          onClick={() => setMobileMenuOpen((o) => !o)}
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
+          className="ml-auto rounded-[var(--cl-r-md)] p-2 text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-surface-strong)] md:hidden"
         >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-24 left-4 right-4 bg-white/95 backdrop-blur-md border border-slate-100 rounded-2xl shadow-lg p-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex flex-col gap-3">
-            <a 
-              href="#work" 
-              onClick={closeMobileMenu}
-              className="px-4 py-3 text-sm font-medium hover:bg-slate-100 hover:text-fuchsia-600 rounded-lg transition-colors"
-            >
-              Features
-            </a>
-            <a 
-              href="#services" 
-              onClick={closeMobileMenu}
-              className="px-4 py-3 text-sm font-medium hover:bg-slate-100 hover:text-fuchsia-600 rounded-lg transition-colors"
-            >
-              Services
-            </a>
-            <a 
-              href="/contact" 
-              onClick={closeMobileMenu}
-              className="px-4 py-3 text-sm font-medium hover:bg-slate-100 hover:text-fuchsia-600 rounded-lg transition-colors"
-            >
-              Contact
-            </a>
-            <hr className="my-2" />
+        <div className="border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas)] px-4 py-3 md:hidden">
+          <div className="flex flex-col gap-1">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-[var(--cl-r-md)] px-3 py-2.5 text-[15px] font-medium text-[var(--cl-body)] transition-colors hover:bg-[var(--cl-surface-strong)] hover:text-[var(--cl-ink)]"
+              >
+                {link.label}
+              </a>
+            ))}
             <a
               href="/signin"
-              onClick={closeMobileMenu}
-              className="px-4 py-3 border-2 border-black text-black rounded-lg text-sm font-medium hover:bg-black hover:text-white transition-all text-center"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-2 inline-flex h-11 items-center justify-center rounded-[var(--cl-r-pill)] bg-[var(--cl-primary)] px-5 text-[15px] font-semibold text-[var(--cl-on-primary)]"
             >
-              Sign In
-            </a>
-            <a
-              href="#contact"
-              onClick={closeMobileMenu}
-              className="px-4 py-3 bg-black text-white rounded-lg text-sm font-medium hover:bg-fuchsia-600 transition-all text-center"
-            >
-              Let&apos;s Talk
+              Get started
             </a>
           </div>
         </div>

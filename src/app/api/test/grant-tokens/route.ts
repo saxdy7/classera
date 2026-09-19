@@ -13,8 +13,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   // Only allow in development mode
@@ -26,8 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(cookieStore);
+    const supabase = await createClient();
 
     // Get current user
     const {

@@ -200,23 +200,23 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
+        <div className="min-h-screen bg-[var(--cl-canvas)]">
             <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
                 <Sidebar role="student" />
-                <main className="flex-1 p-4 md:p-8 md:ml-24">
+                <main className="flex-1 p-4 md:p-8 cl-main">
                     <div className="max-w-4xl mx-auto">
                         <div className="flex items-center justify-between mb-6">
                             <Link
                                 href="/dashboard/student/tests"
-                                className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900"
+                                className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)]"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Back to Tests
                             </Link>
                             <Link
                                 href={`/dashboard/student/tests/${testId}/review`}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg text-sm font-medium hover:bg-[var(--cl-primary)] transition-colors"
                             >
                                 <FileText className="w-4 h-4" />
                                 Review Answers
@@ -224,90 +224,90 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         </div>
 
                         {/* ── Quiz Summary Hero (Wayground/Quizizz style) ── */}
-                        <div className="rounded-3xl overflow-hidden mb-8 shadow-xl shadow-violet-500/10 border border-slate-100 bg-white">
+                        <div className="rounded-[var(--cl-r-xl)] overflow-hidden mb-8 border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)]">
                             {/* Gradient top with trophy */}
-                            <div className={`relative px-6 pt-10 pb-20 text-center ${passed ? 'bg-gradient-to-br from-violet-600 via-indigo-600 to-violet-700' : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'}`}>
+                            <div className={`relative px-6 pt-10 pb-20 text-center ${passed ? 'bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-inverse)]'}`}>
                                 <div
                                     className="absolute inset-0 opacity-[0.12]"
                                     style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '22px 22px' }}
                                 />
                                 <div className="relative">
                                     <div className="text-6xl mb-2 drop-shadow-lg">{passed ? '🏆' : '📚'}</div>
-                                    <h1 className="text-xl font-bold text-white/95">{test?.title}</h1>
+                                    <h1 className="text-xl font-semibold text-[rgba(255,255,255,0.95)]">{test?.title}</h1>
                                 </div>
                             </div>
 
                             {/* Overlapping congratulations card */}
-                            <div className="relative z-10 -mt-12 mx-4 md:mx-8 rounded-2xl bg-white shadow-lg border border-slate-100 px-6 py-6 text-center">
-                                <h2 className="text-2xl font-extrabold text-slate-900">
+                            <div className="relative z-10 -mt-12 mx-4 md:mx-8 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] px-6 py-6 text-center">
+                                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">
                                     {passed ? 'Congratulations!' : 'Keep practicing!'}
                                 </h2>
-                                <p className="text-slate-500 mt-1">
+                                <p className="text-[var(--cl-muted)] mt-1">
                                     You&apos;ve scored{' '}
-                                    <span className={`font-bold ${passed ? 'text-emerald-500' : 'text-amber-500'}`}>+{pointsScored}</span>{' '}
+                                    <span className={`font-semibold ${passed ? 'text-[var(--cl-success)]' : 'text-[var(--cl-warning)]'}`}>+{pointsScored}</span>{' '}
                                     points
                                 </p>
                             </div>
 
                             {/* Stat tiles: Total / Correct / Wrong */}
                             <div className="px-4 md:px-8 pt-6 pb-7">
-                                <div className="grid grid-cols-3 divide-x divide-slate-100 rounded-2xl border border-slate-100">
+                                <div className="grid grid-cols-3 divide-x divide-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <span className="w-7 h-7 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-extrabold text-sm">Q</span>
-                                            <span className="text-2xl font-extrabold text-slate-900">{totalQuestions}</span>
+                                            <span className="w-7 h-7 rounded-full bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] flex items-center justify-center font-semibold text-sm">Q</span>
+                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{totalQuestions}</span>
                                         </div>
-                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Total Questions</span>
+                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Total Questions</span>
                                     </div>
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <CheckCircle className="w-6 h-6 text-emerald-500" />
-                                            <span className="text-2xl font-extrabold text-slate-900">{pad2(correctCount)}</span>
+                                            <CheckCircle className="w-6 h-6 text-[var(--cl-success)]" />
+                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{pad2(correctCount)}</span>
                                         </div>
-                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Correct</span>
+                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Correct</span>
                                     </div>
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <XCircle className="w-6 h-6 text-red-500" />
-                                            <span className="text-2xl font-extrabold text-slate-900">{pad2(wrongCount)}</span>
+                                            <XCircle className="w-6 h-6 text-[var(--cl-error)]" />
+                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{pad2(wrongCount)}</span>
                                         </div>
-                                        <span className="text-xs text-slate-500 mt-1.5 font-medium">Wrong</span>
+                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Wrong</span>
                                     </div>
                                 </div>
 
                                 {/* Score / grade / percentage summary */}
                                 <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-5 text-sm">
-                                    <span className="text-slate-500">Score: <span className="font-bold text-slate-900">{pointsScored}/{test?.total_marks ?? 0}</span></span>
-                                    <span className="text-slate-500">Grade: <span className="font-bold text-slate-900">{grade}</span></span>
-                                    <span className="text-slate-500">Percentage: <span className={`font-bold ${passed ? 'text-emerald-500' : 'text-amber-500'}`}>{Math.round(percentage)}%</span></span>
+                                    <span className="text-[var(--cl-muted)]">Score: <span className="font-semibold text-[var(--cl-ink)]">{pointsScored}/{test?.total_marks ?? 0}</span></span>
+                                    <span className="text-[var(--cl-muted)]">Grade: <span className="font-semibold text-[var(--cl-ink)]">{grade}</span></span>
+                                    <span className="text-[var(--cl-muted)]">Percentage: <span className={`font-semibold ${passed ? 'text-[var(--cl-success)]' : 'text-[var(--cl-warning)]'}`}>{Math.round(percentage)}%</span></span>
                                 </div>
                             </div>
                         </div>
 
                         {/* ── Per-Test Class Leaderboard ── */}
                         {myRankDisplay !== null && totalParticipants >= 1 && (
-                            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-8 overflow-hidden">
+                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] mb-8 overflow-hidden">
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-6 pb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                            <Trophy className="w-5 h-5 text-amber-500" />
+                                        <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
+                                            <Trophy className="w-5 h-5 text-[var(--cl-warning)]" />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-bold text-slate-900">Standings</h3>
-                                            <p className="text-slate-500 text-xs">{totalParticipants} player{totalParticipants !== 1 ? 's' : ''} completed this test</p>
+                                            <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Standings</h3>
+                                            <p className="text-[var(--cl-muted)] text-xs">{totalParticipants} player{totalParticipants !== 1 ? 's' : ''} completed this test</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide">Your Rank</p>
-                                        <p className="text-2xl font-extrabold text-violet-600">
-                                            #{myRankDisplay}<span className="text-sm text-slate-400 font-medium"> / {totalParticipants}</span>
+                                        <p className="text-[11px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-wide">Your Rank</p>
+                                        <p className="text-2xl font-semibold text-[var(--cl-primary)]">
+                                            #{myRankDisplay}<span className="text-sm text-[var(--cl-muted-soft)] font-medium"> / {totalParticipants}</span>
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Column labels */}
-                                <div className="grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 px-6 py-2.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wide bg-slate-50 border-y border-slate-100">
+                                <div className="grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 px-6 py-2.5 text-[11px] font-semibold text-[var(--cl-muted-soft)] uppercase tracking-wide bg-[var(--cl-canvas-soft)] border-y border-[var(--cl-hairline)]">
                                     <span>Rank</span>
                                     <span>Player</span>
                                     <span className="text-right">Correct</span>
@@ -320,18 +320,18 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                         const rank = idx + 1;
                                         const ordinal = rank === 1 ? '1st' : rank === 2 ? '2nd' : rank === 3 ? '3rd' : `${rank}th`;
                                         const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
-                                        const avatarColors = ['bg-violet-200 text-violet-700', 'bg-amber-200 text-amber-700', 'bg-emerald-200 text-emerald-700', 'bg-sky-200 text-sky-700', 'bg-rose-200 text-rose-700'];
+                                        const avatarColors = ['bg-[var(--cl-primary)] text-[var(--cl-primary)]', 'bg-[var(--cl-warning)] text-[var(--cl-warning)]', 'bg-[var(--cl-success)] text-[var(--cl-success)]', 'bg-[var(--cl-info)] text-[var(--cl-info)]', 'bg-[var(--cl-error)] text-[var(--cl-error)]'];
                                         const ac = avatarColors[idx % avatarColors.length];
                                         const pct = entry.percentage || 0;
                                         return (
                                             <div
                                                 key={entry.student_id}
-                                                className={`grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 items-center px-6 py-3 border-b border-slate-50 last:border-0 ${
-                                                    rank === 1 ? 'bg-emerald-50/70' : isMe ? 'bg-violet-50' : 'hover:bg-slate-50'
+                                                className={`grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 items-center px-6 py-3 border-b border-[var(--cl-hairline)] last:border-0 ${
+                                                    rank === 1 ? 'bg-[rgba(22,163,74,0.7)]' : isMe ? 'bg-[var(--cl-primary-soft)]' : 'hover:bg-slate-50'
                                                 }`}
                                             >
                                                 {/* Rank */}
-                                                <div className="flex items-center gap-1 font-bold text-slate-700 text-sm">
+                                                <div className="flex items-center gap-1 font-semibold text-[var(--cl-body)] text-sm">
                                                     {rank === 1 && <span className="text-base leading-none">👑</span>}
                                                     {ordinal}
                                                 </div>
@@ -340,23 +340,23 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                 <div className="flex items-center gap-3 min-w-0">
                                                     {entry.users?.avatar_url ? (
                                                         // eslint-disable-next-line @next/next/no-img-element
-                                                        <img src={entry.users.avatar_url} alt="" className="w-9 h-9 rounded-xl object-cover flex-shrink-0" />
+                                                        <img src={entry.users.avatar_url} alt="" className="w-9 h-9 rounded-[var(--cl-r-lg)] object-cover flex-shrink-0" />
                                                     ) : (
-                                                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm ${ac}`}>
+                                                        <div className={`w-9 h-9 rounded-[var(--cl-r-lg)] flex items-center justify-center flex-shrink-0 font-semibold text-sm ${ac}`}>
                                                             {initials}
                                                         </div>
                                                     )}
                                                     <div className="min-w-0">
-                                                        <p className="font-semibold text-sm text-slate-900 truncate">
+                                                        <p className="font-semibold text-sm text-[var(--cl-ink)] truncate">
                                                             {entry.users?.full_name || 'Student'}
-                                                            {isMe && <span className="ml-1.5 text-xs text-violet-500 font-normal">(You)</span>}
+                                                            {isMe && <span className="ml-1.5 text-xs text-[var(--cl-primary)] font-normal">(You)</span>}
                                                         </p>
-                                                        <p className="text-xs text-slate-400">{formatTimeTaken(entry.time_taken_seconds)}</p>
+                                                        <p className="text-xs text-[var(--cl-muted-soft)]">{formatTimeTaken(entry.time_taken_seconds)}</p>
                                                     </div>
                                                 </div>
 
                                                 {/* Correct % */}
-                                                <span className="text-right font-extrabold text-sm text-slate-900">{pct.toFixed(0)}%</span>
+                                                <span className="text-right font-semibold text-sm text-[var(--cl-ink)]">{pct.toFixed(0)}%</span>
                                             </div>
                                         );
                                     })}
@@ -370,17 +370,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Strengths */}
                                 {(aiAnalysis.strengths?.length ?? 0) > 0 && (
-                                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6">
+                                    <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-success)] p-6 bg-[rgba(22,163,74,0.12)]">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                                <TrendingUp className="w-5 h-5 text-green-600" />
+                                            <div className="w-10 h-10 bg-[rgba(22,163,74,0.12)] rounded-full flex items-center justify-center">
+                                                <TrendingUp className="w-5 h-5 text-[var(--cl-success)]" />
                                             </div>
-                                            <h3 className="text-lg font-bold text-green-800">Your Strengths</h3>
+                                            <h3 className="text-lg font-semibold text-[var(--cl-success)]">Your Strengths</h3>
                                         </div>
                                         <ul className="space-y-2">
                                             {aiAnalysis.strengths.map((strength: string, idx: number) => (
-                                                <li key={idx} className="flex items-start gap-2 text-green-700">
-                                                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                                <li key={idx} className="flex items-start gap-2 text-[var(--cl-success)]">
+                                                    <CheckCircle className="w-4 h-4 text-[var(--cl-success)] mt-0.5 flex-shrink-0" />
                                                     <span>{strength}</span>
                                                 </li>
                                             ))}
@@ -390,17 +390,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                                 {/* Areas for Improvement */}
                                 {(aiAnalysis.weaknesses?.length ?? 0) > 0 && (
-                                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-6">
+                                    <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-warning)] p-6 bg-[rgba(171,100,0,0.12)]">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                                                <AlertCircle className="w-5 h-5 text-amber-600" />
+                                            <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-full flex items-center justify-center">
+                                                <AlertCircle className="w-5 h-5 text-[var(--cl-warning)]" />
                                             </div>
-                                            <h3 className="text-lg font-bold text-amber-800">Areas to Improve</h3>
+                                            <h3 className="text-lg font-semibold text-[var(--cl-warning)]">Areas to Improve</h3>
                                         </div>
                                         <ul className="space-y-2">
                                             {aiAnalysis.weaknesses.map((weakness: string, idx: number) => (
-                                                <li key={idx} className="flex items-start gap-2 text-amber-700">
-                                                    <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                                                <li key={idx} className="flex items-start gap-2 text-[var(--cl-warning)]">
+                                                    <Lightbulb className="w-4 h-4 text-[var(--cl-warning)] mt-0.5 flex-shrink-0" />
                                                     <span>{weakness}</span>
                                                 </li>
                                             ))}
@@ -412,17 +412,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Study Recommendations */}
                         {(aiAnalysis?.study_recommendations?.length ?? 0) > 0 && (
-                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6">
+                            <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-info)] p-6 bg-[rgba(13,116,206,0.12)]">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <BookOpen className="w-5 h-5 text-blue-600" />
+                                    <div className="w-10 h-10 bg-[rgba(13,116,206,0.12)] rounded-full flex items-center justify-center">
+                                        <BookOpen className="w-5 h-5 text-[var(--cl-info)]" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-blue-800">Study Recommendations</h3>
+                                    <h3 className="text-lg font-semibold text-[var(--cl-info)]">Study Recommendations</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {aiAnalysis!.study_recommendations.map((rec: string, idx: number) => (
-                                        <div key={idx} className="flex items-start gap-2 p-3 bg-white/60 rounded-lg text-blue-700">
-                                            <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium text-blue-600">
+                                        <div key={idx} className="flex items-start gap-2 p-3 bg-[rgba(255,255,255,0.6)] rounded-lg text-[var(--cl-info)]">
+                                            <span className="w-6 h-6 bg-[rgba(13,116,206,0.12)] rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium text-[var(--cl-info)]">
                                                 {idx + 1}
                                             </span>
                                             <span>{rec}</span>
@@ -433,19 +433,19 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         )}
 
                         {/* Question Review */}
-                        <div className="bg-white rounded-xl border border-slate-200">
-                            <div className="p-6 border-b border-slate-200">
-                                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)]">
+                            <div className="p-6 border-b border-[var(--cl-hairline)]">
+                                <h2 className="text-xl font-semibold text-[var(--cl-ink)] flex items-center gap-2">
                                     Question Review
                                     {aiAnalysis && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-fuchsia-100 text-fuchsia-700 text-xs font-medium rounded-full">
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-medium rounded-full">
                                             <Sparkles className="w-3 h-3" />
                                             AI Enhanced
                                         </span>
                                     )}
                                 </h2>
                             </div>
-                            <div className="divide-y divide-slate-100">
+                            <div className="divide-y divide-[var(--cl-hairline)]">
                                 {test?.questions?.map((question: any, index: number) => {
                                     const studentAnswer = submission.answers?.[question.id];
                                     const questionAnalysis = aiAnalysis?.question_analysis?.find(
@@ -459,16 +459,16 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                         <div key={question.id} className="p-6">
                                             <div className="flex items-start gap-4">
                                                 <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                                    isCorrect ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                                                    isCorrect ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
                                                 }`}>
                                                     {index + 1}
                                                 </span>
                                                 <div className="flex-1">
                                                     <div className="flex items-start justify-between gap-4">
-                                                        <p className="font-medium text-slate-900 mb-2">{question.question || question.text}</p>
+                                                        <p className="font-medium text-[var(--cl-ink)] mb-2">{question.question || question.text}</p>
                                                         <div className="flex items-center gap-2 flex-shrink-0">
                                                             <span className={`px-2 py-1 rounded text-sm font-medium ${
-                                                                isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                                isCorrect ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
                                                             }`}>
                                                                 {earnedMarks}/{question.marks || 1}
                                                             </span>
@@ -491,16 +491,16 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                                         key={optIdx}
                                                                         className={`p-3 rounded-lg border ${
                                                                             isCorrectOpt
-                                                                                ? 'bg-green-50 border-green-300'
+                                                                                ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
                                                                                 : isSelected
-                                                                                    ? 'bg-red-50 border-red-300'
-                                                                                    : 'bg-slate-50 border-slate-200'
+                                                                                    ? 'bg-[rgba(239,68,68,0.12)] border-[var(--cl-error)]'
+                                                                                    : 'bg-[var(--cl-canvas-soft)] border-[var(--cl-hairline)]'
                                                                         }`}
                                                                     >
                                                                         <span className="flex items-center gap-2">
-                                                                            {isCorrectOpt && <CheckCircle className="w-4 h-4 text-green-600" />}
-                                                                            {isSelected && !isCorrectOpt && <XCircle className="w-4 h-4 text-red-600" />}
-                                                                            <span className={isCorrectOpt ? 'text-green-700' : isSelected ? 'text-red-700' : 'text-slate-700'}>
+                                                                            {isCorrectOpt && <CheckCircle className="w-4 h-4 text-[var(--cl-success)]" />}
+                                                                            {isSelected && !isCorrectOpt && <XCircle className="w-4 h-4 text-[var(--cl-error)]" />}
+                                                                            <span className={isCorrectOpt ? 'text-[var(--cl-success)]' : isSelected ? 'text-[var(--cl-error)]' : 'text-[var(--cl-body)]'}>
                                                                                 {optValue}
                                                                             </span>
                                                                         </span>
@@ -511,27 +511,27 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                     )}
 
                                                     {question.type !== 'mcq' && studentAnswer && (
-                                                        <div className="mt-3 p-4 bg-slate-50 rounded-lg">
-                                                            <p className="text-sm text-slate-600 mb-1">Your Answer:</p>
-                                                            <p className="text-slate-900 whitespace-pre-wrap">{studentAnswer}</p>
+                                                        <div className="mt-3 p-4 bg-[var(--cl-canvas-soft)] rounded-lg">
+                                                            <p className="text-sm text-[var(--cl-body)] mb-1">Your Answer:</p>
+                                                            <p className="text-[var(--cl-ink)] whitespace-pre-wrap">{studentAnswer}</p>
                                                         </div>
                                                     )}
 
                                                     {/* AI Feedback for this question */}
                                                     {questionAnalysis?.feedback && (
-                                                        <div className="mt-3 p-4 bg-gradient-to-r from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-200">
+                                                        <div className="mt-3 p-4 rounded-lg border border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <Sparkles className="w-4 h-4 text-fuchsia-600" />
-                                                                <p className="text-sm text-fuchsia-700 font-medium">AI Feedback</p>
+                                                                <Sparkles className="w-4 h-4 text-[var(--cl-primary)]" />
+                                                                <p className="text-sm text-[var(--cl-primary)] font-medium">AI Feedback</p>
                                                             </div>
-                                                            <p className="text-fuchsia-800">{questionAnalysis.feedback}</p>
+                                                            <p className="text-[var(--cl-primary)]">{questionAnalysis.feedback}</p>
                                                         </div>
                                                     )}
 
                                                     {question.explanation && (
-                                                        <div className="mt-3 p-4 bg-blue-50 rounded-lg">
-                                                            <p className="text-sm text-blue-600 font-medium mb-1">Explanation:</p>
-                                                            <p className="text-blue-800">{question.explanation}</p>
+                                                        <div className="mt-3 p-4 bg-[rgba(13,116,206,0.12)] rounded-lg">
+                                                            <p className="text-sm text-[var(--cl-info)] font-medium mb-1">Explanation:</p>
+                                                            <p className="text-[var(--cl-info)]">{question.explanation}</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -544,21 +544,21 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Overall AI Feedback */}
                         {(aiAnalysis?.overall_feedback || submission.ai_feedback) && (
-                            <div className="bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-xl border border-fuchsia-200 p-6">
+                            <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)] p-6 bg-[var(--cl-primary-soft)]">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 bg-fuchsia-100 rounded-full flex items-center justify-center">
-                                        <Sparkles className="w-5 h-5 text-fuchsia-600" />
+                                    <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
+                                        <Sparkles className="w-5 h-5 text-[var(--cl-primary)]" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-fuchsia-800">AI Overall Assessment</h3>
+                                        <h3 className="text-lg font-semibold text-[var(--cl-primary)]">AI Overall Assessment</h3>
                                         {submission.ai_evaluated_at && (
-                                            <p className="text-sm text-fuchsia-600">
+                                            <p className="text-sm text-[var(--cl-primary)]">
                                                 Evaluated {new Date(submission.ai_evaluated_at).toLocaleString()}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-fuchsia-800 whitespace-pre-wrap leading-relaxed">
+                                <p className="text-[var(--cl-primary)] whitespace-pre-wrap leading-relaxed">
                                     {aiAnalysis?.overall_feedback || submission.ai_feedback}
                                 </p>
                             </div>
@@ -566,14 +566,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Pending Evaluation Notice */}
                         {!submission.ai_evaluated_at && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+                            <div className="bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-[var(--cl-r-lg)] p-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                                        <Clock className="w-5 h-5 text-amber-600 animate-pulse" />
+                                    <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-full flex items-center justify-center">
+                                        <Clock className="w-5 h-5 text-[var(--cl-warning)] animate-pulse" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-amber-800">AI Evaluation in Progress</h3>
-                                        <p className="text-amber-700">
+                                        <h3 className="text-lg font-semibold text-[var(--cl-warning)]">AI Evaluation in Progress</h3>
+                                        <p className="text-[var(--cl-warning)]">
                                             Your test is being evaluated by our AI. Detailed feedback will appear shortly. 
                                             Refresh the page in a few moments.
                                         </p>

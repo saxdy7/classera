@@ -129,21 +129,21 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 h-[calc(100vh-250px)] flex">
+    <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] h-[calc(100vh-250px)] flex">
       {/* Conversations List */}
       <div
         className={`${selectedConversation ? 'hidden lg:flex' : 'flex'
-          } w-full lg:w-80 border-r border-slate-200 flex-col`}
+          } w-full lg:w-80 border-r border-[var(--cl-hairline)] flex-col`}
       >
-        <div className="p-4 border-b border-slate-200">
+        <div className="p-4 border-b border-[var(--cl-hairline)]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
             <input
               type="text"
               placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-fuchsia-500 transition-colors text-slate-900 placeholder:text-slate-400"
+              className="w-full pl-10 pr-4 py-2 border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted-soft)]"
             />
           </div>
         </div>
@@ -151,17 +151,17 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-fuchsia-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--cl-primary)]"></div>
             </div>
           ) : filteredConversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                <MessageSquare className="w-8 h-8 text-slate-400" />
+              <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mb-4">
+                <MessageSquare className="w-8 h-8 text-[var(--cl-muted-soft)]" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">
                 {searchQuery ? 'No results found' : 'No messages yet'}
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-[var(--cl-muted)]">
                 {searchQuery
                   ? 'Try a different search term'
                   : 'Start a conversation with your mentors'}
@@ -172,34 +172,34 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
               <button
                 key={conversation.user.id}
                 onClick={() => setSelectedConversation(conversation)}
-                className={`w-full p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 text-left ${selectedConversation?.user.id === conversation.user.id ? 'bg-fuchsia-50' : ''
+                className={`w-full p-4 hover:bg-[var(--cl-canvas-soft)] transition-colors border-b border-[var(--cl-hairline)] text-left ${selectedConversation?.user.id === conversation.user.id ? 'bg-[var(--cl-primary-soft)]' : ''
                   }`}
               >
                 <div className="flex gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold flex-shrink-0 bg-[var(--cl-primary)]">
                     {getInitials(conversation.user.full_name)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-1">
-                      <h3 className="font-semibold text-slate-900 truncate">
+                      <h3 className="font-semibold text-[var(--cl-ink)] truncate">
                         {conversation.user.full_name}
                       </h3>
-                      <span className="text-xs text-slate-500 flex-shrink-0 ml-2">
+                      <span className="text-xs text-[var(--cl-muted)] flex-shrink-0 ml-2">
                         {formatTime(conversation.lastMessage.created_at)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <p
                         className={`text-sm truncate ${conversation.unreadCount > 0 && !conversation.lastMessage.isFromCurrentUser
-                            ? 'text-slate-900 font-medium'
-                            : 'text-slate-500'
+                            ? 'text-[var(--cl-ink)] font-medium'
+                            : 'text-[var(--cl-muted)]'
                           }`}
                       >
                         {conversation.lastMessage.isFromCurrentUser ? 'You: ' : ''}
                         {conversation.lastMessage.content}
                       </p>
                       {conversation.unreadCount > 0 && (
-                        <span className="ml-2 px-2 py-0.5 bg-fuchsia-500 text-white text-xs font-semibold rounded-full flex-shrink-0">
+                        <span className="ml-2 px-2 py-0.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-xs font-semibold rounded-full flex-shrink-0">
                           {conversation.unreadCount}
                         </span>
                       )}
@@ -222,11 +222,11 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center p-6">
-            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-              <Users className="w-10 h-10 text-slate-400" />
+            <div className="w-20 h-20 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mb-4">
+              <Users className="w-10 h-10 text-[var(--cl-muted-soft)]" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">Select a conversation</h3>
-            <p className="text-slate-500">
+            <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">Select a conversation</h3>
+            <p className="text-[var(--cl-muted)]">
               Choose a conversation from the list to start messaging
             </p>
           </div>

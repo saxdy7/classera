@@ -3,153 +3,112 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import crypto from 'crypto';
 
 /**
- * GitHub Webhook Handler
- * Receives events from GitHub: push, pull_request, issues, etc.
- * Updates project analytics in real-time
+ * GitHub Webhook Handler - push events trigger automatic re-analysis instead
+ * of requiring a mentor to click "Re-analyze" manually.
+ *
+ * Rebuilt against the real schema (the previous version referenced
+ * project_assignments.github_repo_url, repo_analytics.project_id/
+ * total_pull_requests/last_commit_date, and a webhook_logs table - none of
+ * which exist; see PROJECTS_FEATURE_HANDOFF.md). Matches submissions by
+ * repo_full_name on assignment_submissions instead.
  */
 
-const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || 'dev-secret';
+const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
 
 function verifyWebhookSignature(request: NextRequest, payload: Buffer): boolean {
+  if (!WEBHOOK_SECRET) return false;
   const signature = request.headers.get('x-hub-signature-256');
   if (!signature) return false;
 
-  const hash = crypto
-    .createHmac('sha256', WEBHOOK_SECRET)
-    .update(payload)
-    .digest('hex');
+  const expected = `sha256=${crypto.createHmac('sha256', WEBHOOK_SECRET).update(payload).digest('hex')}`;
 
-  const expectedSignature = `sha256=${hash}`;
-  return crypto.timingSafeEqual(signature, expectedSignature);
+  // timingSafeEqual throws on mismatched buffer lengths instead of returning
+  // false - check length first so a malformed/short signature fails safely.
+  const sigBuf = Buffer.from(signature);
+  const expectedBuf = Buffer.from(expected);
+  if (sigBuf.length !== expectedBuf.length) return false;
+
+  return crypto.timingSafeEqual(sigBuf, expectedBuf);
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify webhook signature
-    const payload = await request.arrayBuffer();
-    if (!verifyWebhookSignature(request, Buffer.from(payload))) {
+    const payloadBuffer = Buffer.from(await request.arrayBuffer());
+    if (!verifyWebhookSignature(request, payloadBuffer)) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
-    const event = JSON.parse(Buffer.from(payload).toString());
+    const githubEvent = request.headers.get('x-github-event');
+    if (githubEvent !== 'push') {
+      // We only act on pushes; acknowledge everything else so GitHub doesn't retry.
+      return NextResponse.json({ message: `Ignored event type: ${githubEvent}` });
+    }
+
+    const event = JSON.parse(payloadBuffer.toString());
+    const repoFullName: string | undefined = event.repository?.full_name;
+    const commitCount: number = Array.isArray(event.commits) ? event.commits.length : 0;
+
+    if (!repoFullName || commitCount === 0) {
+      return NextResponse.json({ message: 'No commits to process' });
+    }
+
     const admin = createAdminClient();
 
-    // Extract repository info
-    const repoName = event.repository?.name;
-    const repoUrl = event.repository?.html_url;
-    const repoOwner = event.repository?.owner?.login;
+    // A repo can be submitted to more than one assignment (rare, but possible
+    // if a student reuses a repo) - re-analyze every match.
+    const { data: submissions } = await admin
+      .from('assignment_submissions')
+      .select('id, assignment_id, student_id, assignment:project_assignments(mentor_id, title, submission_type)')
+      .ilike('repo_full_name', repoFullName);
 
-    if (!repoName || !repoUrl) {
-      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+    const matches = (submissions ?? []).filter(
+      (s) => (s.assignment as any)?.submission_type === 'github' || !(s.assignment as any)?.submission_type,
+    );
+
+    if (matches.length === 0) {
+      return NextResponse.json({ message: `No submission found for ${repoFullName} (this is OK)` });
     }
 
-    // Get the full repo URL in standard format
-    const fullRepoUrl = `https://github.com/${repoOwner}/${repoName}`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
 
-    // Find the project with this GitHub repo
-    const { data: projects } = await admin
-      .from('project_assignments')
-      .select('id, title')
-      .ilike('github_repo_url', `%${repoName}%`);
+    for (const submission of matches) {
+      const assignment = submission.assignment as { mentor_id?: string; title?: string } | null;
 
-    if (!projects || projects.length === 0) {
-      console.log(`No projects found for repo: ${fullRepoUrl}`);
-      return NextResponse.json({ message: 'Project not found (this is OK)' });
-    }
+      // Fire-and-forget re-analysis, same internal call the submit route already uses.
+      fetch(`${appUrl}/api/github/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submission_id: submission.id }),
+      }).catch((e) => console.error('Webhook-triggered analysis failed to start:', e));
 
-    const project = projects[0];
-
-    // Handle push events
-    if (event.action === 'opened' || event.ref) {
-      const commits = event.commits || [];
-      const { data: analytics } = await admin
-        .from('repo_analytics')
-        .select('*')
-        .eq('project_id', project.id)
-        .single();
-
-      if (analytics) {
-        await admin
-          .from('repo_analytics')
-          .update({
-            total_commits: (analytics.total_commits || 0) + commits.length,
-            last_commit_date: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq('project_id', project.id);
-      } else {
-        await admin
-          .from('repo_analytics')
-          .insert({
-            project_id: project.id,
-            repo_url: fullRepoUrl,
-            total_commits: commits.length,
-            last_commit_date: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-          });
+      if (assignment?.mentor_id) {
+        await admin.from('notifications').insert({
+          user_id: assignment.mentor_id,
+          type: 'project_new_commits',
+          title: 'New Commits Pushed',
+          message: `${commitCount} new commit${commitCount !== 1 ? 's' : ''} pushed to "${assignment.title ?? 'a project'}" since you last reviewed it.`,
+          related_id: submission.assignment_id,
+          related_type: 'project_assignment',
+          action_url: `/dashboard/mentor/projects/${submission.assignment_id}/${submission.student_id}`,
+          metadata: { assignment_id: submission.assignment_id, submission_id: submission.id, commit_count: commitCount },
+          is_read: false,
+        });
       }
     }
 
-    // Handle pull request events
-    if (event.action === 'opened' && event.pull_request) {
-      const { data: analytics } = await admin
-        .from('repo_analytics')
-        .select('*')
-        .eq('project_id', project.id)
-        .single();
-
-      if (analytics) {
-        await admin
-          .from('repo_analytics')
-          .update({
-            total_pull_requests: (analytics.total_pull_requests || 0) + 1,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('project_id', project.id);
-      }
-    }
-
-    // Log webhook activity
-    await admin
-      .from('webhook_logs')
-      .insert({
-        project_id: project.id,
-        event_type: event.action || event.ref ? 'push' : 'unknown',
-        event_data: event,
-        processed_at: new Date().toISOString(),
-      })
-      .catch(err => console.log('Webhook log insert error:', err)); // Non-critical
-
-    // Trigger AI review on commits (optional - can be rate-limited)
-    if (commits && commits.length > 0) {
-      const commitData = commits.slice(0, 3).map((c: any) => ({
-        message: c.message,
-        url: c.url,
-        timestamp: c.timestamp,
-      }));
-
-      // Could queue this for async processing
-      console.log(`New commits on ${project.title}:`, commitData);
-    }
-
-    return NextResponse.json({
-      success: true,
-      project: project.title,
-      eventType: event.action || 'push',
-    });
+    return NextResponse.json({ success: true, repo: repoFullName, submissions_reanalyzed: matches.length });
   } catch (error) {
     console.error('Webhook error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process webhook' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to process webhook' }, { status: 500 });
   }
 }
 
 export async function GET() {
   return NextResponse.json({
     message: 'GitHub Webhook Endpoint',
-    description: 'Configure in GitHub repo settings: Settings > Webhooks > Add webhook',
-    events: ['push', 'pull_request', 'issues', 'pull_request_review'],
+    description:
+      'Configure in GitHub repo settings: Settings > Webhooks > Add webhook. Content type: application/json. ' +
+      'Set GITHUB_WEBHOOK_SECRET in your environment and use the same value as the webhook secret.',
+    events: ['push'],
   });
 }

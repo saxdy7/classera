@@ -80,10 +80,10 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
   return (
     <div className="space-y-4">
       {/* Weight indicator */}
-      <div className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-xl border ${
+      <div className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-[var(--cl-r-lg)] border ${
         isWeightValid
-          ? 'bg-emerald-50 border-emerald-100 text-emerald-700'
-          : 'bg-amber-50 border-amber-100 text-amber-700'
+          ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)] text-[var(--cl-success)]'
+          : 'bg-[rgba(171,100,0,0.12)] border-[var(--cl-warning)] text-[var(--cl-warning)]'
       }`}>
         {isWeightValid
           ? <CheckCircle size={14} />
@@ -95,15 +95,15 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
       {/* Criteria list */}
       <div className="space-y-3">
         {criteria.map((c, idx) => (
-          <div key={c.id} className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+          <div key={c.id} className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <span className="text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-wide">
                 Criterion {idx + 1}
               </span>
               {criteria.length > 1 && (
                 <button
                   onClick={() => removeCriterion(c.id)}
-                  className="p-1 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
+                  className="p-1 rounded-lg hover:bg-[rgba(239,68,68,0.12)] text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -115,7 +115,7 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
               placeholder="Criterion name (e.g., Code Quality)"
               value={c.name}
               onChange={(e) => update(c.id, 'name', e.target.value)}
-              className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400 placeholder-slate-300"
+              className="w-full text-sm border border-[var(--cl-hairline)] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] placeholder-[var(--cl-muted-soft)]"
             />
 
             <textarea
@@ -123,30 +123,30 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
               value={c.description}
               onChange={(e) => update(c.id, 'description', e.target.value)}
               rows={2}
-              className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-violet-400 placeholder-slate-300"
+              className="w-full text-sm border border-[var(--cl-hairline)] rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] placeholder-[var(--cl-muted-soft)]"
             />
 
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="text-xs text-slate-500 font-medium mb-1 block">Max Points</label>
+                <label className="text-xs text-[var(--cl-muted)] font-medium mb-1 block">Max Points</label>
                 <input
                   type="number"
                   min={1}
                   max={1000}
                   value={c.max_points}
                   onChange={(e) => update(c.id, 'max_points', Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400"
+                  className="w-full text-sm border border-[var(--cl-hairline)] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
                 />
               </div>
               <div className="flex-1">
-                <label className="text-xs text-slate-500 font-medium mb-1 block">Weight (%)</label>
+                <label className="text-xs text-[var(--cl-muted)] font-medium mb-1 block">Weight (%)</label>
                 <input
                   type="number"
                   min={0}
                   max={100}
                   value={c.weight}
                   onChange={(e) => update(c.id, 'weight', Math.max(0, Math.min(100, parseInt(e.target.value) || 0)))}
-                  className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-400"
+                  className="w-full text-sm border border-[var(--cl-hairline)] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
                 />
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
       {/* Add criterion */}
       <button
         onClick={addCriterion}
-        className="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 text-sm font-medium rounded-xl hover:border-violet-300 hover:text-violet-500 flex items-center justify-center gap-2 transition-colors"
+        className="w-full py-3 border-2 border-dashed border-[var(--cl-hairline)] text-[var(--cl-muted-soft)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:border-[var(--cl-primary)] hover:text-[var(--cl-primary)] flex items-center justify-center gap-2 transition-colors"
       >
         <Plus size={16} />
         Add Criterion
@@ -165,7 +165,7 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
 
       {/* Error */}
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2">
+        <p className="text-sm text-[var(--cl-error)] bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] rounded-[var(--cl-r-lg)] px-3 py-2">
           {error}
         </p>
       )}
@@ -174,7 +174,7 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
       <button
         onClick={handleSave}
         disabled={!canSave}
-        className="w-full py-2.5 bg-violet-600 text-white text-sm font-semibold rounded-xl hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+        className="w-full py-2.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-sm font-semibold rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-primary)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
       >
         <Save size={15} />
         {saving ? 'Saving…' : saved ? 'Saved!' : 'Save Rubric'}

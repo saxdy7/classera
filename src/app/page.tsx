@@ -11,7 +11,9 @@ import Footer from '@/components/landing/Footer';
 
 export default function Home() {
   return (
-    <div className="bg-white text-slate-900 antialiased selection:bg-fuchsia-300 selection:text-fuchsia-900 pb-6">
+    // `cl-app` opts the landing page into the design system. It was previously
+    // excluded on purpose; that constraint has been lifted.
+    <div className="cl-app bg-[var(--cl-canvas)] text-[var(--cl-body)] antialiased selection:bg-[var(--cl-surface-strong)]">
       <Navigation />
       <HeroSection />
       <MarqueeSection />

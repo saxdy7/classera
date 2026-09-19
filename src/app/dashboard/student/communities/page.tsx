@@ -26,11 +26,11 @@ export default async function StudentCommunitiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--cl-surface-card)]">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
-        <main className="flex-1 p-4 md:p-8 md:ml-14">
+        <main className="flex-1 p-4 md:p-8 cl-main">
           <CommunitiesClient userId={user.id} universityId={profile.university_id} />
         </main>
       </div>
