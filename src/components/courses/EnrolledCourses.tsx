@@ -93,15 +93,15 @@ export function EnrolledCourses() {
         <div className="space-y-6">
             {/* Header with Filters */}
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">My Courses</h2>
-                <div className="flex gap-2">
+                <h2 className="text-xl font-semibold tracking-tight text-foreground">My Courses</h2>
+                <div className="flex w-fit items-center gap-1 rounded border border-border/40 bg-muted p-1">
                     {(['all', 'in-progress', 'completed'] as const).map(f => (
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${filter === f
-                                    ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                            className={`cursor-pointer rounded-sm px-4 py-1.5 text-sm font-medium transition-colors ${filter === f
+                                    ? 'bg-background text-foreground shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
                                 }`}
                         >
                             {f === 'all' ? 'All' : f === 'in-progress' ? 'In Progress' : 'Completed'}

@@ -199,7 +199,7 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-[var(--cl-hairline)]">
+        <div className="mb-8 flex w-fit items-center gap-1 rounded border border-border/40 bg-muted p-1">
           {[
             { id: 'all', label: 'All Communities', icon: BookOpen },
             { id: 'joined', label: 'My Communities', icon: Heart },

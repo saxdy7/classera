@@ -40,6 +40,32 @@ type NavItem = { icon: React.ComponentType<{ className?: string }>; label: strin
  * The one accent is purple (`--accent-purple`), exactly as in the reference.
  * Collapse behaviour (pinned, persisted in localStorage) is unchanged.
  */
+/** aria's SidebarMenuButton recipe, verbatim in spirit. Module-scoped so the
+    component identity is stable across renders (React Compiler rule). */
+function NavRow({ item, active, expanded }: { item: NavItem; active: boolean; expanded: boolean }) {
+  return (
+    <Link
+      href={item.href}
+      aria-current={active ? 'page' : undefined}
+      title={!expanded ? item.label : undefined}
+      className={cn(
+        'flex h-10 items-center gap-2 rounded-md px-3 text-sm transition-all duration-200',
+        'text-foreground/80 hover:bg-[var(--sidebar-accent)]/50 hover:text-foreground',
+        'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
+        active && [
+          'bg-linear-to-r from-accent-purple/20 to-transparent hover:from-accent-purple/15',
+          'rounded border-l-4 border-accent-purple pl-[10px] font-medium text-foreground',
+        ],
+        !expanded && 'justify-center px-2',
+        !expanded && active && 'rounded-xl border-l-0 p-2',
+      )}
+    >
+      <item.icon className={cn('size-4 shrink-0 transition-colors duration-200', active ? 'text-foreground' : 'text-foreground/70')} />
+      {expanded && <span className="truncate">{item.label}</span>}
+    </Link>
+  );
+}
+
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -120,29 +146,6 @@ export function Sidebar({ role }: SidebarProps) {
     router.push('/signin');
   };
 
-  /** aria's SidebarMenuButton recipe, verbatim in spirit. */
-  const NavRow = ({ item, active }: { item: NavItem; active: boolean }) => (
-    <Link
-      href={item.href}
-      aria-current={active ? 'page' : undefined}
-      title={!expanded ? item.label : undefined}
-      className={cn(
-        'flex h-10 items-center gap-2 rounded-md px-3 text-sm transition-all duration-200',
-        'text-foreground/80 hover:bg-[var(--sidebar-accent)]/50 hover:text-foreground',
-        'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
-        active && [
-          'bg-linear-to-r from-accent-purple/20 to-transparent hover:from-accent-purple/15',
-          'rounded border-l-4 border-accent-purple pl-[10px] font-medium text-foreground',
-        ],
-        !expanded && 'justify-center px-2',
-        !expanded && active && 'rounded-xl border-l-0 p-2',
-      )}
-    >
-      <item.icon className={cn('size-4 shrink-0 transition-colors duration-200', active ? 'text-foreground' : 'text-foreground/70')} />
-      {expanded && <span className="truncate">{item.label}</span>}
-    </Link>
-  );
-
   return (
     <>
       {/* Desktop rail */}
@@ -165,7 +168,7 @@ export function Sidebar({ role }: SidebarProps) {
           <div className="p-2">
             <nav className="flex flex-col gap-1.5">
               {navItems.map((item) => (
-                <NavRow key={item.href} item={item} active={isActive(item.href, item.exact)} />
+                <NavRow key={item.href} item={item} active={isActive(item.href, item.exact)} expanded={expanded} />
               ))}
             </nav>
           </div>
@@ -182,7 +185,7 @@ export function Sidebar({ role }: SidebarProps) {
                 {aiTools.map((item) => {
                   const base = item.href.split('?')[0];
                   const active = pathname === base || (base !== '/roadmaps' && pathname.startsWith(base));
-                  return <NavRow key={item.href} item={item} active={active} />;
+                  return <NavRow key={item.href} item={item} active={active} expanded={expanded} />;
                 })}
               </nav>
             </div>
@@ -190,7 +193,7 @@ export function Sidebar({ role }: SidebarProps) {
 
           {/* Settings */}
           <div className="p-2 pt-1">
-            <NavRow item={{ icon: User, label: 'Settings', href: `/dashboard/${role}/settings` }} active={settingsActive} />
+            <NavRow item={{ icon: User, label: 'Settings', href: `/dashboard/${role}/settings` }} active={settingsActive} expanded={expanded} />
           </div>
         </div>
 

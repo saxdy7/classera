@@ -294,21 +294,21 @@ export function StudentSessionsClient({
             )}
 
             {/* Tabs */}
-            <div className="flex items-center gap-4 mb-6 border-b border-[var(--cl-hairline)]">
+            <div className="mb-6 flex w-fit items-center gap-1 rounded border border-border/40 bg-muted p-1">
                 <button
                     onClick={() => setActiveTab('upcoming')}
-                    className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'upcoming'
-                        ? 'border-[var(--cl-info)] text-[var(--cl-info)]'
-                        : 'border-transparent text-[var(--cl-muted)] hover:text-[var(--cl-body)]'
+                    className={`cursor-pointer rounded-sm px-6 py-1.5 text-sm font-medium transition-colors ${activeTab === 'upcoming'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                         }`}
                 >
                     Upcoming ({upcomingSessions.length})
                 </button>
                 <button
                     onClick={() => setActiveTab('past')}
-                    className={`pb-3 px-1 text-sm font-medium border-b-2 transition-colors ${activeTab === 'past'
-                        ? 'border-[var(--cl-info)] text-[var(--cl-info)]'
-                        : 'border-transparent text-[var(--cl-muted)] hover:text-[var(--cl-body)]'
+                    className={`cursor-pointer rounded-sm px-6 py-1.5 text-sm font-medium transition-colors ${activeTab === 'past'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                         }`}
                 >
                     Past ({pastSessions.length})

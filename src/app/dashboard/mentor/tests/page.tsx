@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
-import { Plus, Clock, Users, CheckCircle, Rocket, BookMarked } from 'lucide-react';
+import { Plus, Clock, Users, CheckCircle, Rocket, BookMarked, ClipboardCheck, Radio, FileEdit } from 'lucide-react';
+import { PageHeader, SectionHeader, StatCard, CreateTile, gradientFor, primaryButton, outlineButton } from '@/components/shell';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,171 +69,63 @@ export default async function TestsPage() {
   ) || [];
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-background">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-4 md:p-8 cl-main">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Tests</h1>
-                <p className="text-[var(--cl-body)]">Create and manage your tests</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/dashboard/mentor/question-bank"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-[var(--cl-surface-card)] text-[var(--cl-body)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] font-medium hover:border-[var(--cl-primary)] hover:text-[var(--cl-primary)] transition-all"
-                >
-                  <BookMarked className="w-5 h-5" />
-                  Question Bank
-                </Link>
-                <Link
-                  href="/dashboard/mentor/tests/create"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all bg-[var(--cl-primary)]"
-                >
-                  <Plus className="w-5 h-5" />
-                  Create Test
-                </Link>
-              </div>
+        <main className="flex-1 cl-main p-6">
+          <div className="mx-auto w-full max-w-7xl space-y-8">
+
+            <PageHeader
+              icon={ClipboardCheck}
+              title="Tests"
+              description="Create and manage your tests."
+              actions={
+                <>
+                  <Link href="/dashboard/mentor/question-bank" className={outlineButton}>
+                    <BookMarked className="size-3.5" />
+                    Question Bank
+                  </Link>
+                  <Link href="/dashboard/mentor/tests/create" className={primaryButton}>
+                    <Plus className="size-4" />
+                    Create Test
+                  </Link>
+                </>
+              }
+            />
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              <StatCard label="Total tests" value={tests?.length || 0} icon={CheckCircle} />
+              <StatCard label="Live now" value={liveTests.length} icon={Radio} />
+              <StatCard label="Ready" value={readyTests.length} icon={Rocket} />
+              <StatCard label="Drafts" value={draftTests.length} icon={FileEdit} />
+              <StatCard label="Scheduled" value={scheduledTests.length} icon={Clock} />
+              <StatCard label="Completed" value={completedTests.length} icon={Users} />
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Total Tests</span>
-                  <CheckCircle className="w-5 h-5 text-[var(--cl-info)]" />
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-ink)]">{tests?.length || 0}</p>
+            {(!tests || tests.length === 0) ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <CreateTile href="/dashboard/mentor/tests/create" label="Create your first test" />
               </div>
-
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Live Now</span>
-                  <div className="w-3 h-3 bg-[var(--cl-success)] rounded-full animate-pulse" />
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-success)]">{liveTests.length}</p>
-              </div>
-
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Ready</span>
-                  <Rocket className="w-5 h-5 text-[var(--cl-info)]" />
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-info)]">{readyTests.length}</p>
-              </div>
-
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Drafts</span>
-                  <div className="w-5 h-5 text-[var(--cl-warning)]">📝</div>
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-warning)]">{draftTests.length}</p>
-              </div>
-
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Scheduled</span>
-                  <Clock className="w-5 h-5 text-[var(--cl-warning)]" />
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-warning)]">{scheduledTests.length}</p>
-              </div>
-
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition-shadow">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-[var(--cl-body)]">Completed</span>
-                  <Users className="w-5 h-5 text-[var(--cl-muted-soft)]" />
-                </div>
-                <p className="text-3xl font-semibold text-[var(--cl-body)]">{completedTests.length}</p>
-              </div>
-            </div>
-
-            {/* Ready Tests - Has invitations but not live yet */}
-            {readyTests.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                  🚀 Ready to Go Live
-                  <span className="text-sm font-normal text-[var(--cl-muted)]">(students invited)</span>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {readyTests.map((test) => (
-                    <TestCard key={test.id} test={test} isReady />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Draft Tests - Show prominently */}
-            {draftTests.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                  📝 Draft Tests
-                  <span className="text-sm font-normal text-[var(--cl-muted)]">(needs setup)</span>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {draftTests.map((test) => (
-                    <TestCard key={test.id} test={test} isDraft />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Live Tests */}
-            {liveTests.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[var(--cl-success)] rounded-full animate-pulse" />
-                  Live Tests
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {liveTests.map((test) => (
-                    <TestCard key={test.id} test={test} isLive />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Scheduled Tests */}
-            {scheduledTests.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Scheduled Tests</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {scheduledTests.map((test) => (
-                    <TestCard key={test.id} test={test} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Completed Tests */}
-            {completedTests.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Completed Tests</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {completedTests.map((test) => (
-                    <TestCard key={test.id} test={test} isCompleted />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {(!tests || tests.length === 0) && (
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-16 text-center border border-[var(--cl-hairline)]">
-                <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-[var(--cl-muted-soft)]" />
-                </div>
-                <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No tests yet</h3>
-                <p className="text-[var(--cl-body)] mb-6">Create your first test to get started</p>
-                <Link
-                  href="/dashboard/mentor/tests/create"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all bg-[var(--cl-primary)]"
-                >
-                  <Plus className="w-5 h-5" />
-                  Create Test
-                </Link>
-              </div>
+            ) : (
+              <>
+                {liveTests.length > 0 && (
+                  <TestSection title="Live tests" description="Running right now" tests={liveTests} state="live" offset={0} />
+                )}
+                {readyTests.length > 0 && (
+                  <TestSection title="Ready to go live" description="Students invited" tests={readyTests} state="ready" offset={4} showCreate />
+                )}
+                {draftTests.length > 0 && (
+                  <TestSection title="Drafts" description="Needs setup" tests={draftTests} state="draft" offset={7} showCreate={readyTests.length === 0} />
+                )}
+                {scheduledTests.length > 0 && (
+                  <TestSection title="Scheduled" tests={scheduledTests} state="scheduled" offset={2} />
+                )}
+                {completedTests.length > 0 && (
+                  <TestSection title="Completed" description="Results available" tests={completedTests} state="completed" offset={9} />
+                )}
+              </>
             )}
           </div>
         </main>
@@ -241,89 +134,76 @@ export default async function TestsPage() {
   );
 }
 
-function TestCard({ test, isLive = false, isCompleted = false, isDraft = false, isReady = false }: { test: any; isLive?: boolean; isCompleted?: boolean; isDraft?: boolean; isReady?: boolean }) {
+type TestState = 'live' | 'ready' | 'draft' | 'scheduled' | 'completed';
+
+const STATE_META: Record<TestState, { badge: string; cta: string }> = {
+  live: { badge: 'Live now', cta: 'Monitor →' },
+  ready: { badge: 'Ready', cta: 'Start the test →' },
+  draft: { badge: 'Draft', cta: 'Invite students →' },
+  scheduled: { badge: 'Scheduled', cta: 'Open →' },
+  completed: { badge: 'Completed', cta: 'View results →' },
+};
+
+/** looma "My Workspaces" row: section header, then a gradient card grid, with the dashed create tile leading. */
+function TestSection({ title, description, tests, state, offset, showCreate = false }: {
+  title: string; description?: string; tests: any[]; state: TestState; offset: number; showCreate?: boolean;
+}) {
+  return (
+    <section className="space-y-4">
+      <SectionHeader
+        icon={state === 'live' ? Radio : state === 'completed' ? CheckCircle : ClipboardCheck}
+        title={title}
+        description={description}
+      />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {showCreate && <CreateTile href="/dashboard/mentor/tests/create" label="Create New Test" />}
+        {tests.map((test, i) => (
+          <TestCard key={test.id} test={test} state={state} index={offset + i} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TestCard({ test, state, index }: { test: any; state: TestState; index: number }) {
   const submissionCount = test.submissions?.length ?? 0;
   const invitationCount = test.invitations?.length ?? 0;
+  const meta = STATE_META[state];
 
   return (
     <Link
       href={`/dashboard/mentor/tests/${test.id}`}
-      className={`block bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border hover:-translate-y-0.5 transition-all ${
-        isDraft ? 'border-[var(--cl-warning)] hover:border-[var(--cl-warning)] bg-[rgba(171,100,0,0.3)]' :
-        isLive ? 'border-[var(--cl-success)] hover:border-[var(--cl-success)]' :
-        isReady ? 'border-[var(--cl-info)] hover:border-[var(--cl-info)] bg-[rgba(13,116,206,0.3)]' :
-        isCompleted ? 'border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)]' :
-        'border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
+      className={`group relative block h-[180px] overflow-hidden rounded-xl border bg-linear-to-br p-4 transition-transform hover:scale-[1.02] ${
+        state === 'completed' ? 'from-neutral-200 to-neutral-50' : gradientFor(index)
       }`}
     >
-      {isLive && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] text-xs font-medium rounded-full mb-3">
-          <span className="w-1.5 h-1.5 bg-[var(--cl-success)] rounded-full animate-pulse" />
-          Live Now
-        </span>
-      )}
-
-      {isDraft && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] text-xs font-medium rounded-full mb-3">
-          📝 Draft - Needs Setup
-        </span>
-      )}
-
-      {isReady && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] text-xs font-medium rounded-full mb-3">
-          🚀 Ready - Go Live
-        </span>
-      )}
-
-      {isCompleted && (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] text-xs font-medium rounded-full mb-3">
-          ✅ Completed
-        </span>
-      )}
-
-      <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">{test.title}</h3>
-      <p className="text-sm text-[var(--cl-body)] mb-4 line-clamp-2">
-        {test.description || 'No description'}
-      </p>
-
-      <div className="flex items-center gap-4 text-sm text-[var(--cl-muted)] mb-4">
-        <span className="flex items-center gap-1">
-          <Clock className="w-4 h-4" />
-          {test.duration_minutes} min
-        </span>
-        <span className="flex items-center gap-1">
-          <Users className="w-4 h-4" />
-          {invitationCount} invited
-        </span>
-        <span className="flex items-center gap-1">
-          <CheckCircle className="w-4 h-4" />
-          {submissionCount} submitted
-        </span>
+      <div className="pointer-events-none absolute -top-8 -right-8 size-32 rounded-full bg-white/40 blur-2xl" />
+      <div className="relative">
+        <div className="flex items-start justify-between gap-2">
+          <span className="flex size-9 items-center justify-center rounded-lg border border-white/40 bg-white/60 text-foreground shadow-xs">
+            <ClipboardCheck className="size-4.5" />
+          </span>
+          <span className="flex items-center gap-1.5 rounded-full border border-white/40 bg-white/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
+            {state === 'live' && <span className="size-1.5 animate-pulse rounded-full bg-green-600" />}
+            {meta.badge}
+          </span>
+        </div>
+        <h3 className="mt-3 line-clamp-1 text-base font-semibold leading-snug text-foreground">{test.title}</h3>
+        <p className="mt-1 line-clamp-1 text-xs text-foreground/70">{test.description || 'No description'}</p>
+        <div className="mt-2 flex items-center gap-3 text-xs text-foreground/70">
+          <span className="flex items-center gap-1"><Clock className="size-3.5" />{test.duration_minutes} min</span>
+          <span className="flex items-center gap-1"><Users className="size-3.5" />{invitationCount}</span>
+          <span className="flex items-center gap-1"><CheckCircle className="size-3.5" />{submissionCount}</span>
+        </div>
       </div>
-
-      {isDraft && (
-        <p className="text-xs text-[var(--cl-warning)] font-medium">
-          Click to invite students and go live →
-        </p>
-      )}
-
-      {isReady && (
-        <p className="text-xs text-[var(--cl-info)] font-medium">
-          Click to start the test →
-        </p>
-      )}
-
-      {isCompleted && (
-        <p className="text-xs text-[var(--cl-body)] font-medium">
-          Click to view results →
-        </p>
-      )}
-
-      {test.scheduled_at && !isLive && !isDraft && !isReady && (
-        <p className="text-xs text-[var(--cl-muted)]">
-          {isCompleted ? 'Conducted' : 'Scheduled'}: {new Date(test.scheduled_at).toLocaleDateString()}
-        </p>
-      )}
+      <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/10 bg-black/10 px-3 py-2.5 text-[11px] font-medium text-foreground/80 backdrop-blur-xs">
+        <span>
+          {test.scheduled_at && state !== 'live' && state !== 'draft' && state !== 'ready'
+            ? `${state === 'completed' ? 'Conducted' : 'Scheduled'} ${new Date(test.scheduled_at).toLocaleDateString()}`
+            : `${submissionCount}/${invitationCount} submitted`}
+        </span>
+        <span className="text-accent-purple group-hover:underline">{meta.cta}</span>
+      </div>
     </Link>
   );
 }
