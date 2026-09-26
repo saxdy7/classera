@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
 import { Plus, Clock, Users, CheckCircle, Rocket, BookMarked, ClipboardCheck, Radio, FileEdit } from 'lucide-react';
 import { PageHeader, SectionHeader, StatCard, CreateTile, gradientFor, primaryButton, outlineButton } from '@/components/shell';
+import { Stagger } from '@/components/motion';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,19 +96,19 @@ export default async function TestsPage() {
             />
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            <Stagger className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" each={0.05}>
               <StatCard label="Total tests" value={tests?.length || 0} icon={CheckCircle} />
               <StatCard label="Live now" value={liveTests.length} icon={Radio} />
               <StatCard label="Ready" value={readyTests.length} icon={Rocket} />
               <StatCard label="Drafts" value={draftTests.length} icon={FileEdit} />
               <StatCard label="Scheduled" value={scheduledTests.length} icon={Clock} />
               <StatCard label="Completed" value={completedTests.length} icon={Users} />
-            </div>
+            </Stagger>
 
             {(!tests || tests.length === 0) ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" each={0.05}>
                 <CreateTile href="/dashboard/mentor/tests/create" label="Create your first test" />
-              </div>
+              </Stagger>
             ) : (
               <>
                 {liveTests.length > 0 && (
@@ -155,12 +156,12 @@ function TestSection({ title, description, tests, state, offset, showCreate = fa
         title={title}
         description={description}
       />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" each={0.05}>
         {showCreate && <CreateTile href="/dashboard/mentor/tests/create" label="Create New Test" />}
         {tests.map((test, i) => (
           <TestCard key={test.id} test={test} state={state} index={offset + i} />
         ))}
-      </div>
+      </Stagger>
     </section>
   );
 }

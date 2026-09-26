@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
 import { Clock, CheckCircle, AlertCircle, Play, Eye, BarChart3, Award, TrendingUp, BookOpen, Zap, ClipboardCheck, ArrowRight } from 'lucide-react';
 import { PageHeader, SectionHeader, StatCard, EmptyState, gradientFor } from '@/components/shell';
+import { Stagger } from '@/components/motion';
 
 export const dynamic = 'force-dynamic';
 
@@ -92,17 +93,17 @@ export default async function StudentTestsPage() {
               description="Track your upcoming tests and review your performance."
             />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <Stagger className="grid grid-cols-1 gap-4 md:grid-cols-3" each={0.06}>
               <StatCard label="Live tests" value={liveTests.length} icon={Zap} hint="Ready to take now" />
               <StatCard label="Pending" value={pendingTests.length} icon={AlertCircle} hint="Scheduled for later" />
               <StatCard label="Completed" value={completedTests.length} icon={CheckCircle} hint="Tests taken" />
-            </div>
+            </Stagger>
 
             {/* ── Live now — gradient cards, looma ── */}
             <section className="space-y-4">
               <SectionHeader icon={Zap} title="Live now" description="Tests you can start right away." />
               {liveTests.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" each={0.05}>
                   {liveTests.map((inv, i) => (
                     <Link
                       key={inv.id}
@@ -132,7 +133,7 @@ export default async function StudentTestsPage() {
                       </div>
                     </Link>
                   ))}
-                </div>
+                </Stagger>
               ) : (
                 <EmptyState icon={Zap} title="No live tests right now" description="When a mentor starts a test you're invited to, it appears here." />
               )}

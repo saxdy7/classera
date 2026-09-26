@@ -301,7 +301,7 @@ export default async function MentorDashboard() {
                   ) : (
                     <EmptyState icon={GraduationCap} title="No students at your university yet" description="Students will appear here once they join." />
                   )}
-                </section>
+                </ScrollReveal>
 
                 {/* ── Recent messages ── */}
                 <ScrollReveal className="space-y-4">
@@ -333,7 +333,7 @@ export default async function MentorDashboard() {
                   ) : (
                     <EmptyState icon={MessageSquare} title="No messages yet" description="Your students will reach out soon." />
                   )}
-                </section>
+                </ScrollReveal>
               </div>
 
               {/* ── Right column ── */}

@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import Link from 'next/link';
 import { Plus, GitBranch, Clock, Users, CheckCircle, FileCode, ChevronRight, Code2 } from 'lucide-react';
 import { PageHeader, SectionHeader, StatCard, CreateTile, gradientFor, primaryButton } from '@/components/shell';
+import { Stagger } from '@/components/motion';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,17 +79,17 @@ export default async function MentorProjectsPage() {
             />
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-4" each={0.06}>
               <StatCard label="Total assignments" value={list.length} icon={FileCode} />
               <StatCard label="Active" value={activeCount} icon={CheckCircle} />
               <StatCard label="Students assigned" value={totalStudents} icon={Users} />
               <StatCard label="Submissions" value={totalSubmissions} icon={GitBranch} />
-            </div>
+            </Stagger>
 
             {/* Grid — looma: dashed create tile first, then gradient cards */}
             <section className="space-y-4">
               <SectionHeader icon={Code2} title="Assignments" description={list.length ? `${list.length} total` : 'Nothing here yet'} />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" each={0.05}>
                 <CreateTile href="/dashboard/mentor/projects/create" label="Create New Assignment" />
                 {list.map((a, i) => {
                   const status = getStatusConfig(a);
@@ -131,7 +132,7 @@ export default async function MentorProjectsPage() {
                     </Link>
                   );
                 })}
-              </div>
+              </Stagger>
             </section>
           </div>
         </main>

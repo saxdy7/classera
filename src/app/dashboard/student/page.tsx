@@ -307,7 +307,7 @@ export default async function StudentDashboard() {
                   ) : (
                     <EmptyState icon={Users} title="No mentors at your university yet" description="Check back soon — mentors are added as they join." />
                   )}
-                </section>
+                </ScrollReveal>
 
                 {/* ── Recent messages — list rows ── */}
                 <ScrollReveal className="space-y-4">
@@ -339,7 +339,7 @@ export default async function StudentDashboard() {
                   ) : (
                     <EmptyState icon={MessageSquare} title="No messages yet" description="Connect with a mentor to start a conversation." cta="Find mentors" href="/dashboard/student/find-mentors" />
                   )}
-                </section>
+                </ScrollReveal>
               </div>
 
               {/* ── Right column ── */}
