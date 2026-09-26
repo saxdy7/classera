@@ -177,19 +177,19 @@ export default function QuizClient() {
     const progress = ((step + 1) / TOTAL_STEPS) * 100;
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
             <div className="w-full max-w-2xl">
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 md:p-12">
+                <div className="bg-card rounded-xl p-8 md:p-12">
 
                     {/* Progress bar */}
                     <div className="mb-8">
-                        <div className="flex justify-between text-xs text-[var(--cl-muted-soft)] mb-2">
+                        <div className="flex justify-between text-xs text-muted-foreground/70 mb-2">
                             <span>Question {step + 1} of {TOTAL_STEPS}</span>
                             <span>{Math.round(progress)}% complete</span>
                         </div>
-                        <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                        <div className="h-2 bg-muted rounded-full overflow-hidden">
                             <div
-                                className="h-full rounded-full transition-all duration-500 bg-[var(--cl-primary)]"
+                                className="h-full rounded-full transition-all duration-500 bg-primary"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
@@ -198,11 +198,11 @@ export default function QuizClient() {
                     {/* Question */}
                     <div className="animate-in fade-in slide-in-from-right duration-300">
                         <div className="text-center mb-8">
-                            <div className={`w-20 h-20 ${current.gradient} rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4`}>
-                                <Icon className="w-10 h-10 text-[var(--cl-on-dark)]" />
+                            <div className={`w-20 h-20 ${current.gradient} rounded-xl flex items-center justify-center mx-auto mb-4`}>
+                                <Icon className="w-10 h-10 text-white" />
                             </div>
-                            <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">{current.title}</h2>
-                            <p className="text-[var(--cl-muted)] text-sm">{current.subtitle}</p>
+                            <h2 className="text-2xl font-semibold text-foreground mb-2">{current.title}</h2>
+                            <p className="text-muted-foreground text-sm">{current.subtitle}</p>
                         </div>
 
                         {/* Options */}
@@ -215,16 +215,16 @@ export default function QuizClient() {
                                     <button
                                         key={opt}
                                         onClick={() => current.type === 'single' ? selectSingle(opt) : toggleMulti(opt)}
-                                        className={`relative flex items-center gap-3 px-4 py-3 rounded-[var(--cl-r-lg)] border-2 text-left text-sm font-medium transition-all ${selected
-                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
-                                            : 'border-[var(--cl-hairline)] text-[var(--cl-body)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-canvas-soft)]'
+                                        className={`relative flex items-center gap-3 px-4 py-3 rounded-lg border-2 text-left text-sm font-medium transition-all ${selected
+                                            ? 'border-accent-purple bg-accent-purple/10 text-accent-purple'
+                                            : 'border-border text-foreground/80 hover:border-accent-purple hover:bg-muted/40'
                                             }`}
                                     >
                                         <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${selected
-                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary)]'
-                                            : 'border-[var(--cl-hairline-strong)]'
+                                            ? 'border-accent-purple bg-primary'
+                                            : 'border-border'
                                             }`}>
-                                            {selected && <CheckCircle className="w-3 h-3 text-[var(--cl-on-dark)]" />}
+                                            {selected && <CheckCircle className="w-3 h-3 text-white" />}
                                         </div>
                                         {opt}
                                     </button>
@@ -233,18 +233,18 @@ export default function QuizClient() {
                         </div>
 
                         {error && (
-                            <div className="mb-4 p-3 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] text-[var(--cl-error)] rounded-[var(--cl-r-lg)] text-sm">{error}</div>
+                            <div className="mb-4 p-3 bg-destructive/10 border border-destructive text-destructive rounded-lg text-sm">{error}</div>
                         )}
                     </div>
 
                     {/* Navigation */}
-                    <div className="flex items-center justify-between gap-4 pt-6 border-t border-[var(--cl-hairline)]">
+                    <div className="flex items-center justify-between gap-4 pt-6 border-t border-border">
                         <button
                             onClick={handleBack}
                             disabled={step === 0}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-[var(--cl-r-lg)] text-sm font-medium transition-all ${step === 0
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${step === 0
                                 ? 'invisible'
-                                : 'text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                : 'text-foreground/80 hover:bg-muted'
                                 }`}
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -255,7 +255,7 @@ export default function QuizClient() {
                             <button
                                 onClick={handleNext}
                                 disabled={!isAnswered}
-                                className="flex items-center gap-2 px-6 py-2.5 text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-all disabled:opacity-40 bg-[var(--cl-primary)]"
+                                className="flex items-center gap-2 px-6 py-2.5 text-white font-semibold rounded-lg transition-all disabled:opacity-40 bg-primary"
                             >
                                 Next
                                 <ArrowRight className="w-4 h-4" />
@@ -264,7 +264,7 @@ export default function QuizClient() {
                             <button
                                 onClick={handleSubmit}
                                 disabled={!isAnswered || submitting}
-                                className="flex items-center gap-2 px-6 py-2.5 text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-all disabled:opacity-40 bg-[var(--cl-primary)]"
+                                className="flex items-center gap-2 px-6 py-2.5 text-white font-semibold rounded-lg transition-all disabled:opacity-40 bg-primary"
                             >
                                 {submitting ? 'Saving…' : 'Go to Dashboard'}
                                 <ArrowRight className="w-4 h-4" />

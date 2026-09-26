@@ -124,15 +124,15 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-xl max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="bg-card rounded-xl w-full max-w-xl max-h-[85vh] overflow-hidden flex flex-col">
                 {/* Header */}
-                <div className="p-4 border-b border-[var(--cl-hairline)] flex-shrink-0">
+                <div className="p-4 border-b border-border flex-shrink-0">
                     <div className="flex items-center justify-between mb-3">
                         <div>
-                            <h2 className="text-lg font-semibold text-[var(--cl-ink)]">Invite Students</h2>
-                            <p className="text-[var(--cl-body)] text-xs">{testTitle}</p>
+                            <h2 className="text-lg font-semibold text-foreground">Invite Students</h2>
+                            <p className="text-foreground/80 text-xs">{testTitle}</p>
                         </div>
-                        <button onClick={onClose} className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg">
+                        <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -142,8 +142,8 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                         <button
                             onClick={() => setMode('students')}
                             className={`flex-1 py-2 px-3 text-sm rounded-lg font-medium flex items-center justify-center gap-2 ${mode === 'students'
-                                    ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-muted text-foreground/80 hover:bg-muted'
                                 }`}
                         >
                             <User className="w-4 h-4" />
@@ -152,8 +152,8 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                         <button
                             onClick={() => setMode('community')}
                             className={`flex-1 py-2 px-3 text-sm rounded-lg font-medium flex items-center justify-center gap-2 ${mode === 'community'
-                                    ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-muted text-foreground/80 hover:bg-muted'
                                 }`}
                         >
                             <Users className="w-4 h-4" />
@@ -168,20 +168,20 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                         <>
                             {/* Search */}
                             <div className="relative mb-3">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                                 <input
                                     type="text"
                                     placeholder="Search students..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-9 pr-3 py-2 text-sm border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                    className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                 />
                             </div>
 
                             {/* Select All */}
                             <button
                                 onClick={selectAllStudents}
-                                className="text-xs text-[var(--cl-primary)] hover:text-[var(--cl-primary)] mb-2"
+                                className="text-xs text-accent-purple hover:text-accent-purple mb-2"
                             >
                                 {selectedStudents.size === filteredStudents.length ? 'Deselect All' : 'Select All'}
                             </button>
@@ -192,17 +192,17 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                                     <label
                                         key={student.id}
                                         className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer border-2 transition-all ${selectedStudents.has(student.id)
-                                                ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
-                                                : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)] hover:bg-[var(--cl-canvas-soft)]'
+                                                ? 'border-accent-purple bg-accent-purple/10'
+                                                : 'border-border hover:border-border hover:bg-muted/40'
                                             }`}
                                     >
                                         <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
                                             selectedStudents.has(student.id)
-                                                ? 'bg-[var(--cl-primary)] border-[var(--cl-primary)]'
-                                                : 'border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)]'
+                                                ? 'bg-primary border-accent-purple'
+                                                : 'border-border bg-card'
                                         }`}>
                                             {selectedStudents.has(student.id) && (
-                                                <Check className="w-3 h-3 text-[var(--cl-on-dark)]" />
+                                                <Check className="w-3 h-3 text-white" />
                                             )}
                                         </div>
                                         <input
@@ -211,21 +211,21 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                                             onChange={() => toggleStudent(student.id)}
                                             className="hidden"
                                         />
-                                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold text-xs flex-shrink-0 bg-[var(--cl-primary)]">
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 bg-primary">
                                             {student.full_name?.[0] || '?'}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-[var(--cl-ink)]">{student.full_name}</p>
-                                            <p className="text-xs text-[var(--cl-muted)] truncate">{student.email}</p>
+                                            <p className="font-medium text-foreground">{student.full_name}</p>
+                                            <p className="text-xs text-muted-foreground truncate">{student.email}</p>
                                         </div>
                                         {selectedStudents.has(student.id) && (
-                                            <Check className="w-4 h-4 text-[var(--cl-primary)] flex-shrink-0" />
+                                            <Check className="w-4 h-4 text-accent-purple flex-shrink-0" />
                                         )}
                                     </label>
                                 ))}
 
                                 {filteredStudents.length === 0 && (
-                                    <p className="text-center text-[var(--cl-muted)] py-6 text-sm">No students found</p>
+                                    <p className="text-center text-muted-foreground py-6 text-sm">No students found</p>
                                 )}
                             </div>
                         </>
@@ -236,17 +236,17 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                                 <label
                                     key={community.id}
                                     className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer border-2 transition-all ${selectedCommunity === community.id
-                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
-                                            : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)] hover:bg-[var(--cl-canvas-soft)]'
+                                            ? 'border-accent-purple bg-accent-purple/10'
+                                            : 'border-border hover:border-border hover:bg-muted/40'
                                         }`}
                                 >
                                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
                                         selectedCommunity === community.id
-                                            ? 'bg-[var(--cl-primary)] border-[var(--cl-primary)]'
-                                            : 'border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)]'
+                                            ? 'bg-primary border-accent-purple'
+                                            : 'border-border bg-card'
                                     }`}>
                                         {selectedCommunity === community.id && (
-                                            <Check className="w-3 h-3 text-[var(--cl-on-dark)]" />
+                                            <Check className="w-3 h-3 text-white" />
                                         )}
                                     </div>
                                     <input
@@ -256,26 +256,26 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                                         onChange={() => setSelectedCommunity(community.id)}
                                         className="hidden"
                                     />
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--cl-on-dark)] font-semibold text-xs flex-shrink-0 bg-[var(--cl-info)]">
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 bg-accent-purple">
                                         {community.name?.[0] || 'C'}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="font-medium text-[var(--cl-ink)]">{community.name}</p>
-                                        <p className="text-xs text-[var(--cl-muted)]">{community.member_count || 0} members</p>
+                                        <p className="font-medium text-foreground">{community.name}</p>
+                                        <p className="text-xs text-muted-foreground">{community.member_count || 0} members</p>
                                     </div>
                                 </label>
                             ))}
 
                             {communities.length === 0 && (
-                                <p className="text-center text-[var(--cl-muted)] py-6 text-sm">No communities found</p>
+                                <p className="text-center text-muted-foreground py-6 text-sm">No communities found</p>
                             )}
                         </div>
                     )}
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-[var(--cl-hairline)] flex-shrink-0 flex items-center justify-between gap-3">
-                    <p className="text-xs text-[var(--cl-body)]">
+                <div className="p-4 border-t border-border flex-shrink-0 flex items-center justify-between gap-3">
+                    <p className="text-xs text-foreground/80">
                         {mode === 'students'
                             ? `${selectedStudents.size} selected`
                             : selectedCommunity ? '1 selected' : 'None selected'
@@ -284,7 +284,7 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                     <div className="flex gap-2">
                         <button
                             onClick={onClose}
-                            className="px-3 py-1.5 text-sm bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg hover:bg-[var(--cl-surface-strong)]"
+                            className="px-3 py-1.5 text-sm bg-muted text-foreground/80 rounded-lg hover:bg-muted"
                         >
                             Cancel
                         </button>
@@ -298,7 +298,7 @@ export function TestAssignModal({ testId, testTitle, isOpen, onClose, onAssigned
                                 ? 'Select a community'
                                 : `Assign to ${mode === 'students' ? selectedStudents.size : 1} recipient${mode === 'students' && selectedStudents.size !== 1 ? 's' : ''}`
                             }
-                            className="px-4 py-1.5 text-sm text-[var(--cl-on-dark)] rounded-lg font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2 bg-[var(--cl-primary)]"
+                            className="px-4 py-1.5 text-sm text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2 bg-primary"
                         >
                             {submitting ? (
                               <>

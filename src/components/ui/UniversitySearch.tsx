@@ -124,14 +124,14 @@ export function UniversitySearch({
   return (
     <div className="w-full" ref={dropdownRef}>
       {label && (
-        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+        <label className="block text-sm font-medium text-foreground/80 mb-2">
           {label}
         </label>
       )}
       
       <div className="relative">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
           <input
             ref={inputRef}
             type="text"
@@ -143,39 +143,39 @@ export function UniversitySearch({
               }
             }}
             placeholder={placeholder}
-            className={`w-full pl-12 pr-4 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors ${
-              error ? 'border-[var(--cl-error)]' : ''
+            className={`w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors ${
+              error ? 'border-destructive' : ''
             }`}
           />
           {loading && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
-              <div className="w-5 h-5 border-2 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-accent-purple border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
         </div>
 
         {/* Dropdown */}
         {showDropdown && universities.length > 0 && (
-          <div className="absolute z-50 w-full mt-2 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] max-h-60 overflow-y-auto">
+          <div className="absolute z-50 w-full mt-2 bg-card rounded-lg border border-border max-h-60 overflow-y-auto">
             {universities.map((university, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleSelect(university)}
-                className="w-full px-4 py-3 text-left hover:bg-[var(--cl-canvas-soft)] transition-colors flex items-start justify-between gap-2 border-b border-[var(--cl-hairline)] last:border-0"
+                className="w-full px-4 py-3 text-left hover:bg-muted/40 transition-colors flex items-start justify-between gap-2 border-b border-border last:border-0"
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-black truncate">
                     {university.name}
                   </p>
                   {university['state-province'] && (
-                    <p className="text-xs text-[var(--cl-muted)] mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {university['state-province']}, {university.country}
                     </p>
                   )}
                 </div>
                 {value === university.name && (
-                  <Check className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0" />
+                  <Check className="w-5 h-5 text-accent-purple flex-shrink-0" />
                 )}
               </button>
             ))}
@@ -184,16 +184,16 @@ export function UniversitySearch({
 
         {/* No results */}
         {showDropdown && !loading && query.length >= 2 && universities.length === 0 && (
-          <div className="absolute z-50 w-full mt-2 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] px-4 py-3">
-            <p className="text-sm text-[var(--cl-muted)]">No universities found. Try a different search.</p>
+          <div className="absolute z-50 w-full mt-2 bg-card rounded-lg border border-border px-4 py-3">
+            <p className="text-sm text-muted-foreground">No universities found. Try a different search.</p>
           </div>
         )}
       </div>
 
-      {error && <p className="mt-1 text-sm text-[var(--cl-error)]">{error}</p>}
+      {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       
       {query.length > 0 && query.length < 2 && (
-        <p className="mt-1 text-xs text-[var(--cl-muted)]">Type at least 2 characters to search</p>
+        <p className="mt-1 text-xs text-muted-foreground">Type at least 2 characters to search</p>
       )}
     </div>
   );

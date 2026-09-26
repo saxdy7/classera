@@ -87,31 +87,31 @@ export function FieldOfStudySearch({
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className={`w-full px-4 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors bg-[var(--cl-surface-card)] text-black placeholder:text-[var(--cl-muted-soft)] ${className}`}
+          className={`w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors bg-card text-black placeholder:text-muted-foreground/70 ${className}`}
         />
         {loading && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            <div className="w-5 h-5 border-2 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-accent-purple border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
       </div>
 
       {isOpen && fields.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] max-h-80 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-card border-2 border-border rounded-lg max-h-80 overflow-y-auto">
           {fields.map((field, index) => (
             <button
               key={`${field.code}-${index}`}
               type="button"
               onClick={() => handleSelect(field)}
-              className="w-full px-4 py-3 text-left hover:bg-[var(--cl-primary-soft)] transition-colors border-b border-[var(--cl-hairline)] last:border-b-0"
+              className="w-full px-4 py-3 text-left hover:bg-accent-purple/10 transition-colors border-b border-border last:border-b-0"
             >
               <div className="font-medium text-black">{field.name}</div>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm text-[var(--cl-muted)]">{field.category}</span>
+                <span className="text-sm text-muted-foreground">{field.category}</span>
                 {field.level && (
                   <>
-                    <span className="text-[var(--cl-muted-soft)]">•</span>
-                    <span className="text-xs px-2 py-0.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full font-medium">
+                    <span className="text-muted-foreground/70">•</span>
+                    <span className="text-xs px-2 py-0.5 bg-accent-purple/10 text-accent-purple rounded-full font-medium">
                       {field.level}
                     </span>
                   </>
@@ -123,8 +123,8 @@ export function FieldOfStudySearch({
       )}
 
       {isOpen && searchQuery.length >= 2 && fields.length === 0 && !loading && (
-        <div className="absolute z-50 w-full mt-2 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] p-4">
-          <p className="text-sm text-[var(--cl-body)] text-center">
+        <div className="absolute z-50 w-full mt-2 bg-card border-2 border-border rounded-lg p-4">
+          <p className="text-sm text-foreground/80 text-center">
             No fields found. Try a different search term.
           </p>
         </div>

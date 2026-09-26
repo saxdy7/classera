@@ -39,7 +39,7 @@ export default async function CommunitySettingsPage({
     }
 
     return (
-        <div className="min-h-screen bg-[var(--cl-surface-card)]">
+        <div className="min-h-screen bg-card">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="mentor" />
@@ -48,7 +48,7 @@ export default async function CommunitySettingsPage({
                         {/* Back Button */}
                         <Link
                             href={`/dashboard/mentor/communities/${id}`}
-                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back to Community
@@ -59,16 +59,16 @@ export default async function CommunitySettingsPage({
                             <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                                 Community Settings
                             </h1>
-                            <p className="text-[var(--cl-body)]">Manage your community details and settings</p>
+                            <p className="text-foreground/80">Manage your community details and settings</p>
                         </div>
 
                         {/* Settings Form */}
                         <EditCommunityForm communityId={id} initialData={community} />
 
                         {/* Danger Zone */}
-                        <div className="mt-8 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-xl)] border border-[var(--cl-error)] p-8">
-                            <h2 className="text-2xl font-semibold text-[var(--cl-error)] mb-4">Danger Zone</h2>
-                            <p className="text-[var(--cl-error)] mb-6">
+                        <div className="mt-8 bg-destructive/10 rounded-xl border border-destructive p-8">
+                            <h2 className="text-2xl font-semibold text-destructive mb-4">Danger Zone</h2>
+                            <p className="text-destructive mb-6">
                                 Once you delete a community, there is no going back. All messages, members, and data will be permanently deleted.
                             </p>
                             <DeleteCommunityButton id={id} />

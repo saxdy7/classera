@@ -4,6 +4,7 @@ import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import RealCalendar from '@/components/shared/RealCalendar';
 import { StatCard, SectionHeader, GradientCard, EmptyState, getGreeting, gradientFor, primaryButton, outlineButton } from '@/components/shell';
+import { Stagger, ScrollReveal } from '@/components/motion';
 import { ActivityBarChart } from '@/components/dashboard/ActivityBarChart';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -194,21 +195,21 @@ export default async function MentorDashboard() {
             </div>
 
             {/* ── Stats ── */}
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <Stagger className="grid grid-cols-2 gap-4 lg:grid-cols-4" each={0.06}>
               <StatCard label="Students" value={students.length || 0} icon={Users} href="/dashboard/mentor/students" />
               <StatCard label="Live tests" value={liveTestsCount} icon={ClipboardCheck} href="/dashboard/mentor/tests" hint={`${tests.length} total`} />
               <StatCard label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Trophy} href="/dashboard/mentor/analytics" />
               <StatCard label="Conversations" value={conversations.length || 0} icon={MessageSquare} href="/dashboard/mentor/messages" />
-            </div>
+            </Stagger>
 
             {/* ── Quick actions — looma gradient grid + dashed create tile ── */}
             <section className="space-y-4">
               <SectionHeader icon={Target} title="Quick actions" description="Create something for your students." />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" each={0.07}>
                 {quickActions.map((a, i) => (
                   <GradientCard key={a.href} href={a.href} index={i + 4} icon={a.icon} title={a.title} subtitle={a.subtitle} footerLeft="Open" footerRight="→" />
                 ))}
-              </div>
+              </Stagger>
             </section>
 
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
@@ -256,7 +257,7 @@ export default async function MentorDashboard() {
                 </div>
 
                 {/* ── Students at university — looma gradient cards ── */}
-                <section className="space-y-4">
+                <ScrollReveal className="space-y-4">
                   <SectionHeader
                     icon={GraduationCap}
                     title="Students at your university"
@@ -303,7 +304,7 @@ export default async function MentorDashboard() {
                 </section>
 
                 {/* ── Recent messages ── */}
-                <section className="space-y-4">
+                <ScrollReveal className="space-y-4">
                   <SectionHeader
                     icon={MessageSquare}
                     title="Recent messages"

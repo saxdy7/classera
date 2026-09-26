@@ -130,7 +130,7 @@ export function StudentConnectionActions({
       <button
         onClick={sendRequest}
         disabled={loading}
-        className="flex items-center gap-2 px-6 py-3 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] disabled:opacity-50"
+        className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary disabled:opacity-50"
       >
         <UserPlus className="w-5 h-5" />
         {loading ? 'Sending...' : 'Connect Student'}
@@ -144,7 +144,7 @@ export function StudentConnectionActions({
         <button
           onClick={acceptRequest}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[var(--cl-success)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-success)] disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
         >
           <UserCheck className="w-5 h-5" />
           {loading ? 'Accepting...' : 'Accept Request'}
@@ -152,7 +152,7 @@ export function StudentConnectionActions({
         <button
           onClick={cancelRequest}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[var(--cl-surface-strong)] text-black rounded-lg hover:bg-[var(--cl-surface-strong)] disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-muted text-black rounded-lg hover:bg-muted disabled:opacity-50"
         >
           <X className="w-5 h-5" />
           {loading ? 'Declining...' : 'Decline'}
@@ -163,7 +163,7 @@ export function StudentConnectionActions({
 
   if (status === 'pending' && isRequester) {
     return (
-      <div className="flex items-center gap-2 px-6 py-3 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] rounded-lg">
+      <div className="flex items-center gap-2 px-6 py-3 bg-amber-500/10 text-amber-600 rounded-lg">
         <Clock className="w-5 h-5" />
         <span>Request Pending</span>
       </div>
@@ -176,7 +176,7 @@ export function StudentConnectionActions({
         <button
           onClick={startLiveSession}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] disabled:opacity-50 font-medium"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary disabled:opacity-50 font-medium"
         >
           <Video className="w-5 h-5" />
           {loading ? 'Starting...' : 'Start Live Session'}

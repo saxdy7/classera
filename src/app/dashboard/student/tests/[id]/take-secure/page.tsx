@@ -204,11 +204,11 @@ export default function TakeTestPageSecure() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--cl-canvas-soft)] flex items-center justify-center">
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[var(--cl-body)] mb-2">Initializing secure test session...</p>
-          <p className="text-xs text-[var(--cl-muted)]">Please allow a moment for setup</p>
+          <div className="w-16 h-16 border-4 border-accent-purple border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-foreground/80 mb-2">Initializing secure test session...</p>
+          <p className="text-xs text-muted-foreground">Please allow a moment for setup</p>
         </div>
       </div>
     );
@@ -216,14 +216,14 @@ export default function TakeTestPageSecure() {
 
   if (error || !sessionData) {
     return (
-      <div className="min-h-screen bg-[var(--cl-canvas-soft)] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <AlertCircle className="w-16 h-16 text-[var(--cl-error)] mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">Unable to Start Test</h2>
-          <p className="text-[var(--cl-body)] mb-4">{error}</p>
+          <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold text-foreground mb-2">Unable to Start Test</h2>
+          <p className="text-foreground/80 mb-4">{error}</p>
           <button
             onClick={() => router.push('/dashboard/student/tests')}
-            className="px-6 py-2 bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-surface-inverse)]"
+            className="px-6 py-2 bg-neutral-900 text-white rounded-lg font-medium hover:bg-neutral-900"
           >
             Back to Tests
           </button>
@@ -239,21 +239,21 @@ export default function TakeTestPageSecure() {
   const antiCheatEnabled = sessionData.security.antiCheatEnabled;
 
   const testContent = (
-    <div className="min-h-screen bg-[var(--cl-primary-soft)]">
+    <div className="min-h-screen bg-accent-purple/10">
       {/* Security Banner */}
       {antiCheatEnabled && (
-        <div className="border-b-2 border-[var(--cl-warning)] px-4 py-3 bg-[rgba(171,100,0,0.12)]">
+        <div className="border-b-2 border-amber-500 px-4 py-3 bg-amber-500/10">
           <div className="max-w-7xl mx-auto flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-[var(--cl-warning)]" />
-              <Lock className="w-5 h-5 text-[var(--cl-warning)]" />
-              <span className="font-semibold text-[var(--cl-warning)]">Secure Test Session Active</span>
+              <Shield className="w-5 h-5 text-amber-600" />
+              <Lock className="w-5 h-5 text-amber-600" />
+              <span className="font-semibold text-amber-600">Secure Test Session Active</span>
             </div>
-            <span className="text-sm text-[var(--cl-warning)]">
+            <span className="text-sm text-amber-600">
               Session Token: {sessionTokenRef.current?.substring(0, 16)}...
             </span>
             {violations.length > 0 && (
-              <span className="ml-auto font-semibold text-[var(--cl-warning)] bg-[rgba(171,100,0,0.12)] px-3 py-1 rounded-full text-sm">
+              <span className="ml-auto font-semibold text-amber-600 bg-amber-500/10 px-3 py-1 rounded-full text-sm">
                 Warnings: {violations.length}/5
               </span>
             )}
@@ -262,22 +262,22 @@ export default function TakeTestPageSecure() {
       )}
 
       {/* Header with Timer */}
-      <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur border-b border-[var(--cl-hairline)] sticky top-0 z-10">
+      <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-2xl truncate">{test.title}</h1>
-              <p className="text-[var(--cl-muted)] text-sm font-medium">
+              <p className="text-muted-foreground text-sm font-medium">
                 Question {currentQuestion + 1} of {test.questions.length}
               </p>
             </div>
             <div className="flex items-center gap-3 flex-shrink-0">
               <div className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono text-lg font-semibold transition-all ${
                 timeRemaining < 60
-                  ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)] animate-pulse'
+                  ? 'bg-destructive text-white animate-pulse'
                   : timeRemaining < 300
-                  ? 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] border-2 border-[var(--cl-warning)]'
-                  : 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] border-2 border-[var(--cl-primary)]'
+                  ? 'bg-amber-500/10 text-amber-600 border-2 border-amber-500'
+                  : 'bg-accent-purple/10 text-accent-purple border-2 border-accent-purple'
               }`}>
                 <Clock className="w-5 h-5" />
                 {formatTime(timeRemaining)}
@@ -285,7 +285,7 @@ export default function TakeTestPageSecure() {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="px-5 md:px-6 py-2.5 text-[var(--cl-on-dark)] rounded-full font-semibold transition-all disabled:opacity-50 bg-[var(--cl-primary)]"
+                className="px-5 md:px-6 py-2.5 text-white rounded-full font-semibold transition-all disabled:opacity-50 bg-primary"
               >
                 {submitting ? 'Submitting...' : 'Submit'}
               </button>
@@ -294,9 +294,9 @@ export default function TakeTestPageSecure() {
 
           {/* Progress Bar */}
           <div className="mt-3">
-            <div className="h-2.5 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+            <div className="h-2.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full transition-all duration-500 rounded-full bg-[var(--cl-primary)]"
+                className="h-full transition-all duration-500 rounded-full bg-primary"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -306,22 +306,22 @@ export default function TakeTestPageSecure() {
 
       {/* Question Content */}
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden">
+        <div className="bg-card rounded-xl border border-border overflow-hidden">
           {/* Question header band */}
-          <div className="px-6 md:px-10 py-6 bg-[var(--cl-primary)]">
+          <div className="px-6 md:px-10 py-6 bg-primary">
             <div className="flex items-center justify-between mb-4">
-              <span className="inline-flex items-center gap-2 px-3 py-1 bg-[rgba(255,255,255,0.2)] backdrop-blur text-[var(--cl-on-dark)] rounded-full text-xs font-semibold uppercase tracking-wide">
+              <span className="inline-flex items-center gap-2 px-3 py-1 bg-[rgba(255,255,255,0.2)] backdrop-blur text-white rounded-full text-xs font-semibold uppercase tracking-wide">
                 {question.type === 'mcq' ? 'Multiple Choice' : question.type === 'short_answer' ? 'Short Answer' : 'Descriptive'}
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(255,255,255,0.2)] backdrop-blur text-[var(--cl-on-dark)] rounded-full text-xs font-semibold">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[rgba(255,255,255,0.2)] backdrop-blur text-white rounded-full text-xs font-semibold">
                 {question.marks} {question.marks === 1 ? 'point' : 'points'}
               </span>
             </div>
             <div className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-11 h-11 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-card)] text-[var(--cl-primary)] flex items-center justify-center font-semibold text-lg">
+              <span className="flex-shrink-0 w-11 h-11 rounded-xl bg-card text-accent-purple flex items-center justify-center font-semibold text-lg">
                 {currentQuestion + 1}
               </span>
-              <h2 className="text-xl md:text-2xl font-semibold text-[var(--cl-on-dark)] leading-snug pt-1">{question.question}</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-white leading-snug pt-1">{question.question}</h2>
             </div>
           </div>
 
@@ -339,7 +339,7 @@ export default function TakeTestPageSecure() {
                 value={answers[question.id] || ''}
                 onChange={(e) => handleAnswerChange(question.id, e.target.value)}
                 placeholder="Type your short answer here..."
-                className="w-full px-4 py-3 border-2 border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:border-[var(--cl-primary)] transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
               />
             ) : (
               <textarea
@@ -347,7 +347,7 @@ export default function TakeTestPageSecure() {
                 onChange={(e) => handleAnswerChange(question.id, e.target.value)}
                 placeholder="Type your answer here..."
                 rows={8}
-                className="w-full px-4 py-3 border-2 border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:border-[var(--cl-primary)] transition-colors resize-none"
+                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors resize-none"
               />
             )}
           </div>
@@ -357,13 +357,13 @@ export default function TakeTestPageSecure() {
             <button
               onClick={() => setCurrentQuestion((prev) => Math.max(0, prev - 1))}
               disabled={currentQuestion === 0}
-              className="flex items-center gap-2 px-5 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-semibold hover:bg-[var(--cl-surface-strong)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-3 bg-muted text-foreground/80 rounded-lg font-semibold hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-5 h-5" />
               Previous
             </button>
 
-            <span className="text-sm text-[var(--cl-muted-soft)] font-semibold">
+            <span className="text-sm text-muted-foreground/70 font-semibold">
               {currentQuestion + 1} / {test.questions.length}
             </span>
 
@@ -375,7 +375,7 @@ export default function TakeTestPageSecure() {
                   setCurrentQuestion((prev) => Math.min(test.questions.length - 1, prev + 1));
                 }
               }}
-              className="flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-all bg-[var(--cl-primary)]"
+              className="flex items-center gap-2 px-6 py-3 text-white rounded-lg font-semibold transition-all bg-primary"
             >
               {isLastQuestion ? 'Finish' : 'Next'}
               {!isLastQuestion && <ChevronRight className="w-5 h-5" />}
@@ -384,11 +384,11 @@ export default function TakeTestPageSecure() {
         </div>
 
         {/* Answer Summary */}
-        <div className="mt-6 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
+        <div className="mt-6 bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-[var(--cl-ink)]">Progress Overview</h3>
-            <span className="text-sm text-[var(--cl-muted)]">
-              <span className="font-semibold text-[var(--cl-primary)]">{Object.keys(answers).length}</span>/{test.questions.length} answered
+            <h3 className="font-semibold text-foreground">Progress Overview</h3>
+            <span className="text-sm text-muted-foreground">
+              <span className="font-semibold text-accent-purple">{Object.keys(answers).length}</span>/{test.questions.length} answered
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -399,10 +399,10 @@ export default function TakeTestPageSecure() {
                 title={`Question ${index + 1}${answers[q.id] ? ' (answered)' : ''}`}
                 className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all ${
                   index === currentQuestion
-                    ? 'text-[var(--cl-on-dark)] scale-110 bg-[var(--cl-primary)]'
+                    ? 'text-white scale-110 bg-primary'
                     : answers[q.id]
-                    ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] hover:bg-[var(--cl-primary)]'
-                    : 'bg-[var(--cl-surface-strong)] text-[var(--cl-muted)] hover:bg-[var(--cl-surface-strong)]'
+                    ? 'bg-accent-purple/10 text-accent-purple hover:bg-primary'
+                    : 'bg-muted text-muted-foreground hover:bg-muted'
                 }`}
               >
                 {index + 1}

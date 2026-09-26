@@ -25,7 +25,7 @@ export default async function CreateAssignmentPage() {
     .order('full_name');
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />

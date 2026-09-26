@@ -108,7 +108,7 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
   const correctCount = items.filter((i) => i.is_correct).length;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />
@@ -117,7 +117,7 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
             <div className="flex items-center justify-between mb-6">
               <Link
                 href={`/dashboard/student/tests/${testId}/results`}
-                className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)]"
+                className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Results
@@ -126,30 +126,30 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
 
             <div className="mb-6">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
-              <p className="text-[var(--cl-body)] mt-1">Answer review</p>
+              <p className="text-foreground/80 mt-1">Answer review</p>
             </div>
 
             {!allowReview ? (
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-12 text-center border border-[var(--cl-hairline)]">
-                <MinusCircle className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-1">Review not available</h3>
-                <p className="text-[var(--cl-muted)]">Your mentor has disabled answer review for this test.</p>
+              <div className="bg-card rounded-xl p-12 text-center border border-border">
+                <MinusCircle className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-foreground mb-1">Review not available</h3>
+                <p className="text-muted-foreground">Your mentor has disabled answer review for this test.</p>
               </div>
             ) : (
               <>
                 {/* Summary */}
                 <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-5 border border-[var(--cl-hairline)]">
-                    <p className="text-sm text-[var(--cl-muted)]">Score</p>
-                    <p className="text-2xl font-semibold text-[var(--cl-ink)]">{totalEarned}/{totalMax}</p>
+                  <div className="bg-card rounded-lg p-5 border border-border">
+                    <p className="text-sm text-muted-foreground">Score</p>
+                    <p className="text-2xl font-semibold text-foreground">{totalEarned}/{totalMax}</p>
                   </div>
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-5 border border-[var(--cl-hairline)]">
-                    <p className="text-sm text-[var(--cl-muted)]">Correct</p>
-                    <p className="text-2xl font-semibold text-[var(--cl-success)]">{correctCount}/{items.length}</p>
+                  <div className="bg-card rounded-lg p-5 border border-border">
+                    <p className="text-sm text-muted-foreground">Correct</p>
+                    <p className="text-2xl font-semibold text-green-600">{correctCount}/{items.length}</p>
                   </div>
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-5 border border-[var(--cl-hairline)]">
-                    <p className="text-sm text-[var(--cl-muted)]">Percentage</p>
-                    <p className="text-2xl font-semibold text-[var(--cl-primary)]">
+                  <div className="bg-card rounded-lg p-5 border border-border">
+                    <p className="text-sm text-muted-foreground">Percentage</p>
+                    <p className="text-2xl font-semibold text-accent-purple">
                       {totalMax > 0 ? Math.round((totalEarned / totalMax) * 100) : 0}%
                     </p>
                   </div>
@@ -159,20 +159,20 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
                 <div className="space-y-4">
                   {items.map((item, index) => {
                     const statusColor = !item.answered
-                      ? 'border-[var(--cl-hairline)]'
+                      ? 'border-border'
                       : item.is_correct
-                      ? 'border-[var(--cl-success)]'
-                      : 'border-[var(--cl-error)]';
+                      ? 'border-green-600'
+                      : 'border-destructive';
                     return (
-                      <div key={item.question_id} className={`bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border-2 ${statusColor}`}>
+                      <div key={item.question_id} className={`bg-card rounded-lg p-6 border-2 ${statusColor}`}>
                         <div className="flex items-start justify-between gap-4 mb-3">
                           <div className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--cl-surface-strong)] flex items-center justify-center text-sm font-semibold text-[var(--cl-body)]">
+                            <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-sm font-semibold text-foreground/80">
                               {index + 1}
                             </span>
-                            <h3 className="text-base font-semibold text-[var(--cl-ink)]">{item.question_text}</h3>
+                            <h3 className="text-base font-semibold text-foreground">{item.question_text}</h3>
                           </div>
-                          <span className="flex-shrink-0 inline-flex items-center gap-1 text-sm font-medium text-[var(--cl-body)]">
+                          <span className="flex-shrink-0 inline-flex items-center gap-1 text-sm font-medium text-foreground/80">
                             <Award className="w-4 h-4" />
                             {item.earned_marks}/{item.max_marks}
                           </span>
@@ -182,15 +182,15 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
                           {/* Status badge */}
                           <div>
                             {!item.answered ? (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--cl-surface-strong)] text-[var(--cl-body)]">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-muted text-foreground/80">
                                 <MinusCircle className="w-3.5 h-3.5" /> Not answered
                               </span>
                             ) : item.is_correct ? (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-600">
                                 <CheckCircle className="w-3.5 h-3.5" /> Correct
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
                                 <XCircle className="w-3.5 h-3.5" /> Incorrect
                               </span>
                             )}
@@ -207,16 +207,16 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
                                     key={i}
                                     className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm ${
                                       isCorrectOpt
-                                        ? 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                                        ? 'border-green-600 bg-green-500/10 text-green-600'
                                         : isStudent
-                                        ? 'border-[var(--cl-error)] bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
-                                        : 'border-[var(--cl-hairline)] text-[var(--cl-body)]'
+                                        ? 'border-destructive bg-destructive/10 text-destructive'
+                                        : 'border-border text-foreground/80'
                                     }`}
                                   >
                                     {isCorrectOpt ? (
-                                      <CheckCircle className="w-4 h-4 text-[var(--cl-success)]" />
+                                      <CheckCircle className="w-4 h-4 text-green-600" />
                                     ) : isStudent ? (
-                                      <XCircle className="w-4 h-4 text-[var(--cl-error)]" />
+                                      <XCircle className="w-4 h-4 text-destructive" />
                                     ) : (
                                       <span className="w-4 h-4" />
                                     )}
@@ -229,15 +229,15 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
                           ) : (
                             <div className="space-y-2 text-sm">
                               <div>
-                                <p className="text-xs font-medium text-[var(--cl-muted)] mb-1">Your answer</p>
-                                <p className="px-4 py-2.5 rounded-lg bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] text-[var(--cl-ink)] whitespace-pre-wrap">
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Your answer</p>
+                                <p className="px-4 py-2.5 rounded-lg bg-muted/40 border border-border text-foreground whitespace-pre-wrap">
                                   {item.student_answer}
                                 </p>
                               </div>
                               {item.correct_answer && (
                                 <div>
-                                  <p className="text-xs font-medium text-[var(--cl-muted)] mb-1">Expected answer</p>
-                                  <p className="px-4 py-2.5 rounded-lg bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] text-[var(--cl-success)] whitespace-pre-wrap">
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Expected answer</p>
+                                  <p className="px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-600 text-green-600 whitespace-pre-wrap">
                                     {item.correct_answer}
                                   </p>
                                 </div>
@@ -247,12 +247,12 @@ export default async function TestReviewPage({ params }: { params: Promise<{ id:
 
                           {/* Feedback */}
                           {item.feedback && (
-                            <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] text-sm text-[var(--cl-primary)]">
-                              <Lightbulb className="w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--cl-primary)]" />
+                            <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-accent-purple/10 border border-accent-purple text-sm text-accent-purple">
+                              <Lightbulb className="w-4 h-4 mt-0.5 flex-shrink-0 text-accent-purple" />
                               <div>
                                 <p>{item.feedback}</p>
                                 {item.tips && item.tips.length > 0 && (
-                                  <ul className="list-disc ml-4 mt-1 space-y-0.5 text-[var(--cl-primary)]">
+                                  <ul className="list-disc ml-4 mt-1 space-y-0.5 text-accent-purple">
                                     {item.tips.map((t, i) => (
                                       <li key={i}>{t}</li>
                                     ))}

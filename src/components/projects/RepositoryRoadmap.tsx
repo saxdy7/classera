@@ -162,10 +162,10 @@ export function RepositoryRoadmap({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96 bg-[var(--cl-canvas-soft)] rounded-lg border border-[var(--cl-hairline)]">
+      <div className="flex items-center justify-center h-96 bg-muted/40 rounded-lg border border-border">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-[var(--cl-muted-soft)] animate-spin mx-auto mb-2" />
-          <p className="text-sm text-[var(--cl-body)]">Loading roadmap...</p>
+          <Loader2 className="w-8 h-8 text-muted-foreground/70 animate-spin mx-auto mb-2" />
+          <p className="text-sm text-foreground/80">Loading roadmap...</p>
         </div>
       </div>
     );
@@ -173,30 +173,30 @@ export function RepositoryRoadmap({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-96 bg-[var(--cl-canvas-soft)] rounded-lg border border-[var(--cl-hairline)]">
+      <div className="flex items-center justify-center h-96 bg-muted/40 rounded-lg border border-border">
         <div className="text-center">
-          <AlertCircle className="w-8 h-8 text-[var(--cl-error)] mx-auto mb-2" />
-          <p className="text-sm text-[var(--cl-error)]">{error}</p>
+          <AlertCircle className="w-8 h-8 text-destructive mx-auto mb-2" />
+          <p className="text-sm text-destructive">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[var(--cl-surface-card)] rounded-lg border border-[var(--cl-hairline)] overflow-hidden">
+    <div className="bg-card rounded-lg border border-border overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+      <div className="px-6 py-4 border-b border-border bg-muted/40">
         <div className="flex items-center gap-2 mb-2">
-          <Code className="w-5 h-5 text-[var(--cl-info)]" />
-          <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Project Structure Roadmap</h3>
+          <Code className="w-5 h-5 text-accent-purple" />
+          <h3 className="text-lg font-semibold text-foreground">Project Structure Roadmap</h3>
         </div>
-        <p className="text-sm text-[var(--cl-body)]">
+        <p className="text-sm text-foreground/80">
           {userName}/{repoName} — {roadmap.length} items
         </p>
       </div>
 
       {/* Content */}
-      <div className="divide-y divide-[var(--cl-hairline)]">
+      <div className="divide-y divide-border">
         {roadmap.map((item, index) => (
           <div
             key={`${item.path}-${index}`}
@@ -207,18 +207,18 @@ export function RepositoryRoadmap({
               {/* Icon */}
               <div className="mt-1">
                 {item.type === 'dir' ? (
-                  <Folder className="w-5 h-5 text-[var(--cl-info)]" />
+                  <Folder className="w-5 h-5 text-accent-purple" />
                 ) : (
-                  <File className="w-5 h-5 text-[var(--cl-muted-soft)]" />
+                  <File className="w-5 h-5 text-muted-foreground/70" />
                 )}
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-[var(--cl-ink)]">{item.name}</p>
+                  <p className="text-sm font-medium text-foreground">{item.name}</p>
                   {item.type === 'dir' && item.fileCount !== undefined && (
-                    <span className="inline-block px-2 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] text-xs font-medium rounded">
+                    <span className="inline-block px-2 py-1 bg-accent-purple/10 text-accent-purple text-xs font-medium rounded">
                       {item.fileCount} files
                     </span>
                   )}
@@ -227,11 +227,11 @@ export function RepositoryRoadmap({
                 {/* Key Files Preview */}
                 {item.type === 'dir' && expandedDirs.has(item.path) && item.keyFiles && (
                   <div className="mt-3 space-y-2">
-                    <p className="text-xs text-[var(--cl-body)] font-medium uppercase tracking-wide">Key Files:</p>
+                    <p className="text-xs text-foreground/80 font-medium uppercase tracking-wide">Key Files:</p>
                     <ul className="space-y-1">
                       {item.keyFiles.map((file) => (
-                        <li key={file} className="text-xs text-[var(--cl-body)] flex items-center gap-2 ml-4">
-                          <File className="w-3 h-3 text-[var(--cl-muted-soft)]" />
+                        <li key={file} className="text-xs text-foreground/80 flex items-center gap-2 ml-4">
+                          <File className="w-3 h-3 text-muted-foreground/70" />
                           <code className="font-mono">{file.split('/').pop()}</code>
                         </li>
                       ))}
@@ -242,7 +242,7 @@ export function RepositoryRoadmap({
 
               {/* Expand Button */}
               {item.type === 'dir' && (
-                <div className="text-[var(--cl-muted-soft)] ml-2">
+                <div className="text-muted-foreground/70 ml-2">
                   {expandedDirs.has(item.path) ? '−' : '+'}
                 </div>
               )}
@@ -252,7 +252,7 @@ export function RepositoryRoadmap({
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 bg-[var(--cl-canvas-soft)] border-t border-[var(--cl-hairline)] text-xs text-[var(--cl-body)]">
+      <div className="px-6 py-4 bg-muted/40 border-t border-border text-xs text-foreground/80">
         <p>💡 Click on directories to see key files. Open the full explorer to browse all files.</p>
       </div>
     </div>

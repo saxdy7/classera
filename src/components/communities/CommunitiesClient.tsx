@@ -103,7 +103,7 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
     if (loading) {
         return (
             <div className="flex items-center justify-center py-16">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
             </div>
         );
     }
@@ -114,25 +114,25 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
             <div className="mb-12">
                 <div className="max-w-3xl mb-10">
                     <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl mb-4">
-                        Explore, Share & <span className="text-[var(--cl-ink)]">Connect</span> with Fellow Learners
+                        Explore, Share & <span className="text-foreground">Connect</span> with Fellow Learners
                     </h1>
-                    <p className="text-xl text-[var(--cl-muted)] font-medium">
+                    <p className="text-xl text-muted-foreground font-medium">
                         Join the Classera community — share your learning journey, get real tips from peers, and discover new growth paths.
                     </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1 group">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-[var(--cl-muted-soft)] group-focus-within:text-[var(--cl-primary)] transition-colors" />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground/70 group-focus-within:text-accent-purple transition-colors" />
                         <input
                             type="text"
                             placeholder="Search discussions, groups or tags..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-14 pr-6 py-5 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-4 focus:ring-[var(--cl-primary)] focus:border-[var(--cl-primary)] transition-all text-lg"
+                            className="w-full pl-14 pr-6 py-5 rounded-xl bg-card border border-border focus:outline-none focus:ring-4 focus:ring-ring focus:border-accent-purple transition-all text-lg"
                         />
                     </div>
-                    <button className="px-8 py-5 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] font-semibold text-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <button className="px-8 py-5 bg-primary hover:bg-primary text-white rounded-xl font-semibold text-lg transition-all active:scale-95 flex items-center justify-center gap-2">
                         <Plus className="w-6 h-6" />
                         Start Discussion
                     </button>
@@ -144,26 +144,26 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                 <div className="col-span-12 lg:col-span-8">
                     {/* Featured Discussions Banner (Image 3 Style) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-                         <div className="relative h-64 rounded-[var(--cl-r-xl)] overflow-hidden group cursor-pointer">
+                         <div className="relative h-64 rounded-xl overflow-hidden group cursor-pointer">
                             <div className="absolute inset-0 from-black/90 via-black/40 to-black/10 z-10" />
-                            <div className="absolute inset-0 bg-[var(--cl-surface-card)] group-hover:bg-[rgba(10,10,10,0)] transition-all duration-500" />
+                            <div className="absolute inset-0 bg-card group-hover:bg-[rgba(10,10,10,0)] transition-all duration-500" />
                             <div className="absolute bottom-6 left-6 right-6 z-20">
-                                <span className="px-2 py-1 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-[10px] font-semibold uppercase tracking-widest rounded-lg mb-3 inline-block">Featured</span>
-                                <h3 className="text-xl font-semibold text-[var(--cl-on-dark)] mb-2 leading-snug">The Beautiful Art of Tech Leadership with Classera Mentors</h3>
+                                <span className="px-2 py-1 bg-primary text-white text-[10px] font-semibold uppercase tracking-widest rounded-lg mb-3 inline-block">Featured</span>
+                                <h3 className="text-xl font-semibold text-white mb-2 leading-snug">The Beautiful Art of Tech Leadership with Classera Mentors</h3>
                                 <div className="flex items-center gap-2 text-[rgba(255,255,255,0.7)] text-xs">
-                                    <div className="w-5 h-5 rounded-full bg-[var(--cl-surface-strong)]" />
+                                    <div className="w-5 h-5 rounded-full bg-muted" />
                                     <span>by Admin Team</span>
                                 </div>
                             </div>
                          </div>
-                         <div className="relative h-64 rounded-[var(--cl-r-xl)] overflow-hidden group cursor-pointer">
+                         <div className="relative h-64 rounded-xl overflow-hidden group cursor-pointer">
                             <div className="absolute inset-0 from-black/90 via-black/40 to-black/10 z-10" />
-                            <div className="absolute inset-0 bg-[var(--cl-surface-card)] group-hover:bg-[rgba(10,10,10,0)] transition-all duration-500" />
+                            <div className="absolute inset-0 bg-card group-hover:bg-[rgba(10,10,10,0)] transition-all duration-500" />
                             <div className="absolute bottom-6 left-6 right-6 z-20">
-                                <span className="px-2 py-1 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-[10px] font-semibold uppercase tracking-widest rounded-lg mb-3 inline-block">Trending</span>
-                                <h3 className="text-xl font-semibold text-[var(--cl-on-dark)] mb-2 leading-snug">5 things I learned during my 1st year at University</h3>
+                                <span className="px-2 py-1 bg-primary text-white text-[10px] font-semibold uppercase tracking-widest rounded-lg mb-3 inline-block">Trending</span>
+                                <h3 className="text-xl font-semibold text-white mb-2 leading-snug">5 things I learned during my 1st year at University</h3>
                                 <div className="flex items-center gap-2 text-[rgba(255,255,255,0.7)] text-xs">
-                                    <div className="w-5 h-5 rounded-full bg-[var(--cl-surface-strong)]" />
+                                    <div className="w-5 h-5 rounded-full bg-muted" />
                                     <span>by Student Council</span>
                                 </div>
                             </div>
@@ -192,11 +192,11 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
 
                         {displayCommunities.length === 0 ? (
                             <div className="text-center py-20">
-                                <div className="w-20 h-20 bg-[var(--cl-canvas-soft)] rounded-full flex items-center justify-center mx-auto mb-4 border border-[var(--cl-hairline)]">
-                                    <UsersRound className="w-10 h-10 text-[var(--cl-muted-soft)]" />
+                                <div className="w-20 h-20 bg-muted/40 rounded-full flex items-center justify-center mx-auto mb-4 border border-border">
+                                    <UsersRound className="w-10 h-10 text-muted-foreground/70" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-[var(--cl-body)]">No communities found</h3>
-                                <p className="text-[var(--cl-muted-soft)] text-sm">Try broadening your search criteria</p>
+                                <h3 className="text-lg font-semibold text-foreground/80">No communities found</h3>
+                                <p className="text-muted-foreground/70 text-sm">Try broadening your search criteria</p>
                             </div>
                         ) : (
                             <div className="space-y-6">
@@ -205,8 +205,8 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                     const memberCount = community.community_members?.[0]?.count || 0;
 
                                     return (
-                                        <div key={community.id} className="group flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-[var(--cl-r-xl)] border border-transparent hover:border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-all cursor-pointer">
-                                            <div className="w-24 h-24 sm:w-20 sm:h-20 rounded-[2rem] flex items-center justify-center text-4xl flex-shrink-0 group-hover:scale-110 transition-transform bg-[var(--cl-primary-soft)]">
+                                        <div key={community.id} className="group flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-xl border border-transparent hover:border-border hover:bg-muted/40 transition-all cursor-pointer">
+                                            <div className="w-24 h-24 sm:w-20 sm:h-20 rounded-[2rem] flex items-center justify-center text-4xl flex-shrink-0 group-hover:scale-110 transition-transform bg-accent-purple/10">
                                                 {community.avatar_url ? (
                                                     <img src={community.avatar_url} alt={community.name} className="w-full h-full rounded-[2rem] object-cover" />
                                                 ) : (
@@ -215,19 +215,19 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                             </div>
                                             <div className="flex-1 text-center sm:text-left">
                                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                                                    <h3 className="text-xl font-semibold text-[var(--cl-ink)] group-hover:text-[var(--cl-primary)] transition-colors uppercase tracking-tight">{community.name}</h3>
+                                                    <h3 className="text-xl font-semibold text-foreground group-hover:text-accent-purple transition-colors uppercase tracking-tight">{community.name}</h3>
                                                     {!community.is_active && (
-                                                        <span className="px-2 py-0.5 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] text-[10px] font-semibold uppercase tracking-widest rounded-lg self-center">Inactive</span>
+                                                        <span className="px-2 py-0.5 bg-muted text-foreground/80 text-[10px] font-semibold uppercase tracking-widest rounded-lg self-center">Inactive</span>
                                                     )}
                                                 </div>
-                                                <p className="text-[var(--cl-muted)] text-sm mb-4 line-clamp-2 leading-relaxed font-medium">{community.description}</p>
-                                                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs font-semibold uppercase tracking-widest text-[var(--cl-muted-soft)]">
+                                                <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed font-medium">{community.description}</p>
+                                                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground/70">
                                                     <div className="flex items-center gap-1.5">
                                                         <UsersRound className="w-3.5 h-3.5" />
                                                         <span>{memberCount} Members</span>
                                                     </div>
-                                                    <div className="w-1 h-1 rounded-full bg-[var(--cl-surface-strong)]" />
-                                                    <div className="flex items-center gap-1.5 text-[var(--cl-primary)]">
+                                                    <div className="w-1 h-1 rounded-full bg-muted" />
+                                                    <div className="flex items-center gap-1.5 text-accent-purple">
                                                         <span>Mentor: {community.mentor?.full_name}</span>
                                                     </div>
                                                 </div>
@@ -236,22 +236,22 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                                 {membership?.status === 'approved' ? (
                                                     <Link
                                                         href={`/dashboard/student/communities/${community.id}`}
-                                                        className="w-full px-6 py-3 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] hover:text-[var(--cl-primary)] text-[var(--cl-body)] rounded-[var(--cl-r-xl)] font-semibold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
+                                                        className="w-full px-6 py-3 bg-card border-2 border-border hover:border-accent-purple hover:text-accent-purple text-foreground/80 rounded-xl font-semibold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn"
                                                     >
                                                         Enter <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                                                     </Link>
                                                 ) : membership?.status === 'pending' ? (
-                                                    <div className="px-6 py-3 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] rounded-[var(--cl-r-xl)] font-semibold text-xs uppercase tracking-widest flex items-center gap-2 border border-[var(--cl-warning)]">
+                                                    <div className="px-6 py-3 bg-amber-500/10 text-amber-600 rounded-xl font-semibold text-xs uppercase tracking-widest flex items-center gap-2 border border-amber-500">
                                                         <Clock className="w-4 h-4" /> Pending
                                                     </div>
                                                 ) : membership?.status === 'rejected' ? (
-                                                    <div className="px-6 py-3 bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] rounded-[var(--cl-r-xl)] font-semibold text-xs uppercase tracking-widest flex items-center gap-2 border border-[var(--cl-error)]">
+                                                    <div className="px-6 py-3 bg-destructive/10 text-destructive rounded-xl font-semibold text-xs uppercase tracking-widest flex items-center gap-2 border border-destructive">
                                                         <X className="w-4 h-4" /> Rejected
                                                     </div>
                                                 ) : (
                                                     <button
                                                         onClick={() => handleJoinCommunity(community.id)}
-                                                        className="w-full px-8 py-3 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] font-semibold text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-2"
+                                                        className="w-full px-8 py-3 bg-primary hover:bg-primary text-white rounded-xl font-semibold text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-2"
                                                     >
                                                         Join Room
                                                     </button>
@@ -268,9 +268,9 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                 {/* Sidebar (Right) (Image 2 & 3 Style) */}
                 <div className="col-span-12 lg:col-span-4 space-y-8">
                     {/* What's Trending (Image 1 Style) */}
-                    <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)]">
-                        <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-6 flex items-center gap-2">
-                             <Flame className="w-5 h-5 text-[var(--cl-warning)]" />
+                    <div className="bg-card rounded-[2rem] p-8 border border-border">
+                        <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
+                             <Flame className="w-5 h-5 text-amber-600" />
                              What's Trending
                         </h3>
                         <div className="space-y-6">
@@ -280,10 +280,10 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                 { title: "Planning for Final Year Projects?", desc: "Tips on avoiding burnout and finding inspirations...", tag: "Education" }
                             ].map((item, idx) => (
                                 <div key={idx} className="group cursor-pointer">
-                                    <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--cl-primary)] mb-1 block">{item.tag}</span>
-                                    <h4 className="font-semibold text-[var(--cl-ink)] group-hover:text-[var(--cl-primary)] transition-colors mb-1">{item.title}</h4>
-                                    <p className="text-xs text-[var(--cl-muted)] line-clamp-2 leading-relaxed">{item.desc}</p>
-                                    <div className="mt-2 flex items-center gap-1 text-[var(--cl-primary)] text-xs font-semibold cursor-pointer group-hover:translate-x-1 transition-transform">
+                                    <span className="text-[10px] font-semibold uppercase tracking-widest text-accent-purple mb-1 block">{item.tag}</span>
+                                    <h4 className="font-semibold text-foreground group-hover:text-accent-purple transition-colors mb-1">{item.title}</h4>
+                                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{item.desc}</p>
+                                    <div className="mt-2 flex items-center gap-1 text-accent-purple text-xs font-semibold cursor-pointer group-hover:translate-x-1 transition-transform">
                                         Read More <ChevronRight className="w-3 h-3" />
                                     </div>
                                 </div>
@@ -292,25 +292,25 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                     </div>
 
                     {/* Popular Topics (Image 1 Style) */}
-                    <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)]">
+                    <div className="bg-card rounded-[2rem] p-8 border border-border">
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-xl font-semibold text-[var(--cl-ink)]">Popular Topics</h3>
-                            <button className="text-xs font-semibold text-[var(--cl-primary)] hover:underline">See All</button>
+                            <h3 className="text-xl font-semibold text-foreground">Popular Topics</h3>
+                            <button className="text-xs font-semibold text-accent-purple hover:underline">See All</button>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {['UI/UX Design', 'Web Development', 'AI Research', 'Career Tips', 'Study Groups', 'Networking', 'Project Hub'].map((tag) => (
-                                <span key={tag} className="px-4 py-2 bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-primary-soft)] text-[var(--cl-body)] hover:text-[var(--cl-primary)] rounded-[var(--cl-r-lg)] text-xs font-semibold transition-all cursor-pointer border border-[var(--cl-hairline)] flex items-center gap-1.5">
-                                    <Hash className="w-3 h-3 text-[var(--cl-muted-soft)]" /> {tag}
+                                <span key={tag} className="px-4 py-2 bg-muted/40 hover:bg-accent-purple/10 text-foreground/80 hover:text-accent-purple rounded-lg text-xs font-semibold transition-all cursor-pointer border border-border flex items-center gap-1.5">
+                                    <Hash className="w-3 h-3 text-muted-foreground/70" /> {tag}
                                 </span>
                             ))}
                         </div>
                     </div>
 
                     {/* Top Mentors (Real Data) */}
-                    <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)]">
+                    <div className="bg-card rounded-[2rem] p-8 border border-border">
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-xl font-semibold text-[var(--cl-ink)] tracking-tight">Top Mentors</h3>
-                            <button className="text-xs font-semibold text-[var(--cl-primary)] hover:underline">See All</button>
+                            <h3 className="text-xl font-semibold text-foreground tracking-tight">Top Mentors</h3>
+                            <button className="text-xs font-semibold text-accent-purple hover:underline">See All</button>
                         </div>
                         <div className="space-y-6">
                             {Array.from(new Map(communities.map(c => [c.mentor?.id, c.mentor])).values())
@@ -318,7 +318,7 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                 .map((mentor, idx) => (
                                 <div key={mentor?.id || idx} className="flex items-center justify-between group">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary-soft)] flex items-center justify-center text-[var(--cl-primary)] font-semibold overflow-hidden">
+                                        <div className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center text-accent-purple font-semibold overflow-hidden">
                                             {mentor?.avatar_url ? (
                                                 <img src={mentor.avatar_url} className="w-full h-full object-cover" />
                                             ) : (
@@ -326,17 +326,17 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                                             )}
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-semibold text-[var(--cl-ink)]">{mentor?.full_name || 'Classera Mentor'}</h4>
-                                            <p className="text-[10px] text-[var(--cl-muted)] font-semibold uppercase tracking-widest">Active Mentor</p>
+                                            <h4 className="text-sm font-semibold text-foreground">{mentor?.full_name || 'Classera Mentor'}</h4>
+                                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest">Active Mentor</p>
                                         </div>
                                     </div>
-                                    <button className="p-2.5 text-[var(--cl-primary)] hover:text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] transition-all border border-transparent hover:border-[var(--cl-primary)]">
+                                    <button className="p-2.5 text-accent-purple hover:text-accent-purple hover:bg-accent-purple/10 rounded-lg transition-all border border-transparent hover:border-accent-purple">
                                         <UserPlus size={18} />
                                     </button>
                                 </div>
                             ))}
                             {communities.length === 0 && (
-                                <p className="text-xs text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest text-center py-4">No mentors active yet</p>
+                                <p className="text-xs text-muted-foreground/70 font-semibold uppercase tracking-widest text-center py-4">No mentors active yet</p>
                             )}
                         </div>
                     </div>

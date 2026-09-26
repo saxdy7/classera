@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-primary-soft)]">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-accent-purple/10">
       <div className="max-w-md w-full text-center">
         {/* 404 Number */}
         <div className="mb-8">
@@ -14,12 +14,12 @@ export default function NotFound() {
         </div>
 
         {/* Title */}
-        <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-4">
+        <h2 className="text-3xl font-semibold text-foreground mb-4">
           Page Not Found
         </h2>
 
         {/* Description */}
-        <p className="text-[var(--cl-body)] mb-8">
+        <p className="text-foreground/80 mb-8">
           Sorry, we couldn't find the page you're looking for. It might have been
           moved or deleted.
         </p>

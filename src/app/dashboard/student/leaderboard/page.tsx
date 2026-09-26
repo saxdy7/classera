@@ -49,7 +49,7 @@ export default async function StudentLeaderboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -59,12 +59,12 @@ export default async function StudentLeaderboardPage() {
               <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 Leaderboard
               </h1>
-              <p className="text-[var(--cl-body)]">{profile.universities?.name} • {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
+              <p className="text-foreground/80">{profile.universities?.name} • {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
             </div>
 
             {/* My Rank Card */}
             {myRank && (
-              <div className={`mb-8 ${getRankColor(myRank.rank!)} rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)]`}>
+              <div className={`mb-8 ${getRankColor(myRank.rank!)} rounded-xl p-6 text-white`}>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm opacity-90 mb-1">Your Rank</div>
@@ -86,7 +86,7 @@ export default async function StudentLeaderboardPage() {
             {leaderboard && leaderboard.length >= 3 && (
               <div className="mb-8 grid grid-cols-3 gap-4 items-end">
                 {/* 2nd Place */}
-                <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] text-center bg-[var(--cl-surface-strong)]">
+                <div className="rounded-xl p-6 text-white text-center bg-muted">
                   <div className="text-5xl mb-3">🥈</div>
                   <div className="w-16 h-16 bg-[rgba(255,255,255,0.2)] rounded-full mx-auto mb-3 flex items-center justify-center text-2xl font-semibold">
                     {leaderboard[1].users?.full_name.charAt(0)}
@@ -97,7 +97,7 @@ export default async function StudentLeaderboardPage() {
                 </div>
 
                 {/* 1st Place */}
-                <div className="rounded-[var(--cl-r-xl)] p-8 text-[var(--cl-on-dark)] text-center -translate-y-4 bg-[var(--cl-warning)]">
+                <div className="rounded-xl p-8 text-white text-center -translate-y-4 bg-amber-500">
                   <div className="text-6xl mb-3">🥇</div>
                   <div className="w-20 h-20 bg-[rgba(255,255,255,0.2)] rounded-full mx-auto mb-3 flex items-center justify-center text-3xl font-semibold">
                     {leaderboard[0].users?.full_name.charAt(0)}
@@ -108,7 +108,7 @@ export default async function StudentLeaderboardPage() {
                 </div>
 
                 {/* 3rd Place */}
-                <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] text-center bg-[var(--cl-warning)]">
+                <div className="rounded-xl p-6 text-white text-center bg-amber-500">
                   <div className="text-5xl mb-3">🥉</div>
                   <div className="w-16 h-16 bg-[rgba(255,255,255,0.2)] rounded-full mx-auto mb-3 flex items-center justify-center text-2xl font-semibold">
                     {leaderboard[2].users?.full_name.charAt(0)}
@@ -121,49 +121,49 @@ export default async function StudentLeaderboardPage() {
             )}
 
             {/* Full Leaderboard */}
-            <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur-sm rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
-              <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-6">Full Rankings</h2>
+            <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur-sm rounded-xl border border-border p-6">
+              <h2 className="text-xl font-semibold text-foreground mb-6">Full Rankings</h2>
               
               <div className="space-y-2">
                 {leaderboard && leaderboard.map((entry, index) => (
                   <div
                     key={entry.id}
-                    className={`p-4 rounded-[var(--cl-r-xl)] border transition-all ${
+                    className={`p-4 rounded-xl border transition-all ${
                       entry.student_id === user.id
-                        ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]'
-                        : 'bg-[var(--cl-canvas-soft)] border-[var(--cl-hairline)] hover:bg-[var(--cl-surface-strong)]'
+                        ? 'bg-accent-purple/10 border-accent-purple'
+                        : 'bg-muted/40 border-border hover:bg-muted'
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-[var(--cl-r-lg)] flex items-center justify-center font-semibold text-xl ${
-                        index < 3 ? ` ${getRankColor(entry.rank!)} text-[var(--cl-on-dark)]` : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-semibold text-xl ${
+                        index < 3 ? ` ${getRankColor(entry.rank!)} text-white` : 'bg-muted text-foreground/80'
                       }`}>
                         {getRankBadge(entry.rank!)}
                       </div>
 
                       <div className="flex-1">
-                        <div className="font-semibold text-[var(--cl-ink)]">
+                        <div className="font-semibold text-foreground">
                           {entry.users?.full_name}
                           {entry.student_id === user.id && (
-                            <span className="ml-2 px-2 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-semibold rounded-full">
+                            <span className="ml-2 px-2 py-1 bg-accent-purple/10 text-accent-purple text-xs font-semibold rounded-full">
                               You
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-[var(--cl-body)]">{entry.users?.degree_type || 'Student'}</div>
+                        <div className="text-sm text-foreground/80">{entry.users?.degree_type || 'Student'}</div>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-2xl font-semibold text-[var(--cl-ink)]">{entry.total_score}</div>
-                        <div className="text-xs text-[var(--cl-muted)]">points</div>
+                        <div className="text-2xl font-semibold text-foreground">{entry.total_score}</div>
+                        <div className="text-xs text-muted-foreground">points</div>
                       </div>
 
                       <div className="text-right">
-                        <div className="text-lg font-semibold text-[var(--cl-primary)]">{Math.round(entry.average_percentage)}%</div>
-                        <div className="text-xs text-[var(--cl-muted)]">avg</div>
+                        <div className="text-lg font-semibold text-accent-purple">{Math.round(entry.average_percentage)}%</div>
+                        <div className="text-xs text-muted-foreground">avg</div>
                       </div>
 
-                      <div className="text-sm text-[var(--cl-body)]">
+                      <div className="text-sm text-foreground/80">
                         <div>{entry.tests_completed} tests</div>
                         <div>{entry.tasks_completed} tasks</div>
                       </div>
@@ -173,7 +173,7 @@ export default async function StudentLeaderboardPage() {
               </div>
 
               {(!leaderboard || leaderboard.length === 0) && (
-                <div className="text-center py-12 text-[var(--cl-muted-soft)]">
+                <div className="text-center py-12 text-muted-foreground/70">
                   <Trophy className="w-16 h-16 mx-auto mb-4 opacity-50" />
                   <p className="font-semibold">No rankings yet</p>
                   <p className="text-sm">Complete tests and tasks to appear on the leaderboard</p>

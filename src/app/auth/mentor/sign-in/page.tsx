@@ -50,54 +50,54 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md">
-        <div className="bg-black/40 backdrop-blur-xl border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-8">
+        <div className="bg-black/40 backdrop-blur-xl border border-border rounded-xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               Welcome Back
             </h1>
-            <p className="text-[var(--cl-muted)] mt-2">Sign in to continue your journey</p>
+            <p className="text-muted-foreground mt-2">Sign in to continue your journey</p>
           </div>
 
           <form onSubmit={handleSignIn} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="you@university.edu"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-muted-foreground mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-12 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-12 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -105,7 +105,7 @@ export default function SignInPage() {
             </div>
 
             {error && (
-              <div className="bg-[rgba(239,68,68,0.1)] border border-[var(--cl-error)] rounded-lg p-3 text-[var(--cl-error)] text-sm">
+              <div className="bg-[rgba(239,68,68,0.1)] border border-destructive rounded-lg p-3 text-destructive text-sm">
                 {error}
               </div>
             )}
@@ -113,7 +113,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--cl-on-primary)] font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
+              className="w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-primary"
             >
               {loading ? (
                 <>
@@ -127,11 +127,11 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[var(--cl-muted)]">
+            <p className="text-muted-foreground">
               Don't have an account?{' '}
               <Link
                 href="/auth/sign-up"
-                className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-semibold transition-colors"
+                className="text-accent-purple hover:text-accent-purple font-semibold transition-colors"
               >
                 Sign Up
               </Link>
@@ -141,7 +141,7 @@ export default function SignInPage() {
           <div className="mt-4 text-center">
             <Link
               href="/auth/forgot-password"
-              className="text-sm text-[var(--cl-muted)] hover:text-[var(--cl-muted)] transition-colors"
+              className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
             >
               Forgot your password?
             </Link>

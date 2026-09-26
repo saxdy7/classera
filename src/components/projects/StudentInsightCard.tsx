@@ -47,19 +47,19 @@ export default function StudentInsightCard({ submissionId, cachedNote, grade, an
       : 'Submit a repository to a project to see your analytics here.';
 
   return (
-    <div className="p-6 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)]">
+    <div className="p-6 bg-card border border-accent-purple rounded-xl">
       <div className="flex justify-between items-end mb-4">
-        <p className="text-[10px] font-semibold uppercase text-[var(--cl-primary)]">Quality Grade</p>
-        <Sparkles className="text-[var(--cl-primary)] w-6 h-6" />
+        <p className="text-[10px] font-semibold uppercase text-accent-purple">Quality Grade</p>
+        <Sparkles className="text-accent-purple w-6 h-6" />
       </div>
-      <p className="text-4xl font-semibold italic text-[var(--cl-on-dark)] mb-4">{grade ?? 'N/A'}</p>
+      <p className="text-4xl font-semibold italic text-white mb-4">{grade ?? 'N/A'}</p>
       {loading ? (
-        <div className="flex items-center gap-2 text-[11px] text-[var(--cl-muted-soft)]">
+        <div className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
           <Loader2 className="w-3 h-3 animate-spin" />
           Generating a personal note…
         </div>
       ) : (
-        <p className="text-[11px] leading-relaxed text-[var(--cl-muted-soft)] font-medium">
+        <p className="text-[11px] leading-relaxed text-muted-foreground/70 font-medium">
           {!failed && note ? note : fallbackText}
         </p>
       )}

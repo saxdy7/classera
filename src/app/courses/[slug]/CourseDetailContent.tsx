@@ -117,8 +117,8 @@ export function CourseDetailContent() {
         return (
             <div className="flex h-[calc(100vh-64px)] overflow-hidden">
                 {/* Left Sidebar - Course Navigation */}
-                <div className="w-80 border-r bg-[var(--cl-canvas-soft)] overflow-y-auto hidden md:block">
-                    <div className="p-4 border-b bg-[var(--cl-surface-card)] top-0 sticky z-10">
+                <div className="w-80 border-r bg-muted/40 overflow-y-auto hidden md:block">
+                    <div className="p-4 border-b bg-card top-0 sticky z-10">
                         <Button variant="ghost" size="sm" onClick={() => setActiveLesson(null)} className="mb-2">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Overview
@@ -128,18 +128,18 @@ export function CourseDetailContent() {
                     <div className="p-4 space-y-4">
                         {course.modules?.map((module: any, cmdIndex: number) => (
                             <div key={module.id}>
-                                <h4 className="text-xs font-semibold text-[var(--cl-muted)] uppercase mb-2">Module {cmdIndex + 1}</h4>
+                                <h4 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Module {cmdIndex + 1}</h4>
                                 <div className="space-y-1">
                                     {module.lessons?.map((lesson: any, lIndex: number) => (
                                         <button
                                             key={lesson.id}
                                             onClick={() => setActiveLesson(lesson)}
-                                            className={`w-full text-left p-2 rounded text-sm flex items-center gap-2 ${activeLesson.id === lesson.id ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] font-medium' : 'hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'}`}
+                                            className={`w-full text-left p-2 rounded text-sm flex items-center gap-2 ${activeLesson.id === lesson.id ? 'bg-green-500/10 text-green-600 font-medium' : 'hover:bg-muted text-foreground/80'}`}
                                         >
                                             {isLessonCompleted(lesson.id) ? (
-                                                <CheckCircle2 className="w-4 h-4 text-[var(--cl-success)] flex-shrink-0" />
+                                                <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
                                             ) : (
-                                                <div className="w-4 h-4 rounded-full border border-[var(--cl-hairline-strong)] flex-shrink-0" />
+                                                <div className="w-4 h-4 rounded-full border border-border flex-shrink-0" />
                                             )}
                                             <span className="line-clamp-1">{lIndex + 1}. {lesson.title}</span>
                                         </button>
@@ -151,7 +151,7 @@ export function CourseDetailContent() {
                 </div>
 
                 {/* Main Content - Lesson Viewer */}
-                <div className="flex-1 overflow-y-auto bg-[var(--cl-surface-card)]">
+                <div className="flex-1 overflow-y-auto bg-card">
                     <div className="max-w-4xl mx-auto p-6 lg:p-12 mb-20">
                         <div className="mb-8 border-b pb-6">
                             <Button variant="outline" size="sm" onClick={() => setActiveLesson(null)} className="md:hidden mb-4">
@@ -160,7 +160,7 @@ export function CourseDetailContent() {
                             </Button>
                             <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">{activeLesson.title}</h1>
                             {activeLesson.duration_minutes > 0 && (
-                                <div className="flex items-center text-[var(--cl-muted)] text-sm">
+                                <div className="flex items-center text-muted-foreground text-sm">
                                     <Clock className="w-4 h-4 mr-1" />
                                     {activeLesson.duration_minutes} min read
                                 </div>
@@ -176,7 +176,7 @@ export function CourseDetailContent() {
                         <div className="mt-12 pt-8 border-t flex justify-end">
                             <Button
                                 size="lg"
-                                className={isLessonCompleted(activeLesson.id) ? "bg-[var(--cl-success)]" : "bg-[var(--cl-success)] hover:bg-[var(--cl-success)]"}
+                                className={isLessonCompleted(activeLesson.id) ? "bg-green-600" : "bg-green-600 hover:bg-green-600"}
                                 onClick={() => handleLessonComplete(activeLesson.id)}
                             >
                                 {isLessonCompleted(activeLesson.id) ? 'Completed' : 'Mark as Complete & Next'}
@@ -191,7 +191,7 @@ export function CourseDetailContent() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh] p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-success)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
             </div>
         );
     }
@@ -199,7 +199,7 @@ export function CourseDetailContent() {
     if (!course) {
         return (
             <div className="p-8 text-center">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">Course Not Found</h2>
+                <h2 className="text-2xl font-semibold text-foreground mb-2">Course Not Found</h2>
                 <Button onClick={() => router.push('/courses')}>Back to Courses</Button>
             </div>
         );
@@ -215,7 +215,7 @@ export function CourseDetailContent() {
                         <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                             {course.title}
                         </h1>
-                        <div className="flex items-center gap-4 text-sm text-[var(--cl-body)] mb-3">
+                        <div className="flex items-center gap-4 text-sm text-foreground/80 mb-3">
                             <span>{course.total_modules} modules</span>
                             <span>•</span>
                             <span>{course.total_lessons} lessons</span>
@@ -223,9 +223,9 @@ export function CourseDetailContent() {
                             <span>{progress}% complete</span>
                         </div>
                         {enrollment && (
-                            <div className="w-full max-w-md bg-[var(--cl-surface-strong)] rounded-full h-2">
+                            <div className="w-full max-w-md bg-muted rounded-full h-2">
                                 <div
-                                    className="bg-[var(--cl-success)] h-2 rounded-full transition-all duration-500"
+                                    className="bg-green-600 h-2 rounded-full transition-all duration-500"
                                     style={{ width: `${progress}%` }}
                                 ></div>
                             </div>
@@ -236,7 +236,7 @@ export function CourseDetailContent() {
                         <Button
                             onClick={handleEnroll}
                             disabled={enrolling}
-                            className="ml-4 bg-[var(--cl-success)] hover:bg-[var(--cl-success)]"
+                            className="ml-4 bg-green-600 hover:bg-green-600"
                         >
                             {enrolling ? 'Enrolling...' : 'Enroll Now'}
                         </Button>
@@ -255,24 +255,24 @@ export function CourseDetailContent() {
                                 className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                             >
                                 <div className="flex items-center gap-3">
-                                    <span className="text-lg font-semibold text-[var(--cl-muted-soft)]">
+                                    <span className="text-lg font-semibold text-muted-foreground/70">
                                         {moduleIndex + 1}
                                     </span>
                                     <div className="text-left">
-                                        <h3 className="font-semibold text-[var(--cl-ink)]">
+                                        <h3 className="font-semibold text-foreground">
                                             Module {moduleIndex + 1}: {module.title}
                                         </h3>
                                         {module.description && (
-                                            <p className="text-sm text-[var(--cl-body)] mt-1">
+                                            <p className="text-sm text-foreground/80 mt-1">
                                                 {module.description}
                                             </p>
                                         )}
                                     </div>
                                 </div>
                                 {isExpanded ? (
-                                    <ChevronUp className="h-5 w-5 text-[var(--cl-muted-soft)]" />
+                                    <ChevronUp className="h-5 w-5 text-muted-foreground/70" />
                                 ) : (
-                                    <ChevronDown className="h-5 w-5 text-[var(--cl-muted-soft)]" />
+                                    <ChevronDown className="h-5 w-5 text-muted-foreground/70" />
                                 )}
                             </button>
 
@@ -284,29 +284,29 @@ export function CourseDetailContent() {
                                         return (
                                             <div
                                                 key={lesson.id}
-                                                className="px-6 py-4 flex items-center justify-between hover:bg-[var(--cl-canvas-soft)] border-b last:border-b-0 cursor-pointer"
+                                                className="px-6 py-4 flex items-center justify-between hover:bg-muted/40 border-b last:border-b-0 cursor-pointer"
                                                 onClick={() => enrollment && setActiveLesson(lesson)} // Click to open if enrolled
                                             >
                                                 <div className="flex items-center gap-4 flex-1">
                                                     {completed ? (
-                                                        <CheckCircle2 className="h-5 w-5 text-[var(--cl-success)] flex-shrink-0" />
+                                                        <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
                                                     ) : (
-                                                        <Circle className="h-5 w-5 text-[var(--cl-muted-soft)] flex-shrink-0" />
+                                                        <Circle className="h-5 w-5 text-muted-foreground/70 flex-shrink-0" />
                                                     )}
 
                                                     <div className="flex-1">
-                                                        <span className="text-sm font-medium text-[var(--cl-ink)]">
+                                                        <span className="text-sm font-medium text-foreground">
                                                             {lessonIndex + 1}. {lesson.title}
                                                         </span>
                                                         {lesson.description && (
-                                                            <p className="text-sm text-[var(--cl-body)] mt-1 line-clamp-1">
+                                                            <p className="text-sm text-foreground/80 mt-1 line-clamp-1">
                                                                 {lesson.description}
                                                             </p>
                                                         )}
                                                     </div>
 
                                                     {lesson.duration_minutes > 0 && (
-                                                        <div className="flex items-center gap-1 text-sm text-[var(--cl-muted)]">
+                                                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                                             <Clock className="h-4 w-4" />
                                                             <span>{lesson.duration_minutes}m</span>
                                                         </div>

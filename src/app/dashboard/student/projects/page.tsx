@@ -78,7 +78,7 @@ export default async function StudentProjectsPage() {
     .sort((a: any, b: any) => new Date(b.repo_analytics.analyzed_at).getTime() - new Date(a.repo_analytics.analyzed_at).getTime())[0] as any;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={{ id: '1', full_name: 'Student', role: 'student', avatar_url: '' }} />
       <div className="flex">
         <Sidebar role="student" />
@@ -87,24 +87,24 @@ export default async function StudentProjectsPage() {
 
             {/* Header */}
             <div className="mb-8">
-              <div className="flex items-center gap-2 text-[var(--cl-primary)] font-semibold text-[10px] uppercase tracking-[0.2em] mb-2">
+              <div className="flex items-center gap-2 text-accent-purple font-semibold text-[10px] uppercase tracking-[0.2em] mb-2">
                 <GitBranch className="w-4 h-4" />
                 Clario Project Hub
               </div>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-none">Your Engineering Roadmap.</h1>
-              <p className="text-[var(--cl-muted)] mt-2 font-medium">Build, commit, and master your technical skills.</p>
+              <p className="text-muted-foreground mt-2 font-medium">Build, commit, and master your technical skills.</p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
               {[
-                { label: 'Assigned', value: totalAssigned, color: 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]', text: 'text-[var(--cl-ink)]' },
-                { label: 'Completed', value: totalSubmitted, color: 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]', text: 'text-[var(--cl-ink)]' },
-                { label: 'Pending', value: totalPending, color: 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]', text: 'text-[var(--cl-warning)]' },
-                { label: 'Avg. Quality Grade', value: grade ?? '—', color: 'bg-[var(--cl-primary)] border-[var(--cl-primary)]', text: 'text-[var(--cl-on-dark)]' },
+                { label: 'Assigned', value: totalAssigned, color: 'bg-card border-border', text: 'text-foreground' },
+                { label: 'Completed', value: totalSubmitted, color: 'bg-card border-border', text: 'text-foreground' },
+                { label: 'Pending', value: totalPending, color: 'bg-card border-border', text: 'text-amber-600' },
+                { label: 'Avg. Quality Grade', value: grade ?? '—', color: 'bg-primary border-accent-purple', text: 'text-white' },
               ].map(({ label, value, color, text }) => (
-                <div key={label} className={`${color} border rounded-[var(--cl-r-xl)] p-6`}>
-                  <p className={`text-3xl font-semibold italic ${text || 'text-[var(--cl-ink)]'}`}>{value}</p>
+                <div key={label} className={`${color} border rounded-xl p-6`}>
+                  <p className={`text-3xl font-semibold italic ${text || 'text-foreground'}`}>{value}</p>
                   <p className="text-[10px] font-semibold uppercase tracking-widest mt-1 opacity-60">{label}</p>
                 </div>
               ))}
@@ -115,10 +115,10 @@ export default async function StudentProjectsPage() {
               
               {/* Projects List */}
               <div className="lg:col-span-2 space-y-4">
-                <h3 className="text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-widest px-1">Current Assignments</h3>
+                <h3 className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-widest px-1">Current Assignments</h3>
                 {(!assignedRows || assignedRows.length === 0) ? (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-12 text-center">
-                    <p className="text-[var(--cl-muted-soft)] font-semibold italic">No active projects yet.</p>
+                  <div className="bg-card rounded-xl border border-border p-12 text-center">
+                    <p className="text-muted-foreground/70 font-semibold italic">No active projects yet.</p>
                   </div>
                 ) : (
                   assignedRows.map((row) => {
@@ -129,24 +129,24 @@ export default async function StudentProjectsPage() {
                     
                     return (
                       <Link key={row.assignment_id} href={`/dashboard/student/projects/${row.assignment_id}`}
-                        className="group bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] p-6 rounded-[2rem] hover:border-[var(--cl-primary)] transition-all flex items-center justify-between">
+                        className="group bg-card border border-border p-6 rounded-[2rem] hover:border-accent-purple transition-all flex items-center justify-between">
                         <div className="flex gap-5 items-center">
-                           <div className="w-12 h-12 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] flex items-center justify-center group-hover:bg-[var(--cl-primary)] group-hover:text-[var(--cl-on-dark)] transition-all">
+                           <div className="w-12 h-12 rounded-xl bg-accent-purple/10 text-accent-purple flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                               <GitBranch size={20} />
                            </div>
                            <div>
-                              <h4 className="text-lg font-semibold text-[var(--cl-ink)]">{a.title}</h4>
-                              <p className="text-xs font-semibold text-[var(--cl-muted-soft)] uppercase tracking-widest mt-1">Deadline: {a.deadline ? new Date(a.deadline).toLocaleDateString() : 'No limit'}</p>
+                              <h4 className="text-lg font-semibold text-foreground">{a.title}</h4>
+                              <p className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-widest mt-1">Deadline: {a.deadline ? new Date(a.deadline).toLocaleDateString() : 'No limit'}</p>
                            </div>
                         </div>
                         <div className="flex items-center gap-6">
                            {evaluation && (
                              <div className="text-right">
-                                <p className="text-xl font-semibold text-[var(--cl-primary)] italic leading-none">{evaluation.score}/{a.max_score}</p>
-                                <p className="text-[10px] font-semibold text-[var(--cl-muted-soft)] uppercase mt-1">Grade</p>
+                                <p className="text-xl font-semibold text-accent-purple italic leading-none">{evaluation.score}/{a.max_score}</p>
+                                <p className="text-[10px] font-semibold text-muted-foreground/70 uppercase mt-1">Grade</p>
                              </div>
                            )}
-                           <div className="w-10 h-10 rounded-full border border-[var(--cl-hairline)] flex items-center justify-center text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-primary)] group-hover:border-[var(--cl-primary)] transition-all">
+                           <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground/70 group-hover:text-accent-purple group-hover:border-accent-purple transition-all">
                               <ArrowRight size={18} />
                            </div>
                         </div>
@@ -158,23 +158,23 @@ export default async function StudentProjectsPage() {
 
               {/* GitHub Insights Sidebar */}
               <div className="space-y-6">
-                 <div className="bg-[var(--cl-surface-inverse)] rounded-[2.5rem] p-8 text-[var(--cl-on-dark)] relative overflow-hidden">
+                 <div className="bg-neutral-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
                     <div className="relative z-10">
                       <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] flex items-center justify-center">
-                          <GitBranch className="text-[var(--cl-primary)] w-5 h-5" />
+                        <div className="w-10 h-10 rounded-lg bg-card border border-accent-purple flex items-center justify-center">
+                          <GitBranch className="text-accent-purple w-5 h-5" />
                         </div>
                         <h4 className="text-sm font-semibold uppercase tracking-widest">GitHub Intelligence</h4>
                       </div>
                       
                       <div className="space-y-6">
                         <div className="grid grid-cols-2 gap-3 text-center">
-                          <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] p-4">
-                            <p className="text-[10px] font-semibold uppercase text-[var(--cl-muted)] mb-1">Commits</p>
+                          <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl p-4">
+                            <p className="text-[10px] font-semibold uppercase text-muted-foreground mb-1">Commits</p>
                             <p className="text-xl font-semibold italic">{totalCommits.toLocaleString()}</p>
                           </div>
-                          <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] p-4">
-                            <p className="text-[10px] font-semibold uppercase text-[var(--cl-muted)] mb-1">Avg. Score</p>
+                          <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl p-4">
+                            <p className="text-[10px] font-semibold uppercase text-muted-foreground mb-1">Avg. Score</p>
                             <p className="text-xl font-semibold italic">{avgScore ?? '—'}</p>
                           </div>
                         </div>
@@ -189,9 +189,9 @@ export default async function StudentProjectsPage() {
                     </div>
                  </div>
 
-                 <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[2.5rem] p-8">
-                    <h4 className="text-sm font-semibold text-[var(--cl-ink)] uppercase tracking-widest mb-6">Mentor Feedback</h4>
-                    <div className="p-5 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] italic font-medium text-[var(--cl-body)] text-xs leading-relaxed">
+                 <div className="bg-card border border-border rounded-[2.5rem] p-8">
+                    <h4 className="text-sm font-semibold text-foreground uppercase tracking-widest mb-6">Mentor Feedback</h4>
+                    <div className="p-5 bg-muted/40 rounded-xl border border-border italic font-medium text-foreground/80 text-xs leading-relaxed">
                        {latestFeedback?.feedback
                          ? `"${latestFeedback.feedback}"`
                          : 'No feedback yet — check back after your mentor reviews a submission.'}
@@ -202,14 +202,14 @@ export default async function StudentProjectsPage() {
             </div>
 
             {/* Repository Explorer Section */}
-            <div className="mt-16 pt-8 border-t border-[var(--cl-hairline)]">
+            <div className="mt-16 pt-8 border-t border-border">
               <div className="mb-8">
-                <div className="flex items-center gap-2 text-[var(--cl-info)] font-semibold text-[10px] uppercase tracking-[0.2em] mb-2">
+                <div className="flex items-center gap-2 text-accent-purple font-semibold text-[10px] uppercase tracking-[0.2em] mb-2">
                   <Code className="w-4 h-4" />
                   Source Code & Repository
                 </div>
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Explore Your Project Code</h2>
-                <p className="text-[var(--cl-muted)] mt-2 font-medium">Browse repository structures, source code roadmap, and view files directly from GitHub.</p>
+                <h2 className="text-2xl font-semibold text-foreground">Explore Your Project Code</h2>
+                <p className="text-muted-foreground mt-2 font-medium">Browse repository structures, source code roadmap, and view files directly from GitHub.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -225,17 +225,17 @@ export default async function StudentProjectsPage() {
                       return (
                         <div
                           key={row.assignment_id}
-                          className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] transition overflow-hidden"
+                          className="bg-card border border-border rounded-xl transition overflow-hidden"
                         >
                           {/* Header */}
-                          <div className="px-6 py-4 border-b border-[var(--cl-hairline)] bg-[rgba(13,116,206,0.12)]">
+                          <div className="px-6 py-4 border-b border-border bg-accent-purple/10">
                             <div className="flex items-start gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-[var(--cl-info)] text-[var(--cl-on-dark)] flex items-center justify-center">
+                              <div className="w-10 h-10 rounded-lg bg-accent-purple text-white flex items-center justify-center">
                                 <Code className="w-5 h-5" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold text-[var(--cl-ink)] text-sm truncate">{a.title}</h4>
-                                <p className="text-xs text-[var(--cl-muted)] mt-1 truncate">
+                                <h4 className="font-semibold text-foreground text-sm truncate">{a.title}</h4>
+                                <p className="text-xs text-muted-foreground mt-1 truncate">
                                   {submission.repo_full_name}
                                 </p>
                               </div>
@@ -243,7 +243,7 @@ export default async function StudentProjectsPage() {
                           </div>
 
                           {/* Description */}
-                          <div className="px-6 py-3 text-xs text-[var(--cl-body)] line-clamp-2 border-b border-[var(--cl-hairline)]">
+                          <div className="px-6 py-3 text-xs text-foreground/80 line-clamp-2 border-b border-border">
                             {a.description || 'View source code and explore repository structure'}
                           </div>
 
@@ -251,7 +251,7 @@ export default async function StudentProjectsPage() {
                           <div className="p-4 flex gap-2">
                             <Link
                               href={`/dashboard/student/projects/${row.assignment_id}`}
-                              className="flex-1 px-3 py-2 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-lg hover:bg-[rgba(13,116,206,0.12)] transition text-xs font-semibold text-center flex items-center justify-center gap-1"
+                              className="flex-1 px-3 py-2 bg-accent-purple/10 text-accent-purple rounded-lg hover:bg-accent-purple/10 transition text-xs font-semibold text-center flex items-center justify-center gap-1"
                             >
                               <Code className="w-3 h-3" />
                               View Analytics
@@ -260,7 +260,7 @@ export default async function StudentProjectsPage() {
                               href={submission.repo_url || `https://github.com/${submission.repo_full_name}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 px-3 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg hover:bg-[var(--cl-surface-strong)] transition text-xs font-semibold text-center flex items-center justify-center gap-1"
+                              className="flex-1 px-3 py-2 bg-muted text-foreground/80 rounded-lg hover:bg-muted transition text-xs font-semibold text-center flex items-center justify-center gap-1"
                             >
                               <ExternalLink className="w-3 h-3" />
                               Open on GitHub
@@ -270,10 +270,10 @@ export default async function StudentProjectsPage() {
                       );
                     })
                 ) : (
-                  <div className="col-span-full bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-12 text-center">
-                    <Code className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
-                    <p className="text-[var(--cl-muted)] font-medium">No projects with repositories yet</p>
-                    <p className="text-xs text-[var(--cl-muted-soft)] mt-1">Link a GitHub repository to any project to explore its source code</p>
+                  <div className="col-span-full bg-card rounded-xl border border-border p-12 text-center">
+                    <Code className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+                    <p className="text-muted-foreground font-medium">No projects with repositories yet</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">Link a GitHub repository to any project to explore its source code</p>
                   </div>
                 )}
               </div>

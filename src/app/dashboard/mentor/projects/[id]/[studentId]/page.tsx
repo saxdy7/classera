@@ -84,7 +84,7 @@ export default async function StudentProjectReviewPage({
   const peerNames = Object.fromEntries((peers ?? []).map((p) => [p.id, p.full_name]));
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -93,14 +93,14 @@ export default async function StudentProjectReviewPage({
             {/* Back */}
             <Link
               href={`/dashboard/mentor/projects/${assignmentId}`}
-              className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Assignment
             </Link>
 
             {/* Header card */}
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <div className="flex items-start gap-5 flex-wrap">
                 {/* Student avatar */}
                 {student.avatar_url ? (
@@ -109,10 +109,10 @@ export default async function StudentProjectReviewPage({
                     alt={student.full_name}
                     width={64}
                     height={64}
-                    className="w-16 h-16 rounded-[var(--cl-r-xl)] object-cover border border-[var(--cl-hairline)] flex-shrink-0"
+                    className="w-16 h-16 rounded-xl object-cover border border-border flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-primary-soft)] flex items-center justify-center text-xl font-semibold text-[var(--cl-primary)] flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl bg-accent-purple/10 flex items-center justify-center text-xl font-semibold text-accent-purple flex-shrink-0">
                     {student.full_name[0]?.toUpperCase()}
                   </div>
                 )}
@@ -121,29 +121,29 @@ export default async function StudentProjectReviewPage({
                   <div className="flex items-center gap-3 flex-wrap">
                     <h1 className="text-3xl font-semibold tracking-tight text-foreground">{student.full_name}</h1>
                     {evaluation?.score !== null && evaluation?.score !== undefined && (
-                      <span className="text-sm font-semibold px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full">
+                      <span className="text-sm font-semibold px-3 py-1 bg-accent-purple/10 text-accent-purple rounded-full">
                         {evaluation.score}/{assignment.max_score}
                       </span>
                     )}
                   </div>
-                  <p className="text-[var(--cl-muted)] text-sm mt-0.5">{student.email}</p>
+                  <p className="text-muted-foreground text-sm mt-0.5">{student.email}</p>
                   {student.specialization_board && (
-                    <p className="text-[var(--cl-muted)] text-sm">{student.specialization_board}</p>
+                    <p className="text-muted-foreground text-sm">{student.specialization_board}</p>
                   )}
 
                   {/* Submission link */}
                   <div className="flex items-center gap-3 mt-3 flex-wrap">
                     {assignment.submission_type === 'github' && (
                       <>
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-on-dark)]">
-                          <GitBranch className="w-3.5 h-3.5 text-[var(--cl-muted-soft)]" />
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 rounded-lg text-sm text-white">
+                          <GitBranch className="w-3.5 h-3.5 text-muted-foreground/70" />
                           <span className="font-mono">{submission.repo_full_name}</span>
                         </div>
                         <a
                           href={`https://github.com/${submission.repo_full_name}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] transition-colors"
+                          className="flex items-center gap-1.5 text-sm text-accent-purple hover:text-accent-purple transition-colors"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           Open on GitHub
@@ -155,7 +155,7 @@ export default async function StudentProjectReviewPage({
                         href={submission.submission_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline break-all"
+                        className="flex items-center gap-1.5 text-sm text-accent-purple hover:underline break-all"
                       >
                         <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                         {submission.submission_url}
@@ -166,7 +166,7 @@ export default async function StudentProjectReviewPage({
                         href={submission.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline"
+                        className="flex items-center gap-1.5 text-sm text-accent-purple hover:underline"
                       >
                         <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                         {submission.file_name ?? 'View uploaded file'}
@@ -177,7 +177,7 @@ export default async function StudentProjectReviewPage({
                         href={submission.deploy_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:underline"
+                        className="flex items-center gap-1.5 text-sm text-accent-purple hover:underline"
                       >
                         <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                         Live site
@@ -185,13 +185,13 @@ export default async function StudentProjectReviewPage({
                     )}
                   </div>
                   {assignment.submission_type === 'written' && submission.submission_text && (
-                    <p className="mt-3 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-body)] whitespace-pre-line">
+                    <p className="mt-3 p-3 bg-muted/40 rounded-lg text-sm text-foreground/80 whitespace-pre-line">
                       {submission.submission_text}
                     </p>
                   )}
                 </div>
 
-                <div className="flex flex-col items-end gap-1 text-xs text-[var(--cl-muted-soft)] flex-shrink-0">
+                <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground/70 flex-shrink-0">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
                     Submitted {new Date(submission.submitted_at).toLocaleDateString('en-US', {
@@ -201,7 +201,7 @@ export default async function StudentProjectReviewPage({
                     })}
                   </span>
                   {analytics?.analyzed_at && (
-                    <span className="text-[var(--cl-muted)]">
+                    <span className="text-muted-foreground">
                       Analyzed {new Date(analytics.analyzed_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',

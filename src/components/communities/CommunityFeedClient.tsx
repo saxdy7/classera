@@ -29,14 +29,14 @@ export function CommunityFeedClient({ communityId, userId, userRole, isMentor }:
       <div className="mb-6">
         <button
           onClick={() => setShowCreatePost(true)}
-          className="w-full px-6 py-4 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] text-left hover:border-[var(--cl-primary)] hover:bg-[var(--cl-surface-card)] transition-all group"
+          className="w-full px-6 py-4 bg-card border-2 border-border rounded-xl text-left hover:border-accent-purple hover:bg-card transition-all group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold bg-primary">
               <Plus className="w-6 h-6" />
             </div>
             <div className="flex-1">
-              <span className="text-[var(--cl-muted)] group-hover:text-[var(--cl-primary)] transition-colors">
+              <span className="text-muted-foreground group-hover:text-accent-purple transition-colors">
                 What's on your mind? Share with the community...
               </span>
             </div>

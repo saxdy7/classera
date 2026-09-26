@@ -63,12 +63,12 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-[rgba(239,68,68,0.12)]">
-          <div className="max-w-2xl w-full bg-[var(--cl-surface-card)] rounded-lg p-8">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-destructive/10">
+          <div className="max-w-2xl w-full bg-card rounded-lg p-8">
             {/* Icon */}
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-[rgba(239,68,68,0.12)] rounded-full flex items-center justify-center">
-                <AlertTriangle className="w-10 h-10 text-[var(--cl-error)]" />
+              <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-10 h-10 text-destructive" />
               </div>
             </div>
 
@@ -78,26 +78,26 @@ export class ErrorBoundary extends Component<Props, State> {
             </h1>
 
             {/* Description */}
-            <p className="text-center text-[var(--cl-body)] mb-6">
+            <p className="text-center text-foreground/80 mb-6">
               We encountered an unexpected error. Don't worry, our team has been notified
               and we're working on it.
             </p>
 
             {/* Error Details (only in development) */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mb-6 p-4 bg-[var(--cl-surface-strong)] rounded-lg border border-[var(--cl-hairline)]">
-                <h3 className="text-sm font-semibold text-[var(--cl-ink)] mb-2">
+              <div className="mb-6 p-4 bg-muted rounded-lg border border-border">
+                <h3 className="text-sm font-semibold text-foreground mb-2">
                   Error Details (Development Only)
                 </h3>
-                <p className="text-sm text-[var(--cl-error)] font-mono mb-2">
+                <p className="text-sm text-destructive font-mono mb-2">
                   {this.state.error.toString()}
                 </p>
                 {this.state.errorInfo && (
                   <details className="mt-2">
-                    <summary className="text-sm text-[var(--cl-body)] cursor-pointer hover:text-[var(--cl-ink)]">
+                    <summary className="text-sm text-foreground/80 cursor-pointer hover:text-foreground">
                       Component Stack
                     </summary>
-                    <pre className="mt-2 text-xs text-[var(--cl-body)] overflow-auto max-h-64 p-2 bg-[var(--cl-surface-card)] rounded">
+                    <pre className="mt-2 text-xs text-foreground/80 overflow-auto max-h-64 p-2 bg-card rounded">
                       {this.state.errorInfo.componentStack}
                     </pre>
                   </details>
@@ -126,11 +126,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Help Text */}
             <div className="mt-8 text-center">
-              <p className="text-sm text-[var(--cl-muted)]">
+              <p className="text-sm text-muted-foreground">
                 If the problem persists, please{' '}
                 <a
                   href="/contact"
-                  className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] underline"
+                  className="text-accent-purple hover:text-accent-purple underline"
                 >
                   contact support
                 </a>

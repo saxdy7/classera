@@ -71,7 +71,7 @@ export default async function StudentCommunityDetailPage({
     const isMuted = muteStatus && (!muteStatus.muted_until || new Date(muteStatus.muted_until) > new Date());
 
     return (
-        <div className="min-h-screen bg-[var(--cl-surface-card)]">
+        <div className="min-h-screen bg-card">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="student" />
@@ -80,31 +80,31 @@ export default async function StudentCommunityDetailPage({
                         {/* Back Button */}
                         <Link
                             href="/dashboard/student/communities"
-                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             Back to Communities
                         </Link>
 
                         {/* Community Header */}
-                        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-8 mb-6">
+                        <div className="bg-card rounded-xl border border-border p-8 mb-6">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] text-3xl font-semibold bg-[var(--cl-primary)]">
+                                    <div className="w-20 h-20 rounded-xl flex items-center justify-center text-white text-3xl font-semibold bg-primary">
                                         {community.name.charAt(0)}
                                     </div>
                                     <div>
                                         <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                                             {community.name}
                                         </h1>
-                                        <p className="text-[var(--cl-body)] mb-3">{community.description}</p>
+                                        <p className="text-foreground/80 mb-3">{community.description}</p>
                                         <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2 text-sm text-[var(--cl-body)]">
+                                            <div className="flex items-center gap-2 text-sm text-foreground/80">
                                                 <Users className="w-4 h-4" />
                                                 <span>{memberCount} members</span>
                                             </div>
-                                            <div className="text-sm text-[var(--cl-muted)]">
-                                                Mentor: <span className="font-semibold text-[var(--cl-body)]">{community.mentor?.full_name}</span>
+                                            <div className="text-sm text-muted-foreground">
+                                                Mentor: <span className="font-semibold text-foreground/80">{community.mentor?.full_name}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -113,12 +113,12 @@ export default async function StudentCommunityDetailPage({
                         </div>
 
                         {/* Tab Navigation */}
-                        <div className="flex gap-2 mb-6 border-b border-[var(--cl-hairline)]">
+                        <div className="flex gap-2 mb-6 border-b border-border">
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=feed`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'feed'
-                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
-                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
+                                    ? 'text-accent-purple border-b-2 border-accent-purple'
+                                    : 'text-foreground/80 hover:text-foreground'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">
@@ -129,8 +129,8 @@ export default async function StudentCommunityDetailPage({
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=chat`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'chat'
-                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
-                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
+                                    ? 'text-accent-purple border-b-2 border-accent-purple'
+                                    : 'text-foreground/80 hover:text-foreground'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">
@@ -141,8 +141,8 @@ export default async function StudentCommunityDetailPage({
                             <Link
                                 href={`/dashboard/student/communities/${id}?tab=members`}
                                 className={`px-6 py-3 font-semibold transition-colors ${tab === 'members'
-                                    ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]'
-                                    : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'
+                                    ? 'text-accent-purple border-b-2 border-accent-purple'
+                                    : 'text-foreground/80 hover:text-foreground'
                                     }`}
                             >
                                 <div className="flex items-center gap-2">

@@ -85,21 +85,21 @@ export default async function PortfolioPage({
   const completedProjects = projects.length;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas)]">
+    <div className="min-h-screen bg-background">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Hero Section */}
-        <div className="bg-[var(--cl-surface-card)] rounded-lg p-12 mb-12">
+        <div className="bg-card rounded-lg p-12 mb-12">
           <div className="flex items-start justify-between gap-8 mb-8">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 {user.full_name}
               </h1>
-              <p className="text-lg text-[var(--cl-body)] mb-4">
+              <p className="text-lg text-foreground/80 mb-4">
                 {user.email}
               </p>
-              <p className="text-[var(--cl-body)] max-w-2xl">
+              <p className="text-foreground/80 max-w-2xl">
                 {user.bio || 'Software developer passionate about building innovative solutions'}
               </p>
             </div>
@@ -113,49 +113,49 @@ export default async function PortfolioPage({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-[var(--cl-hairline)]">
+          <div className="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
             <div className="text-center">
-              <div className="text-3xl font-semibold text-[var(--cl-info)]">{totalProjects}</div>
-              <p className="text-sm text-[var(--cl-body)] mt-1">Total Projects</p>
+              <div className="text-3xl font-semibold text-accent-purple">{totalProjects}</div>
+              <p className="text-sm text-foreground/80 mt-1">Total Projects</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-semibold text-[var(--cl-success)]">{completedProjects}</div>
-              <p className="text-sm text-[var(--cl-body)] mt-1">Completed</p>
+              <div className="text-3xl font-semibold text-green-600">{completedProjects}</div>
+              <p className="text-sm text-foreground/80 mt-1">Completed</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-semibold text-[var(--cl-warning)]">{achievements?.length || 0}</div>
-              <p className="text-sm text-[var(--cl-body)] mt-1">Achievements</p>
+              <div className="text-3xl font-semibold text-amber-600">{achievements?.length || 0}</div>
+              <p className="text-sm text-foreground/80 mt-1">Achievements</p>
             </div>
           </div>
         </div>
 
         {/* Projects Section */}
         <div className="mb-12">
-          <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-6">Featured Projects</h2>
+          <h2 className="text-3xl font-semibold text-foreground mb-6">Featured Projects</h2>
 
           {projects.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-[var(--cl-surface-card)] rounded-lg transition p-6"
+                  className="bg-card rounded-lg transition p-6"
                 >
-                  <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {project.title}
                   </h3>
-                  <p className="text-sm text-[var(--cl-body)] mb-4 line-clamp-3">
+                  <p className="text-sm text-foreground/80 mb-4 line-clamp-3">
                     {project.description}
                   </p>
 
                   {/* Tech Stack */}
                   {project.technologies && project.technologies.length > 0 && (
                     <div className="mb-4">
-                      <p className="text-xs text-[var(--cl-muted)] font-medium mb-2">Tech Stack</p>
+                      <p className="text-xs text-muted-foreground font-medium mb-2">Tech Stack</p>
                       <div className="flex flex-wrap gap-2">
                         {project.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="inline-block px-2.5 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded text-xs font-medium"
+                            className="inline-block px-2.5 py-1 bg-accent-purple/10 text-accent-purple rounded text-xs font-medium"
                           >
                             {tech}
                           </span>
@@ -174,13 +174,13 @@ export default async function PortfolioPage({
                             size={16}
                             className={
                               i <= Math.round((project.score! / project.max_score) * 5)
-                                ? 'fill-[var(--cl-warning)] text-[var(--cl-warning)]'
-                                : 'text-[var(--cl-muted-soft)]'
+                                ? 'fill-[var(--cl-warning)] text-amber-600'
+                                : 'text-muted-foreground/70'
                             }
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-[var(--cl-body)]">
+                      <span className="text-sm text-foreground/80">
                         {project.score}/{project.max_score}
                       </span>
                     </div>
@@ -193,7 +193,7 @@ export default async function PortfolioPage({
                         href={project.submission.repo_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] rounded hover:bg-[var(--cl-surface-inverse)] transition text-sm font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-neutral-900 text-white rounded hover:bg-neutral-900 transition text-sm font-medium"
                       >
                         <Github size={16} />
                         Code
@@ -204,7 +204,7 @@ export default async function PortfolioPage({
                         href={project.submission.deploy_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[var(--cl-info)] text-[var(--cl-on-dark)] rounded hover:bg-[var(--cl-info)] transition text-sm font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-accent-purple text-white rounded hover:bg-accent-purple transition text-sm font-medium"
                       >
                         <ExternalLink size={16} />
                         Live
@@ -215,22 +215,22 @@ export default async function PortfolioPage({
               ))}
             </div>
           ) : (
-            <div className="bg-[var(--cl-surface-card)] rounded-lg p-12 text-center">
-              <Code2 size={48} className="text-[var(--cl-muted-soft)] mx-auto mb-4" />
-              <p className="text-[var(--cl-body)]">No completed projects yet</p>
+            <div className="bg-card rounded-lg p-12 text-center">
+              <Code2 size={48} className="text-muted-foreground/70 mx-auto mb-4" />
+              <p className="text-foreground/80">No completed projects yet</p>
             </div>
           )}
         </div>
 
         {/* Contact CTA */}
-        <div className="rounded-lg p-8 text-[var(--cl-on-dark)] text-center bg-[var(--cl-info)]">
+        <div className="rounded-lg p-8 text-white text-center bg-accent-purple">
           <h3 className="text-2xl font-semibold mb-2">Interested in collaborating?</h3>
-          <p className="mb-4 text-[var(--cl-info)]">
+          <p className="mb-4 text-accent-purple">
             Reach out to discuss opportunities or learn more about these projects
           </p>
           <a
             href={`mailto:${user.email}`}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--cl-surface-card)] text-[var(--cl-info)] font-semibold rounded-lg hover:bg-[rgba(13,116,206,0.12)] transition"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-card text-accent-purple font-semibold rounded-lg hover:bg-accent-purple/10 transition"
           >
             <Mail size={20} />
             Contact {user.full_name}

@@ -61,23 +61,23 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-md w-full">
+            <div className="bg-card rounded-xl max-w-md w-full">
                 {/* Header */}
-                <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center justify-between">
+                <div className="p-6 border-b border-border flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
-                            <UserX className="w-5 h-5 text-[var(--cl-error)]" />
+                        <div className="w-10 h-10 bg-destructive/10 rounded-lg flex items-center justify-center">
+                            <UserX className="w-5 h-5 text-destructive" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Mute User</h2>
-                            <p className="text-sm text-[var(--cl-body)]">Mute {userName}</p>
+                            <h2 className="text-xl font-semibold text-foreground">Mute User</h2>
+                            <p className="text-sm text-foreground/80">Mute {userName}</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors"
                     >
-                        <X className="w-5 h-5 text-[var(--cl-body)]" />
+                        <X className="w-5 h-5 text-foreground/80" />
                     </button>
                 </div>
 
@@ -85,7 +85,7 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
                 <div className="p-6 space-y-4">
                     {/* Duration Selection */}
                     <div>
-                        <label className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                        <label className="block text-sm font-semibold text-foreground/80 mb-2">
                             Mute Duration
                         </label>
                         <div className="grid grid-cols-2 gap-2">
@@ -93,9 +93,9 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
                                 <button
                                     key={dur}
                                     onClick={() => setDuration(dur)}
-                                    className={`px-4 py-3 rounded-[var(--cl-r-lg)] font-medium transition-colors ${duration === dur
-                                            ? 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] border-2 border-[var(--cl-error)]'
-                                            : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)] border-2 border-transparent hover:bg-[var(--cl-surface-strong)]'
+                                    className={`px-4 py-3 rounded-lg font-medium transition-colors ${duration === dur
+                                            ? 'bg-destructive/10 text-destructive border-2 border-destructive'
+                                            : 'bg-muted text-foreground/80 border-2 border-transparent hover:bg-muted'
                                         }`}
                                 >
                                     {getDurationLabel(dur)}
@@ -106,7 +106,7 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
 
                     {/* Reason */}
                     <div>
-                        <label htmlFor="reason" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                        <label htmlFor="reason" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Reason (Optional)
                         </label>
                         <textarea
@@ -114,32 +114,32 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
                             rows={3}
-                            className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-error)] focus:border-transparent resize-none"
+                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-[var(--cl-error)] focus:border-transparent resize-none"
                             placeholder="Why are you muting this user?"
                         />
                     </div>
 
                     {/* Warning */}
-                    <div className="p-4 bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-[var(--cl-r-lg)]">
-                        <p className="text-sm text-[var(--cl-warning)]">
+                    <div className="p-4 bg-amber-500/10 border border-amber-500 rounded-lg">
+                        <p className="text-sm text-amber-600">
                             <strong>Note:</strong> The user will not be able to post messages in this community for the selected duration.
                         </p>
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-[var(--cl-hairline)] flex items-center justify-end gap-3">
+                <div className="p-6 border-t border-border flex items-center justify-end gap-3">
                     <button
                         onClick={onClose}
                         disabled={processing}
-                        className="px-6 py-2.5 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-semibold transition-colors disabled:opacity-50"
+                        className="px-6 py-2.5 bg-muted hover:bg-muted text-foreground/80 rounded-lg font-semibold transition-colors disabled:opacity-50"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleMute}
                         disabled={processing}
-                        className="px-6 py-2.5 bg-[var(--cl-error)] hover:bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className="px-6 py-2.5 bg-destructive hover:bg-destructive text-white rounded-lg font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
                     >
                         {processing ? (
                             <>

@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/shared/Sidebar';
 import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import RealCalendar from '@/components/shared/RealCalendar';
 import { StatCard, SectionHeader, GradientCard, EmptyState, getGreeting, gradientFor, primaryButton, outlineButton } from '@/components/shell';
+import { Stagger, ScrollReveal } from '@/components/motion';
 import { ScoreTrendChart } from '@/components/dashboard/ScoreTrendChart';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -202,12 +203,12 @@ export default async function StudentDashboard() {
             </Link>
 
             {/* ── Stats ── */}
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <Stagger className="grid grid-cols-2 gap-4 lg:grid-cols-4" each={0.06}>
               <StatCard label="Courses" value={courseCount} icon={BookOpen} href="/dashboard/student/courses" />
               <StatCard label="Tests taken" value={submissions.length || 0} icon={ClipboardCheck} href="/dashboard/student/tests" />
               <StatCard label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Target} href="/dashboard/student/tests" />
               <StatCard label="Sessions" value={sessionCount} icon={MessageSquare} href="/dashboard/student/sessions" />
-            </div>
+            </Stagger>
 
             {/* ── Quick actions — looma "My Workspaces" gradient grid ── */}
             <section className="space-y-4">
@@ -216,11 +217,11 @@ export default async function StudentDashboard() {
                 title="Quick actions"
                 description="Jump back into the tools you use most."
               />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" each={0.07}>
                 {quickActions.map((a, i) => (
                   <GradientCard key={a.href} href={a.href} index={i + 2} icon={a.icon} title={a.title} subtitle={a.subtitle} footerLeft="Open" footerRight="→" />
                 ))}
-              </div>
+              </Stagger>
             </section>
 
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
@@ -266,7 +267,7 @@ export default async function StudentDashboard() {
                 </div>
 
                 {/* ── Recommended mentors — looma gradient cards ── */}
-                <section className="space-y-4">
+                <ScrollReveal className="space-y-4">
                   <SectionHeader
                     icon={Users}
                     title="Recommended mentors"
@@ -309,7 +310,7 @@ export default async function StudentDashboard() {
                 </section>
 
                 {/* ── Recent messages — list rows ── */}
-                <section className="space-y-4">
+                <ScrollReveal className="space-y-4">
                   <SectionHeader
                     icon={MessageSquare}
                     title="Recent messages"

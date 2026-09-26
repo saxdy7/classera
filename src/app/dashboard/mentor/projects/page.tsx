@@ -44,13 +44,13 @@ export default async function MentorProjectsPage() {
   const list = (assignments ?? []) as unknown as Assignment[];
 
   function getStatusConfig(a: Assignment) {
-    if (!a.is_active) return { label: 'Closed', cls: 'bg-[var(--cl-surface-strong)] text-[var(--cl-muted)] border-[var(--cl-hairline)]' };
-    if (a.deadline && new Date(a.deadline) < new Date()) return { label: 'Expired', cls: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] border-[var(--cl-error)]' };
+    if (!a.is_active) return { label: 'Closed', cls: 'bg-muted text-muted-foreground border-border' };
+    if (a.deadline && new Date(a.deadline) < new Date()) return { label: 'Expired', cls: 'bg-destructive/10 text-destructive border-destructive' };
     const subCount = a.assignment_submissions[0]?.count ?? 0;
     const studentCount = a.assignment_students[0]?.count ?? 0;
-    if (subCount > 0 && subCount >= studentCount) return { label: 'All Submitted', cls: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] border-[var(--cl-success)]' };
-    if (subCount > 0) return { label: 'In Progress', cls: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] border-[var(--cl-info)]' };
-    return { label: 'Active', cls: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] border-[var(--cl-primary)]' };
+    if (subCount > 0 && subCount >= studentCount) return { label: 'All Submitted', cls: 'bg-green-500/10 text-green-600 border-green-600' };
+    if (subCount > 0) return { label: 'In Progress', cls: 'bg-accent-purple/10 text-accent-purple border-accent-purple' };
+    return { label: 'Active', cls: 'bg-accent-purple/10 text-accent-purple border-accent-purple' };
   }
 
   const totalStudents = list.reduce((s, a) => s + (a.assignment_students[0]?.count ?? 0), 0);

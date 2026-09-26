@@ -17,7 +17,7 @@ export function LearningNav() {
     const isActive = (href: string) => pathname.startsWith(href);
 
     return (
-        <div className="bg-[var(--cl-surface-card)] border-b sticky top-0 z-40">
+        <div className="bg-card border-b sticky top-0 z-40">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Navigation Tabs */}
@@ -32,11 +32,11 @@ export function LearningNav() {
                                     href={item.href}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${active
                                             ? item.color === 'purple'
-                                                ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                                ? 'bg-accent-purple/10 text-accent-purple'
                                                 : item.color === 'blue'
-                                                    ? 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]'
-                                                    : 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
-                                            : 'text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                                    ? 'bg-accent-purple/10 text-accent-purple'
+                                                    : 'bg-green-500/10 text-green-600'
+                                            : 'text-foreground/80 hover:bg-muted'
                                         }`}
                                 >
                                     <Icon className="h-5 w-5" />
@@ -49,7 +49,7 @@ export function LearningNav() {
                     {/* AI Generate Button */}
                     <Button
                         variant="outline"
-                        className="flex items-center gap-2 border-[var(--cl-primary)] text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)]"
+                        className="flex items-center gap-2 border-accent-purple text-accent-purple hover:bg-accent-purple/10"
                     >
                         <Sparkles className="h-4 w-4" />
                         <span>AI Generate</span>

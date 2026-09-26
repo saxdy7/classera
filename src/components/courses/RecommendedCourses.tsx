@@ -79,10 +79,10 @@ export function RecommendedCourses() {
     if (loading) {
         return (
             <div className="space-y-6">
-                <div className="h-8 w-64 bg-[var(--cl-surface-strong)] rounded animate-pulse" />
+                <div className="h-8 w-64 bg-muted rounded animate-pulse" />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="h-64 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] animate-pulse" />
+                        <div key={i} className="h-64 bg-muted rounded-lg animate-pulse" />
                     ))}
                 </div>
             </div>
@@ -92,9 +92,9 @@ export function RecommendedCourses() {
     return (
         <div className="space-y-8">
             {/* AI Recommendations Header */}
-            <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] bg-[var(--cl-primary)]">
+            <div className="rounded-xl p-6 text-white bg-primary">
                 <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[rgba(255,255,255,0.2)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[rgba(255,255,255,0.2)] rounded-lg flex items-center justify-center">
                         <Sparkles className="w-6 h-6" />
                     </div>
                     <div>
@@ -121,7 +121,7 @@ export function RecommendedCourses() {
             {recommendations.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {recommendations.map(course => (
-                        <div key={course.id} className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] overflow-hidden transition-shadow">
+                        <div key={course.id} className="bg-card rounded-lg border border-border overflow-hidden transition-shadow">
                             <div className="relative h-40">
                                 <Image
                                     src={course.image}
@@ -131,8 +131,8 @@ export function RecommendedCourses() {
                                 />
                                 <div className="absolute top-3 right-3">
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${course.type === 'free'
-                                            ? 'bg-[var(--cl-success)] text-[var(--cl-on-dark)]'
-                                            : 'bg-[var(--cl-info)] text-[var(--cl-on-dark)]'
+                                            ? 'bg-green-600 text-white'
+                                            : 'bg-accent-purple text-white'
                                         }`}>
                                         {course.type === 'free' ? 'FREE' : course.price}
                                     </span>
@@ -141,23 +141,23 @@ export function RecommendedCourses() {
 
                             <div className="p-4">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-xs font-medium text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-0.5 rounded">
+                                    <span className="text-xs font-medium text-accent-purple bg-accent-purple/10 px-2 py-0.5 rounded">
                                         {course.platform}
                                     </span>
-                                    <span className="text-xs text-[var(--cl-muted)]">{course.level}</span>
+                                    <span className="text-xs text-muted-foreground">{course.level}</span>
                                 </div>
 
-                                <h3 className="font-semibold text-[var(--cl-ink)] mb-1 line-clamp-2">{course.title}</h3>
-                                <p className="text-sm text-[var(--cl-body)] mb-3">{course.instructor}</p>
+                                <h3 className="font-semibold text-foreground mb-1 line-clamp-2">{course.title}</h3>
+                                <p className="text-sm text-foreground/80 mb-3">{course.instructor}</p>
 
                                 <div className="flex items-center gap-2 mb-4">
-                                    <Star className="w-4 h-4 text-[var(--cl-warning)] fill-[var(--cl-warning)]" />
+                                    <Star className="w-4 h-4 text-amber-600 fill-[var(--cl-warning)]" />
                                     <span className="text-sm font-semibold">{course.rating}</span>
                                 </div>
 
                                 <div className="flex flex-wrap gap-1 mb-4">
                                     {course.skills.slice(0, 3).map(skill => (
-                                        <span key={skill} className="text-xs bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-0.5 rounded">
+                                        <span key={skill} className="text-xs bg-muted text-foreground/80 px-2 py-0.5 rounded">
                                             {skill}
                                         </span>
                                     ))}
@@ -166,7 +166,7 @@ export function RecommendedCourses() {
                                 <button
                                     onClick={() => handleEnroll(course)}
                                     disabled={enrolling === course.id}
-                                    className="w-full py-2 text-[var(--cl-on-dark)] rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
+                                    className="w-full py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 bg-primary"
                                 >
                                     {enrolling === course.id ? (
                                         'Enrolling...'
@@ -185,38 +185,38 @@ export function RecommendedCourses() {
 
             {/* Learning Path */}
             {learningPath.length > 0 && (
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
+                <div className="bg-card rounded-xl border border-border p-6">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded-[var(--cl-r-lg)] flex items-center justify-center bg-[var(--cl-info)]">
-                            <TrendingUp className="w-5 h-5 text-[var(--cl-on-dark)]" />
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-accent-purple">
+                            <TrendingUp className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Your Learning Path</h3>
-                            <p className="text-sm text-[var(--cl-body)]">{specialization} roadmap</p>
+                            <h3 className="text-lg font-semibold text-foreground">Your Learning Path</h3>
+                            <p className="text-sm text-foreground/80">{specialization} roadmap</p>
                         </div>
                     </div>
 
                     <div className="relative">
                         {/* Progress line */}
-                        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-[var(--cl-surface-strong)]" />
+                        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-muted" />
 
                         <div className="space-y-4">
                             {learningPath.map((step, index) => (
                                 <div key={step.step} className="flex items-start gap-4">
                                     <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm ${index === 0
-                                            ? 'bg-[var(--cl-success)] text-[var(--cl-on-dark)]'
-                                            : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
+                                            ? 'bg-green-600 text-white'
+                                            : 'bg-muted text-foreground/80'
                                         }`}>
                                         {index === 0 ? <CheckCircle className="w-5 h-5" /> : step.step}
                                     </div>
                                     <div className="flex-1 pb-4">
-                                        <h4 className="font-semibold text-[var(--cl-ink)]">{step.title}</h4>
-                                        <div className="flex items-center gap-4 text-sm text-[var(--cl-muted)] mt-1">
+                                        <h4 className="font-semibold text-foreground">{step.title}</h4>
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                                             <span className="flex items-center gap-1">
                                                 <Clock className="w-3 h-3" />
                                                 {step.duration}
                                             </span>
-                                            <span className="px-2 py-0.5 bg-[var(--cl-surface-strong)] rounded text-xs">
+                                            <span className="px-2 py-0.5 bg-muted rounded text-xs">
                                                 {step.level}
                                             </span>
                                         </div>

@@ -23,7 +23,7 @@ export function DeleteCommunityButton({ id }: { id: string }) {
         <button
             type="button"
             onClick={handleDelete}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--cl-error)] hover:bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-destructive hover:bg-destructive text-white rounded-lg font-semibold transition-colors"
         >
             <Trash2 className="w-5 h-5" />
             Delete Community

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { createClient } from '@/lib/supabase/server';
+import { GROQ_MODEL } from '@/lib/deepseek';
 
 export async function POST(req: Request) {
     console.log('[AI Chat] Request received');
@@ -102,7 +103,10 @@ When users ask general questions, answer naturally and helpfully.`;
                 { role: 'system', content: finalSystemPrompt },
                 ...messages.map((m: any) => ({ role: m.role, content: m.content }))
             ],
-            model: 'llama-3.3-70b-versatile',
+            model: GROQ_MODEL,
+            // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+            // trace short so it cannot eat the max_tokens budget and return empty content.
+            reasoning_effort: 'low',
             temperature: 0.5,
             max_tokens: 1024,
             stream: true,

@@ -156,7 +156,7 @@ export function CoursesTab() {
         {/* Search Bar */}
         <div className="flex flex-col lg:flex-row gap-3">
           <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <input
               type="text"
               placeholder="Search courses by name, instructor, skills..."
@@ -167,7 +167,7 @@ export function CoursesTab() {
                   liveSearchCourses(searchQuery);
                 }
               }}
-              className="w-full pl-12 pr-4 py-3 border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors"
+              className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
             />
           </div>
 
@@ -175,11 +175,11 @@ export function CoursesTab() {
             <button
               onClick={() => liveSearchCourses(searchQuery)}
               disabled={liveSearching || !searchQuery.trim()}
-              className="px-5 py-3 rounded-[var(--cl-r-lg)] font-semibold transition-all flex items-center gap-2 text-[var(--cl-on-dark)] disabled:opacity-50 bg-[var(--cl-success)]"
+              className="px-5 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 text-white disabled:opacity-50 bg-green-600"
             >
               {liveSearching ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-[var(--cl-on-dark)] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Searching...
                 </>
               ) : (
@@ -192,8 +192,8 @@ export function CoursesTab() {
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-5 py-3 rounded-[var(--cl-r-lg)] font-semibold transition-all flex items-center gap-2 ${
-                showFilters ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
+              className={`px-5 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                showFilters ? 'bg-primary text-white' : 'bg-muted hover:bg-muted text-foreground/80'
               }`}
             >
               <SlidersHorizontal className="w-5 h-5" />
@@ -202,7 +202,7 @@ export function CoursesTab() {
 
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="w-12 h-12 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] transition-colors flex items-center justify-center"
+              className="w-12 h-12 bg-muted hover:bg-muted rounded-lg transition-colors flex items-center justify-center"
             >
               {viewMode === 'grid' ? <List className="w-5 h-5" /> : <Grid3x3 className="w-5 h-5" />}
             </button>
@@ -211,14 +211,14 @@ export function CoursesTab() {
 
         {/* Filters Panel */}
         {showFilters && (
-          <div className="p-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)]">
+          <div className="p-4 bg-muted/40 rounded-lg border border-border">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--cl-body)] mb-2 uppercase">Type</label>
+                <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase">Type</label>
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="all">All Types</option>
                   <option value="free">Free</option>
@@ -227,11 +227,11 @@ export function CoursesTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--cl-body)] mb-2 uppercase">Platform</label>
+                <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase">Platform</label>
                 <select
                   value={selectedPlatform}
                   onChange={(e) => setSelectedPlatform(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   {platforms.map(platform => (
                     <option key={platform} value={platform}>{platform === 'all' ? 'All Platforms' : platform}</option>
@@ -240,11 +240,11 @@ export function CoursesTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--cl-body)] mb-2 uppercase">Level</label>
+                <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase">Level</label>
                 <select
                   value={selectedLevel}
                   onChange={(e) => setSelectedLevel(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   {levels.map(level => (
                     <option key={level} value={level}>{level === 'all' ? 'All Levels' : level}</option>
@@ -253,11 +253,11 @@ export function CoursesTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--cl-body)] mb-2 uppercase">Sort By</label>
+                <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase">Sort By</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="popular">Most Popular</option>
                   <option value="rating">Highest Rated</option>
@@ -271,8 +271,8 @@ export function CoursesTab() {
 
       {/* Results Count */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--cl-body)]">
-          Showing <span className="font-semibold text-[var(--cl-ink)]">{filteredCourses.length}</span> courses
+        <p className="text-sm text-foreground/80">
+          Showing <span className="font-semibold text-foreground">{filteredCourses.length}</span> courses
           {favorites.size > 0 && (
             <span className="ml-2">• {favorites.size} favorites saved</span>
           )}
@@ -283,12 +283,12 @@ export function CoursesTab() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-xl)] h-96 animate-pulse"></div>
+            <div key={i} className="bg-muted rounded-xl h-96 animate-pulse"></div>
           ))}
         </div>
       ) : filteredCourses.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-[var(--cl-muted)] text-lg">No courses found. Try adjusting your filters.</p>
+          <p className="text-muted-foreground text-lg">No courses found. Try adjusting your filters.</p>
         </div>
       ) : (
         <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-6`}>

@@ -26,7 +26,7 @@ export default async function AchievementsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="flex h-screen bg-muted/40">
       <Sidebar role="student" />
 
       <div className="flex-1 cl-main overflow-auto">

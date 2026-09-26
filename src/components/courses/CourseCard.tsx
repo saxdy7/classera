@@ -29,12 +29,12 @@ interface CourseCardProps {
  * single brown tint, so the whole grid rendered the same muddy colour.
  */
 const CARD_TINTS = [
-  'bg-[var(--cl-tint-blue)]',
-  'bg-[var(--cl-tint-mint)]',
-  'bg-[var(--cl-tint-peach)]',
-  'bg-[var(--cl-tint-lavender)]',
-  'bg-[var(--cl-tint-pink)]',
-  'bg-[var(--cl-tint-ochre)]',
+  'bg-accent-purple/10',
+  'bg-accent-purple/10',
+  'bg-accent-purple/10',
+  'bg-accent-purple/10',
+  'bg-accent-purple/10',
+  'bg-accent-purple/10',
 ];
 
 /** Stable per-course tint, so a card keeps its colour across re-renders. */
@@ -140,7 +140,7 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
 
   return (
     <div
-      className="w-full overflow-hidden rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] shadow-[var(--cl-shadow-card)] transition-shadow duration-[var(--cl-dur-micro)] hover:shadow-[var(--cl-shadow-card-hover)]"
+      className="w-full overflow-hidden rounded-xl border border-border bg-card shadow-none transition-shadow duration-200 hover:shadow-md"
     >
       {/* Top Section - Light Yellow Background */}
       <div className={`${tintFor(course.id || course.title)} p-5 relative`}>
@@ -160,22 +160,22 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
           </div>
           {/* Small circles */}
           <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-[rgba(10,10,10,0.15)] rounded-full"></div>
-          <div className="absolute top-8 right-16 w-4 h-4 bg-[var(--cl-surface-card)] rounded-full"></div>
+          <div className="absolute top-8 right-16 w-4 h-4 bg-card rounded-full"></div>
         </div>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-4 relative z-10">
-          <span className="bg-[var(--cl-surface-card)] px-3 py-1 rounded-full text-xs font-medium text-[var(--cl-ink)]">
+          <span className="bg-card px-3 py-1 rounded-full text-xs font-medium text-foreground">
             {platformLabel}
           </span>
           {/* Platform Icon */}
-          <div className="bg-[var(--cl-surface-card)] p-2 rounded-full" title={course.platform}>
+          <div className="bg-card p-2 rounded-full" title={course.platform}>
             <PlatformIcon platform={course.platform} />
           </div>
         </div>
 
         {/* Content */}
-        <h3 className="relative z-10 mb-4 line-clamp-2 min-h-[3.25rem] text-[18px] font-semibold leading-[1.35] tracking-normal text-[var(--cl-ink)]">
+        <h3 className="relative z-10 mb-4 line-clamp-2 min-h-[3.25rem] text-[18px] font-semibold leading-[1.35] tracking-normal text-foreground">
           {course.title}
         </h3>
 
@@ -184,7 +184,7 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
           {tags.slice(0, 4).map((tag, index) => (
             <span
               key={index}
-              className="px-3 py-1 rounded-full text-xs bg-[var(--cl-surface-card)] border border-black/10 text-[var(--cl-body)]"
+              className="px-3 py-1 rounded-full text-xs bg-card border border-black/10 text-foreground/80"
             >
               {tag}
             </span>
@@ -193,7 +193,7 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
       </div>
 
       {/* Bottom Section - White Background */}
-      <div className="bg-[var(--cl-surface-card)] p-5 relative">
+      <div className="bg-card p-5 relative">
         {/* Decorative curves and lines */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
           {/* Curved line bottom left */}
@@ -209,23 +209,23 @@ export function CourseCard({ course, isFavorite, onToggleFavorite }: CourseCardP
             </svg>
           </div>
           {/* Small shapes */}
-          <div className="absolute top-4 right-8 w-6 h-6 border-2 border-[var(--cl-hairline)] rotate-45"></div>
-          <div className="absolute bottom-8 right-4 w-3 h-3 bg-[var(--cl-surface-strong)] rounded-full"></div>
+          <div className="absolute top-4 right-8 w-6 h-6 border-2 border-border rotate-45"></div>
+          <div className="absolute bottom-8 right-4 w-3 h-3 bg-muted rounded-full"></div>
         </div>
 
         <div className="flex items-center justify-between relative z-10">
           <div>
-            <p className={`text-lg font-semibold ${course.type === 'free' ? 'text-[var(--cl-success)]' : 'text-[var(--cl-ink)]'}`}>
+            <p className={`text-lg font-semibold ${course.type === 'free' ? 'text-green-600' : 'text-foreground'}`}>
               {course.type === 'free' ? 'FREE' : 'Paid'}
             </p>
-            <p className="text-sm text-[var(--cl-body)]">{getLocation()}</p>
+            <p className="text-sm text-foreground/80">{getLocation()}</p>
           </div>
 
           <a
             href={course.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-black text-[var(--cl-on-dark)] px-5 py-2 rounded-full text-sm hover:bg-[var(--cl-surface-inverse)] transition-colors whitespace-nowrap"
+            className="bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-neutral-900 transition-colors whitespace-nowrap"
           >
             Details
           </a>

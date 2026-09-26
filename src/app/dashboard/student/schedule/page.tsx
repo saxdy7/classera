@@ -26,7 +26,7 @@ export default async function StudentSchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -34,9 +34,9 @@ export default async function StudentSchedulePage() {
           <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Schedule</h1>
-              <p className="text-[var(--cl-body)]">View all your upcoming sessions, tests, and assignments in one place</p>
+              <p className="text-foreground/80">View all your upcoming sessions, tests, and assignments in one place</p>
             </div>
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <CalendarWidget />
             </div>
           </div>

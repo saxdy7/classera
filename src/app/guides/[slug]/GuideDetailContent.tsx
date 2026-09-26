@@ -41,7 +41,7 @@ export function GuideDetailContent() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh] p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-info)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
             </div>
         );
     }
@@ -49,7 +49,7 @@ export function GuideDetailContent() {
     if (!guide) {
         return (
             <div className="p-8 text-center">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">Guide Not Found</h2>
+                <h2 className="text-2xl font-semibold text-foreground mb-2">Guide Not Found</h2>
                 <Button onClick={() => router.push('/guides')}>Back to Guides</Button>
             </div>
         );
@@ -71,7 +71,7 @@ export function GuideDetailContent() {
                     {guide.title}
                 </h1>
 
-                <div className="flex items-center gap-4 text-sm text-[var(--cl-body)]">
+                <div className="flex items-center gap-4 text-sm text-foreground/80">
                     {guide.difficulty && (
                         <Badge>{guide.difficulty}</Badge>
                     )}

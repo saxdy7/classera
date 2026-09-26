@@ -44,41 +44,41 @@ const sessionTypeConfig = {
         icon: MessageSquare,
         color: 'blue',
         label: '1:1 Meeting',
-        bgColor: 'bg-[rgba(13,116,206,0.12)]',
-        textColor: 'text-[var(--cl-info)]',
-        borderColor: 'border-[var(--cl-info)]',
+        bgColor: 'bg-accent-purple/10',
+        textColor: 'text-accent-purple',
+        borderColor: 'border-accent-purple',
     },
     proctored_test: {
         icon: Shield,
         color: 'red',
         label: 'Proctored Test',
-        bgColor: 'bg-[rgba(239,68,68,0.12)]',
-        textColor: 'text-[var(--cl-error)]',
-        borderColor: 'border-[var(--cl-error)]',
+        bgColor: 'bg-destructive/10',
+        textColor: 'text-destructive',
+        borderColor: 'border-destructive',
     },
     group_study: {
         icon: Users,
         color: 'green',
         label: 'Group Study',
-        bgColor: 'bg-[rgba(22,163,74,0.12)]',
-        textColor: 'text-[var(--cl-success)]',
-        borderColor: 'border-[var(--cl-success)]',
+        bgColor: 'bg-green-500/10',
+        textColor: 'text-green-600',
+        borderColor: 'border-green-600',
     },
     office_hours: {
         icon: Clock,
         color: 'amber',
         label: 'Office Hours',
-        bgColor: 'bg-[rgba(171,100,0,0.12)]',
-        textColor: 'text-[var(--cl-warning)]',
-        borderColor: 'border-[var(--cl-warning)]',
+        bgColor: 'bg-amber-500/10',
+        textColor: 'text-amber-600',
+        borderColor: 'border-amber-500',
     },
     webinar: {
         icon: Radio,
         color: 'purple',
         label: 'Webinar',
-        bgColor: 'bg-[var(--cl-primary-soft)]',
-        textColor: 'text-[var(--cl-primary)]',
-        borderColor: 'border-[var(--cl-primary)]',
+        bgColor: 'bg-accent-purple/10',
+        textColor: 'text-accent-purple',
+        borderColor: 'border-accent-purple',
     },
 };
 
@@ -139,43 +139,43 @@ function SessionCard({ session, isLive = false, onJoinVideo }: { session: Sessio
     };
 
     return (
-        <div className={`bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border ${isLive ? 'border-[var(--cl-success)] ring-2 ring-[var(--cl-success)]' : 'border-[var(--cl-hairline)]'} p-6 hover:shadow-md transition-all`}>
+        <div className={`bg-card rounded-lg border ${isLive ? 'border-green-600 ring-2 ring-[var(--cl-success)]' : 'border-border'} p-6 hover:shadow-md transition-all`}>
             {isLive && (
                 <div className="flex items-center gap-2 mb-4">
                     <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cl-success)] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--cl-success)]"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-600 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
                     </span>
-                    <span className="text-sm font-medium text-[var(--cl-success)]">Live Now</span>
+                    <span className="text-sm font-medium text-green-600">Live Now</span>
                 </div>
             )}
 
             <div className="flex items-start gap-4">
-                <div className={`w-12 h-12 ${config.bgColor} rounded-[var(--cl-r-lg)] flex items-center justify-center`}>
+                <div className={`w-12 h-12 ${config.bgColor} rounded-lg flex items-center justify-center`}>
                     <Icon className={`w-6 h-6 ${config.textColor}`} />
                 </div>
 
                 <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <h3 className="font-semibold text-[var(--cl-ink)] mb-1">{session.title}</h3>
+                            <h3 className="font-semibold text-foreground mb-1">{session.title}</h3>
                             <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full ${config.bgColor} ${config.textColor}`}>
                                 {config.label}
                             </span>
                         </div>
 
                         {!isLive && (
-                            <span className="text-sm text-[var(--cl-muted)] flex-shrink-0">
+                            <span className="text-sm text-muted-foreground flex-shrink-0">
                                 {getTimeUntil(session.scheduled_at)}
                             </span>
                         )}
                     </div>
 
                     {session.description && (
-                        <p className="text-sm text-[var(--cl-body)] mt-2 line-clamp-2">{session.description}</p>
+                        <p className="text-sm text-foreground/80 mt-2 line-clamp-2">{session.description}</p>
                     )}
 
-                    <div className="flex items-center gap-4 mt-3 text-sm text-[var(--cl-muted)]">
+                    <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                             <CalendarIcon className="w-4 h-4" />
                             {formatDateTime(session.scheduled_at)}
@@ -194,23 +194,23 @@ function SessionCard({ session, isLive = false, onJoinVideo }: { session: Sessio
                                 className="w-6 h-6 rounded-full"
                             />
                         ) : (
-                            <div className="w-6 h-6 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center">
-                                <span className="text-xs font-medium text-[var(--cl-body)]">
+                            <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center">
+                                <span className="text-xs font-medium text-foreground/80">
                                     {session.host?.full_name?.charAt(0) ?? '?'}
                                 </span>
                             </div>
                         )}
-                        <span className="text-sm text-[var(--cl-body)]">Hosted by {session.host?.full_name ?? 'Unknown'}</span>
+                        <span className="text-sm text-foreground/80">Hosted by {session.host?.full_name ?? 'Unknown'}</span>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-[var(--cl-hairline)] flex items-center justify-between gap-2">
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                     {session.session_type === 'proctored_test' && session.linked_test_id ? (
                         <Link
                             href={`/dashboard/student/tests/${session.linked_test_id}/take`}
-                            className="flex items-center gap-2 text-sm text-[var(--cl-info)] hover:text-[var(--cl-info)]"
+                            className="flex items-center gap-2 text-sm text-accent-purple hover:text-accent-purple"
                         >
                             <BookOpen className="w-4 h-4" />
                             View Test
@@ -222,7 +222,7 @@ function SessionCard({ session, isLive = false, onJoinVideo }: { session: Sessio
                     {!isLive && session.status === 'scheduled' && (
                         <button
                             onClick={handleAddToCalendar}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[var(--cl-body)] hover:text-[var(--cl-primary)] border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)] rounded-lg transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-foreground/80 hover:text-accent-purple border border-border hover:border-accent-purple rounded-lg transition-colors"
                         >
                             <Download className="w-3.5 h-3.5" />
                             Add to Calendar
@@ -233,7 +233,7 @@ function SessionCard({ session, isLive = false, onJoinVideo }: { session: Sessio
                 {(isLive || session.status === 'live') ? (
                     <button
                         onClick={handleJoin}
-                        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-success)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-success)] transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-600 transition-colors"
                     >
                         <PlayCircle className="w-4 h-4" />
                         Join Session
@@ -242,13 +242,13 @@ function SessionCard({ session, isLive = false, onJoinVideo }: { session: Sessio
                 ) : getTimeUntil(session.scheduled_at) === 'Started' ? (
                     <button
                         onClick={handleJoin}
-                        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-info)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-info)] transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg hover:bg-accent-purple transition-colors"
                     >
                         <Video className="w-4 h-4" />
                         Join Now
                     </button>
                 ) : (
-                    <span className="text-sm text-[var(--cl-muted)]">
+                    <span className="text-sm text-muted-foreground">
                         Starts in {getTimeUntil(session.scheduled_at)}
                     </span>
                 )}
@@ -270,7 +270,7 @@ export function StudentSessionsClient({
         <div className="max-w-5xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-3xl font-semibold tracking-tight text-foreground">Live Sessions</h1>
-                <p className="text-[var(--cl-body)] mt-2">Join live sessions, webinars, and proctored tests</p>
+                <p className="text-foreground/80 mt-2">Join live sessions, webinars, and proctored tests</p>
             </div>
 
             {/* Live Sessions Banner */}
@@ -278,11 +278,11 @@ export function StudentSessionsClient({
                 <div className="mb-8">
                     <div className="flex items-center gap-2 mb-4">
                         <span className="relative flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--cl-success)] opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--cl-success)]"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-600 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
                         </span>
-                        <h2 className="text-lg font-semibold text-[var(--cl-ink)]">Live Now</h2>
-                        <span className="text-sm text-[var(--cl-muted)]">({liveSessions.length} session{liveSessions.length > 1 ? 's' : ''})</span>
+                        <h2 className="text-lg font-semibold text-foreground">Live Now</h2>
+                        <span className="text-sm text-muted-foreground">({liveSessions.length} session{liveSessions.length > 1 ? 's' : ''})</span>
                     </div>
 
                     <div className="space-y-4">
@@ -325,11 +325,11 @@ export function StudentSessionsClient({
                             ))
                         ) : (
                             <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CalendarIcon className="w-8 h-8 text-[var(--cl-muted-soft)]" />
+                                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <CalendarIcon className="w-8 h-8 text-muted-foreground/70" />
                                 </div>
-                                <h3 className="text-lg font-medium text-[var(--cl-ink)] mb-2">No Upcoming Sessions</h3>
-                                <p className="text-[var(--cl-body)]">
+                                <h3 className="text-lg font-medium text-foreground mb-2">No Upcoming Sessions</h3>
+                                <p className="text-foreground/80">
                                     You don't have any scheduled sessions. Check back later or ask your mentor to schedule one.
                                 </p>
                             </div>
@@ -345,11 +345,11 @@ export function StudentSessionsClient({
                             ))
                         ) : (
                             <div className="text-center py-12">
-                                <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Video className="w-8 h-8 text-[var(--cl-muted-soft)]" />
+                                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Video className="w-8 h-8 text-muted-foreground/70" />
                                 </div>
-                                <h3 className="text-lg font-medium text-[var(--cl-ink)] mb-2">No Past Sessions</h3>
-                                <p className="text-[var(--cl-body)]">
+                                <h3 className="text-lg font-medium text-foreground mb-2">No Past Sessions</h3>
+                                <p className="text-foreground/80">
                                     You haven't attended any sessions yet.
                                 </p>
                             </div>
@@ -362,30 +362,30 @@ export function StudentSessionsClient({
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Link
                     href="/dashboard/student/tests"
-                    className="flex items-center gap-4 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:border-[var(--cl-info)] transition-all group"
+                    className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-accent-purple transition-all group"
                 >
-                    <div className="w-12 h-12 bg-[rgba(13,116,206,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-[var(--cl-info)]" />
+                    <div className="w-12 h-12 bg-accent-purple/10 rounded-lg flex items-center justify-center">
+                        <BookOpen className="w-6 h-6 text-accent-purple" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-info)]">Available Tests</h3>
-                        <p className="text-sm text-[var(--cl-body)]">View and take available tests</p>
+                        <h3 className="font-medium text-foreground group-hover:text-accent-purple">Available Tests</h3>
+                        <p className="text-sm text-foreground/80">View and take available tests</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-info)]" />
+                    <ChevronRight className="w-5 h-5 text-muted-foreground/70 group-hover:text-accent-purple" />
                 </Link>
 
                 <Link
                     href="/dashboard/student/messages"
-                    className="flex items-center gap-4 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:border-[var(--cl-info)] transition-all group"
+                    className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-accent-purple transition-all group"
                 >
-                    <div className="w-12 h-12 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
-                        <MessageSquare className="w-6 h-6 text-[var(--cl-success)]" />
+                    <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
+                        <MessageSquare className="w-6 h-6 text-green-600" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-info)]">Message Mentor</h3>
-                        <p className="text-sm text-[var(--cl-body)]">Request a session from your mentor</p>
+                        <h3 className="font-medium text-foreground group-hover:text-accent-purple">Message Mentor</h3>
+                        <p className="text-sm text-foreground/80">Request a session from your mentor</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-[var(--cl-muted-soft)] group-hover:text-[var(--cl-info)]" />
+                    <ChevronRight className="w-5 h-5 text-muted-foreground/70 group-hover:text-accent-purple" />
                 </Link>
             </div>
 

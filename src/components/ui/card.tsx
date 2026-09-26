@@ -20,10 +20,10 @@ const Card = React.forwardRef<
     ref={ref}
     data-card=""
     className={cn(
-      "rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)]",
-      "bg-[var(--cl-surface-card)] text-[var(--cl-body)]",
-      "shadow-[var(--cl-shadow-card)]",
-      "hover:shadow-[var(--cl-shadow-card-hover)] hover:border-[var(--cl-hairline-strong)]",
+      "rounded-lg border border-border",
+      "bg-card text-foreground/80",
+      "shadow-none",
+      "hover:shadow-md hover:border-border",
       className
     )}
     {...props}
@@ -36,13 +36,13 @@ type CategoryTone = 'pink' | 'teal' | 'lavender' | 'peach' | 'ochre' | 'mint' | 
 
 const TONE: Record<CategoryTone, string> = {
   // Pink and teal are saturated enough to carry white text; the rest take ink.
-  pink: 'bg-[var(--cl-brand-pink)] text-[var(--cl-on-dark)] [&_h1,&_h2,&_h3,&_h4]:text-[var(--cl-on-dark)]',
-  teal: 'bg-[var(--cl-brand-teal)] text-[var(--cl-on-dark)] [&_h1,&_h2,&_h3,&_h4]:text-[var(--cl-on-dark)]',
-  lavender: 'bg-[var(--cl-brand-lavender)] text-[var(--cl-ink)]',
-  peach: 'bg-[var(--cl-brand-peach)] text-[var(--cl-ink)]',
-  ochre: 'bg-[var(--cl-brand-ochre)] text-[var(--cl-ink)]',
-  mint: 'bg-[var(--cl-brand-mint)] text-[var(--cl-ink)]',
-  coral: 'bg-[var(--cl-brand-coral)] text-[var(--cl-ink)]',
+  pink: 'bg-accent-purple text-white [&_h1,&_h2,&_h3,&_h4]:text-white',
+  teal: 'bg-accent-purple text-white [&_h1,&_h2,&_h3,&_h4]:text-white',
+  lavender: 'bg-accent-purple text-foreground',
+  peach: 'bg-accent-purple text-foreground',
+  ochre: 'bg-accent-purple text-foreground',
+  mint: 'bg-accent-purple text-foreground',
+  coral: 'bg-accent-purple text-foreground',
 }
 
 const CardCategory = React.forwardRef<
@@ -52,7 +52,7 @@ const CardCategory = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-[var(--cl-r-xl)] border border-transparent p-8",
+      "rounded-xl border border-transparent p-8",
       TONE[tone],
       className
     )}
@@ -69,9 +69,9 @@ const CardFeatured = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-[var(--cl-r-lg)] border border-transparent",
-      "bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark-soft)]",
-      "[&_h1,&_h2,&_h3,&_h4]:text-[var(--cl-on-dark)]",
+      "rounded-lg border border-transparent",
+      "bg-neutral-900 text-white/70",
+      "[&_h1,&_h2,&_h3,&_h4]:text-white",
       className
     )}
     {...props}
@@ -98,7 +98,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-[18px] font-semibold leading-[1.4] tracking-normal text-[var(--cl-ink)]",
+      "text-[18px] font-semibold leading-[1.4] tracking-normal text-foreground",
       className
     )}
     {...props}
@@ -112,7 +112,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm leading-[1.55] text-[var(--cl-muted)]", className)}
+    className={cn("text-sm leading-[1.55] text-muted-foreground", className)}
     {...props}
   />
 ))

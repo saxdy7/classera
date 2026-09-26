@@ -110,7 +110,7 @@ export function TestCreateClient({ profile }: Props) {
     const isValid = formData.title && questions.length > 0;
 
     return (
-        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+        <div className="min-h-screen bg-muted/40">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="mentor" />
@@ -119,14 +119,14 @@ export function TestCreateClient({ profile }: Props) {
                         {/* Header */}
                         <Link
                             href="/dashboard/mentor/tests"
-                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Tests
                         </Link>
 
                         <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Create New Test</h1>
-                        <p className="text-[var(--cl-body)] mb-4">Build your test and configure settings</p>
+                        <p className="text-foreground/80 mb-4">Build your test and configure settings</p>
 
                         {/* Quick Actions */}
                         <div className="flex items-center gap-3 mb-8">
@@ -139,12 +139,12 @@ export function TestCreateClient({ profile }: Props) {
 
                         <form onSubmit={handleSubmit} className="space-y-8">
                             {/* Basic Info */}
-                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">Basic Information</h2>
+                            <div className="bg-card rounded-lg p-6 border border-border">
+                                <h2 className="text-xl font-semibold text-foreground mb-4">Basic Information</h2>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                        <label className="block text-sm font-medium text-foreground/80 mb-2">
                                             Test Title *
                                         </label>
                                         <input
@@ -153,26 +153,26 @@ export function TestCreateClient({ profile }: Props) {
                                             value={formData.title}
                                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                             placeholder="e.g., Mathematics Mid-term Exam"
-                                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                        <label className="block text-sm font-medium text-foreground/80 mb-2">
                                             Description
                                         </label>
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                             placeholder="Optional description..."
-                                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] resize-none"
+                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                                             rows={3}
                                         />
                                     </div>
 
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Duration (minutes) *
                                             </label>
                                             <input
@@ -181,24 +181,24 @@ export function TestCreateClient({ profile }: Props) {
                                                 min="1"
                                                 value={formData.duration_minutes}
                                                 onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Schedule Date & Time
                                             </label>
                                             <input
                                                 type="datetime-local"
                                                 value={formData.scheduled_at}
                                                 onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                                                className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Passing % 
                                             </label>
                                             <input
@@ -207,7 +207,7 @@ export function TestCreateClient({ profile }: Props) {
                                                 max="100"
                                                 value={formData.passing_percentage}
                                                 onChange={(e) => setFormData({ ...formData, passing_percentage: parseInt(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
                                     </div>
@@ -215,70 +215,70 @@ export function TestCreateClient({ profile }: Props) {
                             </div>
 
                             {/* Test Settings */}
-                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">
+                            <div className="bg-card rounded-lg p-6 border border-border">
+                                <h2 className="text-xl font-semibold text-foreground mb-4">
                                     <Shuffle className="w-5 h-5 inline-block mr-2" />
                                     Test Settings
                                 </h2>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    <label className="flex items-start gap-3 p-3 bg-[var(--cl-canvas-soft)] rounded-lg cursor-pointer hover:bg-[var(--cl-surface-strong)] transition-colors">
+                                    <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
                                         <input
                                             type="checkbox"
                                             checked={formData.randomize_questions}
                                             onChange={(e) => setFormData({ ...formData, randomize_questions: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
                                         <div>
-                                            <span className="text-sm font-medium text-[var(--cl-body)]">Randomize Questions</span>
-                                            <p className="text-xs text-[var(--cl-muted)]">Each student sees questions in different order</p>
+                                            <span className="text-sm font-medium text-foreground/80">Randomize Questions</span>
+                                            <p className="text-xs text-muted-foreground">Each student sees questions in different order</p>
                                         </div>
                                     </label>
 
-                                    <label className="flex items-start gap-3 p-3 bg-[var(--cl-canvas-soft)] rounded-lg cursor-pointer hover:bg-[var(--cl-surface-strong)] transition-colors">
+                                    <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
                                         <input
                                             type="checkbox"
                                             checked={formData.show_results_immediately}
                                             onChange={(e) => setFormData({ ...formData, show_results_immediately: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
                                         <div>
-                                            <span className="text-sm font-medium text-[var(--cl-body)]">Show Results Immediately</span>
-                                            <p className="text-xs text-[var(--cl-muted)]">Students see score right after submission</p>
+                                            <span className="text-sm font-medium text-foreground/80">Show Results Immediately</span>
+                                            <p className="text-xs text-muted-foreground">Students see score right after submission</p>
                                         </div>
                                     </label>
 
-                                    <label className="flex items-start gap-3 p-3 bg-[var(--cl-canvas-soft)] rounded-lg cursor-pointer hover:bg-[var(--cl-surface-strong)] transition-colors">
+                                    <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
                                         <input
                                             type="checkbox"
                                             checked={formData.allow_review}
                                             onChange={(e) => setFormData({ ...formData, allow_review: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
                                         <div>
-                                            <span className="text-sm font-medium text-[var(--cl-body)]">Allow Answer Review</span>
-                                            <p className="text-xs text-[var(--cl-muted)]">Students can review correct answers</p>
+                                            <span className="text-sm font-medium text-foreground/80">Allow Answer Review</span>
+                                            <p className="text-xs text-muted-foreground">Students can review correct answers</p>
                                         </div>
                                     </label>
 
-                                    <label className="flex items-start gap-3 p-3 bg-[var(--cl-canvas-soft)] rounded-lg cursor-pointer hover:bg-[var(--cl-surface-strong)] transition-colors">
+                                    <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
                                         <input
                                             type="checkbox"
                                             checked={formData.enable_anti_cheat}
                                             onChange={(e) => setFormData({ ...formData, enable_anti_cheat: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
                                         <div>
-                                            <span className="text-sm font-medium text-[var(--cl-body)]">Anti-Cheating Measures</span>
-                                            <p className="text-xs text-[var(--cl-muted)]">Block copy/paste, tab switching, etc.</p>
+                                            <span className="text-sm font-medium text-foreground/80">Anti-Cheating Measures</span>
+                                            <p className="text-xs text-muted-foreground">Block copy/paste, tab switching, etc.</p>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
                             {/* Proctoring Settings */}
-                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">
+                            <div className="bg-card rounded-lg p-6 border border-border">
+                                <h2 className="text-xl font-semibold text-foreground mb-4">
                                     <Shield className="w-5 h-5 inline-block mr-2" />
                                     Proctoring Settings
                                 </h2>
@@ -289,9 +289,9 @@ export function TestCreateClient({ profile }: Props) {
                                             type="checkbox"
                                             checked={formData.enable_screen_recording}
                                             onChange={(e) => setFormData({ ...formData, enable_screen_recording: e.target.checked })}
-                                            className="w-5 h-5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
-                                        <span className="text-sm font-medium text-[var(--cl-body)]">Enable Screen Recording</span>
+                                        <span className="text-sm font-medium text-foreground/80">Enable Screen Recording</span>
                                     </label>
 
                                     <label className="flex items-center gap-3">
@@ -299,9 +299,9 @@ export function TestCreateClient({ profile }: Props) {
                                             type="checkbox"
                                             checked={formData.enable_face_monitoring}
                                             onChange={(e) => setFormData({ ...formData, enable_face_monitoring: e.target.checked })}
-                                            className="w-5 h-5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
                                         />
-                                        <span className="text-sm font-medium text-[var(--cl-body)]">Enable Face Monitoring</span>
+                                        <span className="text-sm font-medium text-foreground/80">Enable Face Monitoring</span>
                                     </label>
                                 </div>
                             </div>
@@ -309,14 +309,14 @@ export function TestCreateClient({ profile }: Props) {
                             {/* Questions */}
                             <div>
                                 <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Questions</h2>
+                                    <h2 className="text-xl font-semibold text-foreground">Questions</h2>
                                     <div className="flex items-center gap-4">
                                         <QuestionBankSelector 
                                             onSelect={handleImportFromBank}
                                             existingQuestionIds={questions.map(q => q.id)}
                                         />
-                                        <span className="text-sm text-[var(--cl-body)]">
-                                            Total Marks: <span className="font-semibold text-[var(--cl-primary)]">{total_marks}</span>
+                                        <span className="text-sm text-foreground/80">
+                                            Total Marks: <span className="font-semibold text-accent-purple">{total_marks}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -325,15 +325,15 @@ export function TestCreateClient({ profile }: Props) {
                             </div>
 
                             {/* Submit Button */}
-                            <div className="flex items-center justify-between p-6 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)]">
+                            <div className="flex items-center justify-between p-6 bg-card rounded-lg border border-border">
                                 <div>
-                                    <p className="text-sm font-medium text-[var(--cl-ink)]">{questions.length} questions</p>
-                                    <p className="text-xs text-[var(--cl-muted)]">Total: {total_marks} marks</p>
+                                    <p className="text-sm font-medium text-foreground">{questions.length} questions</p>
+                                    <p className="text-xs text-muted-foreground">Total: {total_marks} marks</p>
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={!isValid || loading}
-                                    className="inline-flex items-center gap-2 px-8 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--cl-primary)]"
+                                    className="inline-flex items-center gap-2 px-8 py-3 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-primary"
                                 >
                                     <Save className="w-5 h-5" />
                                     {loading ? 'Creating...' : 'Create Test'}

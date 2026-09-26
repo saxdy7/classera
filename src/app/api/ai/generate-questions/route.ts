@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
+import { GROQ_MODEL } from '@/lib/deepseek';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -71,7 +72,10 @@ Respond with ONLY valid JSON in this exact format:
 }`;
 
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: GROQ_MODEL,
+      // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+      // trace short so it cannot eat the max_tokens budget and return empty content.
+      reasoning_effort: 'low',
       messages: [
         {
           role: 'system',
@@ -175,7 +179,10 @@ Respond with ONLY valid JSON:
 }`;
 
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: GROQ_MODEL,
+      // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+      // trace short so it cannot eat the max_tokens budget and return empty content.
+      reasoning_effort: 'low',
       messages: [
         {
           role: 'system',

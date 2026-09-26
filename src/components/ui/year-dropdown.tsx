@@ -134,19 +134,19 @@ export function YearDropdown({ value, onChange, placeholder = "Select your year 
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
-              "w-full justify-between bg-[var(--cl-surface-card)] border border-[var(--cl-hairline-strong)] text-[var(--cl-body)] rounded-lg",
+              "w-full justify-between bg-card border border-border text-foreground/80 rounded-lg",
               "hover:border-purple-500 hover:bg-gray-50",
               "focus:ring-2 focus:ring-purple-500 focus:border-purple-500",
               "transition-all duration-200 ease-in-out",
               "h-12 px-4",
               "inline-flex items-center",
-              isOpen && "border-[var(--cl-primary)] bg-[var(--cl-canvas-soft)]",
+              isOpen && "border-accent-purple bg-muted/40",
             )}
             aria-expanded={isOpen}
             aria-haspopup="true"
           >
             {selectedYear ? (
-              <span className="flex items-center text-[var(--cl-ink)]">
+              <span className="flex items-center text-foreground">
                 <IconWrapper 
                   icon={selectedYear.icon} 
                   isHovered={false} 
@@ -155,14 +155,14 @@ export function YearDropdown({ value, onChange, placeholder = "Select your year 
                 {selectedYear.label}
               </span>
             ) : (
-              <span className="text-[var(--cl-muted)]">{placeholder}</span>
+              <span className="text-muted-foreground">{placeholder}</span>
             )}
             <motion.div
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: 0.2 }}
               className="flex items-center justify-center w-5 h-5"
             >
-              <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
             </motion.div>
           </button>
 
@@ -196,7 +196,7 @@ export function YearDropdown({ value, onChange, placeholder = "Select your year 
                 onKeyDown={handleKeyDown}
               >
                 <motion.div
-                  className="w-full rounded-lg border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] p-1"
+                  className="w-full rounded-lg border border-border bg-card p-1"
                   initial={{ borderRadius: 8 }}
                   animate={{
                     borderRadius: 12,
@@ -212,7 +212,7 @@ export function YearDropdown({ value, onChange, placeholder = "Select your year 
                   >
                     <motion.div
                       layoutId="hover-highlight"
-                      className="absolute inset-x-1 bg-[var(--cl-primary-soft)] rounded-md"
+                      className="absolute inset-x-1 bg-accent-purple/10 rounded-md"
                       animate={{
                         y: yearOptions.findIndex((y) => (hoveredYear || selectedYear?.id) === y.id) * 44,
                         height: 44,
@@ -235,8 +235,8 @@ export function YearDropdown({ value, onChange, placeholder = "Select your year 
                           "transition-colors duration-150",
                           "focus:outline-none",
                           selectedYear?.id === year.id || hoveredYear === year.id
-                            ? "text-[var(--cl-primary)] font-medium"
-                            : "text-[var(--cl-body)]",
+                            ? "text-accent-purple font-medium"
+                            : "text-foreground/80",
                         )}
                         whileTap={{ scale: 0.98 }}
                         variants={itemVariants}

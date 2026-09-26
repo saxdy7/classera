@@ -143,13 +143,13 @@ export default function EvaluationPanel({
       {rubric && rubric.criteria.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--cl-body)] flex items-center gap-2">
-              <Award className="w-4 h-4 text-[var(--cl-primary)]" />
+            <h3 className="text-sm font-semibold text-foreground/80 flex items-center gap-2">
+              <Award className="w-4 h-4 text-accent-purple" />
               Rubric Scoring
             </h3>
             <button
               onClick={applyRubricScore}
-              className="text-xs text-[var(--cl-primary)] font-medium hover:underline"
+              className="text-xs text-accent-purple font-medium hover:underline"
             >
               Apply score ({computeRubricScore()}/{maxScore})
             </button>
@@ -159,15 +159,15 @@ export default function EvaluationPanel({
             const cs = criterionScores[c.id] ?? { score: 0, comment: '' };
             const pct = c.max_points > 0 ? Math.round((cs.score / c.max_points) * 100) : 0;
             return (
-              <div key={c.id} className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-3 space-y-2">
+              <div key={c.id} className="bg-muted/40 rounded-lg p-3 space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[var(--cl-ink)]">{c.name}</p>
+                    <p className="text-sm font-medium text-foreground">{c.name}</p>
                     {c.description && (
-                      <p className="text-xs text-[var(--cl-muted)]">{c.description}</p>
+                      <p className="text-xs text-muted-foreground">{c.description}</p>
                     )}
                   </div>
-                  <span className="text-xs text-[var(--cl-muted)]">
+                  <span className="text-xs text-muted-foreground">
                     weight: <span className="font-medium">{c.weight}%</span>
                   </span>
                 </div>
@@ -184,11 +184,11 @@ export default function EvaluationPanel({
                         [c.id]: { ...prev[c.id], score: Number(e.target.value) },
                       }))
                     }
-                    className="flex-1 accent-[var(--cl-primary)]"
+                    className="flex-1 accent-[var(--accent-purple)]"
                   />
-                  <span className="text-sm font-semibold text-[var(--cl-primary)] w-16 text-right">
+                  <span className="text-sm font-semibold text-accent-purple w-16 text-right">
                     {cs.score}/{c.max_points}
-                    <span className="font-normal text-[var(--cl-muted)] ml-1">({pct}%)</span>
+                    <span className="font-normal text-muted-foreground ml-1">({pct}%)</span>
                   </span>
                 </div>
                 <input
@@ -201,15 +201,15 @@ export default function EvaluationPanel({
                       [c.id]: { ...prev[c.id], comment: e.target.value },
                     }))
                   }
-                  className="w-full text-xs border border-[var(--cl-hairline)] rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] placeholder-[var(--cl-muted-soft)]"
+                  className="w-full text-xs border border-border rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-ring placeholder-muted-foreground"
                 />
               </div>
             );
           })}
 
-          <div className="flex items-center justify-between bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] rounded-[var(--cl-r-lg)] px-3 py-2">
-            <span className="text-sm text-[var(--cl-primary)] font-medium">Rubric computed score</span>
-            <span className="text-sm font-semibold text-[var(--cl-primary)]">
+          <div className="flex items-center justify-between bg-accent-purple/10 border border-accent-purple rounded-lg px-3 py-2">
+            <span className="text-sm text-accent-purple font-medium">Rubric computed score</span>
+            <span className="text-sm font-semibold text-accent-purple">
               {computeRubricScore()} / {maxScore}
             </span>
           </div>
@@ -218,8 +218,8 @@ export default function EvaluationPanel({
 
       {/* Score */}
       <div>
-        <label className="block text-sm font-semibold text-[var(--cl-body)] mb-2 flex items-center gap-2">
-          <Star className="w-4 h-4 text-[var(--cl-warning)]" />
+        <label className="block text-sm font-semibold text-foreground/80 mb-2 flex items-center gap-2">
+          <Star className="w-4 h-4 text-amber-600" />
           Score (out of {maxScore})
         </label>
         <div className="flex items-center gap-3">
@@ -230,11 +230,11 @@ export default function EvaluationPanel({
             max={maxScore}
             onChange={(e) => setScore(e.target.value)}
             placeholder="—"
-            className="w-24 px-3 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] text-center font-semibold text-lg"
+            className="w-24 px-3 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring text-center font-semibold text-lg"
           />
-          <span className="text-[var(--cl-muted)] text-sm">/ {maxScore}</span>
+          <span className="text-muted-foreground text-sm">/ {maxScore}</span>
           {score !== '' && (
-            <span className="text-sm text-[var(--cl-primary)] font-medium">
+            <span className="text-sm text-accent-purple font-medium">
               {Math.round((Number(score) / maxScore) * 100)}%
             </span>
           )}
@@ -243,7 +243,7 @@ export default function EvaluationPanel({
 
       {/* Feedback */}
       <div>
-        <label className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+        <label className="block text-sm font-semibold text-foreground/80 mb-2">
           Written Feedback
         </label>
         <textarea
@@ -251,34 +251,34 @@ export default function EvaluationPanel({
           onChange={(e) => setFeedback(e.target.value)}
           placeholder="Provide detailed feedback on code quality, structure, collaboration, and areas for improvement..."
           rows={5}
-          className="w-full px-3.5 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] resize-none"
+          className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
         />
       </div>
 
-      {error && <p className="text-sm text-[var(--cl-error)]">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <button
         onClick={() => save()}
         disabled={saving}
-        className="flex items-center gap-2 px-5 py-2.5 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] text-sm font-medium transition-colors disabled:opacity-60 w-full justify-center"
+        className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-60 w-full justify-center"
       >
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
         {saved ? 'Saved!' : 'Save Evaluation'}
       </button>
 
       {/* Comments thread */}
-      <div className="pt-2 border-t border-[var(--cl-hairline)]">
-        <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-3 flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-[var(--cl-muted-soft)]" />
+      <div className="pt-2 border-t border-border">
+        <h3 className="text-sm font-semibold text-foreground/80 mb-3 flex items-center gap-2">
+          <MessageSquare className="w-4 h-4 text-muted-foreground/70" />
           Comments ({comments.length})
         </h3>
 
         {comments.length > 0 && (
           <div className="space-y-2 mb-3 max-h-48 overflow-y-auto">
             {comments.map((c, i) => (
-              <div key={i} className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-3">
-                <p className="text-sm text-[var(--cl-body)]">{c.text}</p>
-                <p className="text-xs text-[var(--cl-muted)] mt-1">
+              <div key={i} className="bg-muted/40 rounded-lg p-3">
+                <p className="text-sm text-foreground/80">{c.text}</p>
+                <p className="text-xs text-muted-foreground mt-1">
                   {new Date(c.created_at).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -298,12 +298,12 @@ export default function EvaluationPanel({
             onChange={(e) => setComment(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && comment.trim()) { e.preventDefault(); save({ withComment: true }); } }}
             placeholder="Add a comment..."
-            className="flex-1 px-3 py-2 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+            className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <button
             onClick={() => save({ withComment: true })}
             disabled={saving || !comment.trim()}
-            className="px-3 py-2 bg-[var(--cl-primary-soft)] hover:bg-[var(--cl-primary)] text-[var(--cl-primary)] rounded-[var(--cl-r-lg)] transition-colors disabled:opacity-50"
+            className="px-3 py-2 bg-accent-purple/10 hover:bg-primary text-accent-purple rounded-lg transition-colors disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageSquare className="w-4 h-4" />}
           </button>

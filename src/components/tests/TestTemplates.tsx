@@ -212,7 +212,7 @@ export function TestTemplates({ onSelect }: TestTemplatesProps) {
             <button
                 type="button"
                 onClick={() => setIsOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-lg font-medium hover:bg-[var(--cl-primary-soft)] transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-accent-purple/10 text-accent-purple rounded-lg font-medium hover:bg-accent-purple/10 transition-all"
             >
                 <FileText className="w-4 h-4" />
                 Use Template
@@ -224,32 +224,32 @@ export function TestTemplates({ onSelect }: TestTemplatesProps) {
                         className="fixed inset-0 bg-black/50 z-40"
                         onClick={() => setIsOpen(false)}
                     />
-                    <div className="fixed inset-x-4 top-8 bottom-8 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[800px] z-50 flex flex-col bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] overflow-hidden">
+                    <div className="fixed inset-x-4 top-8 bottom-8 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[800px] z-50 flex flex-col bg-card rounded-xl overflow-hidden">
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-[var(--cl-hairline)]">
+                        <div className="flex items-center justify-between p-6 border-b border-border">
                             <div>
-                                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Test Templates</h2>
-                                <p className="text-sm text-[var(--cl-muted)] mt-1">
+                                <h2 className="text-2xl font-semibold text-foreground">Test Templates</h2>
+                                <p className="text-sm text-muted-foreground mt-1">
                                     Start with a pre-built template
                                 </p>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                                className="p-2 hover:bg-muted rounded-lg transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
                         {/* Category Filter */}
-                        <div className="p-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                        <div className="p-4 border-b border-border bg-muted/40">
                             <div className="flex items-center gap-2 flex-wrap">
                                 <button
                                     onClick={() => setSelectedCategory('')}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                                         selectedCategory === ''
-                                            ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                                            : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                            ? 'bg-primary text-white'
+                                            : 'bg-card text-foreground/80 hover:bg-muted'
                                     }`}
                                 >
                                     All
@@ -260,8 +260,8 @@ export function TestTemplates({ onSelect }: TestTemplatesProps) {
                                         onClick={() => setSelectedCategory(category)}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                                             selectedCategory === category
-                                                ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                                                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)]'
+                                                ? 'bg-primary text-white'
+                                                : 'bg-card text-foreground/80 hover:bg-muted'
                                         }`}
                                     >
                                         {category}
@@ -277,26 +277,26 @@ export function TestTemplates({ onSelect }: TestTemplatesProps) {
                                     <button
                                         key={template.id}
                                         onClick={() => handleSelect(template)}
-                                        className="p-5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] hover:border-[var(--cl-primary)] transition-all text-left group"
+                                        className="p-5 border border-border rounded-lg hover:border-accent-purple transition-all text-left group"
                                     >
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-lg group-hover:bg-[var(--cl-primary-soft)] transition-colors">
+                                            <div className="p-3 bg-accent-purple/10 text-accent-purple rounded-lg group-hover:bg-accent-purple/10 transition-colors">
                                                 {template.icon}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-[var(--cl-ink)] mb-1">
+                                                <h3 className="font-semibold text-foreground mb-1">
                                                     {template.name}
                                                 </h3>
-                                                <p className="text-sm text-[var(--cl-muted)] mb-3 line-clamp-2">
+                                                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                                                     {template.description}
                                                 </p>
-                                                <div className="flex items-center gap-3 text-xs text-[var(--cl-muted-soft)]">
+                                                <div className="flex items-center gap-3 text-xs text-muted-foreground/70">
                                                     <span className="flex items-center gap-1">
                                                         <Clock className="w-3 h-3" />
                                                         {template.duration_minutes} min
                                                     </span>
                                                     <span>{template.questions.length} questions</span>
-                                                    <span className="px-2 py-0.5 bg-[var(--cl-surface-strong)] rounded-full">
+                                                    <span className="px-2 py-0.5 bg-muted rounded-full">
                                                         {template.category}
                                                     </span>
                                                 </div>

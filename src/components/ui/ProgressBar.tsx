@@ -19,10 +19,10 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
   return (
     <div className="w-full">
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-sm font-medium text-[var(--cl-body)]">
+        <span className="text-sm font-medium text-foreground/80">
           Step <span className="cl-mono">{clamped}</span> of <span className="cl-mono">{safeTotal}</span>
         </span>
-        <span className="cl-mono text-sm font-medium text-[var(--cl-ink)]">
+        <span className="cl-mono text-sm font-medium text-foreground">
           {Math.round(progress)}%
         </span>
       </div>
@@ -33,10 +33,10 @@ export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Step ${clamped} of ${safeTotal}`}
-        className="h-2 w-full overflow-hidden rounded-[var(--cl-r-pill)] bg-[var(--cl-surface-strong)]"
+        className="h-2 w-full overflow-hidden rounded-full bg-muted"
       >
         <div
-          className="h-full rounded-[var(--cl-r-pill)] bg-[var(--cl-primary)] transition-[width] duration-[var(--cl-dur-panel)] ease-[var(--cl-ease)]"
+          className="h-full rounded-full bg-primary transition-[width] duration-200 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>

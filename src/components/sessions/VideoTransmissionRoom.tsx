@@ -155,68 +155,68 @@ export function VideoTransmissionRoom({
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--cl-surface-inverse)] z-[100] flex flex-col font-sans">
+    <div className="fixed inset-0 bg-neutral-900 z-[100] flex flex-col font-sans">
       {/* Jitsi Engine Container */}
-      <div ref={containerRef} className="flex-1 relative bg-[var(--cl-surface-inverse)]" />
+      <div ref={containerRef} className="flex-1 relative bg-neutral-900" />
 
       {/* 🛡️ CLASSERA BRANDING OVERLAY - Hides Jitsi Logos */}
       <div className="absolute inset-0 pointer-events-none z-10">
         
         {/* Top-Left: Classera Logo (Branding Overlay) */}
-        <div className="absolute top-0 left-0 w-64 h-24 p-6 pointer-events-auto bg-[var(--cl-surface-inverse)]">
+        <div className="absolute top-0 left-0 w-64 h-24 p-6 pointer-events-auto bg-neutral-900">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center">
-                <span className="text-[var(--cl-on-dark)] font-semibold text-xl leading-none italic">C</span>
+             <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-white font-semibold text-xl leading-none italic">C</span>
              </div>
              <div>
-                <h1 className="text-[var(--cl-on-dark)] text-base font-semibold leading-none tracking-tight">Classera <span className="text-[var(--cl-primary)]">Live</span></h1>
-                <p className="text-[var(--cl-muted-soft)] text-[10px] uppercase font-semibold tracking-widest mt-1">E-Learning Hub</p>
+                <h1 className="text-white text-base font-semibold leading-none tracking-tight">Classera <span className="text-accent-purple">Live</span></h1>
+                <p className="text-muted-foreground/70 text-[10px] uppercase font-semibold tracking-widest mt-1">E-Learning Hub</p>
              </div>
           </div>
         </div>
 
         {/* Top-Center: Session Title */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center gap-3">
-           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[rgba(22,163,74,0.2)] text-[var(--cl-success)] rounded-lg text-[10px] font-semibold border border-[var(--cl-success)]">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-card backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center gap-3">
+           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[rgba(22,163,74,0.2)] text-green-600 rounded-lg text-[10px] font-semibold border border-green-600">
               <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
               SECURE
            </div>
-           <span className="text-sm font-semibold text-[var(--cl-on-dark)] tracking-wide">{sessionTitle}</span>
+           <span className="text-sm font-semibold text-white tracking-wide">{sessionTitle}</span>
         </div>
 
         {/* Bottom-Right: Participant Sidebar Toggle (Floating Overlay) */}
         <div className="absolute bottom-32 right-6 flex flex-col gap-3 pointer-events-auto">
            <button 
              onClick={() => setShowParticipants(!showParticipants)}
-             className="w-12 h-12 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] hover:bg-[var(--cl-primary)] transition-all"
+             className="w-12 h-12 bg-card backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center text-white hover:bg-primary transition-all"
            >
               <Users size={20} />
            </button>
-           <button className="w-12 h-12 bg-[var(--cl-surface-card)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)] transition-all">
+           <button className="w-12 h-12 bg-card backdrop-blur-xl border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center text-white hover:bg-neutral-900 transition-all">
               <Settings size={20} />
            </button>
         </div>
 
         {/* Custom Sidebar Overlay */}
         {showParticipants && (
-           <div className="absolute right-6 top-24 bottom-48 w-72 bg-[var(--cl-surface-card)] backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)] p-6 pointer-events-auto overflow-y-auto">
+           <div className="absolute right-6 top-24 bottom-48 w-72 bg-card backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-xl p-6 pointer-events-auto overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[var(--cl-on-dark)] font-semibold text-lg">Members</h3>
-                <button onClick={() => setShowParticipants(false)} className="text-[var(--cl-muted)] hover:text-[var(--cl-on-dark)]"><X size={20} /></button>
+                <h3 className="text-white font-semibold text-lg">Members</h3>
+                <button onClick={() => setShowParticipants(false)} className="text-muted-foreground hover:text-white"><X size={20} /></button>
               </div>
               <div className="space-y-4">
-                 <div className="flex items-center gap-3 p-3 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)]">
-                    <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-primary)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold">{mentorName.charAt(0)}</div>
+                 <div className="flex items-center gap-3 p-3 bg-card border border-accent-purple rounded-xl">
+                    <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-semibold">{mentorName.charAt(0)}</div>
                     <div>
-                      <p className="text-sm font-semibold text-[var(--cl-on-dark)]">{mentorName}</p>
-                      <p className="text-[10px] text-[var(--cl-primary)] uppercase font-semibold tracking-widest">Mentor (Host)</p>
+                      <p className="text-sm font-semibold text-white">{mentorName}</p>
+                      <p className="text-[10px] text-accent-purple uppercase font-semibold tracking-widest">Mentor (Host)</p>
                     </div>
                  </div>
-                 <div className="flex items-center gap-3 p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[var(--cl-r-xl)]">
-                    <div className="w-10 h-10 rounded-[var(--cl-r-lg)] bg-[var(--cl-surface-inverse)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold">{userName.charAt(0)}</div>
+                 <div className="flex items-center gap-3 p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl">
+                    <div className="w-10 h-10 rounded-lg bg-neutral-900 flex items-center justify-center text-white font-semibold">{userName.charAt(0)}</div>
                     <div>
-                      <p className="text-sm font-semibold text-[var(--cl-on-dark)]">{userName}</p>
-                      <p className="text-[10px] text-[var(--cl-muted)] uppercase font-semibold tracking-widest">You</p>
+                      <p className="text-sm font-semibold text-white">{userName}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-widest">You</p>
                     </div>
                  </div>
               </div>
@@ -225,22 +225,22 @@ export function VideoTransmissionRoom({
       </div>
 
       {/* 🎮 CLASSERA CONTROL CENTER */}
-      <div className="bg-[var(--cl-surface-card)] backdrop-blur-3xl px-8 py-6 border-t border-[rgba(255,255,255,0.05)] flex items-center justify-between z-20">
+      <div className="bg-card backdrop-blur-3xl px-8 py-6 border-t border-[rgba(255,255,255,0.05)] flex items-center justify-between z-20">
         <div className="flex items-center gap-4 flex-1">
-           <div className="p-3 bg-[rgba(255,255,255,0.05)] rounded-[var(--cl-r-xl)] border border-[rgba(255,255,255,0.05)] text-[var(--cl-muted-soft)] group hover:border-[var(--cl-primary)] transition-all cursor-pointer" onClick={handleCopyRoomUrl}>
+           <div className="p-3 bg-[rgba(255,255,255,0.05)] rounded-xl border border-[rgba(255,255,255,0.05)] text-muted-foreground/70 group hover:border-accent-purple transition-all cursor-pointer" onClick={handleCopyRoomUrl}>
               <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-[var(--cl-primary)]" />
+                 <div className="w-2 h-2 rounded-full bg-primary" />
                  <span className="text-[10px] font-semibold uppercase tracking-widest">{copied ? 'Copied' : 'Session Info'}</span>
-                 {copied ? <Check size={12} className="text-[var(--cl-success)]" /> : <Copy size={12} />}
+                 {copied ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
               </div>
            </div>
         </div>
 
-        <div className="flex items-center gap-4 bg-[rgba(255,255,255,0.05)] p-2 rounded-[var(--cl-r-xl)] border border-[rgba(255,255,255,0.05)]">
+        <div className="flex items-center gap-4 bg-[rgba(255,255,255,0.05)] p-2 rounded-xl border border-[rgba(255,255,255,0.05)]">
           <button
             onClick={toggleMic}
-            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-95 ${
-              isMuted ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
+            className={`p-4 rounded-xl transition-all transform active:scale-95 ${
+              isMuted ? 'bg-destructive text-white' : 'bg-neutral-900 text-white hover:bg-neutral-900'
             }`}
           >
             {isMuted ? <MicOff size={22} /> : <Mic size={22} />}
@@ -248,8 +248,8 @@ export function VideoTransmissionRoom({
 
           <button
             onClick={toggleCamera}
-            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-95 ${
-              isCameraOff ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
+            className={`p-4 rounded-xl transition-all transform active:scale-95 ${
+              isCameraOff ? 'bg-destructive text-white' : 'bg-neutral-900 text-white hover:bg-neutral-900'
             }`}
           >
             {isCameraOff ? <VideoOff size={22} /> : <Video size={22} />}
@@ -259,8 +259,8 @@ export function VideoTransmissionRoom({
 
           <button
             onClick={toggleScreenShare}
-            className={`p-4 rounded-[var(--cl-r-xl)] transition-all transform active:scale-105 ${
-              isScreenSharing ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]' : 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] hover:bg-[var(--cl-surface-inverse)]'
+            className={`p-4 rounded-xl transition-all transform active:scale-105 ${
+              isScreenSharing ? 'bg-primary text-white' : 'bg-neutral-900 text-white hover:bg-neutral-900'
             }`}
           >
             <Share2 size={22} />
@@ -270,7 +270,7 @@ export function VideoTransmissionRoom({
 
           <button
             onClick={handleLeaveCall}
-            className="p-4 bg-[var(--cl-error)] hover:bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 group"
+            className="p-4 bg-destructive hover:bg-destructive text-white rounded-xl transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 group"
           >
             <PhoneOff size={22} />
             <span className="text-xs font-semibold font-sans pr-1 group-hover:block hidden">End</span>
@@ -278,7 +278,7 @@ export function VideoTransmissionRoom({
         </div>
 
         <div className="flex-1 flex justify-end gap-3 text-xs">
-           <div className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] text-[var(--cl-primary)] rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)] font-semibold uppercase tracking-widest text-[9px]">
+           <div className="flex items-center gap-2 px-4 py-2 bg-card text-accent-purple rounded-lg border border-accent-purple font-semibold uppercase tracking-widest text-[9px]">
              Meeting ID: {sessionId.split('-')[0]}
            </div>
         </div>

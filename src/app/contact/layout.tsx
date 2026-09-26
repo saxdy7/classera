@@ -1,3 +1,4 @@
+import { PageTransition } from '@/components/motion';
 /**
  * contact route-segment layout.
  *
@@ -9,5 +10,5 @@ export default function ContactLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="cl-app cl-v3">{children}</div>;
+  return <div className="cl-app cl-v3"><PageTransition>{children}</PageTransition></div>;
 }

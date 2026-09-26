@@ -196,31 +196,31 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
   return (
     <div className="flex flex-col h-full">
       {/* Chat Header */}
-      <div className="flex items-center gap-4 p-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-surface-card)]">
+      <div className="flex items-center gap-4 p-4 border-b border-border bg-card">
         <button
           onClick={onBack}
-          className="lg:hidden p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+          className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold bg-primary">
           {getInitials(otherUser.full_name)}
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-[var(--cl-ink)]">{otherUser.full_name}</h3>
-          <p className="text-sm text-[var(--cl-muted)] capitalize">{otherUser.role}</p>
+          <h3 className="font-semibold text-foreground">{otherUser.full_name}</h3>
+          <p className="text-sm text-muted-foreground capitalize">{otherUser.role}</p>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--cl-canvas-soft)]">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/40">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-20 h-20 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mb-4">
-              <Send className="w-10 h-10 text-[var(--cl-muted-soft)]" />
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-4">
+              <Send className="w-10 h-10 text-muted-foreground/70" />
             </div>
-            <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No messages yet</h3>
-            <p className="text-[var(--cl-muted)]">
+            <h3 className="text-xl font-semibold text-foreground mb-2">No messages yet</h3>
+            <p className="text-muted-foreground">
               Start a conversation with {otherUser.full_name}
             </p>
           </div>
@@ -234,16 +234,16 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
                   className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-[var(--cl-r-xl)] px-4 py-2 ${
+                    className={`max-w-[70%] rounded-xl px-4 py-2 ${
                       isCurrentUser
-                        ? 'text-[var(--cl-on-dark)] rounded-br-none bg-[var(--cl-primary)]'
-                        : 'bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-ink)] rounded-bl-none'
+                        ? 'text-white rounded-br-none bg-primary'
+                        : 'bg-card border border-border text-foreground rounded-bl-none'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{message.content}</p>
                     <p
                       className={`text-xs mt-1 ${
-                        isCurrentUser ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'
+                        isCurrentUser ? 'text-accent-purple' : 'text-muted-foreground/70'
                       }`}
                     >
                       {new Date(message.created_at).toLocaleTimeString([], {
@@ -261,7 +261,7 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-[var(--cl-hairline)] bg-[var(--cl-surface-card)]">
+      <div className="p-4 border-t border-border bg-card">
         <div className="flex gap-2">
           <input
             type="text"
@@ -270,12 +270,12 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
             disabled={loading}
-            className="flex-1 px-4 py-3 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] focus:outline-none focus:border-[var(--cl-primary)] transition-colors text-[var(--cl-ink)] placeholder:text-[var(--cl-muted-soft)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground/70 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             onClick={sendMessage}
             disabled={loading || !newMessage.trim()}
-            className="px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--cl-primary)]"
+            className="px-6 py-3 text-white rounded-lg font-medium transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-primary"
           >
             <Send className="w-5 h-5" />
             Send

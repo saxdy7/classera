@@ -57,14 +57,14 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
     };
 
     return (
-        <div className="relative group my-4 rounded-lg overflow-hidden border border-[var(--cl-hairline-strong)]">
+        <div className="relative group my-4 rounded-lg overflow-hidden border border-border">
             {/* Header with language label and action buttons */}
-            <div className="flex items-center justify-between bg-[var(--cl-surface-inverse)] text-[var(--cl-muted-soft)] px-4 py-2 text-sm font-mono border-b border-[var(--cl-hairline-strong)]">
+            <div className="flex items-center justify-between bg-neutral-900 text-muted-foreground/70 px-4 py-2 text-sm font-mono border-b border-border">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs uppercase tracking-wide font-semibold text-[var(--cl-primary)]">
+                    <span className="text-xs uppercase tracking-wide font-semibold text-accent-purple">
                         {language || 'code'}
                     </span>
-                    <span className="text-xs text-[var(--cl-muted-soft)]">
+                    <span className="text-xs text-muted-foreground/70">
                         {value.split('\n').length} lines
                     </span>
                 </div>
@@ -73,7 +73,7 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
                     {/* Expand/Collapse button */}
                     <button
                         onClick={() => setExpanded(!expanded)}
-                        className="flex items-center gap-1 px-2 py-1 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)] rounded transition-colors text-xs"
+                        className="flex items-center gap-1 px-2 py-1 bg-neutral-900 hover:bg-muted rounded transition-colors text-xs"
                         title={expanded ? 'Collapse' : 'Expand'}
                     >
                         {expanded ? (
@@ -92,7 +92,7 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
                     {/* Download button */}
                     <button
                         onClick={handleDownload}
-                        className="flex items-center gap-1 px-2 py-1 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)] rounded transition-colors text-xs"
+                        className="flex items-center gap-1 px-2 py-1 bg-neutral-900 hover:bg-muted rounded transition-colors text-xs"
                         title="Download code"
                     >
                         <Download className="w-3 h-3" />
@@ -102,13 +102,13 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
                     {/* Copy button */}
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-1 px-2 py-1 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)] rounded transition-colors text-xs"
+                        className="flex items-center gap-1 px-2 py-1 bg-neutral-900 hover:bg-muted rounded transition-colors text-xs"
                         title="Copy code"
                     >
                         {copied ? (
                             <>
-                                <Check className="w-3 h-3 text-[var(--cl-success)]" />
-                                <span className="text-[var(--cl-success)]">Copied!</span>
+                                <Check className="w-3 h-3 text-green-600" />
+                                <span className="text-green-600">Copied!</span>
                             </>
                         ) : (
                             <>
@@ -122,20 +122,20 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
 
             {/* Code content */}
             <div
-                className={`bg-[var(--cl-surface-inverse)] overflow-x-auto transition-all ${expanded ? 'max-h-none' : 'max-h-96'
+                className={`bg-neutral-900 overflow-x-auto transition-all ${expanded ? 'max-h-none' : 'max-h-96'
                     }`}
             >
                 <pre className="p-4 text-sm leading-relaxed">
-                    <code className={`language-${language} text-[var(--cl-muted-soft)]`}>{value}</code>
+                    <code className={`language-${language} text-muted-foreground/70`}>{value}</code>
                 </pre>
             </div>
 
             {/* Show "Scroll for more" indicator if content is long and not expanded */}
             {!expanded && value.split('\n').length > 20 && (
-                <div className="absolute bottom-0 left-0 right-0 h-12 flex items-end justify-center pb-2 bg-[var(--cl-surface-inverse)]">
+                <div className="absolute bottom-0 left-0 right-0 h-12 flex items-end justify-center pb-2 bg-neutral-900">
                     <button
                         onClick={() => setExpanded(true)}
-                        className="text-xs text-[var(--cl-muted-soft)] hover:text-[var(--cl-muted-soft)] transition-colors"
+                        className="text-xs text-muted-foreground/70 hover:text-muted-foreground/70 transition-colors"
                     >
                         ↓ Scroll for more ↓
                     </button>

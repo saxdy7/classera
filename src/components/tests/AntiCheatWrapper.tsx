@@ -287,7 +287,7 @@ export function AntiCheatWrapper({
             {/* Warning Overlay */}
             {showWarning && (
                 <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-bounce">
-                    <div className="flex items-center gap-3 px-6 py-4 bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)]">
+                    <div className="flex items-center gap-3 px-6 py-4 bg-destructive text-white rounded-lg">
                         <AlertTriangle className="w-6 h-6" />
                         <div>
                             <p className="font-semibold">Warning!</p>
@@ -300,9 +300,9 @@ export function AntiCheatWrapper({
             {/* Violation Counter */}
             {warnings.length > 0 && (
                 <div className="fixed top-4 right-4 z-[99]">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-lg">
-                        <Eye className="w-4 h-4 text-[var(--cl-warning)]" />
-                        <span className="text-sm font-medium text-[var(--cl-warning)]">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500 rounded-lg">
+                        <Eye className="w-4 h-4 text-amber-600" />
+                        <span className="text-sm font-medium text-amber-600">
                             {warnings.length}/{config.maxWarnings} violations
                         </span>
                     </div>

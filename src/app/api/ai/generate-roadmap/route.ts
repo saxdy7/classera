@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { deepseek, groq } from '@/lib/deepseek';
+import { deepseek, groq, GROQ_MODEL } from '@/lib/deepseek';
 
 /** Robustly extract the first JSON object from a string that may contain
  *  markdown fences, leading text, trailing text, or partial content. */
@@ -124,7 +124,10 @@ Generate 10-14 nodes, ordered from fundamentals to advanced. Each node must have
             console.warn('⚠️ DeepSeek failed, falling back to Groq:', err.message);
             const c = await groq.chat.completions.create({
                 messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
-                model: 'llama-3.3-70b-versatile',
+                model: GROQ_MODEL,
+                // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+                // trace short so it cannot eat the max_tokens budget and return empty content.
+                reasoning_effort: 'low',
                 temperature: 0.6,
                 max_tokens: 5000,
             });

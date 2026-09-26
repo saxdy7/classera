@@ -77,11 +77,11 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
 
   if (success) {
     return (
-      <div className="flex items-center gap-3 p-4 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)] border border-[var(--cl-success)]">
-        <Send className="w-5 h-5 text-[var(--cl-success)]" />
+      <div className="flex items-center gap-3 p-4 bg-green-500/10 rounded-lg border border-green-600">
+        <Send className="w-5 h-5 text-green-600" />
         <div>
-          <p className="text-sm font-semibold text-[var(--cl-success)]">Submitted!</p>
-          <p className="text-xs text-[var(--cl-success)] mt-0.5">
+          <p className="text-sm font-semibold text-green-600">Submitted!</p>
+          <p className="text-xs text-green-600 mt-0.5">
             {submissionType === 'github' ? 'Analysis will begin shortly…' : 'Your mentor has been notified.'}
           </p>
         </div>
@@ -93,19 +93,19 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
     <form onSubmit={submit} className="space-y-3">
       {submissionType === 'github' && (
         <div>
-          <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">GitHub Repository URL</label>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">GitHub Repository URL</label>
           <div className="relative">
-            <GitBranch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
+            <GitBranch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
             <input
               type="url"
               value={repoUrl}
               onChange={(e) => setRepoUrl(e.target.value)}
               placeholder="https://github.com/username/repository"
-              className="w-full pl-10 pr-4 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               required
             />
           </div>
-          <p className="text-xs text-[var(--cl-muted-soft)] mt-1.5">
+          <p className="text-xs text-muted-foreground/70 mt-1.5">
             Public repositories work immediately. Private repositories also work as long as your GitHub account is connected above.
           </p>
         </div>
@@ -113,15 +113,15 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
 
       {submissionType === 'link' && (
         <div>
-          <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Submission Link</label>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Submission Link</label>
           <div className="relative">
-            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
+            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
             <input
               type="url"
               value={submissionUrl}
               onChange={(e) => setSubmissionUrl(e.target.value)}
               placeholder="https://…"
-              className="w-full pl-10 pr-4 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               required
             />
           </div>
@@ -130,15 +130,15 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
 
       {submissionType === 'written' && (
         <div>
-          <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Your Response</label>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Your Response</label>
           <div className="relative">
-            <FileText className="absolute left-3 top-3 w-4 h-4 text-[var(--cl-muted-soft)]" />
+            <FileText className="absolute left-3 top-3 w-4 h-4 text-muted-foreground/70" />
             <textarea
               value={submissionText}
               onChange={(e) => setSubmissionText(e.target.value)}
               rows={6}
               placeholder="Write your response…"
-              className="w-full pl-10 pr-4 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] resize-none"
+              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
               required
             />
           </div>
@@ -147,10 +147,10 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
 
       {submissionType === 'file_upload' && (
         <div>
-          <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Upload File</label>
-          <label className="flex items-center gap-3 p-3.5 border border-dashed border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] cursor-pointer hover:bg-[var(--cl-canvas-soft)] transition-colors">
-            <Upload className="w-4 h-4 text-[var(--cl-muted)] flex-shrink-0" />
-            <span className="text-sm text-[var(--cl-body)] truncate">
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Upload File</label>
+          <label className="flex items-center gap-3 p-3.5 border border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/40 transition-colors">
+            <Upload className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-sm text-foreground/80 truncate">
               {file?.name ?? existingFileName ?? 'Choose a file (max 10MB)'}
             </span>
             <input type="file" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
@@ -159,30 +159,30 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
       )}
 
       <div>
-        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
-          Live preview link <span className="text-[var(--cl-muted-soft)] font-normal">(optional)</span>
+        <label className="block text-sm font-medium text-foreground/80 mb-2">
+          Live preview link <span className="text-muted-foreground/70 font-normal">(optional)</span>
         </label>
         <input
           type="url"
           value={deployUrl}
           onChange={(e) => setDeployUrl(e.target.value)}
           placeholder="https://your-project.vercel.app"
-          className="w-full px-3.5 py-2.5 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+          className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
       </div>
 
       <button
         type="submit"
         disabled={submitting}
-        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary-active)] text-[var(--cl-on-primary)] rounded-[var(--cl-r-lg)] text-sm font-medium transition-colors disabled:opacity-60"
+        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors disabled:opacity-60"
       >
         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         {existing ? 'Update Submission' : 'Submit'}
       </button>
 
       {error && (
-        <div className="flex items-start gap-2 p-3 bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-lg)] border border-[var(--cl-error)]">
-          <p className="text-sm text-[var(--cl-error)]">{error}</p>
+        <div className="flex items-start gap-2 p-3 bg-destructive/10 rounded-lg border border-destructive">
+          <p className="text-sm text-destructive">{error}</p>
         </div>
       )}
     </form>

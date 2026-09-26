@@ -89,32 +89,32 @@ export function ThreadView({ parentMessage, channelId, onClose, currentUser }: T
     };
 
     return (
-        <div className="absolute top-0 right-0 w-96 h-full bg-[var(--cl-surface-card)] border-l border-[var(--cl-hairline)] z-30 flex flex-col">
-            <div className="p-4 border-b border-[var(--cl-hairline)] flex items-center justify-between bg-[var(--cl-canvas-soft)]">
-                <div className="flex items-center gap-2 font-semibold text-[var(--cl-ink)]">
+        <div className="absolute top-0 right-0 w-96 h-full bg-card border-l border-border z-30 flex flex-col">
+            <div className="p-4 border-b border-border flex items-center justify-between bg-muted/40">
+                <div className="flex items-center gap-2 font-semibold text-foreground">
                     <MessageCircle className="w-5 h-5" />
                     Thread
                 </div>
-                <button onClick={onClose} className="p-1 hover:bg-[var(--cl-surface-strong)] rounded-full transition-colors">
+                <button onClick={onClose} className="p-1 hover:bg-muted rounded-full transition-colors">
                     <X className="w-5 h-5" />
                 </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
                 {/* Parent Message */}
-                <div className="pb-4 border-b border-[var(--cl-hairline)]">
+                <div className="pb-4 border-b border-border">
                     <div className="flex gap-3">
-                        <div className="w-8 h-8 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center text-xs font-semibold text-[var(--cl-primary)] flex-shrink-0">
+                        <div className="w-8 h-8 bg-accent-purple/10 rounded-full flex items-center justify-center text-xs font-semibold text-accent-purple flex-shrink-0">
                             {parentMessage.sender.full_name.charAt(0)}
                         </div>
                         <div>
                             <div className="flex items-baseline gap-2 mb-1">
-                                <span className="font-semibold text-sm text-[var(--cl-ink)]">{parentMessage.sender.full_name}</span>
-                                <span className="text-xs text-[var(--cl-muted)]">
+                                <span className="font-semibold text-sm text-foreground">{parentMessage.sender.full_name}</span>
+                                <span className="text-xs text-muted-foreground">
                                     {new Date(parentMessage.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                             </div>
-                            <p className="text-sm text-[var(--cl-body)]">{parentMessage.content}</p>
+                            <p className="text-sm text-foreground/80">{parentMessage.content}</p>
                         </div>
                     </div>
                 </div>
@@ -122,23 +122,23 @@ export function ThreadView({ parentMessage, channelId, onClose, currentUser }: T
                 {/* Replies */}
                 {loading ? (
                     <div className="flex justify-center">
-                        <Loader2 className="w-6 h-6 animate-spin text-[var(--cl-primary)]" />
+                        <Loader2 className="w-6 h-6 animate-spin text-accent-purple" />
                     </div>
                 ) : (
                     <div className="space-y-4">
                         {replies.map((reply) => (
                             <div key={reply.id} className="flex gap-3">
-                                <div className="w-8 h-8 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center text-xs font-semibold text-[var(--cl-body)] flex-shrink-0">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-xs font-semibold text-foreground/80 flex-shrink-0">
                                     {reply.sender.full_name.charAt(0)}
                                 </div>
                                 <div>
                                     <div className="flex items-baseline gap-2 mb-1">
-                                        <span className="font-semibold text-sm text-[var(--cl-ink)]">{reply.sender.full_name}</span>
-                                        <span className="text-xs text-[var(--cl-muted)]">
+                                        <span className="font-semibold text-sm text-foreground">{reply.sender.full_name}</span>
+                                        <span className="text-xs text-muted-foreground">
                                             {new Date(reply.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-[var(--cl-body)]">{reply.content}</p>
+                                    <p className="text-sm text-foreground/80">{reply.content}</p>
                                 </div>
                             </div>
                         ))}
@@ -148,19 +148,19 @@ export function ThreadView({ parentMessage, channelId, onClose, currentUser }: T
             </div>
 
             {/* Reply Input */}
-            <div className="p-4 border-t border-[var(--cl-hairline)]">
+            <div className="p-4 border-t border-border">
                 <form onSubmit={handleSendReply} className="flex gap-2">
                     <input
                         type="text"
                         value={newReply}
                         onChange={(e) => setNewReply(e.target.value)}
                         placeholder="Reply to thread..."
-                        className="flex-1 px-3 py-2 rounded-lg border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] text-sm"
+                        className="flex-1 px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
                     />
                     <button
                         type="submit"
                         disabled={!newReply.trim() || sending}
-                        className="p-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 bg-primary hover:bg-primary text-white rounded-lg transition-colors disabled:opacity-50"
                     >
                         {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>

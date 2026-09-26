@@ -25,7 +25,7 @@ export interface ProgressSnapshot {
 export default function ProgressChart({ snapshots }: { snapshots: ProgressSnapshot[] }) {
   if (snapshots.length < 2) {
     return (
-      <div className="flex items-center justify-center h-32 text-[var(--cl-muted-soft)] text-sm">
+      <div className="flex items-center justify-center h-32 text-muted-foreground/70 text-sm">
         Need at least 2 analyses to show progress trend
       </div>
     );
@@ -44,7 +44,7 @@ export default function ProgressChart({ snapshots }: { snapshots: ProgressSnapsh
   const delta = last - first;
 
   const DeltaIcon = delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
-  const deltaColor = delta > 0 ? 'text-[var(--cl-success)]' : delta < 0 ? 'text-[var(--cl-error)]' : 'text-[var(--cl-muted-soft)]';
+  const deltaColor = delta > 0 ? 'text-green-600' : delta < 0 ? 'text-destructive' : 'text-muted-foreground/70';
 
   return (
     <div className="space-y-3">
@@ -53,7 +53,7 @@ export default function ProgressChart({ snapshots }: { snapshots: ProgressSnapsh
         <span className={`text-sm font-medium ${deltaColor}`}>
           {delta === 0 ? 'No change' : `${delta > 0 ? '+' : ''}${delta} pts overall`}
         </span>
-        <span className="text-xs text-[var(--cl-muted-soft)]">since first analysis</span>
+        <span className="text-xs text-muted-foreground/70">since first analysis</span>
       </div>
 
       <ResponsiveContainer width="100%" height={180}>
@@ -103,12 +103,12 @@ export default function ProgressChart({ snapshots }: { snapshots: ProgressSnapsh
         </LineChart>
       </ResponsiveContainer>
 
-      <div className="flex flex-wrap gap-3 text-xs text-[var(--cl-muted)]">
+      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
         {[
-          { label: 'Overall', color: 'bg-[var(--cl-primary)]' },
-          { label: 'Consistency', color: 'bg-[var(--cl-success)]' },
-          { label: 'Activity', color: 'bg-[var(--cl-warning)]' },
-          { label: 'Quality', color: 'bg-[var(--cl-info)]' },
+          { label: 'Overall', color: 'bg-primary' },
+          { label: 'Consistency', color: 'bg-green-600' },
+          { label: 'Activity', color: 'bg-amber-500' },
+          { label: 'Quality', color: 'bg-accent-purple' },
         ].map(({ label, color }) => (
           <span key={label} className="flex items-center gap-1">
             <span className={`w-3 h-1 rounded ${color} inline-block`} />

@@ -257,18 +257,18 @@ export function CommunityChat({
 
     if (loading) {
         return (
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] flex items-center justify-center h-96">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--cl-primary)]" />
+            <div className="bg-card rounded-xl border border-border flex items-center justify-center h-96">
+                <Loader2 className="w-8 h-8 animate-spin text-accent-purple" />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-error)] flex flex-col items-center justify-center h-64 gap-3 text-[var(--cl-error)]">
+            <div className="bg-card rounded-xl border border-destructive flex flex-col items-center justify-center h-64 gap-3 text-destructive">
                 <AlertCircle className="w-10 h-10" />
                 <p className="font-semibold">{error}</p>
-                <button onClick={fetchChannels} className="px-4 py-2 bg-[rgba(239,68,68,0.12)] hover:bg-[rgba(239,68,68,0.12)] rounded-lg text-sm font-medium transition-colors">
+                <button onClick={fetchChannels} className="px-4 py-2 bg-destructive/10 hover:bg-destructive/10 rounded-lg text-sm font-medium transition-colors">
                     Retry
                 </button>
             </div>
@@ -276,15 +276,15 @@ export function CommunityChat({
     }
 
     return (
-        <div className="flex flex-col overflow-hidden rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] h-[clamp(420px,calc(100vh-320px),820px)]">
+        <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card h-[clamp(420px,calc(100vh-320px),820px)]">
 
             {/* ── Top bar ── */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-primary-soft)]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-accent-purple/10">
                 <div className="flex items-center gap-3">
-                    <MessageCircle className="w-5 h-5 text-[var(--cl-primary)]" />
-                    <h2 className="font-semibold text-[var(--cl-ink)]">Community Chat</h2>
+                    <MessageCircle className="w-5 h-5 text-accent-purple" />
+                    <h2 className="font-semibold text-foreground">Community Chat</h2>
                     {!messagingEnabled && (
-                        <span className="flex items-center gap-1 px-3 py-1 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] text-xs font-semibold rounded-full">
+                        <span className="flex items-center gap-1 px-3 py-1 bg-amber-500/10 text-amber-600 text-xs font-semibold rounded-full">
                             <MessageSquareOff className="w-3 h-3" /> Messaging Off
                         </span>
                     )}
@@ -294,7 +294,7 @@ export function CommunityChat({
                     {/* Search toggle */}
                     <button
                         onClick={() => { setShowSearch(s => !s); setSearchQuery(''); }}
-                        className={`p-2 rounded-lg transition-colors ${showSearch ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' : 'hover:bg-[var(--cl-surface-strong)] text-[var(--cl-muted)]'}`}
+                        className={`p-2 rounded-lg transition-colors ${showSearch ? 'bg-accent-purple/10 text-accent-purple' : 'hover:bg-muted text-muted-foreground'}`}
                         title="Search messages"
                     >
                         <Search className="w-4 h-4" />
@@ -306,9 +306,9 @@ export function CommunityChat({
                             onClick={handleToggleMessaging}
                             disabled={togglingMsg}
                             title={messagingEnabled ? 'Disable student messaging' : 'Enable student messaging'}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-[var(--cl-r-lg)] text-sm font-semibold transition-all ${messagingEnabled
-                                ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] hover:bg-[var(--cl-success)] border border-[var(--cl-success)]'
-                                : 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] hover:bg-[var(--cl-warning)] border border-[var(--cl-warning)]'
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${messagingEnabled
+                                ? 'bg-green-500/10 text-green-600 hover:bg-green-600 border border-green-600'
+                                : 'bg-amber-500/10 text-amber-600 hover:bg-amber-500 border border-amber-500'
                                 } disabled:opacity-60`}
                         >
                             {togglingMsg
@@ -325,28 +325,28 @@ export function CommunityChat({
 
             {/* ── Channel tabs ── */}
             {channels.length > 0 && (
-                <div className="flex border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                <div className="flex border-b border-border bg-muted/40">
                     {channels.map(ch => (
                         <button
                             key={ch.id}
                             onClick={() => setActiveChannel(ch)}
                             className={`flex items-center gap-2 px-6 py-3 text-sm font-semibold transition-colors ${activeChannel?.id === ch.id
-                                ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)] bg-[var(--cl-surface-card)]'
-                                : 'text-[var(--cl-muted)] hover:text-[var(--cl-ink)] hover:bg-[var(--cl-surface-card)]'
+                                ? 'text-accent-purple border-b-2 border-accent-purple bg-card'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-card'
                                 }`}
                         >
                             {ch.type === 'announcement'
                                 ? <Megaphone className="w-4 h-4" />
                                 : <Hash className="w-4 h-4" />}
                             {ch.name}
-                            {ch.is_locked && <Lock className="w-3 h-3 text-[var(--cl-warning)]" />}
+                            {ch.is_locked && <Lock className="w-3 h-3 text-amber-600" />}
                         </button>
                     ))}
                 </div>
             )}
 
             {channels.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-[var(--cl-muted-soft)]">
+                <div className="flex flex-col items-center justify-center py-16 text-muted-foreground/70">
                     <Hash className="w-12 h-12 mb-3 opacity-40" />
                     <p className="font-semibold">No channels yet</p>
                     <p className="text-sm">Channels will appear here once the community is set up</p>
@@ -355,25 +355,25 @@ export function CommunityChat({
 
             {/* ── Search bar ── */}
             {showSearch && (
-                <div className="px-4 py-3 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                <div className="px-4 py-3 border-b border-border bg-muted/40">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
                         <input
                             autoFocus
                             type="text"
                             placeholder="Search messages…"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 rounded-lg border border-[var(--cl-hairline)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                            className="w-full pl-9 pr-4 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                         />
                         {searchQuery && (
-                            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--cl-muted-soft)] hover:text-[var(--cl-body)]">
+                            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground/80">
                                 <X className="w-4 h-4" />
                             </button>
                         )}
                     </div>
                     {searchQuery && (
-                        <p className="text-xs text-[var(--cl-muted)] mt-1">{filteredMessages.length} result(s)</p>
+                        <p className="text-xs text-muted-foreground mt-1">{filteredMessages.length} result(s)</p>
                     )}
                 </div>
             )}
@@ -382,7 +382,7 @@ export function CommunityChat({
             {activeChannel && (
                 <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
                     {filteredMessages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-[var(--cl-muted-soft)] gap-3">
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground/70 gap-3">
                             <MessageCircle className="w-14 h-14 opacity-30" />
                             <p className="font-semibold text-lg">
                                 {searchQuery ? 'No messages match your search' : 'No messages yet'}
@@ -399,7 +399,7 @@ export function CommunityChat({
                             return (
                                 <div key={msg.id} className={`flex gap-3 group ${isOwn ? 'flex-row-reverse' : ''}`}>
                                     {/* Avatar */}
-                                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] text-sm font-semibold flex-shrink-0 ${isMentor ? 'bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-strong)]'
+                                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${isMentor ? 'bg-primary' : 'bg-muted'
                                         }`}>
                                         {(msg.sender?.full_name || '?').charAt(0).toUpperCase()}
                                     </div>
@@ -408,18 +408,18 @@ export function CommunityChat({
                                     <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                                         {/* Meta */}
                                         <div className={`flex items-center gap-3 mb-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                                            <span className="font-semibold text-xs text-[var(--cl-ink)] tracking-tight uppercase">{msg.sender?.full_name}</span>
+                                            <span className="font-semibold text-xs text-foreground tracking-tight uppercase">{msg.sender?.full_name}</span>
                                             {isMentor && (
-                                                <span className="px-2.5 py-0.5 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-[9px] font-semibold uppercase tracking-widest rounded-lg">Mentor</span>
+                                                <span className="px-2.5 py-0.5 bg-primary text-white text-[9px] font-semibold uppercase tracking-widest rounded-lg">Mentor</span>
                                             )}
-                                            <span className="text-[10px] font-semibold text-[var(--cl-muted-soft)] uppercase tracking-tighter">{fmtTime(msg.created_at)}</span>
-                                            {msg.edited_at && <span className="text-[10px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-tighter italic">(edited)</span>}
+                                            <span className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-tighter">{fmtTime(msg.created_at)}</span>
+                                            {msg.edited_at && <span className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-tighter italic">(edited)</span>}
                                         </div>
 
                                         {/* Message */}
                                         <div className={`relative px-5 py-4 rounded-[1.5rem] text-sm leading-relaxed font-medium border ${isOwn
-                                            ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)] border-[var(--cl-primary)] rounded-tr-sm self-end'
-                                            : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] border-[var(--cl-hairline)] rounded-tl-sm self-start'
+                                            ? 'bg-primary text-white border-accent-purple rounded-tr-sm self-end'
+                                            : 'bg-card text-foreground/80 border-border rounded-tl-sm self-start'
                                             }`}>
                                             {msg.content}
                                         </div>
@@ -434,7 +434,7 @@ export function CommunityChat({
                                                     <button
                                                         key={emoji}
                                                         onClick={() => handleReact(msg.id, emoji)}
-                                                        className={`px-2 py-0.5 rounded-full text-xs transition-colors ${reacted ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] font-semibold' : 'bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
+                                                        className={`px-2 py-0.5 rounded-full text-xs transition-colors ${reacted ? 'bg-accent-purple/10 text-accent-purple font-semibold' : 'bg-muted hover:bg-muted text-foreground/80'
                                                             }`}
                                                     >
                                                         {emoji}{count > 0 ? ` ${count}` : ''}
@@ -444,21 +444,21 @@ export function CommunityChat({
 
                                             {/* Edit (own messages) */}
                                             {isOwn && (
-                                                <button onClick={() => startEdit(msg)} className="p-1.5 rounded-lg bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-primary-soft)] text-[var(--cl-muted-soft)] hover:text-[var(--cl-primary)] transition-colors" title="Edit">
+                                                <button onClick={() => startEdit(msg)} className="p-1.5 rounded-lg bg-muted hover:bg-accent-purple/10 text-muted-foreground/70 hover:text-accent-purple transition-colors" title="Edit">
                                                     <Pencil className="w-3.5 h-3.5" />
                                                 </button>
                                             )}
 
                                             {/* Delete (mentor only) */}
                                             {userRole === 'mentor' && (
-                                                <button onClick={() => handleDelete(msg.id)} className="p-1.5 rounded-lg bg-[var(--cl-surface-strong)] hover:bg-[rgba(239,68,68,0.12)] text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-colors" title="Delete">
+                                                <button onClick={() => handleDelete(msg.id)} className="p-1.5 rounded-lg bg-muted hover:bg-destructive/10 text-muted-foreground/70 hover:text-destructive transition-colors" title="Delete">
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
                                             )}
 
                                             {/* Pin (mentor only) */}
                                             {userRole === 'mentor' && (
-                                                <button className="p-1.5 rounded-lg bg-[var(--cl-surface-strong)] hover:bg-[rgba(171,100,0,0.12)] text-[var(--cl-muted-soft)] hover:text-[var(--cl-warning)] transition-colors" title="Pin message">
+                                                <button className="p-1.5 rounded-lg bg-muted hover:bg-amber-500/10 text-muted-foreground/70 hover:text-amber-600 transition-colors" title="Pin message">
                                                     <Pin className="w-3.5 h-3.5" />
                                                 </button>
                                             )}
@@ -474,13 +474,13 @@ export function CommunityChat({
 
             {/* ── Input ── */}
             {activeChannel && (
-                <div className="border-t border-[var(--cl-hairline)] p-4">
+                <div className="border-t border-border p-4">
                     {(() => {
                         const reason = reasonCannotPost();
                         if (reason) {
                             return (
-                                <div className="flex items-center justify-center gap-2 py-3 px-4 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-[var(--cl-muted)]">
-                                    {reason.includes('disabled') ? <MessageSquareOff className="w-5 h-5 text-[var(--cl-warning)]" /> : <Lock className="w-5 h-5" />}
+                                <div className="flex items-center justify-center gap-2 py-3 px-4 bg-muted/40 rounded-lg text-muted-foreground">
+                                    {reason.includes('disabled') ? <MessageSquareOff className="w-5 h-5 text-amber-600" /> : <Lock className="w-5 h-5" />}
                                     <span className="font-medium text-sm">{reason}</span>
                                 </div>
                             );
@@ -488,7 +488,7 @@ export function CommunityChat({
                         return (
                             <form onSubmit={handleSend} className="flex gap-2 items-center">
                                 {editingId && (
-                                    <button type="button" onClick={cancelEdit} className="p-2 rounded-lg text-[var(--cl-muted-soft)] hover:text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] transition-colors flex-shrink-0">
+                                    <button type="button" onClick={cancelEdit} className="p-2 rounded-lg text-muted-foreground/70 hover:text-foreground/80 hover:bg-muted transition-colors flex-shrink-0">
                                         <X className="w-5 h-5" />
                                     </button>
                                 )}
@@ -500,13 +500,13 @@ export function CommunityChat({
                                     onKeyDown={e => { if (e.key === 'Escape') cancelEdit(); }}
                                     placeholder={editingId ? 'Edit your message… (Esc to cancel)' : 'Type a message…'}
                                     disabled={sending}
-                                    className={`flex-1 px-4 py-3 rounded-[var(--cl-r-lg)] border text-sm focus:outline-none focus:border-[var(--cl-ink)] focus:ring-[3px] focus:ring-[rgba(10,10,10,0.12)] transition-all disabled:opacity-60 ${editingId ? 'border-[var(--cl-warning)] bg-[rgba(171,100,0,0.12)]' : 'border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)]'
+                                    className={`flex-1 px-4 py-3 rounded-lg border text-sm focus:outline-none focus:border-foreground focus:ring-[3px] focus:ring-ring/50 transition-all disabled:opacity-60 ${editingId ? 'border-amber-500 bg-amber-500/10' : 'border-border bg-card'
                                         }`}
                                 />
                                 <button
                                     type="submit"
                                     disabled={!newMessage.trim() || sending}
-                                    className={`px-5 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm ${editingId ? 'bg-[var(--cl-warning)] hover:bg-[var(--cl-warning)]' : 'bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)]'
+                                    className={`px-5 py-3 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm ${editingId ? 'bg-amber-500 hover:bg-amber-500' : 'bg-primary hover:bg-primary'
                                         }`}
                                 >
                                     {sending

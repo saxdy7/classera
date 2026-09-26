@@ -29,13 +29,13 @@ export const dynamic = 'force-dynamic';
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; className: string }> = {
-    submitted:  { label: 'Submitted',  className: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' },
-    analyzing:  { label: 'Analyzing',  className: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]' },
-    analyzed:   { label: 'Analyzed',   className: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' },
-    reviewed:   { label: 'Reviewed',   className: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' },
-    graded:     { label: 'Graded',     className: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' },
+    submitted:  { label: 'Submitted',  className: 'bg-accent-purple/10 text-accent-purple' },
+    analyzing:  { label: 'Analyzing',  className: 'bg-amber-500/10 text-amber-600' },
+    analyzed:   { label: 'Analyzed',   className: 'bg-green-500/10 text-green-600' },
+    reviewed:   { label: 'Reviewed',   className: 'bg-accent-purple/10 text-accent-purple' },
+    graded:     { label: 'Graded',     className: 'bg-accent-purple/10 text-accent-purple' },
   };
-  const s = map[status] ?? { label: status, className: 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]' };
+  const s = map[status] ?? { label: status, className: 'bg-muted text-foreground/80' };
   return <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${s.className}`}>{s.label}</span>;
 }
 
@@ -145,7 +145,7 @@ export default async function StudentProjectDetailPage({
   const isOverdue = deadline && deadline < now && !submission;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -153,23 +153,23 @@ export default async function StudentProjectDetailPage({
           <div className="max-w-6xl mx-auto">
 
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-[var(--cl-primary)] font-semibold uppercase tracking-wider mb-3">
+            <div className="flex items-center gap-2 text-sm text-accent-purple font-semibold uppercase tracking-wider mb-3">
               <GitBranch className="w-4 h-4" />
               Assignment Submission
             </div>
             <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight text-foreground">{assignment.title}</h1>
-                <p className="text-[var(--cl-muted)] mt-1">
+                <p className="text-muted-foreground mt-1">
                   By {(assignment.users as { full_name: string } | null)?.full_name ?? 'Mentor'}
                   {!assignment.is_active && (
-                    <span className="ml-2 text-xs px-2 py-0.5 bg-[var(--cl-surface-strong)] text-[var(--cl-muted)] rounded-full align-middle">Closed</span>
+                    <span className="ml-2 text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-full align-middle">Closed</span>
                   )}
                 </p>
               </div>
               <Link
                 href="/dashboard/student/projects"
-                className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] px-3 py-2 bg-[var(--cl-surface-card)]"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-3 py-2 bg-card"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -183,19 +183,19 @@ export default async function StudentProjectDetailPage({
 
                 {/* GitHub connect - only relevant for GitHub-repo submissions */}
                 {assignment.submission_type === 'github' && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
-                    <h2 className="text-lg font-semibold text-[var(--cl-ink)] mb-5 flex items-center gap-2">
-                      <GitBranch className="w-5 h-5 text-[var(--cl-primary)]" />
+                  <div className="bg-card rounded-xl border border-border p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-5 flex items-center gap-2">
+                      <GitBranch className="w-5 h-5 text-accent-purple" />
                       Repository Connection
                     </h2>
 
                     {!isGithubConnected ? (
-                      <div className="border-2 border-dashed border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] bg-[var(--cl-canvas-soft)] p-8 flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] rounded-full flex items-center justify-center mb-4">
+                      <div className="border-2 border-dashed border-border rounded-xl bg-muted/40 p-8 flex flex-col items-center text-center">
+                        <div className="w-12 h-12 bg-neutral-900 text-white rounded-full flex items-center justify-center mb-4">
                           <GitBranch className="w-6 h-6" />
                         </div>
-                        <h3 className="font-semibold text-lg mb-2 text-[var(--cl-ink)]">Connect GitHub Account</h3>
-                        <p className="text-[var(--cl-muted)] text-sm mb-6 max-w-sm">
+                        <h3 className="font-semibold text-lg mb-2 text-foreground">Connect GitHub Account</h3>
+                        <p className="text-muted-foreground text-sm mb-6 max-w-sm">
                           Link your GitHub account to verify your repository and pull commit data for your submission.
                         </p>
                         <GitHubConnectButton
@@ -206,21 +206,21 @@ export default async function StudentProjectDetailPage({
                         />
                       </div>
                     ) : (
-                      <div className="bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] p-5 mb-5">
+                      <div className="bg-accent-purple/10 border border-accent-purple rounded-xl p-5 mb-5">
                         <div className="flex items-center gap-3">
                           {githubAvatarUrl ? (
-                            <img src={githubAvatarUrl} alt={githubUsername || "GitHub User"} className="w-10 h-10 rounded-full border-2 border-[var(--cl-primary)]" />
+                            <img src={githubAvatarUrl} alt={githubUsername || "GitHub User"} className="w-10 h-10 rounded-full border-2 border-accent-purple" />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-[var(--cl-surface-inverse)] flex items-center justify-center">
-                              <GitBranch className="w-5 h-5 text-[var(--cl-on-dark)]" />
+                            <div className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center">
+                              <GitBranch className="w-5 h-5 text-white" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <CheckCircle2 className="w-4 h-4 text-[var(--cl-success)]" />
-                              <p className="text-sm font-semibold text-[var(--cl-ink)]">GitHub Connected</p>
+                              <CheckCircle2 className="w-4 h-4 text-green-600" />
+                              <p className="text-sm font-semibold text-foreground">GitHub Connected</p>
                             </div>
-                            <p className="text-xs text-[var(--cl-muted)]">@{githubUsername}</p>
+                            <p className="text-xs text-muted-foreground">@{githubUsername}</p>
                           </div>
                           <GitHubConnectButton
                             connected={true}
@@ -234,36 +234,36 @@ export default async function StudentProjectDetailPage({
                     {/* Repo URL + submit */}
                     <div className="mt-4">
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-sm font-semibold text-[var(--cl-ink)]">Repository URL</h3>
+                        <h3 className="text-sm font-semibold text-foreground">Repository URL</h3>
                         {submission && <StatusBadge status={submission.status} />}
                       </div>
 
                       {submission ? (
                         <div className="space-y-3">
-                          <div className="flex items-center gap-3 p-3 bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-lg)]">
-                            <GitBranch className="w-4 h-4 text-[var(--cl-muted-soft)] flex-shrink-0" />
-                            <span className="font-mono text-sm text-[var(--cl-on-dark)] flex-1 truncate">
+                          <div className="flex items-center gap-3 p-3 bg-neutral-900 rounded-lg">
+                            <GitBranch className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
+                            <span className="font-mono text-sm text-white flex-1 truncate">
                               {submission.repo_full_name}
                             </span>
                             <a
                               href={`https://github.com/${submission.repo_full_name}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] flex-shrink-0"
+                              className="flex items-center gap-1.5 text-sm text-accent-purple hover:text-accent-purple flex-shrink-0"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               Open on GitHub
                             </a>
                           </div>
-                          <p className="text-xs text-[var(--cl-muted-soft)] flex items-center gap-1">
+                          <p className="text-xs text-muted-foreground/70 flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
                             Submitted {new Date(submission.submitted_at).toLocaleDateString('en-US', {
                               month: 'long', day: 'numeric', year: 'numeric',
                             })}
                           </p>
                           {submission.status !== 'graded' && (
-                            <div className="pt-3 border-t border-[var(--cl-hairline)]">
-                              <p className="text-xs text-[var(--cl-muted)] mb-2 font-medium">Update repository URL</p>
+                            <div className="pt-3 border-t border-border">
+                              <p className="text-xs text-muted-foreground mb-2 font-medium">Update repository URL</p>
                               <SubmissionForm assignmentId={assignmentId} submissionType="github" existing={submission} />
                             </div>
                           )}
@@ -277,9 +277,9 @@ export default async function StudentProjectDetailPage({
 
                 {/* Non-GitHub submission types */}
                 {assignment.submission_type !== 'github' && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
+                  <div className="bg-card rounded-xl border border-border p-6">
                     <div className="flex items-center justify-between mb-5">
-                      <h2 className="text-lg font-semibold text-[var(--cl-ink)]">Your Submission</h2>
+                      <h2 className="text-lg font-semibold text-foreground">Your Submission</h2>
                       {submission && <StatusBadge status={submission.status} />}
                     </div>
 
@@ -290,14 +290,14 @@ export default async function StudentProjectDetailPage({
                             href={submission.submission_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-primary)] hover:underline break-all"
+                            className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg text-sm text-accent-purple hover:underline break-all"
                           >
                             <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                             {submission.submission_url}
                           </a>
                         )}
                         {assignment.submission_type === 'written' && submission.submission_text && (
-                          <p className="p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-body)] whitespace-pre-line">
+                          <p className="p-3 bg-muted/40 rounded-lg text-sm text-foreground/80 whitespace-pre-line">
                             {submission.submission_text}
                           </p>
                         )}
@@ -306,13 +306,13 @@ export default async function StudentProjectDetailPage({
                             href={submission.file_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-primary)] hover:underline"
+                            className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg text-sm text-accent-purple hover:underline"
                           >
                             <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                             {submission.file_name ?? 'View uploaded file'}
                           </a>
                         )}
-                        <p className="text-xs text-[var(--cl-muted-soft)] flex items-center gap-1">
+                        <p className="text-xs text-muted-foreground/70 flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5" />
                           Submitted {new Date(submission.submitted_at).toLocaleDateString('en-US', {
                             month: 'long', day: 'numeric', year: 'numeric',
@@ -338,7 +338,7 @@ export default async function StudentProjectDetailPage({
                     href={submission.deploy_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full p-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm font-medium text-[var(--cl-ink)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
+                    className="flex items-center justify-center gap-2 w-full p-3 bg-card border border-border rounded-lg text-sm font-medium text-foreground hover:bg-muted/40 transition-colors"
                   >
                     <ExternalLink className="w-4 h-4" />
                     Visit Live Site
@@ -347,33 +347,33 @@ export default async function StudentProjectDetailPage({
 
                 {/* Evaluation feedback */}
                 {evaluation && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-success)] p-6">
+                  <div className="bg-card rounded-xl border border-green-600 p-6">
                     <div className="flex items-center gap-2 mb-4">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--cl-success)]" />
-                      <h2 className="text-base font-semibold text-[var(--cl-ink)]">Mentor Feedback</h2>
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <h2 className="text-base font-semibold text-foreground">Mentor Feedback</h2>
                       {evaluation.score !== null && (
-                        <span className="ml-auto text-xl font-semibold text-[var(--cl-primary)]">
-                          {evaluation.score}<span className="text-[var(--cl-muted-soft)] font-normal text-sm">/{assignment.max_score}</span>
+                        <span className="ml-auto text-xl font-semibold text-accent-purple">
+                          {evaluation.score}<span className="text-muted-foreground/70 font-normal text-sm">/{assignment.max_score}</span>
                         </span>
                       )}
                     </div>
                     {evaluation.feedback && (
-                      <p className="text-sm text-[var(--cl-body)] whitespace-pre-line mb-4 leading-relaxed">{evaluation.feedback}</p>
+                      <p className="text-sm text-foreground/80 whitespace-pre-line mb-4 leading-relaxed">{evaluation.feedback}</p>
                     )}
                     {Array.isArray(evaluation.comments) && evaluation.comments.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wide">Comments</p>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Comments</p>
                         {(evaluation.comments as Array<{ text: string; created_at: string }>).map((c, i) => (
-                          <div key={i} className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-3">
-                            <p className="text-sm text-[var(--cl-body)]">{c.text}</p>
-                            <p className="text-xs text-[var(--cl-muted-soft)] mt-1">
+                          <div key={i} className="bg-muted/40 rounded-lg p-3">
+                            <p className="text-sm text-foreground/80">{c.text}</p>
+                            <p className="text-xs text-muted-foreground/70 mt-1">
                               {new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </p>
                           </div>
                         ))}
                       </div>
                     )}
-                    <div className="mt-4 pt-4 border-t border-[var(--cl-hairline)]">
+                    <div className="mt-4 pt-4 border-t border-border">
                       <PortfolioToggle assignmentId={assignmentId} initialFeatured={evaluation.featured_on_portfolio ?? false} />
                     </div>
                   </div>
@@ -381,26 +381,26 @@ export default async function StudentProjectDetailPage({
 
                 {/* Rubric breakdown */}
                 {evaluation && rubricCriteria.length > 0 && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
-                    <h2 className="text-base font-semibold text-[var(--cl-ink)] mb-4">Rubric Breakdown</h2>
+                  <div className="bg-card rounded-xl border border-border p-6">
+                    <h2 className="text-base font-semibold text-foreground mb-4">Rubric Breakdown</h2>
                     <div className="space-y-3">
                       {rubricCriteria.map((criterion) => {
                         const scored = rubricScoreMap.get(criterion.id);
                         return (
-                          <div key={criterion.id} className="p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)]">
+                          <div key={criterion.id} className="p-3 bg-muted/40 rounded-lg">
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0">
-                                <p className="text-sm font-medium text-[var(--cl-ink)]">{criterion.name}</p>
+                                <p className="text-sm font-medium text-foreground">{criterion.name}</p>
                                 {criterion.description && (
-                                  <p className="text-xs text-[var(--cl-muted)] mt-0.5">{criterion.description}</p>
+                                  <p className="text-xs text-muted-foreground mt-0.5">{criterion.description}</p>
                                 )}
                               </div>
-                              <span className="text-sm font-semibold text-[var(--cl-primary)] flex-shrink-0">
-                                {scored ? scored.score : '—'}<span className="text-[var(--cl-muted-soft)] font-normal">/{criterion.max_points}</span>
+                              <span className="text-sm font-semibold text-accent-purple flex-shrink-0">
+                                {scored ? scored.score : '—'}<span className="text-muted-foreground/70 font-normal">/{criterion.max_points}</span>
                               </span>
                             </div>
                             {scored?.comment && (
-                              <p className="text-xs text-[var(--cl-body)] mt-2 italic">{scored.comment}</p>
+                              <p className="text-xs text-foreground/80 mt-2 italic">{scored.comment}</p>
                             )}
                           </div>
                         );
@@ -420,21 +420,21 @@ export default async function StudentProjectDetailPage({
                         { label: 'Files', value: analytics.total_files },
                         { label: 'Score', value: `${analytics.overall_score}/100` },
                       ].map(({ label, value }) => (
-                        <div key={label} className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-4 text-center">
-                          <p className="text-2xl font-semibold text-[var(--cl-ink)]">{value}</p>
-                          <p className="text-xs text-[var(--cl-muted)] mt-0.5">{label}</p>
+                        <div key={label} className="bg-card border border-border rounded-xl p-4 text-center">
+                          <p className="text-2xl font-semibold text-foreground">{value}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
                         </div>
                       ))}
                     </div>
-                    <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
-                      <h3 className="text-sm font-semibold text-[var(--cl-body)] mb-4 flex items-center gap-2">
-                        <Star className="w-4 h-4 text-[var(--cl-warning)]" />
+                    <div className="bg-card border border-border rounded-xl p-5">
+                      <h3 className="text-sm font-semibold text-foreground/80 mb-4 flex items-center gap-2">
+                        <Star className="w-4 h-4 text-amber-600" />
                         My Coding Activity
                       </h3>
                       <ActivityHeatmap dailyActivity={analytics.daily_activity} weeks={26} />
                     </div>
                     {analytics.suspicious_flags?.length > 0 && (
-                      <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-5">
+                      <div className="bg-card border border-border rounded-xl p-5">
                         <SuspiciousActivityAlert flags={analytics.suspicious_flags} />
                       </div>
                     )}
@@ -446,26 +446,26 @@ export default async function StudentProjectDetailPage({
               <div className="space-y-5">
 
                 {/* Deadline + score */}
-                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-5">
+                <div className="bg-card rounded-xl border border-border p-5">
                   <div className="space-y-3">
                     {deadline && (
-                      <div className={`flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] ${
-                        isOverdue ? 'bg-[rgba(239,68,68,0.12)]' : deadline.getTime() - now.getTime() < 3 * 24 * 60 * 60 * 1000 ? 'bg-[rgba(171,100,0,0.12)]' : 'bg-[var(--cl-canvas-soft)]'
+                      <div className={`flex items-center gap-3 p-3 rounded-lg ${
+                        isOverdue ? 'bg-destructive/10' : deadline.getTime() - now.getTime() < 3 * 24 * 60 * 60 * 1000 ? 'bg-amber-500/10' : 'bg-muted/40'
                       }`}>
-                        <Calendar className={`w-4 h-4 flex-shrink-0 ${isOverdue ? 'text-[var(--cl-error)]' : 'text-[var(--cl-muted)]'}`} />
+                        <Calendar className={`w-4 h-4 flex-shrink-0 ${isOverdue ? 'text-destructive' : 'text-muted-foreground'}`} />
                         <div>
-                          <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wide">Deadline</p>
-                          <p className={`text-sm font-semibold ${isOverdue ? 'text-[var(--cl-error)]' : 'text-[var(--cl-ink)]'}`}>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Deadline</p>
+                          <p className={`text-sm font-semibold ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
                             {isOverdue ? 'Overdue — ' : ''}{deadline.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                           </p>
                         </div>
                       </div>
                     )}
-                    <div className="flex items-center gap-3 p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
-                      <Star className="w-4 h-4 text-[var(--cl-primary)] flex-shrink-0" />
+                    <div className="flex items-center gap-3 p-3 bg-accent-purple/10 rounded-lg">
+                      <Star className="w-4 h-4 text-accent-purple flex-shrink-0" />
                       <div>
-                        <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wide">Max Score</p>
-                        <p className="text-sm font-semibold text-[var(--cl-primary)]">{assignment.max_score} points</p>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Max Score</p>
+                        <p className="text-sm font-semibold text-accent-purple">{assignment.max_score} points</p>
                       </div>
                     </div>
                   </div>
@@ -473,36 +473,36 @@ export default async function StudentProjectDetailPage({
 
                 {/* Requirements / Guidelines */}
                 {(assignment.description || assignment.requirements) && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-5">
-                    <h3 className="font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-[var(--cl-primary)]" />
+                  <div className="bg-card rounded-xl border border-border p-5">
+                    <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-accent-purple" />
                       Project Guidelines
                     </h3>
                     {assignment.requirements ? (
                       <ul className="space-y-3">
                         {assignment.requirements.split('\n').filter(Boolean).map((req: string, i: number) => (
                           <li key={i} className="flex gap-2.5">
-                            <CheckCircle2 className="w-4 h-4 text-[var(--cl-primary)] flex-shrink-0 mt-0.5" />
-                            <p className="text-sm text-[var(--cl-body)]">{req}</p>
+                            <CheckCircle2 className="w-4 h-4 text-accent-purple flex-shrink-0 mt-0.5" />
+                            <p className="text-sm text-foreground/80">{req}</p>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-sm text-[var(--cl-body)] leading-relaxed">{assignment.description}</p>
+                      <p className="text-sm text-foreground/80 leading-relaxed">{assignment.description}</p>
                     )}
                   </div>
                 )}
 
                 {/* Technologies */}
                 {assignment.technologies?.length > 0 && (
-                  <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-5">
-                    <h3 className="font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                      <Cpu className="w-4 h-4 text-[var(--cl-primary)]" />
+                  <div className="bg-card rounded-xl border border-border p-5">
+                    <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Cpu className="w-4 h-4 text-accent-purple" />
                       Tech Requirements
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {assignment.technologies.map((t: string) => (
-                        <span key={t} className="text-xs px-3 py-1.5 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-full font-medium">
+                        <span key={t} className="text-xs px-3 py-1.5 bg-muted text-foreground/80 rounded-full font-medium">
                           {t}
                         </span>
                       ))}
@@ -512,12 +512,12 @@ export default async function StudentProjectDetailPage({
 
                 {/* Help */}
                 {assignment.submission_type === 'github' && (
-                  <div className="bg-[var(--cl-primary-soft)] border border-[var(--cl-primary)] rounded-[var(--cl-r-xl)] p-5">
+                  <div className="bg-accent-purple/10 border border-accent-purple rounded-xl p-5">
                     <div className="flex gap-3">
-                      <HelpCircle className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0 mt-0.5" />
+                      <HelpCircle className="w-5 h-5 text-accent-purple flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-sm font-semibold text-[var(--cl-ink)]">Need help?</p>
-                        <p className="text-xs text-[var(--cl-muted)] mt-1">
+                        <p className="text-sm font-semibold text-foreground">Need help?</p>
+                        <p className="text-xs text-muted-foreground mt-1">
                           Public repos work out of the box. For a private repo, connect your GitHub account above first so analysis can access it.
                         </p>
                       </div>
@@ -526,10 +526,10 @@ export default async function StudentProjectDetailPage({
                 )}
 
                 {assignment.submission_type === 'github' && !isGithubConnected && (
-                  <div className="bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-[var(--cl-r-xl)] p-4">
+                  <div className="bg-amber-500/10 border border-amber-500 rounded-xl p-4">
                     <div className="flex gap-2.5">
-                      <AlertCircle className="w-4 h-4 text-[var(--cl-warning)] flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-[var(--cl-warning)]">
+                      <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-amber-600">
                         Without a connected GitHub account, only <strong>public</strong> repositories can be analyzed.
                       </p>
                     </div>

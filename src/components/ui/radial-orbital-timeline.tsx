@@ -152,19 +152,19 @@ export default function RadialOrbitalTimeline({
   const getStatusStyles = (status: TimelineItem["status"]): string => {
     switch (status) {
       case "completed":
-        return "text-[var(--cl-on-dark)] bg-[var(--cl-success)] border-[var(--cl-success)]";
+        return "text-white bg-green-600 border-green-600";
       case "in-progress":
-        return "text-[var(--cl-on-dark)] bg-[var(--cl-primary)] border-[var(--cl-primary)]";
+        return "text-white bg-primary border-accent-purple";
       case "pending":
-        return "text-[var(--cl-body)] bg-[var(--cl-surface-strong)] border-[var(--cl-hairline-strong)]";
+        return "text-foreground/80 bg-muted border-border";
       default:
-        return "text-[var(--cl-body)] bg-[var(--cl-surface-strong)] border-[var(--cl-hairline-strong)]";
+        return "text-foreground/80 bg-muted border-border";
     }
   };
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-center bg-[var(--cl-surface-card)] overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center bg-card overflow-hidden"
       ref={containerRef}
       onClick={handleContainerClick}
     >
@@ -177,16 +177,16 @@ export default function RadialOrbitalTimeline({
             transform: `translate(${centerOffset.x}px, ${centerOffset.y}px)`,
           }}
         >
-          <div className="absolute w-16 h-16 rounded-full animate-pulse flex items-center justify-center z-10 bg-[var(--cl-primary)]">
-            <div className="absolute w-20 h-20 rounded-full border border-[var(--cl-hairline-strong)] animate-ping opacity-70"></div>
+          <div className="absolute w-16 h-16 rounded-full animate-pulse flex items-center justify-center z-10 bg-primary">
+            <div className="absolute w-20 h-20 rounded-full border border-border animate-ping opacity-70"></div>
             <div
-              className="absolute w-24 h-24 rounded-full border border-[var(--cl-hairline)] animate-ping opacity-50"
+              className="absolute w-24 h-24 rounded-full border border-border animate-ping opacity-50"
               style={{ animationDelay: "0.5s" }}
             ></div>
-            <div className="w-8 h-8 rounded-full bg-[var(--cl-surface-card)] backdrop-blur-md"></div>
+            <div className="w-8 h-8 rounded-full bg-card backdrop-blur-md"></div>
           </div>
 
-          <div className="absolute w-96 h-96 rounded-full border border-[var(--cl-hairline)]"></div>
+          <div className="absolute w-96 h-96 rounded-full border border-border"></div>
 
           {timelineData.map((item, index) => {
             const position = calculateNodePosition(index, timelineData.length);
@@ -232,18 +232,18 @@ export default function RadialOrbitalTimeline({
                   w-10 h-10 rounded-full flex items-center justify-center
                   ${
                     isExpanded
-                      ? "bg-[var(--cl-primary)] text-[var(--cl-on-dark)]"
+                      ? "bg-primary text-white"
                       : isRelated
-                      ? "bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]"
-                      : "bg-[var(--cl-surface-strong)] text-[var(--cl-body)]"
+                      ? "bg-accent-purple/10 text-accent-purple"
+                      : "bg-muted text-foreground/80"
                   }
                   border-2
                   ${
                     isExpanded
-                      ? "border-[var(--cl-primary)]"
+                      ? "border-accent-purple"
                       : isRelated
-                      ? "border-[var(--cl-primary)] animate-pulse"
-                      : "border-[var(--cl-hairline-strong)]"
+                      ? "border-accent-purple animate-pulse"
+                      : "border-border"
                   }
                   transition-all duration-300 transform
                   ${isExpanded ? "scale-150" : ""}
@@ -257,15 +257,15 @@ export default function RadialOrbitalTimeline({
                   absolute top-12  whitespace-nowrap
                   text-xs font-semibold tracking-wider
                   transition-all duration-300
-                  ${isExpanded ? "text-[var(--cl-ink)] scale-125" : "text-[var(--cl-body)]"}
+                  ${isExpanded ? "text-foreground scale-125" : "text-foreground/80"}
                 `}
                 >
                   {item.title}
                 </div>
 
                 {isExpanded && (
-                  <Card className="absolute top-20 left-1/2 -translate-x-1/2 w-64 bg-[var(--cl-surface-card)] backdrop-blur-lg border-[var(--cl-hairline)] overflow-visible">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 bg-[var(--cl-surface-strong)]"></div>
+                  <Card className="absolute top-20 left-1/2 -translate-x-1/2 w-64 bg-card backdrop-blur-lg border-border overflow-visible">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 bg-muted"></div>
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-center">
                         <Badge
@@ -279,18 +279,18 @@ export default function RadialOrbitalTimeline({
                             ? "IN PROGRESS"
                             : "PENDING"}
                         </Badge>
-                        <span className="text-xs font-mono text-[var(--cl-muted)]">
+                        <span className="text-xs font-mono text-muted-foreground">
                           {item.date}
                         </span>
                       </div>
-                      <CardTitle className="text-sm mt-2 text-[var(--cl-ink)]">
+                      <CardTitle className="text-sm mt-2 text-foreground">
                         {item.title}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="text-xs text-[var(--cl-body)]">
+                    <CardContent className="text-xs text-foreground/80">
                       <p>{item.content}</p>
 
-                      <div className="mt-4 pt-3 border-t border-[var(--cl-hairline)]">
+                      <div className="mt-4 pt-3 border-t border-border">
                         <div className="flex justify-between items-center text-xs mb-1">
                           <span className="flex items-center">
                             <Zap size={10} className="mr-1" />
@@ -298,19 +298,19 @@ export default function RadialOrbitalTimeline({
                           </span>
                           <span className="font-mono">{item.energy}%</span>
                         </div>
-                        <div className="w-full h-1 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                        <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-[var(--cl-primary)]"
+                            className="h-full bg-primary"
                             style={{ width: `${item.energy}%` }}
                           ></div>
                         </div>
                       </div>
 
                       {item.relatedIds.length > 0 && (
-                        <div className="mt-4 pt-3 border-t border-[var(--cl-hairline)]">
+                        <div className="mt-4 pt-3 border-t border-border">
                           <div className="flex items-center mb-2">
-                            <Link size={10} className="text-[var(--cl-body)] mr-1" />
-                            <h4 className="text-xs uppercase tracking-wider font-medium text-[var(--cl-body)]">
+                            <Link size={10} className="text-foreground/80 mr-1" />
+                            <h4 className="text-xs uppercase tracking-wider font-medium text-foreground/80">
                               Connected Features
                             </h4>
                           </div>
@@ -324,7 +324,7 @@ export default function RadialOrbitalTimeline({
                                   key={relatedId}
                                   variant="outline"
                                   size="sm"
-                                  className="flex items-center h-6 px-2 py-0 text-xs rounded-full border-[var(--cl-hairline-strong)] bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] hover:text-[var(--cl-ink)] transition-all"
+                                  className="flex items-center h-6 px-2 py-0 text-xs rounded-full border-border bg-muted/40 hover:bg-muted text-foreground/80 hover:text-foreground transition-all"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleItem(relatedId);
@@ -333,7 +333,7 @@ export default function RadialOrbitalTimeline({
                                   {relatedItem?.title}
                                   <ArrowRight
                                     size={8}
-                                    className="ml-1 text-[var(--cl-muted)]"
+                                    className="ml-1 text-muted-foreground"
                                   />
                                 </Button>
                               );

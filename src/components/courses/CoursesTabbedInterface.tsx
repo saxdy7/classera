@@ -190,18 +190,18 @@ export function CoursesTabbedInterface() {
       {/* Left Sidebar - Filters */}
       <div className="w-72 flex-shrink-0 space-y-6">
         {/* Ad Card */}
-        <div className="rounded-[var(--cl-r-xl)] p-6 text-[var(--cl-on-dark)] relative overflow-hidden bg-[var(--cl-surface-inverse)]">
+        <div className="rounded-xl p-6 text-white relative overflow-hidden bg-neutral-900">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
           <div className="relative z-10">
             {/* One heading, not three stacked <h3>s - three headings for one
                 sentence is wrong structurally and was what forced the cramped
                 line breaks. */}
-            <h3 className="text-[20px] font-semibold leading-[1.3] text-[var(--cl-on-dark)] mb-4">
+            <h3 className="text-[20px] font-semibold leading-[1.3] text-white mb-4">
               Unlock your learning potential with Classera
             </h3>
             {/* White button on a dark surface. It was the inline-link blue,
                 which this system never uses as a CTA fill. */}
-            <button className="w-full rounded-[var(--cl-r-md)] bg-[var(--cl-surface-card)] py-2.5 font-semibold text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(255,255,255,0.3)]">
+            <button className="w-full rounded-lg bg-card py-2.5 font-semibold text-foreground transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(255,255,255,0.3)]">
               Explore Courses
             </button>
           </div>
@@ -209,9 +209,9 @@ export function CoursesTabbedInterface() {
 
         {/* Filters Section (Only show for internal courses tab) */}
         {activeTab === 'courses' && (
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-5 border border-[var(--cl-hairline)]">
+          <div className="bg-card rounded-xl p-5 border border-border">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="font-semibold text-lg text-[var(--cl-ink)]">Filters</h3>
+              <h3 className="font-semibold text-lg text-foreground">Filters</h3>
               <button 
                 onClick={() => {
                   setSelectedSchedule(['full-time', 'part-time', 'self-paced', 'intensive']);
@@ -219,7 +219,7 @@ export function CoursesTabbedInterface() {
                   setSelectedPlatforms([]);
                   setSelectedLevels([]);
                 }}
-                className="text-[var(--cl-muted)] hover:text-[var(--cl-body)] transition-colors"
+                className="text-muted-foreground hover:text-foreground/80 transition-colors"
                 title="Reset filters"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -227,19 +227,19 @@ export function CoursesTabbedInterface() {
             </div>
 
             {/* Learning Schedule */}
-            <div className="mb-5 border-b border-[var(--cl-hairline)] pb-5">
+            <div className="mb-5 border-b border-border pb-5">
               <button
                 onClick={() => setIsScheduleOpen(!isScheduleOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h4 className="text-sm font-semibold text-[var(--cl-body)] group-hover:text-[var(--cl-ink)] transition-colors">
+                <h4 className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
                   Learning schedule
                 </h4>
                 <motion.div
                   animate={{ rotate: isScheduleOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </motion.div>
               </button>
               <AnimatePresence>
@@ -259,13 +259,13 @@ export function CoursesTabbedInterface() {
                               type="checkbox"
                               checked={selectedSchedule.includes(option.value)}
                               onChange={() => toggleCheckbox(option.value, selectedSchedule, setSelectedSchedule)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-[var(--cl-hairline-strong)] cursor-pointer transition-all checked:bg-[var(--cl-surface-inverse)] checked:border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
                             />
-                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-[var(--cl-on-dark)] pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedSchedule.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedSchedule.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <span className="text-sm text-[var(--cl-body)] group-hover/item:text-[var(--cl-ink)] transition-colors select-none">{option.label}</span>
+                          <span className="text-sm text-foreground/80 group-hover/item:text-foreground transition-colors select-none">{option.label}</span>
                         </label>
                       ))}
                     </div>
@@ -275,19 +275,19 @@ export function CoursesTabbedInterface() {
             </div>
 
             {/* Course Type */}
-            <div className="mb-5 border-b border-[var(--cl-hairline)] pb-5">
+            <div className="mb-5 border-b border-border pb-5">
               <button
                 onClick={() => setIsTypeOpen(!isTypeOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h4 className="text-sm font-semibold text-[var(--cl-body)] group-hover:text-[var(--cl-ink)] transition-colors">
+                <h4 className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
                   Course type
                 </h4>
                 <motion.div
                   animate={{ rotate: isTypeOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </motion.div>
               </button>
               <AnimatePresence>
@@ -307,13 +307,13 @@ export function CoursesTabbedInterface() {
                               type="checkbox"
                               checked={selectedTypes.includes(option.value)}
                               onChange={() => toggleCheckbox(option.value, selectedTypes, setSelectedTypes)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-[var(--cl-hairline-strong)] cursor-pointer transition-all checked:bg-[var(--cl-surface-inverse)] checked:border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
                             />
-                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-[var(--cl-on-dark)] pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedTypes.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedTypes.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <span className="text-sm text-[var(--cl-body)] group-hover/item:text-[var(--cl-ink)] transition-colors select-none">{option.label}</span>
+                          <span className="text-sm text-foreground/80 group-hover/item:text-foreground transition-colors select-none">{option.label}</span>
                         </label>
                       ))}
                     </div>
@@ -323,19 +323,19 @@ export function CoursesTabbedInterface() {
             </div>
 
             {/* Platform Filter */}
-            <div className="mb-5 border-b border-[var(--cl-hairline)] pb-5">
+            <div className="mb-5 border-b border-border pb-5">
               <button
                 onClick={() => setIsPlatformOpen(!isPlatformOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h4 className="text-sm font-semibold text-[var(--cl-body)] group-hover:text-[var(--cl-ink)] transition-colors">
+                <h4 className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
                   Platform
                 </h4>
                 <motion.div
                   animate={{ rotate: isPlatformOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </motion.div>
               </button>
               <AnimatePresence>
@@ -355,13 +355,13 @@ export function CoursesTabbedInterface() {
                               type="checkbox"
                               checked={selectedPlatforms.includes(platform)}
                               onChange={() => toggleCheckbox(platform, selectedPlatforms, setSelectedPlatforms)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-[var(--cl-hairline-strong)] cursor-pointer transition-all checked:bg-[var(--cl-surface-inverse)] checked:border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
                             />
-                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-[var(--cl-on-dark)] pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedPlatforms.includes(platform) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedPlatforms.includes(platform) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <span className="text-sm text-[var(--cl-body)] group-hover/item:text-[var(--cl-ink)] transition-colors select-none">{platform}</span>
+                          <span className="text-sm text-foreground/80 group-hover/item:text-foreground transition-colors select-none">{platform}</span>
                         </label>
                       ))}
                     </div>
@@ -376,14 +376,14 @@ export function CoursesTabbedInterface() {
                 onClick={() => setIsLevelOpen(!isLevelOpen)}
                 className="flex items-center justify-between w-full text-left group"
               >
-                <h4 className="text-sm font-semibold text-[var(--cl-body)] group-hover:text-[var(--cl-ink)] transition-colors">
+                <h4 className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
                   Difficulty level
                 </h4>
                 <motion.div
                   animate={{ rotate: isLevelOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ChevronDown className="w-4 h-4 text-[var(--cl-muted)]" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 </motion.div>
               </button>
               <AnimatePresence>
@@ -403,13 +403,13 @@ export function CoursesTabbedInterface() {
                               type="checkbox"
                               checked={selectedLevels.includes(level)}
                               onChange={() => toggleCheckbox(level, selectedLevels, setSelectedLevels)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-[var(--cl-hairline-strong)] cursor-pointer transition-all checked:bg-[var(--cl-surface-inverse)] checked:border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)] focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
                             />
-                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-[var(--cl-on-dark)] pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedLevels.includes(level) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedLevels.includes(level) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <span className="text-sm text-[var(--cl-body)] group-hover/item:text-[var(--cl-ink)] transition-colors select-none">{level}</span>
+                          <span className="text-sm text-foreground/80 group-hover/item:text-foreground transition-colors select-none">{level}</span>
                         </label>
                       ))}
                     </div>
@@ -427,10 +427,10 @@ export function CoursesTabbedInterface() {
         <div className="flex flex-wrap items-center gap-3 mb-8">
           <button
             onClick={() => setActiveTab('courses')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'courses'
-                ? 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] scale-105'
-                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)]'
+                ? 'bg-neutral-900 text-white scale-105'
+                : 'bg-card text-foreground/80 hover:bg-muted/40 border border-border'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -439,10 +439,10 @@ export function CoursesTabbedInterface() {
           
           <button
             onClick={() => setActiveTab('external-courses')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'external-courses'
-                ? 'bg-[var(--cl-info)] text-[var(--cl-on-dark)] scale-105'
-                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)]'
+                ? 'bg-accent-purple text-white scale-105'
+                : 'bg-card text-foreground/80 hover:bg-muted/40 border border-border'
             }`}
           >
             <Globe className="w-4 h-4" />
@@ -451,10 +451,10 @@ export function CoursesTabbedInterface() {
 
           <button
             onClick={() => setActiveTab('hackathons')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'hackathons'
-                ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)] scale-105'
-                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)]'
+                ? 'bg-destructive text-white scale-105'
+                : 'bg-card text-foreground/80 hover:bg-muted/40 border border-border'
             }`}
           >
             <Trophy className="w-4 h-4" />
@@ -463,10 +463,10 @@ export function CoursesTabbedInterface() {
 
           <button
             onClick={() => setActiveTab('videos')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold transition-all ${
               activeTab === 'videos'
-                ? 'bg-[var(--cl-error)] text-[var(--cl-on-dark)] scale-105'
-                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)]'
+                ? 'bg-destructive text-white scale-105'
+                : 'bg-card text-foreground/80 hover:bg-muted/40 border border-border'
             }`}
           >
             <PlayCircle className="w-4 h-4" />
@@ -479,39 +479,39 @@ export function CoursesTabbedInterface() {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)] border-l-4 border-[var(--cl-hairline-strong)] pl-4">Recommended courses</h2>
-                <span className="px-3 py-1 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-full text-xs font-semibold ring-1 ring-[var(--cl-hairline)]">
+                <h2 className="text-2xl font-semibold text-foreground border-l-4 border-border pl-4">Recommended courses</h2>
+                <span className="px-3 py-1 bg-muted text-foreground/80 rounded-full text-xs font-semibold ring-1 ring-border">
                   {filteredCourses.length}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wider">Sort by:</span>
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sort by:</span>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg px-4 py-2 pr-10 text-sm font-semibold text-[var(--cl-body)] hover:border-[var(--cl-hairline-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] cursor-pointer"
+                    className="appearance-none bg-card border border-border rounded-lg px-4 py-2 pr-10 text-sm font-semibold text-foreground/80 hover:border-border focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
                   >
                     <option value="updated">Last updated</option>
                     <option value="rating">Highest rated</option>
                     <option value="popular">Most popular</option>
                     <option value="price-low">Price: Low to High</option>
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)] pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70 pointer-events-none" />
                 </div>
               </div>
             </div>
 
             {/* Search Bar */}
             <div className="mb-8 relative group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)] group-focus-within:text-[var(--cl-primary)] transition-colors" />
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70 group-focus-within:text-accent-purple transition-colors" />
               <input
                 type="text"
                 placeholder="Search internal curated courses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-4 py-4 bg-[var(--cl-surface-card)] border-2 border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] focus:outline-none focus:border-[var(--cl-primary)] transition-all text-[var(--cl-body)]"
+                className="w-full pl-14 pr-4 py-4 bg-card border-2 border-border rounded-xl focus:outline-none focus:border-accent-purple transition-all text-foreground/80"
               />
             </div>
 
@@ -519,13 +519,13 @@ export function CoursesTabbedInterface() {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-xl)] h-96 animate-pulse"></div>
+                  <div key={i} className="bg-muted rounded-xl h-96 animate-pulse"></div>
                 ))}
               </div>
             ) : filteredCourses.length === 0 ? (
-              <div className="text-center py-24 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border-2 border-dashed border-[var(--cl-hairline)]">
-                <BookOpen className="w-20 h-20 text-[var(--cl-muted-soft)] mx-auto mb-6" />
-                <p className="text-[var(--cl-muted-soft)] font-medium text-lg">No matching courses found in our records.</p>
+              <div className="text-center py-24 bg-card rounded-xl border-2 border-dashed border-border">
+                <BookOpen className="w-20 h-20 text-muted-foreground/70 mx-auto mb-6" />
+                <p className="text-muted-foreground/70 font-medium text-lg">No matching courses found in our records.</p>
               </div>
             ) : (
               <>
@@ -546,10 +546,10 @@ export function CoursesTabbedInterface() {
                     <button
                       onClick={() => goToPage(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className={`px-6 py-3 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                         currentPage === 1
-                          ? 'bg-[var(--cl-canvas-soft)] text-[var(--cl-muted-soft)] cursor-not-allowed'
-                          : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-inverse)] hover:text-[var(--cl-on-dark)] border border-[var(--cl-hairline)] active:scale-95'
+                          ? 'bg-muted/40 text-muted-foreground/70 cursor-not-allowed'
+                          : 'bg-card text-foreground/80 hover:bg-neutral-900 hover:text-white border border-border active:scale-95'
                       }`}
                     >
                       Previous
@@ -568,10 +568,10 @@ export function CoursesTabbedInterface() {
                           <button
                             key={page}
                             onClick={() => goToPage(page)}
-                            className={`w-12 h-12 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+                            className={`w-12 h-12 rounded-lg font-semibold transition-all ${
                               currentPage === page
-                                ? 'bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)]'
-                                : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] active:scale-95'
+                                ? 'bg-neutral-900 text-white'
+                                : 'bg-card text-foreground/80 hover:bg-muted/40 border border-border active:scale-95'
                             }`}
                           >
                             {page}
@@ -583,10 +583,10 @@ export function CoursesTabbedInterface() {
                     <button
                       onClick={() => goToPage(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className={`px-6 py-3 rounded-[var(--cl-r-lg)] font-semibold transition-all ${
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                         currentPage === totalPages
-                          ? 'bg-[var(--cl-canvas-soft)] text-[var(--cl-muted-soft)] cursor-not-allowed'
-                          : 'bg-[var(--cl-surface-card)] text-[var(--cl-body)] hover:bg-[var(--cl-surface-inverse)] hover:text-[var(--cl-on-dark)] border border-[var(--cl-hairline)] active:scale-95'
+                          ? 'bg-muted/40 text-muted-foreground/70 cursor-not-allowed'
+                          : 'bg-card text-foreground/80 hover:bg-neutral-900 hover:text-white border border-border active:scale-95'
                       }`}
                     >
                       Next

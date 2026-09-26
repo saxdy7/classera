@@ -50,13 +50,13 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
     return (
         <div className="space-y-6">
             {questions.map((question, qIndex) => (
-                <div key={question.id} className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
+                <div key={question.id} className="bg-card rounded-lg p-6 border border-border">
                     {/* Question Header */}
                     <div className="flex items-start justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Question {qIndex + 1}</h3>
+                        <h3 className="text-lg font-semibold text-foreground">Question {qIndex + 1}</h3>
                         <button
                             onClick={() => removeQuestion(qIndex)}
-                            className="p-2 text-[var(--cl-error)] hover:bg-[rgba(239,68,68,0.12)] rounded-lg transition-colors"
+                            className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                         >
                             <Trash2 className="w-5 h-5" />
                         </button>
@@ -64,21 +64,21 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
 
                     {/* Question Text */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                        <label className="block text-sm font-medium text-foreground/80 mb-2">
                             Question Text *
                         </label>
                         <textarea
                             value={question.question}
                             onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
                             placeholder="Enter your question here..."
-                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] resize-none"
+                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                             rows={3}
                         />
                     </div>
 
                     {/* Options */}
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                        <label className="block text-sm font-medium text-foreground/80 mb-2">
                             Options *
                         </label>
                         <div className="space-y-2">
@@ -87,8 +87,8 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                                     <button
                                         onClick={() => updateQuestion(qIndex, 'correctAnswer', oIndex)}
                                         className={`flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${question.correctAnswer === oIndex
-                                                ? 'bg-[var(--cl-success)] border-[var(--cl-success)] text-[var(--cl-on-dark)]'
-                                                : 'border-[var(--cl-hairline-strong)] hover:border-[var(--cl-success)]'
+                                                ? 'bg-green-600 border-green-600 text-white'
+                                                : 'border-border hover:border-green-600'
                                             }`}
                                     >
                                         {question.correctAnswer === oIndex && <Check className="w-4 h-4" />}
@@ -98,18 +98,18 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                                         value={option}
                                         onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                         placeholder={`Option ${oIndex + 1}`}
-                                        className="flex-1 px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                        className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                     />
                                 </div>
                             ))}
                         </div>
-                        <p className="text-xs text-[var(--cl-muted)] mt-2">Click the circle to mark correct answer</p>
+                        <p className="text-xs text-muted-foreground mt-2">Click the circle to mark correct answer</p>
                     </div>
 
                     {/* Marks and Explanation */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Marks *
                             </label>
                             <input
@@ -117,11 +117,11 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                                 min="1"
                                 value={question.marks}
                                 onChange={(e) => updateQuestion(qIndex, 'marks', parseInt(e.target.value) || 1)}
-                                className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Explanation (Optional)
                             </label>
                             <input
@@ -129,7 +129,7 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                                 value={question.explanation || ''}
                                 onChange={(e) => updateQuestion(qIndex, 'explanation', e.target.value)}
                                 placeholder="Why is this the correct answer?"
-                                className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                             />
                         </div>
                     </div>
@@ -139,7 +139,7 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
             {/* Add Question Button */}
             <button
                 onClick={addQuestion}
-                className="w-full py-4 border-2 border-dashed border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] hover:border-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] transition-all flex items-center justify-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-primary)] font-medium"
+                className="w-full py-4 border-2 border-dashed border-border rounded-lg hover:border-accent-purple hover:bg-accent-purple/10 transition-all flex items-center justify-center gap-2 text-foreground/80 hover:text-accent-purple font-medium"
             >
                 <Plus className="w-5 h-5" />
                 Add Question

@@ -63,7 +63,7 @@ export default async function LiveSessionsPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />

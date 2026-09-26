@@ -34,7 +34,7 @@ export default async function MentorTestAnalyticsPage({ params }: { params: Prom
   if (!test) redirect('/dashboard/mentor/tests');
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -42,14 +42,14 @@ export default async function MentorTestAnalyticsPage({ params }: { params: Prom
           <div className="max-w-6xl mx-auto">
             <Link
               href={`/dashboard/mentor/tests/${id}`}
-              className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6"
+              className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Test
             </Link>
             <div className="mb-6">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
-              <p className="text-[var(--cl-body)] mt-1">Test analytics &amp; performance insights</p>
+              <p className="text-foreground/80 mt-1">Test analytics &amp; performance insights</p>
             </div>
             <TestAnalytics testId={id} />
           </div>

@@ -84,12 +84,12 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-[var(--cl-surface-strong)] rounded-lg animate-pulse"></div>
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse"></div>
           ))}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <div key={i} className="h-64 bg-[var(--cl-surface-strong)] rounded-lg animate-pulse"></div>
+            <div key={i} className="h-64 bg-muted rounded-lg animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
   }
 
   if (!analytics) {
-    return <div className="p-6 text-center text-[var(--cl-muted)]">No analytics data available</div>;
+    return <div className="p-6 text-center text-muted-foreground">No analytics data available</div>;
   }
 
   if (role === 'student') {
@@ -107,7 +107,7 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Your Analytics
           </h1>
-          <p className="text-[var(--cl-body)] mt-2">Track your learning progress and performance</p>
+          <p className="text-foreground/80 mt-2">Track your learning progress and performance</p>
         </div>
 
         {/* Key Metrics */}
@@ -115,13 +115,13 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Average Score</p>
-                <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+                <p className="text-sm text-foreground/80 mb-1">Average Score</p>
+                <p className="text-3xl font-semibold text-accent-purple">
                   {analytics.testPerformance?.averageScore.toFixed(1)}%
                 </p>
                 {analytics.testPerformance && analytics.testPerformance.trend !== 0 && (
                   <div className={`flex items-center mt-2 text-sm ${
-                    analytics.testPerformance.trend > 0 ? 'text-[var(--cl-success)]' : 'text-[var(--cl-error)]'
+                    analytics.testPerformance.trend > 0 ? 'text-green-600' : 'text-destructive'
                   }`}>
                     {analytics.testPerformance.trend > 0 ? (
                       <TrendingUp className="w-4 h-4 mr-1" />
@@ -132,8 +132,8 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
                   </div>
                 )}
               </div>
-              <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-                <Award className="w-6 h-6 text-[var(--cl-primary)]" />
+              <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+                <Award className="w-6 h-6 text-accent-purple" />
               </div>
             </div>
           </Card>
@@ -141,16 +141,16 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Courses Progress</p>
-                <p className="text-3xl font-semibold text-[var(--cl-info)]">
+                <p className="text-sm text-foreground/80 mb-1">Courses Progress</p>
+                <p className="text-3xl font-semibold text-accent-purple">
                   {analytics.courseProgress?.completed}/{analytics.courseProgress?.totalEnrolled}
                 </p>
-                <p className="text-sm text-[var(--cl-muted)] mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   {analytics.courseProgress?.inProgress} in progress
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[rgba(13,116,206,0.12)] rounded-full flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-[var(--cl-info)]" />
+              <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-accent-purple" />
               </div>
             </div>
           </Card>
@@ -158,16 +158,16 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Community Activity</p>
-                <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+                <p className="text-sm text-foreground/80 mb-1">Community Activity</p>
+                <p className="text-3xl font-semibold text-accent-purple">
                   {analytics.communityActivity?.messagesThisMonth}
                 </p>
-                <p className="text-sm text-[var(--cl-muted)] mt-2">
+                <p className="text-sm text-muted-foreground mt-2">
                   messages this month
                 </p>
               </div>
-              <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-[var(--cl-primary)]" />
+              <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-accent-purple" />
               </div>
             </div>
           </Card>
@@ -252,7 +252,7 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Mentor Analytics
         </h1>
-        <p className="text-[var(--cl-body)] mt-2">Overview of your teaching impact</p>
+        <p className="text-foreground/80 mt-2">Overview of your teaching impact</p>
       </div>
 
       {/* Key Metrics */}
@@ -260,16 +260,16 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[var(--cl-body)] mb-1">Total Tests</p>
-              <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+              <p className="text-sm text-foreground/80 mb-1">Total Tests</p>
+              <p className="text-3xl font-semibold text-accent-purple">
                 {analytics.testManagement?.totalTests}
               </p>
-              <p className="text-sm text-[var(--cl-muted)] mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 {analytics.testManagement?.totalSubmissions} submissions
               </p>
             </div>
-            <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-              <Award className="w-6 h-6 text-[var(--cl-primary)]" />
+            <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+              <Award className="w-6 h-6 text-accent-purple" />
             </div>
           </div>
         </Card>
@@ -277,16 +277,16 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[var(--cl-body)] mb-1">Communities</p>
-              <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+              <p className="text-sm text-foreground/80 mb-1">Communities</p>
+              <p className="text-3xl font-semibold text-accent-purple">
                 {analytics.communityManagement?.totalCommunities}
               </p>
-              <p className="text-sm text-[var(--cl-muted)] mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 {analytics.communityManagement?.totalMembers} members
               </p>
             </div>
-            <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-              <Users className="w-6 h-6 text-[var(--cl-primary)]" />
+            <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+              <Users className="w-6 h-6 text-accent-purple" />
             </div>
           </div>
         </Card>
@@ -294,16 +294,16 @@ export default function AnalyticsDashboard({ role }: { role: 'student' | 'mentor
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[var(--cl-body)] mb-1">Courses</p>
-              <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+              <p className="text-sm text-foreground/80 mb-1">Courses</p>
+              <p className="text-3xl font-semibold text-accent-purple">
                 {analytics.courseManagement?.totalCourses}
               </p>
-              <p className="text-sm text-[var(--cl-muted)] mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 {analytics.courseManagement?.totalEnrollments} enrollments
               </p>
             </div>
-            <div className="w-12 h-12 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-[var(--cl-primary)]" />
+            <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-accent-purple" />
             </div>
           </div>
         </Card>

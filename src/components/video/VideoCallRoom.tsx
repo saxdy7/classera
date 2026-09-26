@@ -186,9 +186,9 @@ export default function VideoCallRoom({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[var(--cl-surface-inverse)]">
+      <div className="flex items-center justify-center h-screen bg-neutral-900">
         <div className="text-center">
-          <div className="text-[var(--cl-error)] text-xl mb-4">{error}</div>
+          <div className="text-destructive text-xl mb-4">{error}</div>
           <Button onClick={onLeave} variant="outline">
             Go Back
           </Button>
@@ -198,7 +198,7 @@ export default function VideoCallRoom({
   }
 
   return (
-    <div className="relative w-full h-screen bg-[var(--cl-surface-inverse)]">
+    <div className="relative w-full h-screen bg-neutral-900">
       {/* Video Container */}
       <div ref={containerRef} className="w-full h-full" />
 
@@ -206,17 +206,17 @@ export default function VideoCallRoom({
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-[rgba(10,10,10,0.9)]">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--cl-primary)] mx-auto mb-4"></div>
-            <p className="text-[var(--cl-on-dark)] text-lg">Connecting to video call...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-accent-purple mx-auto mb-4"></div>
+            <p className="text-white text-lg">Connecting to video call...</p>
           </div>
         </div>
       )}
 
       {/* Call Info Bar */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-[rgba(10,10,10,0.9)] px-6 py-3 rounded-full">
-        <div className="flex items-center space-x-6 text-[var(--cl-on-dark)]">
+        <div className="flex items-center space-x-6 text-white">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-[var(--cl-error)] rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-destructive rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">{formatDuration(callDuration)}</span>
           </div>
           <div className="text-sm">
@@ -231,7 +231,7 @@ export default function VideoCallRoom({
           onClick={toggleMute}
           size="lg"
           className={`rounded-full w-14 h-14 ${
-            isMuted ? 'bg-[var(--cl-error)] hover:bg-[var(--cl-error)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
+            isMuted ? 'bg-destructive hover:bg-destructive' : 'bg-neutral-900 hover:bg-muted'
           }`}
         >
           {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -241,7 +241,7 @@ export default function VideoCallRoom({
           onClick={toggleVideo}
           size="lg"
           className={`rounded-full w-14 h-14 ${
-            isVideoOff ? 'bg-[var(--cl-error)] hover:bg-[var(--cl-error)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
+            isVideoOff ? 'bg-destructive hover:bg-destructive' : 'bg-neutral-900 hover:bg-muted'
           }`}
         >
           {isVideoOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
@@ -252,7 +252,7 @@ export default function VideoCallRoom({
             onClick={toggleScreenShare}
             size="lg"
             className={`rounded-full w-14 h-14 ${
-              isScreenSharing ? 'bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
+              isScreenSharing ? 'bg-primary hover:bg-primary' : 'bg-neutral-900 hover:bg-muted'
             }`}
           >
             {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <Monitor className="w-6 h-6" />}
@@ -262,7 +262,7 @@ export default function VideoCallRoom({
         <Button
           onClick={leaveCall}
           size="lg"
-          className="rounded-full w-14 h-14 bg-[var(--cl-error)] hover:bg-[var(--cl-error)]"
+          className="rounded-full w-14 h-14 bg-destructive hover:bg-destructive"
         >
           <PhoneOff className="w-6 h-6" />
         </Button>

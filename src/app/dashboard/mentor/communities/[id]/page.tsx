@@ -46,58 +46,58 @@ export default async function CommunityDetailPage({
   const messagingEnabled = community.messaging_enabled ?? true;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-surface-card)]">
+    <div className="min-h-screen bg-card">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
         <main className="flex-1 p-4 md:p-8 cl-main">
           <div className="max-w-7xl mx-auto">
             <Link href="/dashboard/mentor/communities"
-              className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors">
+              className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6 transition-colors">
               <ArrowLeft className="w-5 h-5" />Back to Communities
             </Link>
 
             {/* Community header */}
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-8 mb-6">
+            <div className="bg-card rounded-xl border border-border p-8 mb-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center text-[var(--cl-on-dark)] text-3xl font-semibold bg-[var(--cl-primary)]">
+                  <div className="w-20 h-20 rounded-xl flex items-center justify-center text-white text-3xl font-semibold bg-primary">
                     {community.name.charAt(0)}
                   </div>
                   <div>
                     <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                       {community.name}
                     </h1>
-                    <p className="text-[var(--cl-body)] mb-3">{community.description}</p>
+                    <p className="text-foreground/80 mb-3">{community.description}</p>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className="flex items-center gap-1 text-sm text-[var(--cl-body)]">
+                      <span className="flex items-center gap-1 text-sm text-foreground/80">
                         <Users className="w-4 h-4" />{memberCount} members
                       </span>
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${community.is_active ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'}`}>
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${community.is_active ? 'bg-green-500/10 text-green-600' : 'bg-muted text-foreground/80'}`}>
                         {community.is_active ? 'Active' : 'Inactive'}
                       </span>
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${messagingEnabled ? 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' : 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]'}`}>
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${messagingEnabled ? 'bg-accent-purple/10 text-accent-purple' : 'bg-amber-500/10 text-amber-600'}`}>
                         💬 Messaging {messagingEnabled ? 'On' : 'Off'}
                       </span>
                     </div>
                   </div>
                 </div>
                 <Link href={`/dashboard/mentor/communities/${id}/settings`}
-                  className="p-3 hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] transition-colors">
-                  <Settings className="w-6 h-6 text-[var(--cl-body)]" />
+                  className="p-3 hover:bg-muted rounded-lg transition-colors">
+                  <Settings className="w-6 h-6 text-foreground/80" />
                 </Link>
               </div>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 mb-6 border-b border-[var(--cl-hairline)]">
+            <div className="flex gap-2 mb-6 border-b border-border">
               {[
                 { key: 'feed', label: 'Feed', icon: FileText },
                 { key: 'chat', label: 'Chat', icon: MessageCircle },
                 { key: 'members', label: 'Members', icon: Users },
               ].map(({ key, label, icon: Icon }) => (
                 <Link key={key} href={`/dashboard/mentor/communities/${id}?tab=${key}`}
-                  className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${tab === key ? 'text-[var(--cl-primary)] border-b-2 border-[var(--cl-primary)]' : 'text-[var(--cl-body)] hover:text-[var(--cl-ink)]'}`}>
+                  className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${tab === key ? 'text-accent-purple border-b-2 border-accent-purple' : 'text-foreground/80 hover:text-foreground'}`}>
                   <Icon className="w-4 h-4" />{label}
                 </Link>
               ))}

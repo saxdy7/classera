@@ -26,7 +26,7 @@ export default async function StudentCommunitiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--cl-surface-card)]">
+    <div className="min-h-screen bg-card">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="student" />

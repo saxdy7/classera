@@ -100,11 +100,11 @@ export function NotificationCenter() {
       {/* Bell Icon */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+        className="relative p-2 hover:bg-muted rounded-lg transition-colors"
       >
-        <Bell className="w-6 h-6 text-[var(--cl-body)]" />
+        <Bell className="w-6 h-6 text-foreground/80" />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 w-5 h-5 bg-[var(--cl-error)] text-[var(--cl-on-dark)] text-xs rounded-full flex items-center justify-center font-semibold">
+          <span className="absolute top-0 right-0 w-5 h-5 bg-destructive text-white text-xs rounded-full flex items-center justify-center font-semibold">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -120,13 +120,13 @@ export function NotificationCenter() {
           ></div>
 
           {/* Panel */}
-          <div className="absolute right-0 mt-2 w-96 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] z-50 max-h-96 overflow-hidden flex flex-col">
+          <div className="absolute right-0 mt-2 w-96 bg-card rounded-lg border border-border z-50 max-h-96 overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-[var(--cl-hairline)] flex items-center justify-between sticky top-0 bg-[var(--cl-surface-card)]">
+            <div className="p-4 border-b border-border flex items-center justify-between sticky top-0 bg-card">
               <div>
-                <h3 className="font-semibold text-[var(--cl-ink)]">Notifications</h3>
+                <h3 className="font-semibold text-foreground">Notifications</h3>
                 {unreadCount > 0 && (
-                  <p className="text-xs text-[var(--cl-body)]">{unreadCount} unread</p>
+                  <p className="text-xs text-foreground/80">{unreadCount} unread</p>
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -134,17 +134,17 @@ export function NotificationCenter() {
                   <button
                     onClick={markAllAsRead}
                     disabled={loading}
-                    className="p-1 hover:bg-[var(--cl-surface-strong)] rounded transition-colors disabled:opacity-50"
+                    className="p-1 hover:bg-muted rounded transition-colors disabled:opacity-50"
                     title="Mark all as read"
                   >
-                    <Check className="w-5 h-5 text-[var(--cl-body)]" />
+                    <Check className="w-5 h-5 text-foreground/80" />
                   </button>
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-[var(--cl-surface-strong)] rounded transition-colors"
+                  className="p-1 hover:bg-muted rounded transition-colors"
                 >
-                  <X className="w-5 h-5 text-[var(--cl-body)]" />
+                  <X className="w-5 h-5 text-foreground/80" />
                 </button>
               </div>
             </div>
@@ -152,7 +152,7 @@ export function NotificationCenter() {
             {/* Notifications List */}
             <div className="overflow-y-auto flex-1">
               {notifications.length > 0 ? (
-                <div className="divide-y divide-[var(--cl-hairline)]">
+                <div className="divide-y divide-border">
                   {notifications.map((notification) => (
                     <Link
                       key={notification.id}
@@ -162,36 +162,36 @@ export function NotificationCenter() {
                         setIsOpen(false);
                       }}
                       className={`p-4 hover:bg-slate-50 transition-colors block ${
-                        !notification.read ? "bg-[var(--cl-primary-soft)]" : ""
+                        !notification.read ? "bg-accent-purple/10" : ""
                       }`}
                     >
                       <div className="flex gap-3">
                         <span className="text-xl">{getNotificationIcon(notification.type)}</span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[var(--cl-ink)] truncate">
+                          <p className="text-sm font-medium text-foreground truncate">
                             {notification.sender?.full_name || "Someone"}
                           </p>
-                          <p className="text-xs text-[var(--cl-body)] line-clamp-2">
+                          <p className="text-xs text-foreground/80 line-clamp-2">
                             {notification.type === "mention" && "mentioned you"}
                             {notification.type === "reply" && "replied to your comment"}
                             {notification.type === "like" && "liked your post"}
                             {notification.type === "announcement" && "posted an announcement"}
                             {notification.content && `: ${notification.content}`}
                           </p>
-                          <p className="text-xs text-[var(--cl-muted)] mt-1">
+                          <p className="text-xs text-muted-foreground mt-1">
                             {new Date(notification.created_at).toLocaleDateString()}
                           </p>
                         </div>
                         {!notification.read && (
-                          <div className="flex-shrink-0 w-2 h-2 bg-[var(--cl-primary)] rounded-full mt-2"></div>
+                          <div className="flex-shrink-0 w-2 h-2 bg-primary rounded-full mt-2"></div>
                         )}
                       </div>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <div className="p-8 text-center text-[var(--cl-body)]">
-                  <Bell className="w-8 h-8 text-[var(--cl-muted-soft)] mx-auto mb-2" />
+                <div className="p-8 text-center text-foreground/80">
+                  <Bell className="w-8 h-8 text-muted-foreground/70 mx-auto mb-2" />
                   <p className="text-sm">No notifications yet</p>
                 </div>
               )}

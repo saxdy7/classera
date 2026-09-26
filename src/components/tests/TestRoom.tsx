@@ -72,17 +72,17 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
     const answeredCount = Object.keys(answers).length;
 
     return (
-        <div className="min-h-screen bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)]">
+        <div className="min-h-screen bg-neutral-900 text-white">
             {/* Header */}
-            <div className="bg-[var(--cl-surface-inverse)] border-b border-[var(--cl-hairline-strong)] p-4">
+            <div className="bg-neutral-900 border-b border-border p-4">
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-semibold tracking-tight text-foreground">{test.title}</h1>
-                        <p className="text-sm text-[var(--cl-muted-soft)]">{answeredCount}/{questions.length} answered</p>
+                        <p className="text-sm text-muted-foreground/70">{answeredCount}/{questions.length} answered</p>
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <div className={`text-2xl font-semibold ${timeLeft < 300 ? 'text-[var(--cl-error)] animate-pulse' : 'text-[var(--cl-success)]'}`}>
+                        <div className={`text-2xl font-semibold ${timeLeft < 300 ? 'text-destructive animate-pulse' : 'text-green-600'}`}>
                             <Clock className="w-5 h-5 inline mr-2" />
                             {formatTime(timeLeft)}
                         </div>
@@ -90,7 +90,7 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                         <button
                             onClick={handleSubmit}
                             disabled={submitting}
-                            className="px-6 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] rounded-lg font-medium transition-colors disabled:opacity-50"
+                            className="px-6 py-2 bg-primary hover:bg-primary rounded-lg font-medium transition-colors disabled:opacity-50"
                         >
                             {submitting ? 'Submitting...' : 'Submit Test'}
                         </button>
@@ -99,11 +99,11 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
             </div>
 
             {/* Progress Bar */}
-            <div className="bg-[var(--cl-surface-inverse)]">
+            <div className="bg-neutral-900">
                 <div className="max-w-6xl mx-auto">
-                    <div className="h-2 bg-[var(--cl-surface-inverse)]">
+                    <div className="h-2 bg-neutral-900">
                         <div
-                            className="h-full bg-[var(--cl-primary)] transition-all duration-300"
+                            className="h-full bg-primary transition-all duration-300"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
@@ -113,12 +113,12 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
             {/* Main Content */}
             <div className="max-w-4xl mx-auto p-8">
                 {question ? (
-                    <div className="bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-xl)] p-8 mb-6">
+                    <div className="bg-neutral-900 rounded-xl p-8 mb-6">
                         <div className="flex items-start justify-between mb-6">
-                            <h2 className="text-sm font-medium text-[var(--cl-muted-soft)]">
+                            <h2 className="text-sm font-medium text-muted-foreground/70">
                                 Question {currentQuestion + 1} of {questions.length}
                             </h2>
-                            <span className="px-3 py-1 bg-[var(--cl-primary)] rounded-full text-sm font-medium">
+                            <span className="px-3 py-1 bg-primary rounded-full text-sm font-medium">
                                 {question.marks} {question.marks === 1 ? 'mark' : 'marks'}
                             </span>
                         </div>
@@ -130,15 +130,15 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                                 <button
                                     key={index}
                                     onClick={() => handleAnswerSelect(question.id, index)}
-                                    className={`w-full text-left p-4 rounded-[var(--cl-r-lg)] border-2 transition-all ${answers[question.id] === index
-                                            ? 'border-[var(--cl-primary)] bg-[var(--cl-surface-card)]'
-                                            : 'border-[var(--cl-hairline-strong)] hover:border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)]'
+                                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${answers[question.id] === index
+                                            ? 'border-accent-purple bg-card'
+                                            : 'border-border hover:border-border bg-card'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${answers[question.id] === index
-                                                ? 'border-[var(--cl-primary)] bg-[var(--cl-primary)]'
-                                                : 'border-[var(--cl-hairline-strong)]'
+                                                ? 'border-accent-purple bg-primary'
+                                                : 'border-border'
                                             }`}>
                                             {answers[question.id] === index && <Check className="w-4 h-4" />}
                                         </div>
@@ -149,8 +149,8 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-[var(--cl-surface-inverse)] rounded-[var(--cl-r-xl)] p-16 text-center">
-                        <AlertTriangle className="w-16 h-16 text-[var(--cl-warning)] mx-auto mb-4" />
+                    <div className="bg-neutral-900 rounded-xl p-16 text-center">
+                        <AlertTriangle className="w-16 h-16 text-amber-600 mx-auto mb-4" />
                         <p className="text-xl">No questions available</p>
                     </div>
                 )}
@@ -160,7 +160,7 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                     <button
                         onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
                         disabled={currentQuestion === 0}
-                        className="px-6 py-3 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-3 bg-neutral-900 hover:bg-muted rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Previous
                     </button>
@@ -172,10 +172,10 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                                 key={index}
                                 onClick={() => setCurrentQuestion(index)}
                                 className={`w-10 h-10 rounded-lg font-medium transition-all ${index === currentQuestion
-                                        ? 'bg-[var(--cl-primary)]'
+                                        ? 'bg-primary'
                                         : answers[questions[index].id] !== undefined
-                                            ? 'bg-[var(--cl-success)]'
-                                            : 'bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)]'
+                                            ? 'bg-green-600'
+                                            : 'bg-neutral-900 hover:bg-muted'
                                     }`}
                             >
                                 {index + 1}
@@ -186,7 +186,7 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
                     <button
                         onClick={() => setCurrentQuestion(Math.min(questions.length - 1, currentQuestion + 1))}
                         disabled={currentQuestion === questions.length - 1}
-                        className="px-6 py-3 bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-3 bg-neutral-900 hover:bg-muted rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Next
                     </button>
@@ -194,12 +194,12 @@ export function TestRoom({ test, studentId }: TestRoomProps) {
             </div>
 
             {/* Warning for leaving page */}
-            <div className="fixed bottom-4 right-4 bg-[rgba(171,100,0,0.1)] border border-[var(--cl-warning)] rounded-lg p-4 max-w-sm">
+            <div className="fixed bottom-4 right-4 bg-[rgba(171,100,0,0.1)] border border-amber-500 rounded-lg p-4 max-w-sm">
                 <div className="flex items-start gap-3">
-                    <AlertTriangle className="w-5 h-5 text-[var(--cl-warning)] flex-shrink-0" />
+                    <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
                     <div className="text-sm">
-                        <p className="font-medium text-[var(--cl-warning)]">Test in Progress</p>
-                        <p className="text-[var(--cl-warning)]">Do not close this tab or navigate away</p>
+                        <p className="font-medium text-amber-600">Test in Progress</p>
+                        <p className="text-amber-600">Do not close this tab or navigate away</p>
                     </div>
                 </div>
             </div>

@@ -41,7 +41,7 @@ export default async function AssignmentRubricPage({
     .single();
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -49,24 +49,24 @@ export default async function AssignmentRubricPage({
           <div className="max-w-2xl mx-auto space-y-6">
             <Link
               href={`/dashboard/mentor/projects/${assignmentId}`}
-              className="inline-flex items-center gap-2 text-sm text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Assignment
             </Link>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-5 h-5 text-[var(--cl-primary)]" />
+              <div className="w-10 h-10 bg-accent-purple/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-5 h-5 text-accent-purple" />
               </div>
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight text-foreground">Grading Rubric</h1>
-                <p className="text-sm text-[var(--cl-muted)]">{assignment.title}</p>
+                <p className="text-sm text-muted-foreground">{assignment.title}</p>
               </div>
             </div>
 
-            <div className="bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-6">
-              <p className="text-sm text-[var(--cl-muted)] mb-6">
+            <div className="bg-card border border-border rounded-xl p-6">
+              <p className="text-sm text-muted-foreground mb-6">
                 Define criteria with weights summing to 100%. Students&apos; scores will be computed
                 automatically from rubric criterion scores when you evaluate their submissions.
               </p>

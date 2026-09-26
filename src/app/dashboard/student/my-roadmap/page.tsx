@@ -39,20 +39,20 @@ export default function MyRoadmapPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
             </div>
         );
     }
 
     if (!plan) {
         return (
-            <div className="min-h-screen bg-[var(--cl-canvas-soft)] p-8">
+            <div className="min-h-screen bg-muted/40 p-8">
                 <div className="max-w-4xl mx-auto text-center py-12">
-                    <Target className="h-16 w-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
-                    <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">
+                    <Target className="h-16 w-16 text-muted-foreground/70 mx-auto mb-4" />
+                    <h2 className="text-2xl font-semibold text-foreground mb-2">
                         No Active Learning Plan
                     </h2>
-                    <p className="text-[var(--cl-body)] mb-6">
+                    <p className="text-foreground/80 mb-6">
                         Start a roadmap to begin your learning journey
                     </p>
                     <Button onClick={() => router.push('/roadmaps')}>
@@ -67,16 +67,16 @@ export default function MyRoadmapPage() {
     const progress = stats.completionPercentage || 0;
 
     return (
-        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+        <div className="min-h-screen bg-muted/40">
             {/* Header */}
-            <div className="bg-[var(--cl-surface-card)] border-b">
+            <div className="bg-card border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                                 {plan.roadmap?.title}
                             </h1>
-                            <p className="text-[var(--cl-body)]">
+                            <p className="text-foreground/80">
                                 {plan.roadmap?.description}
                             </p>
                         </div>
@@ -93,48 +93,48 @@ export default function MyRoadmapPage() {
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-[var(--cl-body)] mb-1">Progress</p>
-                                <p className="text-3xl font-semibold text-[var(--cl-primary)]">
+                                <p className="text-sm text-foreground/80 mb-1">Progress</p>
+                                <p className="text-3xl font-semibold text-accent-purple">
                                     {progress}%
                                 </p>
                             </div>
-                            <TrendingUp className="h-10 w-10 text-[var(--cl-primary)]" />
+                            <TrendingUp className="h-10 w-10 text-accent-purple" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-[var(--cl-body)] mb-1">Completed</p>
-                                <p className="text-3xl font-semibold text-[var(--cl-success)]">
+                                <p className="text-sm text-foreground/80 mb-1">Completed</p>
+                                <p className="text-3xl font-semibold text-green-600">
                                     {stats.completedNodes}/{stats.totalNodes}
                                 </p>
                             </div>
-                            <CheckCircle2 className="h-10 w-10 text-[var(--cl-success)]" />
+                            <CheckCircle2 className="h-10 w-10 text-green-600" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-[var(--cl-body)] mb-1">Days Active</p>
-                                <p className="text-3xl font-semibold text-[var(--cl-info)]">
+                                <p className="text-sm text-foreground/80 mb-1">Days Active</p>
+                                <p className="text-3xl font-semibold text-accent-purple">
                                     {stats.daysActive || 0}
                                 </p>
                             </div>
-                            <Calendar className="h-10 w-10 text-[var(--cl-info)]" />
+                            <Calendar className="h-10 w-10 text-accent-purple" />
                         </div>
                     </Card>
 
                     <Card className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-[var(--cl-body)] mb-1">Daily Goal</p>
-                                <p className="text-3xl font-semibold text-[var(--cl-warning)]">
+                                <p className="text-sm text-foreground/80 mb-1">Daily Goal</p>
+                                <p className="text-3xl font-semibold text-amber-600">
                                     {plan.daily_time_minutes}m
                                 </p>
                             </div>
-                            <Flame className="h-10 w-10 text-[var(--cl-warning)]" />
+                            <Flame className="h-10 w-10 text-amber-600" />
                         </div>
                     </Card>
                 </div>
@@ -142,13 +142,13 @@ export default function MyRoadmapPage() {
                 {/* Progress Bar */}
                 <Card className="p-6 mb-8">
                     <h3 className="text-lg font-semibold mb-4">Overall Progress</h3>
-                    <div className="w-full bg-[var(--cl-surface-strong)] rounded-full h-4 mb-2">
+                    <div className="w-full bg-muted rounded-full h-4 mb-2">
                         <div
-                            className="h-4 rounded-full transition-all duration-500 bg-[var(--cl-primary)]"
+                            className="h-4 rounded-full transition-all duration-500 bg-primary"
                             style={{ width: `${progress}%` }}
                         ></div>
                     </div>
-                    <p className="text-sm text-[var(--cl-body)]">
+                    <p className="text-sm text-foreground/80">
                         {stats.completedNodes} of {stats.totalNodes} steps completed
                     </p>
                 </Card>
@@ -161,22 +161,22 @@ export default function MyRoadmapPage() {
                             <div
                                 key={item.id}
                                 className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all ${item.status === 'completed'
-                                        ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
+                                        ? 'bg-green-500/10 border-green-600'
                                         : item.status === 'in_progress'
-                                            ? 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]'
-                                            : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)]'
+                                            ? 'bg-accent-purple/10 border-accent-purple'
+                                            : 'bg-card border-border'
                                     }`}
                             >
                                 <div className="flex-shrink-0 mt-1">
                                     {item.status === 'completed' ? (
-                                        <CheckCircle2 className="h-6 w-6 text-[var(--cl-success)]" />
+                                        <CheckCircle2 className="h-6 w-6 text-green-600" />
                                     ) : (
-                                        <Circle className="h-6 w-6 text-[var(--cl-muted-soft)]" />
+                                        <Circle className="h-6 w-6 text-muted-foreground/70" />
                                     )}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
-                                        <h4 className="font-semibold text-[var(--cl-ink)]">
+                                        <h4 className="font-semibold text-foreground">
                                             {item.node?.title}
                                         </h4>
                                         <Badge variant={
@@ -187,11 +187,11 @@ export default function MyRoadmapPage() {
                                             {item.status.replace('_', ' ')}
                                         </Badge>
                                     </div>
-                                    <p className="text-sm text-[var(--cl-body)] mb-2">
+                                    <p className="text-sm text-foreground/80 mb-2">
                                         {item.node?.description}
                                     </p>
                                     {item.node?.estimated_hours && (
-                                        <div className="flex items-center gap-2 text-sm text-[var(--cl-muted)]">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                             <Clock className="h-4 w-4" />
                                             <span>{item.node.estimated_hours} hours</span>
                                         </div>

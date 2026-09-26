@@ -17,9 +17,9 @@ type Task = {
 };
 
 const priorityColors = {
-  low: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]',
-  medium: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]',
-  high: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]',
+  low: 'bg-accent-purple/10 text-accent-purple',
+  medium: 'bg-amber-500/10 text-amber-600',
+  high: 'bg-destructive/10 text-destructive',
 };
 
 export default function TaskBoardClient({ initialTasks, userId }: { initialTasks: Task[], userId: string }) {
@@ -29,9 +29,9 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
   const [showNewTask, setShowNewTask] = useState(false);
 
   const columns = {
-    pending: { title: 'To Do', color: 'border-[var(--cl-hairline-strong)] bg-[var(--cl-canvas-soft)]' },
-    in_progress: { title: 'In Progress', color: 'border-[var(--cl-info)] bg-[rgba(13,116,206,0.12)]' },
-    completed: { title: 'Completed', color: 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]' },
+    pending: { title: 'To Do', color: 'border-border bg-muted/40' },
+    in_progress: { title: 'In Progress', color: 'border-accent-purple bg-accent-purple/10' },
+    completed: { title: 'Completed', color: 'border-green-600 bg-green-500/10' },
   };
 
   const getTasksByStatus = (status: string) => {
@@ -95,12 +95,12 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Task Board</h2>
-          <p className="text-sm text-[var(--cl-body)]">Organize your work with drag and drop</p>
+          <h2 className="text-2xl font-semibold text-foreground">Task Board</h2>
+          <p className="text-sm text-foreground/80">Organize your work with drag and drop</p>
         </div>
         <button
           onClick={() => setShowNewTask(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold rounded-[var(--cl-r-lg)] transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary text-white font-semibold rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Task
@@ -108,20 +108,20 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
       </div>
 
       {showNewTask && (
-        <div className="mb-6 p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
+        <div className="mb-6 p-4 bg-card rounded-xl border border-border">
           <input
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addTask()}
             placeholder="Task title..."
-            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-[var(--cl-r-lg)] focus:ring-2 focus:ring-[var(--cl-primary)] mb-3"
+            className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring mb-3"
             autoFocus
           />
           <div className="flex gap-2">
             <button
               onClick={addTask}
-              className="px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] font-semibold rounded-lg"
+              className="px-4 py-2 bg-primary hover:bg-primary text-white font-semibold rounded-lg"
             >
               Add
             </button>
@@ -130,7 +130,7 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                 setShowNewTask(false);
                 setNewTaskTitle('');
               }}
-              className="px-4 py-2 bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] font-semibold rounded-lg"
+              className="px-4 py-2 bg-muted hover:bg-muted text-foreground/80 font-semibold rounded-lg"
             >
               Cancel
             </button>
@@ -143,8 +143,8 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
           {Object.entries(columns).map(([status, column]) => (
             <div key={status} className="flex flex-col">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{column.title}</h3>
-                <p className="text-sm text-[var(--cl-muted)]">{getTasksByStatus(status).length} tasks</p>
+                <h3 className="text-lg font-semibold text-foreground">{column.title}</h3>
+                <p className="text-sm text-muted-foreground">{getTasksByStatus(status).length} tasks</p>
               </div>
 
               <Droppable droppableId={status}>
@@ -152,9 +152,9 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`flex-1 p-4 rounded-[var(--cl-r-xl)] border-2 transition-colors min-h-[500px] ${
+                    className={`flex-1 p-4 rounded-xl border-2 transition-colors min-h-[500px] ${
                       column.color
-                    } ${snapshot.isDraggingOver ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]' : ''}`}
+                    } ${snapshot.isDraggingOver ? 'border-accent-purple bg-accent-purple/10' : ''}`}
                   >
                     <div className="space-y-3">
                       {getTasksByStatus(status).map((task, index) => (
@@ -164,22 +164,22 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className={`p-4 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] transition-all ${
+                              className={`p-4 bg-card rounded-lg border border-border transition-all ${
                                 snapshot.isDragging ? 'rotate-2' : ''
                               }`}
                             >
                               <div className="flex items-start justify-between mb-2">
-                                <h4 className="font-semibold text-[var(--cl-ink)] flex-1">{task.title}</h4>
+                                <h4 className="font-semibold text-foreground flex-1">{task.title}</h4>
                                 <button
                                   onClick={() => deleteTask(task.id)}
-                                  className="text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-colors"
+                                  className="text-muted-foreground/70 hover:text-destructive transition-colors"
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
 
                               {task.description && (
-                                <p className="text-sm text-[var(--cl-body)] mb-3">{task.description}</p>
+                                <p className="text-sm text-foreground/80 mb-3">{task.description}</p>
                               )}
 
                               <div className="flex items-center gap-2 flex-wrap">
@@ -190,7 +190,7 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
                                   </span>
                                 )}
                                 {task.due_date && (
-                                  <span className="text-xs text-[var(--cl-muted)] flex items-center gap-1">
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
                                     {new Date(task.due_date).toLocaleDateString()}
                                   </span>

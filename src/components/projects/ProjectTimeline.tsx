@@ -15,41 +15,41 @@ interface ProjectTimelineProps {
 const eventConfig: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
   repo_created: {
     icon: <Star className="w-3.5 h-3.5" />,
-    color: 'text-[var(--cl-warning)]',
-    bg: 'bg-[rgba(171,100,0,0.12)] border-[var(--cl-warning)]',
+    color: 'text-amber-600',
+    bg: 'bg-amber-500/10 border-amber-500',
   },
   first_commit: {
     icon: <GitCommit className="w-3.5 h-3.5" />,
-    color: 'text-[var(--cl-success)]',
-    bg: 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]',
+    color: 'text-green-600',
+    bg: 'bg-green-500/10 border-green-600',
   },
   latest_commit: {
     icon: <GitCommit className="w-3.5 h-3.5" />,
-    color: 'text-[var(--cl-primary)]',
-    bg: 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]',
+    color: 'text-accent-purple',
+    bg: 'bg-accent-purple/10 border-accent-purple',
   },
   major_file_add: {
     icon: <FolderPlus className="w-3.5 h-3.5" />,
-    color: 'text-[var(--cl-info)]',
-    bg: 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]',
+    color: 'text-accent-purple',
+    bg: 'bg-accent-purple/10 border-accent-purple',
   },
   branch: {
     icon: <GitBranch className="w-3.5 h-3.5" />,
-    color: 'text-[var(--cl-primary)]',
-    bg: 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)]',
+    color: 'text-accent-purple',
+    bg: 'bg-accent-purple/10 border-accent-purple',
   },
 };
 
 const fallbackConfig = {
   icon: <GitCommit className="w-3.5 h-3.5" />,
-  color: 'text-[var(--cl-body)]',
-  bg: 'bg-[var(--cl-surface-strong)] border-[var(--cl-hairline)]',
+  color: 'text-foreground/80',
+  bg: 'bg-muted border-border',
 };
 
 export default function ProjectTimeline({ events }: ProjectTimelineProps) {
   if (!events || events.length === 0) {
     return (
-      <p className="text-sm text-[var(--cl-muted-soft)] text-center py-4">No timeline data available.</p>
+      <p className="text-sm text-muted-foreground/70 text-center py-4">No timeline data available.</p>
     );
   }
 
@@ -60,7 +60,7 @@ export default function ProjectTimeline({ events }: ProjectTimelineProps) {
   return (
     <div className="relative">
       {/* Vertical line */}
-      <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-[var(--cl-surface-strong)]" />
+      <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-muted" />
 
       <div className="space-y-4">
         {sorted.map((event, i) => {
@@ -83,9 +83,9 @@ export default function ProjectTimeline({ events }: ProjectTimelineProps) {
               {/* Content */}
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm text-[var(--cl-body)] font-medium">{event.message}</p>
+                  <p className="text-sm text-foreground/80 font-medium">{event.message}</p>
                 </div>
-                <p className="text-xs text-[var(--cl-muted-soft)] mt-0.5">{dateStr}</p>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">{dateStr}</p>
               </div>
             </div>
           );

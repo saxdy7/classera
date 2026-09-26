@@ -200,7 +200,7 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
     };
 
     return (
-        <div className="min-h-screen bg-[var(--cl-canvas)]">
+        <div className="min-h-screen bg-background">
             <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
                 <Sidebar role="student" />
@@ -209,14 +209,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         <div className="flex items-center justify-between mb-6">
                             <Link
                                 href="/dashboard/student/tests"
-                                className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)]"
+                                className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Back to Tests
                             </Link>
                             <Link
                                 href={`/dashboard/student/tests/${testId}/review`}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg text-sm font-medium hover:bg-[var(--cl-primary)] transition-colors"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary transition-colors"
                             >
                                 <FileText className="w-4 h-4" />
                                 Review Answers
@@ -224,9 +224,9 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         </div>
 
                         {/* ── Quiz Summary Hero (Wayground/Quizizz style) ── */}
-                        <div className="rounded-[var(--cl-r-xl)] overflow-hidden mb-8 border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)]">
+                        <div className="rounded-xl overflow-hidden mb-8 border border-border bg-card">
                             {/* Gradient top with trophy */}
-                            <div className={`relative px-6 pt-10 pb-20 text-center ${passed ? 'bg-[var(--cl-primary)]' : 'bg-[var(--cl-surface-inverse)]'}`}>
+                            <div className={`relative px-6 pt-10 pb-20 text-center ${passed ? 'bg-primary' : 'bg-neutral-900'}`}>
                                 <div
                                     className="absolute inset-0 opacity-[0.12]"
                                     style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '22px 22px' }}
@@ -238,76 +238,76 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                             </div>
 
                             {/* Overlapping congratulations card */}
-                            <div className="relative z-10 -mt-12 mx-4 md:mx-8 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] px-6 py-6 text-center">
-                                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">
+                            <div className="relative z-10 -mt-12 mx-4 md:mx-8 rounded-xl bg-card border border-border px-6 py-6 text-center">
+                                <h2 className="text-2xl font-semibold text-foreground">
                                     {passed ? 'Congratulations!' : 'Keep practicing!'}
                                 </h2>
-                                <p className="text-[var(--cl-muted)] mt-1">
+                                <p className="text-muted-foreground mt-1">
                                     You&apos;ve scored{' '}
-                                    <span className={`font-semibold ${passed ? 'text-[var(--cl-success)]' : 'text-[var(--cl-warning)]'}`}>+{pointsScored}</span>{' '}
+                                    <span className={`font-semibold ${passed ? 'text-green-600' : 'text-amber-600'}`}>+{pointsScored}</span>{' '}
                                     points
                                 </p>
                             </div>
 
                             {/* Stat tiles: Total / Correct / Wrong */}
                             <div className="px-4 md:px-8 pt-6 pb-7">
-                                <div className="grid grid-cols-3 divide-x divide-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
+                                <div className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border">
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <span className="w-7 h-7 rounded-full bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] flex items-center justify-center font-semibold text-sm">Q</span>
-                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{totalQuestions}</span>
+                                            <span className="w-7 h-7 rounded-full bg-accent-purple/10 text-accent-purple flex items-center justify-center font-semibold text-sm">Q</span>
+                                            <span className="text-2xl font-semibold text-foreground">{totalQuestions}</span>
                                         </div>
-                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Total Questions</span>
+                                        <span className="text-xs text-muted-foreground mt-1.5 font-medium">Total Questions</span>
                                     </div>
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <CheckCircle className="w-6 h-6 text-[var(--cl-success)]" />
-                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{pad2(correctCount)}</span>
+                                            <CheckCircle className="w-6 h-6 text-green-600" />
+                                            <span className="text-2xl font-semibold text-foreground">{pad2(correctCount)}</span>
                                         </div>
-                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Correct</span>
+                                        <span className="text-xs text-muted-foreground mt-1.5 font-medium">Correct</span>
                                     </div>
                                     <div className="flex flex-col items-center py-5">
                                         <div className="flex items-center gap-2">
-                                            <XCircle className="w-6 h-6 text-[var(--cl-error)]" />
-                                            <span className="text-2xl font-semibold text-[var(--cl-ink)]">{pad2(wrongCount)}</span>
+                                            <XCircle className="w-6 h-6 text-destructive" />
+                                            <span className="text-2xl font-semibold text-foreground">{pad2(wrongCount)}</span>
                                         </div>
-                                        <span className="text-xs text-[var(--cl-muted)] mt-1.5 font-medium">Wrong</span>
+                                        <span className="text-xs text-muted-foreground mt-1.5 font-medium">Wrong</span>
                                     </div>
                                 </div>
 
                                 {/* Score / grade / percentage summary */}
                                 <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-5 text-sm">
-                                    <span className="text-[var(--cl-muted)]">Score: <span className="font-semibold text-[var(--cl-ink)]">{pointsScored}/{test?.total_marks ?? 0}</span></span>
-                                    <span className="text-[var(--cl-muted)]">Grade: <span className="font-semibold text-[var(--cl-ink)]">{grade}</span></span>
-                                    <span className="text-[var(--cl-muted)]">Percentage: <span className={`font-semibold ${passed ? 'text-[var(--cl-success)]' : 'text-[var(--cl-warning)]'}`}>{Math.round(percentage)}%</span></span>
+                                    <span className="text-muted-foreground">Score: <span className="font-semibold text-foreground">{pointsScored}/{test?.total_marks ?? 0}</span></span>
+                                    <span className="text-muted-foreground">Grade: <span className="font-semibold text-foreground">{grade}</span></span>
+                                    <span className="text-muted-foreground">Percentage: <span className={`font-semibold ${passed ? 'text-green-600' : 'text-amber-600'}`}>{Math.round(percentage)}%</span></span>
                                 </div>
                             </div>
                         </div>
 
                         {/* ── Per-Test Class Leaderboard ── */}
                         {myRankDisplay !== null && totalParticipants >= 1 && (
-                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] mb-8 overflow-hidden">
+                            <div className="bg-card rounded-xl border border-border mb-8 overflow-hidden">
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-6 pb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
-                                            <Trophy className="w-5 h-5 text-[var(--cl-warning)]" />
+                                        <div className="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center">
+                                            <Trophy className="w-5 h-5 text-amber-600" />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-semibold text-[var(--cl-ink)]">Standings</h3>
-                                            <p className="text-[var(--cl-muted)] text-xs">{totalParticipants} player{totalParticipants !== 1 ? 's' : ''} completed this test</p>
+                                            <h3 className="text-lg font-semibold text-foreground">Standings</h3>
+                                            <p className="text-muted-foreground text-xs">{totalParticipants} player{totalParticipants !== 1 ? 's' : ''} completed this test</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[11px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-wide">Your Rank</p>
-                                        <p className="text-2xl font-semibold text-[var(--cl-primary)]">
-                                            #{myRankDisplay}<span className="text-sm text-[var(--cl-muted-soft)] font-medium"> / {totalParticipants}</span>
+                                        <p className="text-[11px] text-muted-foreground/70 font-semibold uppercase tracking-wide">Your Rank</p>
+                                        <p className="text-2xl font-semibold text-accent-purple">
+                                            #{myRankDisplay}<span className="text-sm text-muted-foreground/70 font-medium"> / {totalParticipants}</span>
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* Column labels */}
-                                <div className="grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 px-6 py-2.5 text-[11px] font-semibold text-[var(--cl-muted-soft)] uppercase tracking-wide bg-[var(--cl-canvas-soft)] border-y border-[var(--cl-hairline)]">
+                                <div className="grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 px-6 py-2.5 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wide bg-muted/40 border-y border-border">
                                     <span>Rank</span>
                                     <span>Player</span>
                                     <span className="text-right">Correct</span>
@@ -320,18 +320,18 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                         const rank = idx + 1;
                                         const ordinal = rank === 1 ? '1st' : rank === 2 ? '2nd' : rank === 3 ? '3rd' : `${rank}th`;
                                         const initials = (entry.users?.full_name || 'S').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
-                                        const avatarColors = ['bg-[var(--cl-primary)] text-[var(--cl-primary)]', 'bg-[var(--cl-warning)] text-[var(--cl-warning)]', 'bg-[var(--cl-success)] text-[var(--cl-success)]', 'bg-[var(--cl-info)] text-[var(--cl-info)]', 'bg-[var(--cl-error)] text-[var(--cl-error)]'];
+                                        const avatarColors = ['bg-primary text-accent-purple', 'bg-amber-500 text-amber-600', 'bg-green-600 text-green-600', 'bg-accent-purple text-accent-purple', 'bg-destructive text-destructive'];
                                         const ac = avatarColors[idx % avatarColors.length];
                                         const pct = entry.percentage || 0;
                                         return (
                                             <div
                                                 key={entry.student_id}
-                                                className={`grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 items-center px-6 py-3 border-b border-[var(--cl-hairline)] last:border-0 ${
-                                                    rank === 1 ? 'bg-[rgba(22,163,74,0.7)]' : isMe ? 'bg-[var(--cl-primary-soft)]' : 'hover:bg-slate-50'
+                                                className={`grid grid-cols-[3.5rem_1fr_4.5rem] gap-3 items-center px-6 py-3 border-b border-border last:border-0 ${
+                                                    rank === 1 ? 'bg-[rgba(22,163,74,0.7)]' : isMe ? 'bg-accent-purple/10' : 'hover:bg-slate-50'
                                                 }`}
                                             >
                                                 {/* Rank */}
-                                                <div className="flex items-center gap-1 font-semibold text-[var(--cl-body)] text-sm">
+                                                <div className="flex items-center gap-1 font-semibold text-foreground/80 text-sm">
                                                     {rank === 1 && <span className="text-base leading-none">👑</span>}
                                                     {ordinal}
                                                 </div>
@@ -340,23 +340,23 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                 <div className="flex items-center gap-3 min-w-0">
                                                     {entry.users?.avatar_url ? (
                                                         // eslint-disable-next-line @next/next/no-img-element
-                                                        <img src={entry.users.avatar_url} alt="" className="w-9 h-9 rounded-[var(--cl-r-lg)] object-cover flex-shrink-0" />
+                                                        <img src={entry.users.avatar_url} alt="" className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
                                                     ) : (
-                                                        <div className={`w-9 h-9 rounded-[var(--cl-r-lg)] flex items-center justify-center flex-shrink-0 font-semibold text-sm ${ac}`}>
+                                                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 font-semibold text-sm ${ac}`}>
                                                             {initials}
                                                         </div>
                                                     )}
                                                     <div className="min-w-0">
-                                                        <p className="font-semibold text-sm text-[var(--cl-ink)] truncate">
+                                                        <p className="font-semibold text-sm text-foreground truncate">
                                                             {entry.users?.full_name || 'Student'}
-                                                            {isMe && <span className="ml-1.5 text-xs text-[var(--cl-primary)] font-normal">(You)</span>}
+                                                            {isMe && <span className="ml-1.5 text-xs text-accent-purple font-normal">(You)</span>}
                                                         </p>
-                                                        <p className="text-xs text-[var(--cl-muted-soft)]">{formatTimeTaken(entry.time_taken_seconds)}</p>
+                                                        <p className="text-xs text-muted-foreground/70">{formatTimeTaken(entry.time_taken_seconds)}</p>
                                                     </div>
                                                 </div>
 
                                                 {/* Correct % */}
-                                                <span className="text-right font-semibold text-sm text-[var(--cl-ink)]">{pct.toFixed(0)}%</span>
+                                                <span className="text-right font-semibold text-sm text-foreground">{pct.toFixed(0)}%</span>
                                             </div>
                                         );
                                     })}
@@ -370,17 +370,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Strengths */}
                                 {(aiAnalysis.strengths?.length ?? 0) > 0 && (
-                                    <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-success)] p-6 bg-[rgba(22,163,74,0.12)]">
+                                    <div className="rounded-lg border border-green-600 p-6 bg-green-500/10">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-[rgba(22,163,74,0.12)] rounded-full flex items-center justify-center">
-                                                <TrendingUp className="w-5 h-5 text-[var(--cl-success)]" />
+                                            <div className="w-10 h-10 bg-green-500/10 rounded-full flex items-center justify-center">
+                                                <TrendingUp className="w-5 h-5 text-green-600" />
                                             </div>
-                                            <h3 className="text-lg font-semibold text-[var(--cl-success)]">Your Strengths</h3>
+                                            <h3 className="text-lg font-semibold text-green-600">Your Strengths</h3>
                                         </div>
                                         <ul className="space-y-2">
                                             {aiAnalysis.strengths.map((strength: string, idx: number) => (
-                                                <li key={idx} className="flex items-start gap-2 text-[var(--cl-success)]">
-                                                    <CheckCircle className="w-4 h-4 text-[var(--cl-success)] mt-0.5 flex-shrink-0" />
+                                                <li key={idx} className="flex items-start gap-2 text-green-600">
+                                                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                                                     <span>{strength}</span>
                                                 </li>
                                             ))}
@@ -390,17 +390,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                                 {/* Areas for Improvement */}
                                 {(aiAnalysis.weaknesses?.length ?? 0) > 0 && (
-                                    <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-warning)] p-6 bg-[rgba(171,100,0,0.12)]">
+                                    <div className="rounded-lg border border-amber-500 p-6 bg-amber-500/10">
                                         <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-full flex items-center justify-center">
-                                                <AlertCircle className="w-5 h-5 text-[var(--cl-warning)]" />
+                                            <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center">
+                                                <AlertCircle className="w-5 h-5 text-amber-600" />
                                             </div>
-                                            <h3 className="text-lg font-semibold text-[var(--cl-warning)]">Areas to Improve</h3>
+                                            <h3 className="text-lg font-semibold text-amber-600">Areas to Improve</h3>
                                         </div>
                                         <ul className="space-y-2">
                                             {aiAnalysis.weaknesses.map((weakness: string, idx: number) => (
-                                                <li key={idx} className="flex items-start gap-2 text-[var(--cl-warning)]">
-                                                    <Lightbulb className="w-4 h-4 text-[var(--cl-warning)] mt-0.5 flex-shrink-0" />
+                                                <li key={idx} className="flex items-start gap-2 text-amber-600">
+                                                    <Lightbulb className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                                                     <span>{weakness}</span>
                                                 </li>
                                             ))}
@@ -412,17 +412,17 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Study Recommendations */}
                         {(aiAnalysis?.study_recommendations?.length ?? 0) > 0 && (
-                            <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-info)] p-6 bg-[rgba(13,116,206,0.12)]">
+                            <div className="rounded-lg border border-accent-purple p-6 bg-accent-purple/10">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 bg-[rgba(13,116,206,0.12)] rounded-full flex items-center justify-center">
-                                        <BookOpen className="w-5 h-5 text-[var(--cl-info)]" />
+                                    <div className="w-10 h-10 bg-accent-purple/10 rounded-full flex items-center justify-center">
+                                        <BookOpen className="w-5 h-5 text-accent-purple" />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-[var(--cl-info)]">Study Recommendations</h3>
+                                    <h3 className="text-lg font-semibold text-accent-purple">Study Recommendations</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {aiAnalysis!.study_recommendations.map((rec: string, idx: number) => (
-                                        <div key={idx} className="flex items-start gap-2 p-3 bg-[rgba(255,255,255,0.6)] rounded-lg text-[var(--cl-info)]">
-                                            <span className="w-6 h-6 bg-[rgba(13,116,206,0.12)] rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium text-[var(--cl-info)]">
+                                        <div key={idx} className="flex items-start gap-2 p-3 bg-[rgba(255,255,255,0.6)] rounded-lg text-accent-purple">
+                                            <span className="w-6 h-6 bg-accent-purple/10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium text-accent-purple">
                                                 {idx + 1}
                                             </span>
                                             <span>{rec}</span>
@@ -433,19 +433,19 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                         )}
 
                         {/* Question Review */}
-                        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)]">
-                            <div className="p-6 border-b border-[var(--cl-hairline)]">
-                                <h2 className="text-xl font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                        <div className="bg-card rounded-lg border border-border">
+                            <div className="p-6 border-b border-border">
+                                <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
                                     Question Review
                                     {aiAnalysis && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] text-xs font-medium rounded-full">
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-accent-purple/10 text-accent-purple text-xs font-medium rounded-full">
                                             <Sparkles className="w-3 h-3" />
                                             AI Enhanced
                                         </span>
                                     )}
                                 </h2>
                             </div>
-                            <div className="divide-y divide-[var(--cl-hairline)]">
+                            <div className="divide-y divide-border">
                                 {test?.questions?.map((question: any, index: number) => {
                                     const studentAnswer = submission.answers?.[question.id];
                                     const questionAnalysis = aiAnalysis?.question_analysis?.find(
@@ -459,16 +459,16 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                         <div key={question.id} className="p-6">
                                             <div className="flex items-start gap-4">
                                                 <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                                    isCorrect ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
+                                                    isCorrect ? 'bg-green-500/10 text-green-600' : 'bg-destructive/10 text-destructive'
                                                 }`}>
                                                     {index + 1}
                                                 </span>
                                                 <div className="flex-1">
                                                     <div className="flex items-start justify-between gap-4">
-                                                        <p className="font-medium text-[var(--cl-ink)] mb-2">{question.question || question.text}</p>
+                                                        <p className="font-medium text-foreground mb-2">{question.question || question.text}</p>
                                                         <div className="flex items-center gap-2 flex-shrink-0">
                                                             <span className={`px-2 py-1 rounded text-sm font-medium ${
-                                                                isCorrect ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
+                                                                isCorrect ? 'bg-green-500/10 text-green-600' : 'bg-destructive/10 text-destructive'
                                                             }`}>
                                                                 {earnedMarks}/{question.marks || 1}
                                                             </span>
@@ -491,16 +491,16 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                                         key={optIdx}
                                                                         className={`p-3 rounded-lg border ${
                                                                             isCorrectOpt
-                                                                                ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
+                                                                                ? 'bg-green-500/10 border-green-600'
                                                                                 : isSelected
-                                                                                    ? 'bg-[rgba(239,68,68,0.12)] border-[var(--cl-error)]'
-                                                                                    : 'bg-[var(--cl-canvas-soft)] border-[var(--cl-hairline)]'
+                                                                                    ? 'bg-destructive/10 border-destructive'
+                                                                                    : 'bg-muted/40 border-border'
                                                                         }`}
                                                                     >
                                                                         <span className="flex items-center gap-2">
-                                                                            {isCorrectOpt && <CheckCircle className="w-4 h-4 text-[var(--cl-success)]" />}
-                                                                            {isSelected && !isCorrectOpt && <XCircle className="w-4 h-4 text-[var(--cl-error)]" />}
-                                                                            <span className={isCorrectOpt ? 'text-[var(--cl-success)]' : isSelected ? 'text-[var(--cl-error)]' : 'text-[var(--cl-body)]'}>
+                                                                            {isCorrectOpt && <CheckCircle className="w-4 h-4 text-green-600" />}
+                                                                            {isSelected && !isCorrectOpt && <XCircle className="w-4 h-4 text-destructive" />}
+                                                                            <span className={isCorrectOpt ? 'text-green-600' : isSelected ? 'text-destructive' : 'text-foreground/80'}>
                                                                                 {optValue}
                                                                             </span>
                                                                         </span>
@@ -511,27 +511,27 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
                                                     )}
 
                                                     {question.type !== 'mcq' && studentAnswer && (
-                                                        <div className="mt-3 p-4 bg-[var(--cl-canvas-soft)] rounded-lg">
-                                                            <p className="text-sm text-[var(--cl-body)] mb-1">Your Answer:</p>
-                                                            <p className="text-[var(--cl-ink)] whitespace-pre-wrap">{studentAnswer}</p>
+                                                        <div className="mt-3 p-4 bg-muted/40 rounded-lg">
+                                                            <p className="text-sm text-foreground/80 mb-1">Your Answer:</p>
+                                                            <p className="text-foreground whitespace-pre-wrap">{studentAnswer}</p>
                                                         </div>
                                                     )}
 
                                                     {/* AI Feedback for this question */}
                                                     {questionAnalysis?.feedback && (
-                                                        <div className="mt-3 p-4 rounded-lg border border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]">
+                                                        <div className="mt-3 p-4 rounded-lg border border-accent-purple bg-accent-purple/10">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <Sparkles className="w-4 h-4 text-[var(--cl-primary)]" />
-                                                                <p className="text-sm text-[var(--cl-primary)] font-medium">AI Feedback</p>
+                                                                <Sparkles className="w-4 h-4 text-accent-purple" />
+                                                                <p className="text-sm text-accent-purple font-medium">AI Feedback</p>
                                                             </div>
-                                                            <p className="text-[var(--cl-primary)]">{questionAnalysis.feedback}</p>
+                                                            <p className="text-accent-purple">{questionAnalysis.feedback}</p>
                                                         </div>
                                                     )}
 
                                                     {question.explanation && (
-                                                        <div className="mt-3 p-4 bg-[rgba(13,116,206,0.12)] rounded-lg">
-                                                            <p className="text-sm text-[var(--cl-info)] font-medium mb-1">Explanation:</p>
-                                                            <p className="text-[var(--cl-info)]">{question.explanation}</p>
+                                                        <div className="mt-3 p-4 bg-accent-purple/10 rounded-lg">
+                                                            <p className="text-sm text-accent-purple font-medium mb-1">Explanation:</p>
+                                                            <p className="text-accent-purple">{question.explanation}</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -544,21 +544,21 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Overall AI Feedback */}
                         {(aiAnalysis?.overall_feedback || submission.ai_feedback) && (
-                            <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)] p-6 bg-[var(--cl-primary-soft)]">
+                            <div className="rounded-lg border border-accent-purple p-6 bg-accent-purple/10">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-full flex items-center justify-center">
-                                        <Sparkles className="w-5 h-5 text-[var(--cl-primary)]" />
+                                    <div className="w-10 h-10 bg-accent-purple/10 rounded-full flex items-center justify-center">
+                                        <Sparkles className="w-5 h-5 text-accent-purple" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold text-[var(--cl-primary)]">AI Overall Assessment</h3>
+                                        <h3 className="text-lg font-semibold text-accent-purple">AI Overall Assessment</h3>
                                         {submission.ai_evaluated_at && (
-                                            <p className="text-sm text-[var(--cl-primary)]">
+                                            <p className="text-sm text-accent-purple">
                                                 Evaluated {new Date(submission.ai_evaluated_at).toLocaleString()}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-[var(--cl-primary)] whitespace-pre-wrap leading-relaxed">
+                                <p className="text-accent-purple whitespace-pre-wrap leading-relaxed">
                                     {aiAnalysis?.overall_feedback || submission.ai_feedback}
                                 </p>
                             </div>
@@ -566,14 +566,14 @@ export default async function TestResultsPage({ params }: { params: Promise<{ id
 
                         {/* Pending Evaluation Notice */}
                         {!submission.ai_evaluated_at && (
-                            <div className="bg-[rgba(171,100,0,0.12)] border border-[var(--cl-warning)] rounded-[var(--cl-r-lg)] p-6">
+                            <div className="bg-amber-500/10 border border-amber-500 rounded-lg p-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-[rgba(171,100,0,0.12)] rounded-full flex items-center justify-center">
-                                        <Clock className="w-5 h-5 text-[var(--cl-warning)] animate-pulse" />
+                                    <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center">
+                                        <Clock className="w-5 h-5 text-amber-600 animate-pulse" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold text-[var(--cl-warning)]">AI Evaluation in Progress</h3>
-                                        <p className="text-[var(--cl-warning)]">
+                                        <h3 className="text-lg font-semibold text-amber-600">AI Evaluation in Progress</h3>
+                                        <p className="text-amber-600">
                                             Your test is being evaluated by our AI. Detailed feedback will appear shortly. 
                                             Refresh the page in a few moments.
                                         </p>

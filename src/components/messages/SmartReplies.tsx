@@ -64,7 +64,7 @@ export function SmartReplies() {
 
     return (
         <div id="smart-replies-container" className="flex gap-2 px-4 pb-2 overflow-x-auto no-scrollbar">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full text-[var(--cl-on-dark)] flex-shrink-0 animate-pulse bg-[var(--cl-primary)]">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full text-white flex-shrink-0 animate-pulse bg-primary">
                 <Sparkles className="w-4 h-4" />
             </div>
             {replies.map((reply, i) => (
@@ -74,7 +74,7 @@ export function SmartReplies() {
                         sendMessage(reply);
                         setReplies([]); // Clear after sending
                     }}
-                    className="px-3 py-1.5 bg-[var(--cl-surface-card)] border border-[var(--cl-primary)] rounded-full text-sm text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] whitespace-nowrap transition-all"
+                    className="px-3 py-1.5 bg-card border border-accent-purple rounded-full text-sm text-accent-purple hover:bg-accent-purple/10 whitespace-nowrap transition-all"
                 >
                     {reply}
                 </button>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CountUp } from '@/components/motion';
 
 /**
  * Stat tile in the reference dashboards' idiom: a plain bordered card,
@@ -22,11 +23,17 @@ export function StatCard({
   hint?: React.ReactNode;
   className?: string;
 }) {
+  // Plain integers count up on mount (GSAP); anything else — "82%", "—" — is
+  // rendered as-is, so the tile never animates a value it cannot parse.
+  const numeric = typeof value === 'number' ? value : null;
+
   const body = (
     <div className={cn('flex h-full items-center justify-between rounded-xl border bg-card p-5 transition-colors', href && 'hover:bg-muted/40', className)}>
       <div className="min-w-0">
         <p className="text-xs font-medium text-muted-foreground">{label}</p>
-        <p className="mt-1 text-3xl font-semibold tracking-tight tabular-nums text-foreground">{value}</p>
+        <p className="mt-1 text-3xl font-semibold tracking-tight tabular-nums text-foreground">
+          {numeric !== null ? <CountUp value={numeric} /> : value}
+        </p>
         {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
       </div>
       <Icon className="size-5 shrink-0 text-accent-purple" aria-hidden="true" />

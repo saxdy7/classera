@@ -15,38 +15,38 @@ import { cn } from "@/lib/utils"
  */
 const badgeVariants = cva(
   cn(
-    "inline-flex items-center rounded-[var(--cl-r-pill)] border px-3 py-1",
+    "inline-flex items-center rounded-full border px-3 py-1",
     "text-[13px] font-medium leading-[1.4]",
-    "transition-colors duration-[var(--cl-dur-micro)] ease-[var(--cl-ease)]",
-    "focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]",
+    "transition-colors duration-200 ease-out",
+    "focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
   ),
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-[var(--cl-primary)] text-[var(--cl-on-primary)]",
+          "border-transparent bg-primary text-primary-foreground",
         secondary:
-          "border-transparent bg-[var(--cl-surface-strong)] text-[var(--cl-ink)]",
+          "border-transparent bg-muted text-foreground",
         outline:
-          "border-[var(--cl-hairline-strong)] bg-transparent text-[var(--cl-ink)]",
+          "border-border bg-transparent text-foreground",
         primary:
-          "border-transparent bg-[var(--cl-primary)] text-[var(--cl-on-primary)]",
+          "border-transparent bg-primary text-primary-foreground",
 
         // Status - tinted fill, full-strength text
-        destructive: "border-transparent bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]",
-        success:     "border-transparent bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]",
-        warning:     "border-transparent bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]",
-        info:        "border-transparent bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]",
+        destructive: "border-transparent bg-destructive/10 text-destructive",
+        success:     "border-transparent bg-green-500/10 text-green-600",
+        warning:     "border-transparent bg-amber-500/10 text-amber-600",
+        info:        "border-transparent bg-accent-purple/10 text-accent-purple",
 
         // Category tags (Clay). Ink text except on pink/teal, which are dark
         // enough to need white.
-        pink:     "border-transparent bg-[var(--cl-brand-pink)] text-[var(--cl-on-dark)]",
-        teal:     "border-transparent bg-[var(--cl-brand-teal)] text-[var(--cl-on-dark)]",
-        lavender: "border-transparent bg-[var(--cl-brand-lavender)] text-[var(--cl-ink)]",
-        peach:    "border-transparent bg-[var(--cl-brand-peach)] text-[var(--cl-ink)]",
-        ochre:    "border-transparent bg-[var(--cl-brand-ochre)] text-[var(--cl-ink)]",
-        mint:     "border-transparent bg-[var(--cl-brand-mint)] text-[var(--cl-ink)]",
-        coral:    "border-transparent bg-[var(--cl-brand-coral)] text-[var(--cl-ink)]",
+        pink:     "border-transparent bg-accent-purple text-white",
+        teal:     "border-transparent bg-accent-purple text-white",
+        lavender: "border-transparent bg-accent-purple text-foreground",
+        peach:    "border-transparent bg-accent-purple text-foreground",
+        ochre:    "border-transparent bg-accent-purple text-foreground",
+        mint:     "border-transparent bg-accent-purple text-foreground",
+        coral:    "border-transparent bg-accent-purple text-foreground",
       },
     },
     defaultVariants: {

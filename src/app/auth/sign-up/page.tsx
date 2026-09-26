@@ -85,56 +85,56 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md">
-        <div className="bg-black/40 backdrop-blur-xl border border-[var(--cl-hairline)] rounded-[var(--cl-r-xl)] p-8">
+        <div className="bg-black/40 backdrop-blur-xl border border-border rounded-xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               Join Classera
             </h1>
-            <p className="text-[var(--cl-muted)] mt-2">Start your learning journey today</p>
+            <p className="text-muted-foreground mt-2">Start your learning journey today</p>
           </div>
 
           <form onSubmit={handleSignUp} className="space-y-5">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="fullName" className="block text-sm font-medium text-muted-foreground mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="fullName"
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="John Doe"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
                 University Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="you@university.edu"
                 />
               </div>
-              <p className="text-xs text-[var(--cl-muted)] mt-1">Use your university email to verify authenticity</p>
+              <p className="text-xs text-muted-foreground mt-1">Use your university email to verify authenticity</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--cl-muted)] mb-3">
+              <label className="block text-sm font-medium text-muted-foreground mb-3">
                 I am a
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -143,8 +143,8 @@ export default function SignUpPage() {
                   onClick={() => setRole('student')}
                   className={`p-4 rounded-lg border transition-all duration-200 ${
                     role === 'student'
-                      ? 'bg-[var(--cl-surface-card)] border-[var(--cl-primary)] text-[var(--cl-ink)]'
-                      : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] text-[var(--cl-muted)] hover:border-[var(--cl-hairline-strong)]'
+                      ? 'bg-card border-accent-purple text-foreground'
+                      : 'bg-card border-border text-muted-foreground hover:border-border'
                   }`}
                 >
                   <GraduationCap className="w-6 h-6 mx-auto mb-2" />
@@ -155,8 +155,8 @@ export default function SignUpPage() {
                   onClick={() => setRole('mentor')}
                   className={`p-4 rounded-lg border transition-all duration-200 ${
                     role === 'mentor'
-                      ? 'bg-[var(--cl-surface-card)] border-[var(--cl-primary)] text-[var(--cl-ink)]'
-                      : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] text-[var(--cl-muted)] hover:border-[var(--cl-hairline-strong)]'
+                      ? 'bg-card border-accent-purple text-foreground'
+                      : 'bg-card border-border text-muted-foreground hover:border-border'
                   }`}
                 >
                   <UserCircle className="w-6 h-6 mx-auto mb-2" />
@@ -166,24 +166,24 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-muted-foreground mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-12 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-12 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--cl-muted)] hover:text-[var(--cl-ink)] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -191,25 +191,25 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-[var(--cl-muted)] mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-muted-foreground mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted)]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-[rgba(239,68,68,0.1)] border border-[var(--cl-error)] rounded-lg p-3 text-[var(--cl-error)] text-sm">
+              <div className="bg-[rgba(239,68,68,0.1)] border border-destructive rounded-lg p-3 text-destructive text-sm">
                 {error}
               </div>
             )}
@@ -217,7 +217,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--cl-on-primary)] font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-[var(--cl-primary)]"
+              className="w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-primary"
             >
               {loading ? (
                 <>
@@ -231,11 +231,11 @@ export default function SignUpPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[var(--cl-muted)]">
+            <p className="text-muted-foreground">
               Already have an account?{' '}
               <Link
                 href="/signin"
-                className="text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-semibold transition-colors"
+                className="text-accent-purple hover:text-accent-purple font-semibold transition-colors"
               >
                 Sign In
               </Link>

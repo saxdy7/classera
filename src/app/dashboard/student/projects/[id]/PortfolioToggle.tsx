@@ -37,11 +37,11 @@ export default function PortfolioToggle({
       disabled={saving}
       className={`flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-[var(--cl-r-pill,9999px)] border transition-colors disabled:opacity-60 ${
         featured
-          ? 'bg-[var(--cl-primary-soft)] border-[var(--cl-primary)] text-[var(--cl-primary)]'
-          : 'border-[var(--cl-hairline)] text-[var(--cl-muted)] hover:bg-[var(--cl-canvas-soft)]'
+          ? 'bg-accent-purple/10 border-accent-purple text-accent-purple'
+          : 'border-border text-muted-foreground hover:bg-muted/40'
       }`}
     >
-      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Star className={`w-3.5 h-3.5 ${featured ? 'fill-[var(--cl-primary)]' : ''}`} />}
+      {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Star className={`w-3.5 h-3.5 ${featured ? 'fill-accent-purple' : ''}`} />}
       {featured ? 'Featured on portfolio' : 'Feature on portfolio'}
     </button>
   );

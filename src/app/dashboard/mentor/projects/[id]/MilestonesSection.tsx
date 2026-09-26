@@ -56,15 +56,15 @@ export default function MilestonesSection({ assignmentId }: { assignmentId: stri
   }
 
   return (
-    <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-6">
+    <div className="bg-card rounded-xl border border-border p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold text-[var(--cl-ink)] flex items-center gap-2">
-          <Flag className="w-4 h-4 text-[var(--cl-primary)]" />
+        <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+          <Flag className="w-4 h-4 text-accent-purple" />
           Checkpoints
         </h2>
         <button
           onClick={() => setShowForm((s) => !s)}
-          className="flex items-center gap-1.5 text-sm font-medium text-[var(--cl-primary)] hover:opacity-80"
+          className="flex items-center gap-1.5 text-sm font-medium text-accent-purple hover:opacity-80"
         >
           {showForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
           {showForm ? 'Cancel' : 'Add checkpoint'}
@@ -78,43 +78,43 @@ export default function MilestonesSection({ assignmentId }: { assignmentId: stri
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Wire up the API"
-            className="flex-1 px-3 py-2 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+            className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="px-3 py-2 border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+            className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           <button
             type="submit"
             disabled={submitting || !title.trim()}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-primary)] text-sm font-medium rounded-[var(--cl-r-lg)] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg disabled:opacity-50"
           >
             {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             Add
           </button>
         </form>
       )}
-      {error && <p className="text-xs text-[var(--cl-error)] mb-3">{error}</p>}
+      {error && <p className="text-xs text-destructive mb-3">{error}</p>}
 
       {milestones === null ? (
-        <p className="text-sm text-[var(--cl-muted)]">Loading…</p>
+        <p className="text-sm text-muted-foreground">Loading…</p>
       ) : milestones.length === 0 ? (
-        <p className="text-sm text-[var(--cl-muted)]">
+        <p className="text-sm text-muted-foreground">
           No checkpoints yet. Break this project into milestones so students get structure before the deadline.
         </p>
       ) : (
         <div className="space-y-2">
           {milestones.map((m) => (
-            <div key={`${m.title}-${m.due_date}`} className="flex items-center justify-between gap-3 p-3 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)]">
+            <div key={`${m.title}-${m.due_date}`} className="flex items-center justify-between gap-3 p-3 bg-muted/40 rounded-lg">
               <div className="min-w-0">
-                <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{m.title}</p>
+                <p className="text-sm font-medium text-foreground truncate">{m.title}</p>
                 {m.due_date && (
-                  <p className="text-xs text-[var(--cl-muted)]">Due {new Date(m.due_date).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground">Due {new Date(m.due_date).toLocaleDateString()}</p>
                 )}
               </div>
-              <span className="text-xs font-semibold text-[var(--cl-primary)] flex-shrink-0">
+              <span className="text-xs font-semibold text-accent-purple flex-shrink-0">
                 {m.completed}/{m.total} done
               </span>
             </div>

@@ -178,13 +178,13 @@ export default function QuestionBankManager() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]';
+        return 'bg-green-500/10 text-green-600';
       case 'medium':
-        return 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]';
+        return 'bg-amber-500/10 text-amber-600';
       case 'hard':
-        return 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]';
+        return 'bg-destructive/10 text-destructive';
       default:
-        return 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]';
+        return 'bg-muted text-foreground/80';
     }
   };
 
@@ -196,7 +196,7 @@ export default function QuestionBankManager() {
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             Question Bank
           </h1>
-          <p className="text-[var(--cl-body)] mt-2">
+          <p className="text-foreground/80 mt-2">
             Create and manage your test questions
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function QuestionBankManager() {
       <Card className="p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--cl-muted-soft)]" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
             <input
               type="text"
               placeholder="Search questions..."
@@ -263,14 +263,14 @@ export default function QuestionBankManager() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-[var(--cl-surface-strong)] rounded-lg animate-pulse" />
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       ) : questions.length === 0 ? (
         <div className="text-center py-12">
-          <FileText className="w-16 h-16 mx-auto text-[var(--cl-muted-soft)] mb-4" />
-          <p className="text-[var(--cl-muted)] text-lg">No questions yet</p>
-          <p className="text-[var(--cl-muted-soft)] text-sm mt-2">
+          <FileText className="w-16 h-16 mx-auto text-muted-foreground/70 mb-4" />
+          <p className="text-muted-foreground text-lg">No questions yet</p>
+          <p className="text-muted-foreground/70 text-sm mt-2">
             Create your first question to get started
           </p>
         </div>
@@ -281,7 +281,7 @@ export default function QuestionBankManager() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="text-[var(--cl-primary)]">
+                    <div className="text-accent-purple">
                       {getQuestionTypeIcon(question.question_type)}
                     </div>
                     <span
@@ -291,20 +291,20 @@ export default function QuestionBankManager() {
                     >
                       {question.difficulty}
                     </span>
-                    <span className="text-sm text-[var(--cl-body)]">
+                    <span className="text-sm text-foreground/80">
                       {question.marks} {question.marks === 1 ? 'mark' : 'marks'}
                     </span>
-                    <span className="text-sm text-[var(--cl-muted)]">
+                    <span className="text-sm text-muted-foreground">
                       Used {question.usage_count} times
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     {question.question_text}
                   </h3>
 
                   {question.subject && (
-                    <p className="text-sm text-[var(--cl-body)] mb-2">
+                    <p className="text-sm text-foreground/80 mb-2">
                       Subject: {question.subject}
                       {question.topic && ` • Topic: ${question.topic}`}
                     </p>
@@ -315,7 +315,7 @@ export default function QuestionBankManager() {
                       {question.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-1 rounded"
+                          className="text-xs bg-muted text-foreground/80 px-2 py-1 rounded"
                         >
                           {tag}
                         </span>
@@ -336,7 +336,7 @@ export default function QuestionBankManager() {
                     size="sm"
                     variant="ghost"
                     onClick={() => handleDelete(question.id)}
-                    className="text-[var(--cl-error)] hover:text-[var(--cl-error)]"
+                    className="text-destructive hover:text-destructive"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -351,13 +351,13 @@ export default function QuestionBankManager() {
       {showAddModal && (
         <>
           <div
-            className="fixed inset-0 bg-[var(--cl-scrim)] z-40"
+            className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setShowAddModal(false)}
           />
           <div className="fixed inset-x-0 top-10 z-50 mx-auto max-w-3xl px-4 max-h-screen overflow-y-auto">
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">
+                <h2 className="text-2xl font-semibold text-foreground">
                   {editingQuestion ? 'Edit Question' : 'Add New Question'}
                 </h2>
                 <Button

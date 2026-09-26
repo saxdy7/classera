@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { deepseek, groq } from '@/lib/deepseek';
+import { deepseek, groq, GROQ_MODEL } from '@/lib/deepseek';
 
 function extractJSON(raw: string): any {
   if (!raw?.trim()) throw new Error('Empty AI response');
@@ -87,7 +87,10 @@ Make ${num_modules} modules with 3-4 lessons each.`;
     } catch {
       const c = await groq.chat.completions.create({
         messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
-        model: 'llama-3.3-70b-versatile', temperature: 0.6, max_tokens: 6000,
+        model: GROQ_MODEL,
+        // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+        // trace short so it cannot eat the max_tokens budget and return empty content.
+        reasoning_effort: 'low', temperature: 0.6, max_tokens: 6000,
       });
       text = c.choices[0]?.message?.content ?? '';
     }

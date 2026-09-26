@@ -13,48 +13,48 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
     const getIcon = (type: string) => {
         switch (type) {
             case 'message':
-                return <MessageSquare className="w-5 h-5 text-[var(--cl-info)]" />;
+                return <MessageSquare className="w-5 h-5 text-accent-purple" />;
             case 'connection_request':
-                return <UserPlus className="w-5 h-5 text-[var(--cl-primary)]" />;
+                return <UserPlus className="w-5 h-5 text-accent-purple" />;
             case 'connection_accepted':
-                return <CheckCircle className="w-5 h-5 text-[var(--cl-success)]" />;
+                return <CheckCircle className="w-5 h-5 text-green-600" />;
             case 'test_assigned':
-                return <FileText className="w-5 h-5 text-[var(--cl-warning)]" />;
+                return <FileText className="w-5 h-5 text-amber-600" />;
             case 'test_graded':
-                return <Award className="w-5 h-5 text-[var(--cl-success)]" />;
+                return <Award className="w-5 h-5 text-green-600" />;
             case 'community_invite':
-                return <Users className="w-5 h-5 text-[var(--cl-primary)]" />;
+                return <Users className="w-5 h-5 text-accent-purple" />;
             case 'community_accepted':
-                return <CheckCircle className="w-5 h-5 text-[var(--cl-success)]" />;
+                return <CheckCircle className="w-5 h-5 text-green-600" />;
             case 'mention':
-                return <Megaphone className="w-5 h-5 text-[var(--cl-primary)]" />;
+                return <Megaphone className="w-5 h-5 text-accent-purple" />;
             case 'system':
-                return <Info className="w-5 h-5 text-[var(--cl-body)]" />;
+                return <Info className="w-5 h-5 text-foreground/80" />;
             default:
-                return <Info className="w-5 h-5 text-[var(--cl-info)]" />;
+                return <Info className="w-5 h-5 text-accent-purple" />;
         }
     };
 
     const getIconBg = (type: string) => {
         switch (type) {
             case 'message':
-                return 'bg-[rgba(13,116,206,0.12)]';
+                return 'bg-accent-purple/10';
             case 'connection_request':
             case 'connection_accepted':
-                return 'bg-[var(--cl-primary-soft)]';
+                return 'bg-accent-purple/10';
             case 'test_assigned':
-                return 'bg-[rgba(171,100,0,0.12)]';
+                return 'bg-amber-500/10';
             case 'test_graded':
-                return 'bg-[rgba(22,163,74,0.12)]';
+                return 'bg-green-500/10';
             case 'community_invite':
             case 'community_accepted':
-                return 'bg-[var(--cl-primary-soft)]';
+                return 'bg-accent-purple/10';
             case 'mention':
-                return 'bg-[var(--cl-primary-soft)]';
+                return 'bg-accent-purple/10';
             case 'system':
-                return 'bg-[var(--cl-surface-strong)]';
+                return 'bg-muted';
             default:
-                return 'bg-[rgba(13,116,206,0.12)]';
+                return 'bg-accent-purple/10';
         }
     };
 
@@ -91,7 +91,7 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
     if (loading) {
         return (
             <div className="flex items-center justify-center py-16">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
             </div>
         );
     }
@@ -102,10 +102,10 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
             <div className="mb-8">
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-3xl font-semibold text-black flex items-center gap-3">
-                        <Bell className="w-8 h-8 text-[var(--cl-primary)]" />
+                        <Bell className="w-8 h-8 text-accent-purple" />
                         Notifications
                         {unreadCount > 0 && (
-                            <span className="bg-[var(--cl-primary)] text-[var(--cl-on-dark)] text-sm font-semibold px-3 py-1 rounded-full">
+                            <span className="bg-primary text-white text-sm font-semibold px-3 py-1 rounded-full">
                                 {unreadCount}
                             </span>
                         )}
@@ -113,13 +113,13 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
                     {unreadCount > 0 && (
                         <button
                             onClick={markAllAsRead}
-                            className="text-sm text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium transition-colors"
+                            className="text-sm text-accent-purple hover:text-accent-purple font-medium transition-colors"
                         >
                             Mark all as read
                         </button>
                     )}
                 </div>
-                <p className="text-[var(--cl-body)]">Stay updated with your latest activities</p>
+                <p className="text-foreground/80">Stay updated with your latest activities</p>
             </div>
 
             {/* Notifications List */}
@@ -128,7 +128,7 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
                     <div
                         key={notification.id}
                         onClick={() => !notification.read && markAsRead(notification.id)}
-                        className={`bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] p-5 transition-all cursor-pointer ${!notification.read ? 'border-l-4 border-l-[var(--cl-primary)]' : ''
+                        className={`bg-card rounded-lg border border-border p-5 transition-all cursor-pointer ${!notification.read ? 'border-l-4 border-l-accent-purple' : ''
                             }`}
                     >
                         <div className="flex gap-4">
@@ -140,14 +140,14 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
                                     <h3 className="font-semibold text-black">{notification.title}</h3>
                                     <div className="flex items-center gap-2">
                                         {!notification.read && (
-                                            <span className="w-2 h-2 bg-[var(--cl-primary)] rounded-full"></span>
+                                            <span className="w-2 h-2 bg-primary rounded-full"></span>
                                         )}
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 deleteNotification(notification.id);
                                             }}
-                                            className="text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] transition-colors"
+                                            className="text-muted-foreground/70 hover:text-destructive transition-colors"
                                             title="Delete notification"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -156,14 +156,14 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
                                         </button>
                                     </div>
                                 </div>
-                                <p className="text-[var(--cl-body)] text-sm mb-2">{notification.message}</p>
+                                <p className="text-foreground/80 text-sm mb-2">{notification.message}</p>
                                 <div className="flex items-center justify-between">
-                                    <p className="text-xs text-[var(--cl-muted-soft)]">{formatTime(notification.created_at)}</p>
+                                    <p className="text-xs text-muted-foreground/70">{formatTime(notification.created_at)}</p>
                                     {notification.action_url && (
                                         <a
                                             href={notification.action_url}
                                             onClick={(e) => e.stopPropagation()}
-                                            className="text-xs text-[var(--cl-primary)] hover:text-[var(--cl-primary)] font-medium"
+                                            className="text-xs text-accent-purple hover:text-accent-purple font-medium"
                                         >
                                             View →
                                         </a>
@@ -178,9 +178,9 @@ export function NotificationsClient({ userId }: NotificationsClientProps) {
             {/* Empty State (if no notifications) */}
             {notifications.length === 0 && (
                 <div className="text-center py-16">
-                    <Bell className="w-16 h-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-[var(--cl-body)] mb-2">No notifications yet</h3>
-                    <p className="text-[var(--cl-muted)]">You're all caught up! Check back later for updates.</p>
+                    <Bell className="w-16 h-16 text-muted-foreground/70 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground/80 mb-2">No notifications yet</h3>
+                    <p className="text-muted-foreground">You're all caught up! Check back later for updates.</p>
                 </div>
             )}
         </div>

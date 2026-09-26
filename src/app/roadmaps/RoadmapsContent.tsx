@@ -56,27 +56,27 @@ function buildGroups(nodes: RoadmapNode[]): RoadmapNode[][] {
 }
 
 const BADGE_PALETTE = [
-    { label: 'CORE', cls: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' },
-    { label: 'ENG',  cls: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' },
-    { label: 'ADV',  cls: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' },
-    { label: 'PRO',  cls: 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]' },
-    { label: 'OPS',  cls: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' },
+    { label: 'CORE', cls: 'bg-accent-purple/10 text-accent-purple' },
+    { label: 'ENG',  cls: 'bg-green-500/10 text-green-600' },
+    { label: 'ADV',  cls: 'bg-accent-purple/10 text-accent-purple' },
+    { label: 'PRO',  cls: 'bg-destructive/10 text-destructive' },
+    { label: 'OPS',  cls: 'bg-accent-purple/10 text-accent-purple' },
 ];
 
 function getNodeBadge(nodeType: string, phaseIdx: number) {
     const t = (nodeType || '').toLowerCase();
     if (t.includes('core') || t.includes('found') || t.includes('basic'))
-        return { label: 'CORE', cls: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' };
+        return { label: 'CORE', cls: 'bg-accent-purple/10 text-accent-purple' };
     if (t.includes('eng') || t.includes('prac') || t.includes('tool') || t.includes('build'))
-        return { label: 'ENG', cls: 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' };
+        return { label: 'ENG', cls: 'bg-green-500/10 text-green-600' };
     if (t.includes('data') || t.includes('stat') || t.includes('math') || t.includes('theory'))
-        return { label: 'DATA', cls: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' };
+        return { label: 'DATA', cls: 'bg-accent-purple/10 text-accent-purple' };
     if (t.includes('ml') || t.includes('ai') || t.includes('deep') || t.includes('nlp'))
-        return { label: 'AI', cls: 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]' };
+        return { label: 'AI', cls: 'bg-accent-purple/10 text-accent-purple' };
     if (t.includes('ops') || t.includes('deploy') || t.includes('cloud') || t.includes('infra'))
-        return { label: 'OPS', cls: 'bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]' };
+        return { label: 'OPS', cls: 'bg-accent-purple/10 text-accent-purple' };
     if (t.includes('project') || t.includes('milestone') || t.includes('capstone'))
-        return { label: 'LAB', cls: 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]' };
+        return { label: 'LAB', cls: 'bg-amber-500/10 text-amber-600' };
     return BADGE_PALETTE[phaseIdx % BADGE_PALETTE.length];
 }
 
@@ -202,24 +202,24 @@ export function RoadmapsContent() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col bg-[var(--cl-canvas-soft)] text-[var(--cl-ink)]" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <div className="flex min-h-screen flex-col bg-muted/40 text-foreground" style={{ fontFamily: 'Inter, sans-serif' }}>
 
             {/* ---- Header ---- */}
-            <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-[var(--cl-hairline)] bg-[rgba(255,255,255,0.8)] px-4 md:px-8 py-3.5 backdrop-blur-md">
-                <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-[var(--cl-surface-strong)] transition-colors">
-                    <ArrowLeft size={18} className="text-[var(--cl-muted)]" />
+            <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-[rgba(255,255,255,0.8)] px-4 md:px-8 py-3.5 backdrop-blur-md">
+                <Link href="/dashboard/student" className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+                    <ArrowLeft size={18} className="text-muted-foreground" />
                 </Link>
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-purple/10 text-accent-purple">
                     <MapIcon size={16} />
                 </div>
                 <div>
                     <h1 className="text-sm font-semibold text-foreground">AI Roadmap Generator</h1>
-                    <p className="text-xs text-[var(--cl-muted)]">Click a node to explore · AI-powered path</p>
+                    <p className="text-xs text-muted-foreground">Click a node to explore · AI-powered path</p>
                 </div>
                 {roadmap && (
                     <button
                         onClick={() => { setRoadmap(null); setSelected(null); setDone({}); }}
-                        className="ml-auto rounded-[var(--cl-r-md)] border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-card)] px-3 py-1.5 text-xs font-semibold text-[var(--cl-ink)] transition-colors hover:bg-[var(--cl-canvas-soft)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)]"
+                        className="ml-auto rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
                     >
                         Back to form
                     </button>
@@ -246,20 +246,20 @@ export function RoadmapsContent() {
                 <div className="max-w-2xl mx-auto px-4 py-12">
                     <div className="text-center mb-10">
                         <div
-                            className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] flex items-center justify-center mx-auto mb-4"
+                            className="w-16 h-16 rounded-xl bg-accent-purple/10 border border-accent-purple flex items-center justify-center mx-auto mb-4"
                             style={{ boxShadow: '0 0 30px rgba(19,91,236,0.25)' }}
                         >
-                            <Sparkles size={28} className="text-[var(--cl-info)]" />
+                            <Sparkles size={28} className="text-accent-purple" />
                         </div>
-                        <div className="mb-4 inline-flex items-center rounded-full bg-[rgba(13,116,206,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--cl-info)] ring-1 ring-[var(--cl-info)]">
+                        <div className="mb-4 inline-flex items-center rounded-full bg-accent-purple/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent-purple ring-1 ring-[var(--cl-info)]">
                             Interactive Learning Path
                         </div>
-                        <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">Generate Your Roadmap</h2>
-                        <p className="text-[var(--cl-muted)]">Type any role — AI builds a visual node-based learning path.</p>
+                        <h2 className="text-3xl font-semibold text-foreground mb-2">Generate Your Roadmap</h2>
+                        <p className="text-muted-foreground">Type any role — AI builds a visual node-based learning path.</p>
                     </div>
 
-                    <div className="border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 mb-6">
-                        <label className="block text-xs font-semibold text-[var(--cl-muted)] mb-2 uppercase tracking-wider">
+                    <div className="border border-border bg-card rounded-xl p-6 mb-6">
+                        <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">
                             What do you want to learn or become?
                         </label>
                         <div className="flex gap-2 mb-4">
@@ -268,12 +268,12 @@ export function RoadmapsContent() {
                                 onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
                                 onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
                                 placeholder="e.g. Full Stack Developer, Data Scientist..."
-                                className="flex-1 px-4 py-3 border border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] text-sm text-[var(--cl-ink)] placeholder-[var(--cl-muted-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] focus:border-[var(--cl-info)] transition-all"
+                                className="flex-1 px-4 py-3 border border-border bg-muted/40 rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] focus:border-accent-purple transition-all"
                             />
                             <button
                                 onClick={generate}
                                 disabled={!form.topic.trim() || loading}
-                                className="px-5 py-3 bg-[var(--cl-info)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold text-sm hover:bg-[var(--cl-info)] disabled:opacity-40 transition-colors flex items-center gap-2 flex-shrink-0"
+                                className="px-5 py-3 bg-accent-purple text-white rounded-lg font-semibold text-sm hover:bg-accent-purple disabled:opacity-40 transition-colors flex items-center gap-2 flex-shrink-0"
                             >
                                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                                 Generate
@@ -286,13 +286,13 @@ export function RoadmapsContent() {
                                 { label: 'Target weeks', key: 'weeks',    opts: ['4','8','12','16','24','52'].map(w => [w, `${w}w`]) },
                             ].map(({ label, key, opts }) => (
                                 <div key={key}>
-                                    <label className="block text-xs text-[var(--cl-muted)] mb-1">{label}</label>
+                                    <label className="block text-xs text-muted-foreground mb-1">{label}</label>
                                     <select
                                         value={(form as any)[key]}
                                         onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                                        className="w-full px-3 py-2.5 border border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] rounded-lg text-sm text-[var(--cl-ink)] focus:outline-none focus:border-[var(--cl-info)]"
+                                        className="w-full px-3 py-2.5 border border-border bg-muted/40 rounded-lg text-sm text-foreground focus:outline-none focus:border-accent-purple"
                                     >
-                                        {opts.map(([v, l]) => <option key={v} value={v} className="bg-[var(--cl-surface-card)]">{l}</option>)}
+                                        {opts.map(([v, l]) => <option key={v} value={v} className="bg-card">{l}</option>)}
                                     </select>
                                 </div>
                             ))}
@@ -300,19 +300,19 @@ export function RoadmapsContent() {
                     </div>
 
                     {error && (
-                        <div className="border border-[var(--cl-error)] bg-[rgba(239,68,68,0.12)] rounded-[var(--cl-r-lg)] px-4 py-3 text-sm text-[var(--cl-error)] mb-6">
+                        <div className="border border-destructive bg-destructive/10 rounded-lg px-4 py-3 text-sm text-destructive mb-6">
                             {error}
                         </div>
                     )}
 
 
-                    <p className="text-xs font-semibold text-[var(--cl-muted)] uppercase tracking-wider mb-3">Popular topics</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Popular topics</p>
                     <div className="flex flex-wrap gap-2">
                         {POPULAR.map(t => (
                             <button
                                 key={t}
                                 onClick={() => setForm(f => ({ ...f, topic: t }))}
-                                className="px-3 py-1.5 border border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] rounded-lg text-sm text-[var(--cl-body)] hover:border-[var(--cl-info)] hover:text-[var(--cl-info)] transition-all"
+                                className="px-3 py-1.5 border border-border bg-muted/40 rounded-lg text-sm text-foreground/80 hover:border-accent-purple hover:text-accent-purple transition-all"
                             >
                                 {t}
                             </button>
@@ -323,23 +323,23 @@ export function RoadmapsContent() {
                 /* ============================================== ROADMAP VIEW ============================================ */
                 <div className="pb-36">
                     {/* Progress strip */}
-                    <div className="border-b border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] px-6 py-4">
+                    <div className="border-b border-border bg-card px-6 py-4">
                         <div className="max-w-4xl mx-auto">
                             <div className="flex items-start justify-between gap-4 mb-3">
                                 <div>
-                                    <h2 className="text-base font-semibold text-[var(--cl-ink)] mb-0.5">{roadmap.roadmap_title}</h2>
-                                    <p className="text-xs text-[var(--cl-muted)]">{roadmap.roadmap_description}</p>
+                                    <h2 className="text-base font-semibold text-foreground mb-0.5">{roadmap.roadmap_title}</h2>
+                                    <p className="text-xs text-muted-foreground">{roadmap.roadmap_description}</p>
                                 </div>
-                                <div className="flex items-center gap-3 text-[10px] text-[var(--cl-muted)] flex-shrink-0">
+                                <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-shrink-0">
                                     <span className="flex items-center gap-1"><Clock size={10} /> {roadmap.estimated_weeks}w</span>
                                     <span className="flex items-center gap-1"><BookOpen size={10} /> {nodes.length} steps</span>
                                 </div>
                             </div>
                             <div className="flex justify-between text-xs mb-1.5">
-                                <span className="text-[var(--cl-muted)]">Progress</span>
-                                <span className="font-semibold text-[var(--cl-info)]">{doneCount}/{nodes.length} complete</span>
+                                <span className="text-muted-foreground">Progress</span>
+                                <span className="font-semibold text-accent-purple">{doneCount}/{nodes.length} complete</span>
                             </div>
-                            <div className="h-1.5 rounded-full overflow-hidden bg-[var(--cl-surface-strong)]">
+                            <div className="h-1.5 rounded-full overflow-hidden bg-muted">
                                 <div
                                     className="h-full rounded-full transition-all duration-500"
                                     style={{ width: `${progress}%`, background: 'linear-gradient(to right,#135bec,#00f2ff)' }}
@@ -397,8 +397,8 @@ export function RoadmapsContent() {
                                     )}
 
                                     {/* Phase label */}
-                                    <div className="mb-8 rounded-lg bg-[var(--cl-canvas-soft)] px-6 py-2 border border-[var(--cl-hairline)] backdrop-blur-sm">
-                                        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--cl-muted)]">
+                                    <div className="mb-8 rounded-lg bg-muted/40 px-6 py-2 border border-border backdrop-blur-sm">
+                                        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                                             Phase {String(phaseIdx + 1).padStart(2, '0')}
                                             {PHASE_TITLES[phaseIdx] ? `: ${PHASE_TITLES[phaseIdx]}` : ''}
                                         </span>
@@ -416,14 +416,14 @@ export function RoadmapsContent() {
                                             return (
                                                 <div
                                                     onClick={() => setSelected(isSelected ? null : idx)}
-                                                    className={`relative z-10 cursor-pointer rounded-[var(--cl-r-lg)] border p-5 transition-all duration-200 ${isMilestone ? 'w-72 p-6' : 'w-64'} ${
+                                                    className={`relative z-10 cursor-pointer rounded-lg border p-5 transition-all duration-200 ${isMilestone ? 'w-72 p-6' : 'w-64'} ${
                                                         completed
-                                                            ? 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]'
+                                                            ? 'border-green-600 bg-green-500/10'
                                                             : isSelected
-                                                                ? 'border-[var(--cl-info)] bg-[var(--cl-surface-card)]'
+                                                                ? 'border-accent-purple bg-card'
                                                                 : isMilestone
-                                                                    ? 'border-[var(--cl-info)] bg-[var(--cl-surface-card)]'
-                                                                    : 'border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] hover:border-[var(--cl-info)]'
+                                                                    ? 'border-accent-purple bg-card'
+                                                                    : 'border-border bg-card hover:border-accent-purple'
                                                     }`}
                                                     style={
                                                         isSelected
@@ -435,21 +435,21 @@ export function RoadmapsContent() {
                                                     data-node="true"
                                                 >
                                                     <div className="mb-3 flex items-center justify-between">
-                                                        <span className={`rounded-[var(--cl-r-xs)] px-2 py-0.5 text-[11px] font-semibold ${completed ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : badge.cls}`}>
+                                                        <span className={`rounded-sm px-2 py-0.5 text-[11px] font-semibold ${completed ? 'bg-green-500/10 text-green-600' : badge.cls}`}>
                                                             {completed ? '✓ DONE' : badge.label}
                                                         </span>
-                                                        <span className="text-[10px] font-medium text-[var(--cl-muted)]">
+                                                        <span className="text-[10px] font-medium text-muted-foreground">
                                                             #{String(idx + 1).padStart(2, '0')}
                                                         </span>
                                                     </div>
-                                                    <h3 className={`font-semibold text-[var(--cl-ink)] ${isMilestone ? 'text-base' : 'text-sm'}`}>{node.title}</h3>
-                                                    <p className="mt-1.5 line-clamp-2 flex-1 text-[12px] leading-relaxed text-[var(--cl-muted)]">{node.description}</p>
-                                                    <div className={`mt-4 flex items-center justify-between ${isMilestone ? 'border-t border-[var(--cl-hairline)] pt-3' : ''}`}>
-                                                        <div className="flex items-center gap-3 text-[10px] text-[var(--cl-muted)]">
+                                                    <h3 className={`font-semibold text-foreground ${isMilestone ? 'text-base' : 'text-sm'}`}>{node.title}</h3>
+                                                    <p className="mt-1.5 line-clamp-2 flex-1 text-[12px] leading-relaxed text-muted-foreground">{node.description}</p>
+                                                    <div className={`mt-4 flex items-center justify-between ${isMilestone ? 'border-t border-border pt-3' : ''}`}>
+                                                        <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                                                             <span className="flex items-center gap-1"><Clock size={9} /> {node.estimated_hours}h</span>
                                                             <span>{getDifficulty(node.estimated_hours)}</span>
                                                         </div>
-                                                        <span className="text-[10px] font-semibold text-[var(--cl-info)]">View →</span>
+                                                        <span className="text-[10px] font-semibold text-accent-purple">View →</span>
                                                     </div>
                                                 </div>
                                             );
@@ -475,25 +475,25 @@ export function RoadmapsContent() {
                                                             {/* Card */}
                                                             <div
                                                                 onClick={() => setSelected(isSelected ? null : idx)}
-                                                                className={`flex h-full w-full max-w-[15rem] cursor-pointer flex-col rounded-[var(--cl-r-lg)] border p-4 transition-colors duration-[var(--cl-dur-micro)] ${
+                                                                className={`flex h-full w-full max-w-[15rem] cursor-pointer flex-col rounded-lg border p-4 transition-colors duration-200 ${
                                                                     completed
-                                                                        ? 'border-[var(--cl-success)] bg-[rgba(22,163,74,0.12)]'
+                                                                        ? 'border-green-600 bg-green-500/10'
                                                                         : isSelected
-                                                                            ? 'border-[var(--cl-info)] bg-[rgba(13,116,206,0.12)]'
-                                                                            : 'border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] hover:border-[var(--cl-info)]'
+                                                                            ? 'border-accent-purple bg-accent-purple/10'
+                                                                            : 'border-border bg-card hover:border-accent-purple'
                                                                 }`}
                                                                 style={isSelected ? { boxShadow: '0 0 20px rgba(19,91,236,0.3)' } : undefined}
                                                                 data-node="true"
                                                             >
                                                                 <div className="mb-3 flex items-center justify-between">
-                                                                    <span className={`rounded-[var(--cl-r-xs)] px-2 py-0.5 text-[11px] font-semibold ${completed ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]' : badge.cls}`}>
+                                                                    <span className={`rounded-sm px-2 py-0.5 text-[11px] font-semibold ${completed ? 'bg-green-500/10 text-green-600' : badge.cls}`}>
                                                                         {completed ? '✓' : badge.label}
                                                                     </span>
-                                                                    <span className="cl-mono text-[11px] text-[var(--cl-muted)]">#{String(idx + 1).padStart(2, '0')}</span>
+                                                                    <span className="cl-mono text-[11px] text-muted-foreground">#{String(idx + 1).padStart(2, '0')}</span>
                                                                 </div>
-                                                                <h3 className="line-clamp-2 min-h-[2.5rem] text-[14px] font-semibold leading-snug text-[var(--cl-ink)]">{node.title}</h3>
-                                                                <p className="mt-1.5 line-clamp-2 flex-1 text-[12px] leading-relaxed text-[var(--cl-muted)]">{node.description}</p>
-                                                                <div className="mt-3 flex items-center gap-3 text-[11px] text-[var(--cl-muted)]">
+                                                                <h3 className="line-clamp-2 min-h-[2.5rem] text-[14px] font-semibold leading-snug text-foreground">{node.title}</h3>
+                                                                <p className="mt-1.5 line-clamp-2 flex-1 text-[12px] leading-relaxed text-muted-foreground">{node.description}</p>
+                                                                <div className="mt-3 flex items-center gap-3 text-[11px] text-muted-foreground">
                                                                     <span className="flex items-center gap-1"><Clock size={9} /> {node.estimated_hours}h</span>
                                                                     <span>{getDifficulty(node.estimated_hours)}</span>
                                                                 </div>
@@ -511,18 +511,18 @@ export function RoadmapsContent() {
                     </div>{/* /canvas */}
 
                     {/* Floating toolbar */}
-                    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-5 rounded-full border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] px-6 py-3">
-                        <button onClick={() => setZoom(z => Math.min(z + 0.15, 2.5))} className="flex flex-col items-center gap-0.5 text-[var(--cl-info)] hover:text-[var(--cl-info)] transition-colors">
+                    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-5 rounded-full border border-border bg-card px-6 py-3">
+                        <button onClick={() => setZoom(z => Math.min(z + 0.15, 2.5))} className="flex flex-col items-center gap-0.5 text-accent-purple hover:text-accent-purple transition-colors">
                             <ZoomIn size={18} />
                             <span className="text-[9px] font-semibold">Zoom In</span>
                         </button>
-                        <div className="w-px h-5 bg-[var(--cl-surface-strong)]" />
-                        <button onClick={() => setZoom(z => Math.max(z - 0.15, 0.4))} className="flex flex-col items-center gap-0.5 text-[var(--cl-muted)] hover:text-[var(--cl-info)] transition-colors">
+                        <div className="w-px h-5 bg-muted" />
+                        <button onClick={() => setZoom(z => Math.max(z - 0.15, 0.4))} className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-accent-purple transition-colors">
                             <ZoomOut size={18} />
                             <span className="text-[9px] font-semibold">Zoom Out</span>
                         </button>
-                        <div className="w-px h-5 bg-[var(--cl-surface-strong)]" />
-                        <button onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }} className="flex flex-col items-center gap-0.5 text-[var(--cl-muted)] hover:text-[var(--cl-info)] transition-colors">
+                        <div className="w-px h-5 bg-muted" />
+                        <button onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }} className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-accent-purple transition-colors">
                             <MapIcon size={18} />
                             <span className="text-[9px] font-semibold">Reset</span>
                         </button>
@@ -541,7 +541,7 @@ export function RoadmapsContent() {
                                 // for the lifetime of the document.
                                 URL.revokeObjectURL(url);
                             }}
-                            className="flex flex-col items-center gap-0.5 text-[var(--cl-muted)] hover:text-[var(--cl-info)] transition-colors"
+                            className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-accent-purple transition-colors"
                         >
                             <Download size={18} />
                             <span className="text-[9px] font-semibold">Export</span>
@@ -561,7 +561,7 @@ export function RoadmapsContent() {
                                     /* user dismissed the share sheet - nothing to do */
                                 }
                             }}
-                            className="flex flex-col items-center gap-0.5 text-[var(--cl-muted)] transition-colors hover:text-[var(--cl-ink)]"
+                            className="flex flex-col items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
                         >
                             <Share2 size={18} />
                             <span className="text-[9px] font-semibold">{shared ? 'Copied' : 'Share'}</span>
@@ -570,19 +570,19 @@ export function RoadmapsContent() {
 
                     {/* ---- Left legend ---- */}
                     <div className="fixed left-20 bottom-24 z-30 hidden lg:block">
-                        <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] p-4 backdrop-blur-md">
-                            <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-[var(--cl-muted)]">Legend</h4>
+                        <div className="rounded-lg border border-border bg-card p-4 backdrop-blur-md">
+                            <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Legend</h4>
                             <div className="space-y-2">
                                 {[
-                                    { color: 'bg-[var(--cl-info)]',    label: 'Core Path' },
-                                    { color: 'bg-[var(--cl-success)]', label: 'Engineering' },
-                                    { color: 'bg-[var(--cl-primary)]',  label: 'Theory / Data' },
-                                    { color: 'bg-[var(--cl-warning)]',   label: 'Milestone' },
-                                    { color: 'bg-[var(--cl-success)]', label: 'Completed' },
+                                    { color: 'bg-accent-purple',    label: 'Core Path' },
+                                    { color: 'bg-green-600', label: 'Engineering' },
+                                    { color: 'bg-primary',  label: 'Theory / Data' },
+                                    { color: 'bg-amber-500',   label: 'Milestone' },
+                                    { color: 'bg-green-600', label: 'Completed' },
                                 ].map(({ color, label }) => (
                                     <div key={label} className="flex items-center gap-2">
                                         <div className={`h-2 w-2 rounded-full ${color}`} />
-                                        <span className="text-[10px] text-[var(--cl-muted)]">{label}</span>
+                                        <span className="text-[10px] text-muted-foreground">{label}</span>
                                     </div>
                                 ))}
                             </div>
@@ -596,18 +596,18 @@ export function RoadmapsContent() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(255,255,255,0.9)] backdrop-blur-sm">
                     <div className="text-center">
                         <div
-                            className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] flex items-center justify-center mx-auto mb-4 animate-pulse"
+                            className="w-16 h-16 rounded-xl bg-accent-purple/10 border border-accent-purple flex items-center justify-center mx-auto mb-4 animate-pulse"
                             style={{ boxShadow: '0 0 30px rgba(19,91,236,0.4)' }}
                         >
-                            <Sparkles size={28} className="text-[var(--cl-info)]" />
+                            <Sparkles size={28} className="text-accent-purple" />
                         </div>
-                        <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-2">Building your roadmap…</h3>
-                        <p className="text-sm text-[var(--cl-muted)]">
-                            Crafting a path for <strong className="text-[var(--cl-ink)]">{form.topic}</strong>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Building your roadmap…</h3>
+                        <p className="text-sm text-muted-foreground">
+                            Crafting a path for <strong className="text-foreground">{form.topic}</strong>
                         </p>
                         <div className="flex justify-center gap-1 mt-4">
                             {[0, 150, 300].map(d => (
-                                <div key={d} className="w-2 h-2 bg-[var(--cl-info)] rounded-full animate-bounce"
+                                <div key={d} className="w-2 h-2 bg-accent-purple rounded-full animate-bounce"
                                     style={{ animationDelay: `${d}ms` }} />
                             ))}
                         </div>
@@ -617,53 +617,53 @@ export function RoadmapsContent() {
 
             {/* ---- Detail panel (slide-in from right) ---- */}
             <div
-                className={`fixed inset-y-0 right-0 z-40 w-full md:w-[400px] overflow-y-auto border-l border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] transform transition-transform duration-300 ${sel ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed inset-y-0 right-0 z-40 w-full md:w-[400px] overflow-y-auto border-l border-border bg-muted/40 transform transition-transform duration-300 ${sel ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 {sel && selected !== null && (
                     <div className="p-6 pt-16 md:pt-6">
                         {/* Panel header */}
                         <div className="flex items-center gap-3 mb-6">
-                            <span className="text-xs font-semibold text-[var(--cl-info)] bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] px-2.5 py-1 rounded-lg">
+                            <span className="text-xs font-semibold text-accent-purple bg-accent-purple/10 border border-accent-purple px-2.5 py-1 rounded-lg">
                                 Step {selected + 1}
                             </span>
-                            <span className="flex-1 text-xs text-[var(--cl-muted)] capitalize">{sel.node_type || 'topic'}</span>
+                            <span className="flex-1 text-xs text-muted-foreground capitalize">{sel.node_type || 'topic'}</span>
                             <button
                                 onClick={() => toggleDone(selected)}
                                 className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all ${
                                     done[selected]
-                                        ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] border-[var(--cl-success)]'
-                                        : 'bg-[var(--cl-canvas-soft)] text-[var(--cl-muted)] border-[var(--cl-hairline)] hover:border-[var(--cl-success)]'
+                                        ? 'bg-green-500/10 text-green-600 border-green-600'
+                                        : 'bg-muted/40 text-muted-foreground border-border hover:border-green-600'
                                 }`}
                             >
                                 {done[selected] ? <CheckCircle2 size={11} /> : <Circle size={11} />}
                                 {done[selected] ? 'Done!' : 'Mark done'}
                             </button>
-                            <button onClick={() => setSelected(null)} className="p-1.5 rounded-lg hover:bg-[var(--cl-surface-strong)] transition-colors">
-                                <X size={14} className="text-[var(--cl-muted)]" />
+                            <button onClick={() => setSelected(null)} className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+                                <X size={14} className="text-muted-foreground" />
                             </button>
                         </div>
 
-                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2 leading-snug">{sel.title}</h2>
-                        <p className="text-sm text-[var(--cl-muted)] mb-5 leading-relaxed">{sel.description}</p>
+                        <h2 className="text-2xl font-semibold text-foreground mb-2 leading-snug">{sel.title}</h2>
+                        <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{sel.description}</p>
 
                         <div className="flex items-center gap-2 mb-6 flex-wrap">
-                            <span className="flex items-center gap-1.5 text-xs bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] text-[var(--cl-body)] px-3 py-1.5 rounded-full">
+                            <span className="flex items-center gap-1.5 text-xs bg-muted/40 border border-border text-foreground/80 px-3 py-1.5 rounded-full">
                                 <Clock size={10} /> {sel.estimated_hours}h estimated
                             </span>
-                            <span className="text-xs bg-[var(--cl-canvas-soft)] border border-[var(--cl-hairline)] text-[var(--cl-body)] px-3 py-1.5 rounded-full">
+                            <span className="text-xs bg-muted/40 border border-border text-foreground/80 px-3 py-1.5 rounded-full">
                                 {getDifficulty(sel.estimated_hours)}
                             </span>
                         </div>
 
                         {/* Overview */}
                         <div className="mb-6">
-                            <h4 className="text-[10px] font-semibold text-[var(--cl-muted)] uppercase tracking-wider mb-3">Overview</h4>
+                            <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">Overview</h4>
                             <div className="space-y-2.5">
                                 {(sel.detailed_summary || sel.description || '')
                                     .split(/\n\n|\n/)
                                     .filter(p => p.trim())
                                     .map((p, i) => (
-                                        <p key={i} className="text-sm text-[var(--cl-body)] leading-relaxed">{p.trim()}</p>
+                                        <p key={i} className="text-sm text-foreground/80 leading-relaxed">{p.trim()}</p>
                                     ))}
                             </div>
                         </div>
@@ -671,7 +671,7 @@ export function RoadmapsContent() {
                         {/* Resources */}
                         {(sel.resources?.length ?? 0) > 0 && (
                             <div>
-                                <h4 className="text-[10px] font-semibold text-[var(--cl-muted)] uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                                     <BookOpen size={11} /> Learning Resources
                                 </h4>
                                 <div className="space-y-2">
@@ -681,16 +681,16 @@ export function RoadmapsContent() {
                                             href={r.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-start gap-2.5 px-3 py-2.5 border border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] hover:border-[var(--cl-info)] hover:bg-[rgba(13,116,206,0.12)] transition-all group"
+                                            className="flex items-start gap-2.5 px-3 py-2.5 border border-border bg-muted/40 rounded-lg hover:border-accent-purple hover:bg-accent-purple/10 transition-all group"
                                         >
                                             <span className="text-sm flex-shrink-0 mt-0.5">
                                                 {r.type === 'video' ? '▶' : r.type === 'article' ? '📄' : '🔗'}
                                             </span>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-info)] leading-snug">{r.title}</p>
-                                                <p className="text-xs text-[var(--cl-muted)] truncate mt-0.5">{r.url}</p>
+                                                <p className="text-sm font-medium text-foreground group-hover:text-accent-purple leading-snug">{r.title}</p>
+                                                <p className="text-xs text-muted-foreground truncate mt-0.5">{r.url}</p>
                                             </div>
-                                            <ExternalLink size={12} className="text-[var(--cl-muted)] flex-shrink-0 mt-1" />
+                                            <ExternalLink size={12} className="text-muted-foreground flex-shrink-0 mt-1" />
                                         </a>
                                     ))}
                                 </div>

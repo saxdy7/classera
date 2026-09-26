@@ -62,12 +62,12 @@ export default function FileViewer({ submissionId, repoUrl, onReviewWithAI }: Fi
     <div className="flex flex-col h-full">
       {/* Header bar */}
       {path && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-inverse)] text-sm border-b border-[var(--cl-hairline-strong)]">
-          <span className="text-[var(--cl-muted)] font-mono truncate flex-1">{path}</span>
+        <div className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-sm border-b border-border">
+          <span className="text-muted-foreground font-mono truncate flex-1">{path}</span>
           {onReviewWithAI && content && (
             <button
               onClick={() => onReviewWithAI(path)}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[var(--cl-surface-card)] text-[var(--cl-primary)] hover:bg-[var(--cl-surface-card)] text-xs font-medium transition-colors flex-shrink-0"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card text-accent-purple hover:bg-card text-xs font-medium transition-colors flex-shrink-0"
               title="Review this file with AI"
             >
               <Sparkles size={12} />
@@ -78,7 +78,7 @@ export default function FileViewer({ submissionId, repoUrl, onReviewWithAI }: Fi
             href={`${repoUrl}/blob/HEAD/${path}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[var(--cl-muted-soft)] hover:text-[var(--cl-on-dark)] transition-colors flex-shrink-0"
+            className="text-muted-foreground/70 hover:text-white transition-colors flex-shrink-0"
             title="Open on GitHub"
           >
             <Eye className="w-4 h-4" />
@@ -87,23 +87,23 @@ export default function FileViewer({ submissionId, repoUrl, onReviewWithAI }: Fi
       )}
 
       {/* Content area */}
-      <div className="flex-1 overflow-auto bg-[var(--cl-surface-inverse)]">
+      <div className="flex-1 overflow-auto bg-neutral-900">
         {loading && (
           <div className="flex items-center justify-center h-full">
-            <Loader2 className="w-6 h-6 text-[var(--cl-primary)] animate-spin" />
+            <Loader2 className="w-6 h-6 text-accent-purple animate-spin" />
           </div>
         )}
         {error && (
           <div className="flex items-center gap-3 p-4">
-            <p className="text-[var(--cl-error)] text-sm">{error}</p>
-            <button onClick={() => loadFile(path)} className="text-[var(--cl-muted-soft)] hover:text-[var(--cl-on-dark)]">
+            <p className="text-destructive text-sm">{error}</p>
+            <button onClick={() => loadFile(path)} className="text-muted-foreground/70 hover:text-white">
               <RefreshCw className="w-4 h-4" />
             </button>
           </div>
         )}
         {!loading && !error && !path && (
           <div className="flex items-center justify-center h-full">
-            <p className="text-[var(--cl-muted)] text-sm">Select a file from the tree to view its contents</p>
+            <p className="text-muted-foreground text-sm">Select a file from the tree to view its contents</p>
           </div>
         )}
         {!loading && !error && content && (
@@ -129,8 +129,8 @@ export default function FileViewer({ submissionId, repoUrl, onReviewWithAI }: Fi
 
       {/* VS Code-style status bar */}
       {path && !loading && (
-        <div className="px-4 py-1 bg-[var(--cl-surface-inverse)] text-[11px] text-[var(--cl-muted)] border-t border-[var(--cl-hairline-strong)] flex items-center gap-4">
-          <span className="font-mono uppercase tracking-wide text-[var(--cl-muted)]">{lang}</span>
+        <div className="px-4 py-1 bg-neutral-900 text-[11px] text-muted-foreground border-t border-border flex items-center gap-4">
+          <span className="font-mono uppercase tracking-wide text-muted-foreground">{lang}</span>
           {content && <span>{content.split('\n').length} lines</span>}
           {content && <span>{(new Blob([content]).size / 1024).toFixed(1)} KB</span>}
           <span className="ml-auto font-mono">{ext ? `.${ext}` : 'file'}</span>

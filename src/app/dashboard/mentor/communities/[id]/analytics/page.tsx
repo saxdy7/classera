@@ -225,33 +225,33 @@ export default async function CommunityAnalyticsPage({
         : 0;
 
   return (
-    <div className="min-h-screen py-8 bg-[var(--cl-canvas)]">
+    <div className="min-h-screen py-8 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
-              <BarChart3 className="w-6 h-6 text-[var(--cl-primary)]" />
+            <div className="p-3 bg-accent-purple/10 rounded-lg">
+              <BarChart3 className="w-6 h-6 text-accent-purple" />
             </div>
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">Analytics Dashboard</h1>
-              <p className="text-[var(--cl-body)]">{community.name}</p>
+              <p className="text-foreground/80">{community.name}</p>
             </div>
           </div>
         </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
-                <Users className="w-6 h-6 text-[var(--cl-primary)]" />
+              <div className="p-3 bg-accent-purple/10 rounded-lg">
+                <Users className="w-6 h-6 text-accent-purple" />
               </div>
               {memberGrowth !== 0 && (
                 <div
                   className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${memberGrowth > 0
-                    ? "bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]"
-                    : "bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]"
+                    ? "bg-green-500/10 text-green-600"
+                    : "bg-destructive/10 text-destructive"
                     }`}
                 >
                   <TrendingUp className="w-3 h-3" />
@@ -260,18 +260,18 @@ export default async function CommunityAnalyticsPage({
                 </div>
               )}
             </div>
-            <div className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">{memberCount || 0}</div>
-            <div className="text-sm text-[var(--cl-body)]">Total Members</div>
+            <div className="text-3xl font-semibold text-foreground mb-1">{memberCount || 0}</div>
+            <div className="text-sm text-foreground/80">Total Members</div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[rgba(13,116,206,0.12)] rounded-[var(--cl-r-lg)]">
-                <MessageSquare className="w-6 h-6 text-[var(--cl-info)]" />
+              <div className="p-3 bg-accent-purple/10 rounded-lg">
+                <MessageSquare className="w-6 h-6 text-accent-purple" />
               </div>
               {postGrowth !== 0 && (
                 <div
-                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${postGrowth > 0 ? "bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]" : "bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]"
+                  className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${postGrowth > 0 ? "bg-green-500/10 text-green-600" : "bg-destructive/10 text-destructive"
                     }`}
                 >
                   <TrendingUp className="w-3 h-3" />
@@ -280,28 +280,28 @@ export default async function CommunityAnalyticsPage({
                 </div>
               )}
             </div>
-            <div className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">{postCount || 0}</div>
-            <div className="text-sm text-[var(--cl-body)]">Total Posts</div>
+            <div className="text-3xl font-semibold text-foreground mb-1">{postCount || 0}</div>
+            <div className="text-sm text-foreground/80">Total Posts</div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)]">
-                <ThumbsUp className="w-6 h-6 text-[var(--cl-warning)]" />
+              <div className="p-3 bg-amber-500/10 rounded-lg">
+                <ThumbsUp className="w-6 h-6 text-amber-600" />
               </div>
             </div>
-            <div className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">{likeCount || 0}</div>
-            <div className="text-sm text-[var(--cl-body)]">Total Likes</div>
+            <div className="text-3xl font-semibold text-foreground mb-1">{likeCount || 0}</div>
+            <div className="text-sm text-foreground/80">Total Likes</div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)]">
+          <div className="bg-card rounded-xl p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)]">
-                <TrendingUp className="w-6 h-6 text-[var(--cl-success)]" />
+              <div className="p-3 bg-green-500/10 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-green-600" />
               </div>
             </div>
-            <div className="text-3xl font-semibold text-[var(--cl-ink)] mb-1">{engagementRate}</div>
-            <div className="text-sm text-[var(--cl-body)]">Engagement Rate</div>
+            <div className="text-3xl font-semibold text-foreground mb-1">{engagementRate}</div>
+            <div className="text-sm text-foreground/80">Engagement Rate</div>
           </div>
         </div>
 
@@ -309,71 +309,71 @@ export default async function CommunityAnalyticsPage({
         <AnalyticsCharts communityId={communityId} />
 
         {/* Top Contributors */}
-        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] mb-8">
-          <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center gap-3">
-            <Award className="w-5 h-5 text-[var(--cl-warning)]" />
-            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Top Contributors</h2>
+        <div className="bg-card rounded-xl border border-border mb-8">
+          <div className="p-6 border-b border-border flex items-center gap-3">
+            <Award className="w-5 h-5 text-amber-600" />
+            <h2 className="text-xl font-semibold text-foreground">Top Contributors</h2>
           </div>
-          <div className="divide-y divide-[var(--cl-hairline)]">
+          <div className="divide-y divide-border">
             {sortedContributors.length > 0 ? (
               sortedContributors.map((contributor, index) => (
                 <div key={contributor.author?.id || index} className="p-6 flex items-center gap-4">
                   <div
                     className={`text-2xl font-semibold ${index === 0
-                      ? "text-[var(--cl-warning)]"
+                      ? "text-amber-600"
                       : index === 1
-                        ? "text-[var(--cl-muted-soft)]"
+                        ? "text-muted-foreground/70"
                         : index === 2
-                          ? "text-[var(--cl-warning)]"
-                          : "text-[var(--cl-muted-soft)]"
+                          ? "text-amber-600"
+                          : "text-muted-foreground/70"
                       }`}
                   >
                     #{index + 1}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-[var(--cl-ink)]">
+                    <div className="font-semibold text-foreground">
                       {contributor.author?.full_name || "Unknown User"}
                     </div>
-                    <div className="text-sm text-[var(--cl-body)]">
+                    <div className="text-sm text-foreground/80">
                       {contributor.postCount} posts • {contributor.commentCount} comments •{" "}
                       {contributor.likeCount} likes received
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-semibold text-[var(--cl-primary)]">
+                    <div className="text-2xl font-semibold text-accent-purple">
                       {contributor.totalActivity}
                     </div>
-                    <div className="text-xs text-[var(--cl-body)]">Total Activity</div>
+                    <div className="text-xs text-foreground/80">Total Activity</div>
                   </div>
                 </div>
               ))
             ) : (
               <div className="p-12 text-center">
-                <Users className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
-                <p className="text-[var(--cl-body)]">No contributors yet</p>
+                <Users className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+                <p className="text-foreground/80">No contributors yet</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Most Popular Posts */}
-        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)]">
-          <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center gap-3">
-            <Eye className="w-5 h-5 text-[var(--cl-primary)]" />
-            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Most Popular Posts</h2>
+        <div className="bg-card rounded-xl border border-border">
+          <div className="p-6 border-b border-border flex items-center gap-3">
+            <Eye className="w-5 h-5 text-accent-purple" />
+            <h2 className="text-xl font-semibold text-foreground">Most Popular Posts</h2>
           </div>
-          <div className="divide-y divide-[var(--cl-hairline)]">
+          <div className="divide-y divide-border">
             {sortedPosts.length > 0 ? (
               sortedPosts.map((post, index) => (
                 <div key={post.id} className="p-6">
                   <div className="flex items-start gap-4">
-                    <div className="text-xl font-semibold text-[var(--cl-muted-soft)]">#{index + 1}</div>
+                    <div className="text-xl font-semibold text-muted-foreground/70">#{index + 1}</div>
                     <div className="flex-1">
                       {post.title && (
-                        <h3 className="font-semibold text-[var(--cl-ink)] mb-1">{post.title}</h3>
+                        <h3 className="font-semibold text-foreground mb-1">{post.title}</h3>
                       )}
-                      <p className="text-sm text-[var(--cl-body)] line-clamp-2 mb-2">{post.content}</p>
-                      <div className="flex items-center gap-4 text-xs text-[var(--cl-muted)]">
+                      <p className="text-sm text-foreground/80 line-clamp-2 mb-2">{post.content}</p>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
                         <span>By {post.author?.[0]?.full_name || "Unknown"}</span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
@@ -388,16 +388,16 @@ export default async function CommunityAnalyticsPage({
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xl font-semibold text-[var(--cl-primary)]">{post.engagement}</div>
-                      <div className="text-xs text-[var(--cl-body)]">Engagement</div>
+                      <div className="text-xl font-semibold text-accent-purple">{post.engagement}</div>
+                      <div className="text-xs text-foreground/80">Engagement</div>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
               <div className="p-12 text-center">
-                <MessageSquare className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
-                <p className="text-[var(--cl-body)]">No posts yet</p>
+                <MessageSquare className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+                <p className="text-foreground/80">No posts yet</p>
               </div>
             )}
           </div>

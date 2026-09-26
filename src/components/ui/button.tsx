@@ -20,32 +20,32 @@ import { cn } from "@/lib/utils"
 const buttonVariants = cva(
   cn(
     "inline-flex items-center justify-center whitespace-nowrap gap-2 cl-press",
-    "rounded-[var(--cl-r-md)] text-sm font-semibold",
-    "transition-colors duration-[var(--cl-dur-micro)] ease-[var(--cl-ease)]",
-    "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(10,10,10,0.12)] focus-visible:border-[var(--cl-ink)]",
-    "disabled:pointer-events-none disabled:bg-[var(--cl-primary-disabled)] disabled:text-[var(--cl-muted)] disabled:border-transparent",
+    "rounded-lg text-sm font-semibold",
+    "transition-colors duration-200 ease-out",
+    "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-foreground",
+    "disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground disabled:border-transparent",
   ),
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--cl-primary)] text-[var(--cl-on-primary)] border border-transparent hover:bg-[var(--cl-primary-active)]",
+          "bg-primary text-primary-foreground border border-transparent hover:bg-primary/90",
         primary:
-          "bg-[var(--cl-primary)] text-[var(--cl-on-primary)] border border-transparent hover:bg-[var(--cl-primary-active)]",
+          "bg-primary text-primary-foreground border border-transparent hover:bg-primary/90",
         secondary:
-          "bg-[var(--cl-surface-card)] text-[var(--cl-ink)] border border-[var(--cl-hairline-strong)] hover:bg-[var(--cl-canvas-soft)]",
+          "bg-card text-foreground border border-border hover:bg-muted/40",
         outline:
-          "bg-[var(--cl-surface-card)] text-[var(--cl-ink)] border border-[var(--cl-hairline-strong)] hover:bg-[var(--cl-canvas-soft)]",
+          "bg-card text-foreground border border-border hover:bg-muted/40",
         /** White button for placement on saturated category cards. */
         onColor:
-          "bg-[var(--cl-surface-card)] text-[var(--cl-ink)] border border-transparent hover:bg-[var(--cl-canvas-soft)]",
+          "bg-card text-foreground border border-transparent hover:bg-muted/40",
         ghost:
-          "bg-transparent text-[var(--cl-ink)] border border-transparent hover:bg-[var(--cl-surface-strong)]",
+          "bg-transparent text-foreground border border-transparent hover:bg-muted",
         destructive:
-          "bg-[var(--cl-error)] text-[var(--cl-on-dark)] border border-transparent hover:bg-[#d33b3b]",
+          "bg-destructive text-white border border-transparent hover:bg-[#d33b3b]",
         /** Inline text link (Expo blue). Never used as a filled CTA. */
         link:
-          "bg-transparent text-[var(--cl-text-link)] border border-transparent underline-offset-4 hover:underline",
+          "bg-transparent text-accent-purple border border-transparent underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-3",

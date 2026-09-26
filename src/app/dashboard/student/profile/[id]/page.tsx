@@ -74,7 +74,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
     .limit(5);
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas)]">
+    <div className="min-h-screen bg-background">
       <Header profile={currentProfile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -83,7 +83,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
           <div className="mb-8 max-w-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <Link href="/dashboard/student/connect-students" className="inline-flex items-center gap-2 text-[var(--cl-primary)] hover:text-[var(--cl-primary)] text-sm font-medium mb-4">
+                <Link href="/dashboard/student/connect-students" className="inline-flex items-center gap-2 text-accent-purple hover:text-accent-purple text-sm font-medium mb-4">
                   <ArrowLeft className="w-4 h-4" />
                   Back to Students
                 </Link>
@@ -92,21 +92,21 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
               
               {/* More Options Menu */}
               <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-[var(--cl-surface-card)] rounded-lg transition border border-[var(--cl-hairline)]">
-                  <Share2 className="w-5 h-5 text-[var(--cl-body)]" />
+                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
+                  <Share2 className="w-5 h-5 text-foreground/80" />
                 </button>
-                <button className="p-2 hover:bg-[var(--cl-surface-card)] rounded-lg transition border border-[var(--cl-hairline)]">
-                  <Download className="w-5 h-5 text-[var(--cl-body)]" />
+                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
+                  <Download className="w-5 h-5 text-foreground/80" />
                 </button>
-                <button className="p-2 hover:bg-[var(--cl-surface-card)] rounded-lg transition border border-[var(--cl-hairline)]">
-                  <MoreVertical className="w-5 h-5 text-[var(--cl-body)]" />
+                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
+                  <MoreVertical className="w-5 h-5 text-foreground/80" />
                 </button>
               </div>
             </div>
           </div>
 
           {/* Profile Header Card */}
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 mb-10 max-w-2xl">
+          <div className="bg-card rounded-xl p-8 mb-10 max-w-2xl">
             <div className="flex flex-col md:flex-row gap-8 items-start">
               {/* Avatar */}
               <div className="flex-shrink-0">
@@ -115,7 +115,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                   alt={student.full_name}
                   width={140}
                   height={140}
-                  className="rounded-full border-4 border-[var(--cl-primary)]"
+                  className="rounded-full border-4 border-accent-purple"
                 />
               </div>
 
@@ -124,12 +124,12 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Badges */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {student.specialization_board && (
-                    <span className="px-3 py-1.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-xs font-semibold border border-[var(--cl-primary)]">
+                    <span className="px-3 py-1.5 bg-accent-purple/10 text-accent-purple rounded-full text-xs font-semibold border border-accent-purple">
                       {student.specialization_board}
                     </span>
                   )}
                   {student.current_semester && (
-                    <span className="px-3 py-1.5 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-full text-xs font-semibold border border-[var(--cl-info)]">
+                    <span className="px-3 py-1.5 bg-accent-purple/10 text-accent-purple rounded-full text-xs font-semibold border border-accent-purple">
                       Semester {student.current_semester}
                     </span>
                   )}
@@ -137,20 +137,20 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
                 {/* Bio */}
                 {student.bio && (
-                  <p className="text-[var(--cl-body)] mb-6 leading-relaxed">{student.bio}</p>
+                  <p className="text-foreground/80 mb-6 leading-relaxed">{student.bio}</p>
                 )}
 
                 {/* Contact Info */}
-                <div className="space-y-3 mb-6 pb-6 border-b border-[var(--cl-hairline)]">
+                <div className="space-y-3 mb-6 pb-6 border-b border-border">
                   {student.universities && (
-                    <div className="flex items-center gap-3 text-[var(--cl-body)]">
-                      <MapPin className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0" />
+                    <div className="flex items-center gap-3 text-foreground/80">
+                      <MapPin className="w-5 h-5 text-accent-purple flex-shrink-0" />
                       <span>{student.universities.name}</span>
                     </div>
                   )}
                   {student.email && (
-                    <div className="flex items-center gap-3 text-[var(--cl-body)]">
-                      <Mail className="w-5 h-5 text-[var(--cl-primary)] flex-shrink-0" />
+                    <div className="flex items-center gap-3 text-foreground/80">
+                      <Mail className="w-5 h-5 text-accent-purple flex-shrink-0" />
                       <a href={`mailto:${student.email}`} className="hover:text-indigo-600 underline">
                         {student.email}
                       </a>
@@ -161,13 +161,13 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Social Links */}
                 <div className="flex gap-3">
                   {student.github_url && (
-                    <a href={student.github_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-surface-inverse)] transition text-sm font-medium">
+                    <a href={student.github_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg hover:bg-neutral-900 transition text-sm font-medium">
                       <Github className="w-4 h-4" />
                       GitHub
                     </a>
                   )}
                   {student.linkedin_url && (
-                    <a href={student.linkedin_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--cl-info)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-info)] transition text-sm font-medium">
+                    <a href={student.linkedin_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg hover:bg-accent-purple transition text-sm font-medium">
                       <ExternalLink className="w-4 h-4" />
                       LinkedIn
                     </a>

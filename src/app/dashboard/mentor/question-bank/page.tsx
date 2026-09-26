@@ -23,7 +23,7 @@ export default async function QuestionBankPage() {
   if (!profile || profile.role !== 'mentor') redirect('/dashboard/student');
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -31,14 +31,14 @@ export default async function QuestionBankPage() {
           <div className="max-w-6xl mx-auto">
             <Link
               href="/dashboard/mentor/tests"
-              className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6"
+              className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Tests
             </Link>
             <div className="mb-6">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">Question Bank</h1>
-              <p className="text-[var(--cl-body)] mt-1">Build a reusable library of questions for your tests</p>
+              <p className="text-foreground/80 mt-1">Build a reusable library of questions for your tests</p>
             </div>
             <QuestionBankManager />
           </div>

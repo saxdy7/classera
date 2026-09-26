@@ -98,11 +98,11 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
   if (loading) {
     return (
       <div className="space-y-8 sticky top-6">
-        <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)] animate-pulse">
-          <div className="h-6 bg-[var(--cl-surface-strong)] rounded-lg w-1/2 mb-6"></div>
+        <div className="bg-card rounded-[2rem] p-8 border border-border animate-pulse">
+          <div className="h-6 bg-muted rounded-lg w-1/2 mb-6"></div>
           <div className="space-y-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-14 bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-xl)]"></div>
+              <div key={i} className="h-14 bg-muted/40 rounded-xl"></div>
             ))}
           </div>
         </div>
@@ -113,54 +113,54 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
   return (
     <div className="space-y-8 sticky top-6">
       {/* Top Streaks (Image 3 Style) */}
-      <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)] relative overflow-hidden group">
+      <div className="bg-card rounded-[2rem] p-8 border border-border relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-           <Flame size={80} className="text-[var(--cl-warning)]" />
+           <Flame size={80} className="text-amber-600" />
         </div>
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-[var(--cl-ink)] tracking-tight">Top Streaks</h3>
-              <BarChart3 className="w-5 h-5 text-[var(--cl-primary)]" />
+              <h3 className="text-xl font-semibold text-foreground tracking-tight">Top Streaks</h3>
+              <BarChart3 className="w-5 h-5 text-accent-purple" />
           </div>
-          <p className="text-xs text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest mb-6">Active for consecutive days</p>
+          <p className="text-xs text-muted-foreground/70 font-semibold uppercase tracking-widest mb-6">Active for consecutive days</p>
           
           <div className="space-y-5">
             {topContributors.map((user, idx) => (
               <div key={user.id} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-[var(--cl-r-lg)] flex items-center justify-center text-[var(--cl-on-dark)] font-semibold text-xs bg-[var(--cl-primary)]">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold text-xs bg-primary">
                     {user.avatar_url ? (
-                        <img src={user.avatar_url} className="w-full h-full rounded-[var(--cl-r-lg)] object-cover" />
+                        <img src={user.avatar_url} className="w-full h-full rounded-lg object-cover" />
                     ) : user.full_name.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-[var(--cl-ink)] leading-none mb-1">{user.full_name}</h4>
-                    <p className="text-[10px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest">Active Member</p>
+                    <h4 className="text-sm font-semibold text-foreground leading-none mb-1">{user.full_name}</h4>
+                    <p className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-widest">Active Member</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-[var(--cl-warning)] font-semibold text-sm">
+                <div className="flex items-center gap-1 text-amber-600 font-semibold text-sm">
                    <Flame size={14} className="fill-current" />
                    {1200 - (idx * 150)}
                 </div>
               </div>
             ))}
           </div>
-          <button className="w-full mt-8 py-3 bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-xl)] text-xs font-semibold uppercase tracking-widest transition-all">View Leaderboard</button>
+          <button className="w-full mt-8 py-3 bg-muted/40 hover:bg-muted text-foreground/80 rounded-xl text-xs font-semibold uppercase tracking-widest transition-all">View Leaderboard</button>
         </div>
       </div>
 
       {/* Online Now (Image 2 Style - "People to Follow") */}
-      <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)]">
+      <div className="bg-card rounded-[2rem] p-8 border border-border">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-semibold text-[var(--cl-ink)] tracking-tight">Active Fellows</h3>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] rounded-lg text-[10px] font-semibold uppercase border border-[var(--cl-success)] italic">
+          <h3 className="text-xl font-semibold text-foreground tracking-tight">Active Fellows</h3>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 text-green-600 rounded-lg text-[10px] font-semibold uppercase border border-green-600 italic">
              <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
              Live
           </div>
         </div>
 
         {onlineMembers.length === 0 ? (
-          <p className="text-xs text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest text-center py-6">No one is active</p>
+          <p className="text-xs text-muted-foreground/70 font-semibold uppercase tracking-widest text-center py-6">No one is active</p>
         ) : (
           <div className="space-y-5">
             {onlineMembers.map((member) => (
@@ -169,20 +169,20 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
                 className="flex items-center justify-between group cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                   <div className="w-11 h-11 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-strong)] border border-[var(--cl-hairline)] p-0.5 group-hover:border-[var(--cl-primary)] transition-colors">
-                      <div className="w-full h-full rounded-[var(--cl-r-lg)] flex items-center justify-center text-[var(--cl-muted-soft)] font-semibold relative bg-[var(--cl-surface-strong)]">
+                   <div className="w-11 h-11 rounded-xl bg-muted border border-border p-0.5 group-hover:border-accent-purple transition-colors">
+                      <div className="w-full h-full rounded-lg flex items-center justify-center text-muted-foreground/70 font-semibold relative bg-muted">
                          {member.avatar_url ? (
-                            <img src={member.avatar_url} className="w-full h-full rounded-[var(--cl-r-lg)] object-cover" />
+                            <img src={member.avatar_url} className="w-full h-full rounded-lg object-cover" />
                          ) : member.full_name.charAt(0)}
-                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--cl-success)] border-2 border-[var(--cl-on-dark)] rounded-full" />
+                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-600 border-2 border-white rounded-full" />
                       </div>
                    </div>
                    <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-[var(--cl-ink)] truncate mb-0.5 transition-colors group-hover:text-[var(--cl-primary)]">{member.full_name}</h4>
-                      <p className="text-[10px] text-[var(--cl-muted-soft)] font-semibold uppercase tracking-widest leading-none">{member.role}</p>
+                      <h4 className="text-sm font-semibold text-foreground truncate mb-0.5 transition-colors group-hover:text-accent-purple">{member.full_name}</h4>
+                      <p className="text-[10px] text-muted-foreground/70 font-semibold uppercase tracking-widest leading-none">{member.role}</p>
                    </div>
                 </div>
-                <button className="p-2.5 text-[var(--cl-primary)] hover:text-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] transition-all border border-transparent hover:border-[var(--cl-primary)]">
+                <button className="p-2.5 text-accent-purple hover:text-accent-purple hover:bg-accent-purple/10 rounded-lg transition-all border border-transparent hover:border-accent-purple">
                    <UserPlus size={18} />
                 </button>
               </div>
@@ -192,13 +192,13 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
       </div>
 
       {/* Trending Tags (Image 2 Style) */}
-      <div className="bg-[var(--cl-surface-card)] rounded-[2rem] p-8 border border-[var(--cl-hairline)]">
-        <h3 className="text-xl font-semibold text-[var(--cl-ink)] tracking-tight mb-6">Trending Hashtags</h3>
+      <div className="bg-card rounded-[2rem] p-8 border border-border">
+        <h3 className="text-xl font-semibold text-foreground tracking-tight mb-6">Trending Hashtags</h3>
         <div className="flex flex-wrap gap-2">
           {['LearningStreak', 'BuiltWithCode', 'DesignInspo', 'AskTheCommunity', 'CareerSwitch', 'MyFirstCourse', 'WomenInTech', 'DailyWin'].map((tag) => (
             <button
               key={tag}
-              className="px-4 py-2.5 bg-[var(--cl-canvas-soft)] hover:bg-[var(--cl-primary)] text-[var(--cl-body)] hover:text-[var(--cl-on-dark)] rounded-[var(--cl-r-xl)] font-semibold text-[10px] uppercase tracking-widest transition-all border border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]"
+              className="px-4 py-2.5 bg-muted/40 hover:bg-primary text-foreground/80 hover:text-white rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all border border-border hover:border-accent-purple"
             >
               #{tag}
             </button>
@@ -207,12 +207,12 @@ export function CommunityRightSidebar({ communityId, userId }: CommunityRightSid
       </div>
 
       {/* Community Invite Card */}
-      <div className="rounded-[2.5rem] p-8 text-[var(--cl-on-dark)] relative overflow-hidden group bg-[var(--cl-primary)]">
+      <div className="rounded-[2.5rem] p-8 text-white relative overflow-hidden group bg-primary">
         <div className="absolute -top-12 -right-12 w-48 h-48 bg-[rgba(255,255,255,0.1)] rounded-full blur-3xl group-hover:scale-110 transition-transform" />
         <div className="relative z-10">
            <h3 className="text-2xl font-semibold leading-tight mb-4 tracking-tighter italic">Grow Faster <br /> Together.</h3>
-           <p className="text-[var(--cl-primary)] text-xs font-semibold leading-relaxed mb-6">Invite your peers to join the discussion and unlock exclusive mentor tips.</p>
-           <button className="w-full py-4 bg-[var(--cl-surface-card)] text-[var(--cl-primary)] rounded-[1.5rem] font-semibold text-xs uppercase tracking-widest shadow-black/10 transition-all hover:bg-[var(--cl-primary-soft)] active:scale-95">
+           <p className="text-accent-purple text-xs font-semibold leading-relaxed mb-6">Invite your peers to join the discussion and unlock exclusive mentor tips.</p>
+           <button className="w-full py-4 bg-card text-accent-purple rounded-[1.5rem] font-semibold text-xs uppercase tracking-widest shadow-black/10 transition-all hover:bg-accent-purple/10 active:scale-95">
               Copy Invite Link
            </button>
         </div>

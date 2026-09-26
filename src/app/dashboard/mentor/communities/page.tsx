@@ -29,7 +29,7 @@ export default async function MentorCommunitiesPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[var(--cl-surface-card)]">
+    <div className="min-h-screen bg-card">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex h-[calc(100vh-64px)]">
         <Sidebar role="mentor" />

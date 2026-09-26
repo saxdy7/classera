@@ -292,33 +292,33 @@ export default function HeartbeatMonitor({
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-[var(--cl-surface-card)] dark:bg-[var(--cl-surface-inverse)] border rounded-lg p-3">
+    <div className="fixed bottom-4 right-4 z-50 bg-card dark:bg-neutral-900 border rounded-lg p-3">
       <div className="space-y-2 text-xs">
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)]">Status:</span>
+          <span className="text-foreground/80 dark:text-muted-foreground/70">Status:</span>
           <div className="flex items-center gap-1">
-            <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-[var(--cl-success)]' : 'bg-[var(--cl-error)]'}`} />
+            <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-600' : 'bg-destructive'}`} />
             <span className="font-medium">{isActive ? 'Active' : 'Inactive'}</span>
           </div>
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)]">Fullscreen:</span>
-          <span className={`font-medium ${isFullscreen ? 'text-[var(--cl-success)]' : 'text-[var(--cl-error)]'}`}>
+          <span className="text-foreground/80 dark:text-muted-foreground/70">Fullscreen:</span>
+          <span className={`font-medium ${isFullscreen ? 'text-green-600' : 'text-destructive'}`}>
             {isFullscreen ? 'Yes' : 'No'}
           </span>
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)]">Tab Switches:</span>
-          <span className={`font-medium ${tabSwitchCount >= maxTabSwitches ? 'text-[var(--cl-error)]' : 'text-[var(--cl-ink)] dark:text-[var(--cl-on-dark)]'}`}>
+          <span className="text-foreground/80 dark:text-muted-foreground/70">Tab Switches:</span>
+          <span className={`font-medium ${tabSwitchCount >= maxTabSwitches ? 'text-destructive' : 'text-foreground dark:text-white'}`}>
             {tabSwitchCount}/{maxTabSwitches}
           </span>
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)]">Fullscreen Exits:</span>
-          <span className={`font-medium ${fullscreenExitCount >= maxFullscreenExits ? 'text-[var(--cl-error)]' : 'text-[var(--cl-ink)] dark:text-[var(--cl-on-dark)]'}`}>
+          <span className="text-foreground/80 dark:text-muted-foreground/70">Fullscreen Exits:</span>
+          <span className={`font-medium ${fullscreenExitCount >= maxFullscreenExits ? 'text-destructive' : 'text-foreground dark:text-white'}`}>
             {fullscreenExitCount}/{maxFullscreenExits}
           </span>
         </div>
@@ -326,7 +326,7 @@ export default function HeartbeatMonitor({
         {!isFullscreen && (
           <button
             onClick={enterFullscreen}
-            className="w-full mt-2 px-3 py-1.5 bg-[var(--cl-info)] text-[var(--cl-on-dark)] text-xs rounded hover:bg-[var(--cl-info)] transition"
+            className="w-full mt-2 px-3 py-1.5 bg-accent-purple text-white text-xs rounded hover:bg-accent-purple transition"
           >
             Enter Fullscreen
           </button>

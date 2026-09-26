@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getAIClients } from '@/lib/deepseek';
+import { getAIClients, GROQ_MODEL_FAST } from '@/lib/deepseek';
 
 const GITHUB_API = 'https://api.github.com';
 const MAX_FILE_CHARS = 8_000;
@@ -57,7 +57,10 @@ async function callAI(prompt: string): Promise<AIReviewResult> {
 
   // Fallback: Groq
   const fallbackResp = await groq.chat.completions.create({
-    model: 'llama-3.1-8b-instant',
+    model: GROQ_MODEL_FAST,
+    // gpt-oss is a reasoning model; 'low' keeps the hidden reasoning
+    // trace short so it cannot eat the max_tokens budget and return empty content.
+    reasoning_effort: 'low',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: prompt },

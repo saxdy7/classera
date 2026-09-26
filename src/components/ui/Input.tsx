@@ -25,7 +25,7 @@ export function Input({ label, error, hint, icon, className = '', id, ...props }
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-2 block text-[16px] font-semibold leading-[1.4] text-[var(--cl-ink)]"
+          className="mb-2 block text-[16px] font-semibold leading-[1.4] text-foreground"
         >
           {label}
         </label>
@@ -33,7 +33,7 @@ export function Input({ label, error, hint, icon, className = '', id, ...props }
 
       <div className="relative">
         {icon && (
-          <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--cl-muted)]">
+          <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
             {icon}
           </div>
         )}
@@ -42,16 +42,16 @@ export function Input({ label, error, hint, icon, className = '', id, ...props }
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : hint ? hintId : undefined}
           className={[
-            'w-full h-11 pr-4 py-3 rounded-[var(--cl-r-md)]',
+            'w-full h-11 pr-4 py-3 rounded-lg',
             icon ? 'pl-12' : 'pl-4',
-            'bg-[var(--cl-surface-card)] text-[var(--cl-ink)]',
-            'placeholder:text-[var(--cl-muted-soft)]',
-            'border transition-colors duration-[var(--cl-dur-micro)] ease-[var(--cl-ease)]',
+            'bg-card text-foreground',
+            'placeholder:text-muted-foreground/70',
+            'border transition-colors duration-200 ease-out',
             // Expo: focus thickens the border to ink, plus a soft neutral ring.
-            'focus:outline-none focus:ring-[3px] focus:ring-[rgba(10,10,10,0.12)]',
+            'focus:outline-none focus:ring-[3px] focus:ring-ring/50',
             error
-              ? 'border-[var(--cl-error)] focus:border-[var(--cl-error)]'
-              : 'border-[var(--cl-hairline-strong)] focus:border-[var(--cl-ink)]',
+              ? 'border-destructive focus:border-destructive'
+              : 'border-border focus:border-foreground',
             className,
           ].join(' ')}
           {...props}
@@ -59,11 +59,11 @@ export function Input({ label, error, hint, icon, className = '', id, ...props }
       </div>
 
       {error ? (
-        <p id={errorId} role="alert" className="mt-1.5 text-[13px] leading-[1.4] text-[var(--cl-error)]">
+        <p id={errorId} role="alert" className="mt-1.5 text-[13px] leading-[1.4] text-destructive">
           {error}
         </p>
       ) : hint ? (
-        <p id={hintId} className="mt-1.5 text-[13px] leading-[1.4] text-[var(--cl-muted)]">
+        <p id={hintId} className="mt-1.5 text-[13px] leading-[1.4] text-muted-foreground">
           {hint}
         </p>
       ) : null}

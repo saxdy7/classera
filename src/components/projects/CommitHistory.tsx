@@ -80,7 +80,7 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-14 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] animate-pulse" />
+          <div key={i} className="h-14 bg-muted rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -88,7 +88,7 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
 
   if (error) {
     return (
-      <div className="rounded-[var(--cl-r-lg)] bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] p-4 text-sm text-[var(--cl-error)]">
+      <div className="rounded-lg bg-destructive/10 border border-destructive p-4 text-sm text-destructive">
         {error}
       </div>
     );
@@ -96,7 +96,7 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
 
   if (commits.length === 0) {
     return (
-      <div className="text-center py-12 text-[var(--cl-muted-soft)]">
+      <div className="text-center py-12 text-muted-foreground/70">
         <GitCommit className="mx-auto mb-2 opacity-40" size={32} />
         <p className="text-sm">No commits found</p>
       </div>
@@ -115,52 +115,52 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
           : '';
 
         return (
-          <div key={commit.sha} className="border border-[var(--cl-hairline)] rounded-[var(--cl-r-lg)] overflow-hidden">
+          <div key={commit.sha} className="border border-border rounded-lg overflow-hidden">
             <button
               onClick={() => toggleDiff(commit.sha)}
-              className="w-full flex items-center gap-3 p-3 hover:bg-[var(--cl-canvas-soft)] transition-colors text-left"
+              className="w-full flex items-center gap-3 p-3 hover:bg-muted/40 transition-colors text-left"
             >
-              <div className="w-8 h-8 rounded-full bg-[var(--cl-primary-soft)] flex items-center justify-center flex-shrink-0">
-                <GitCommit size={14} className="text-[var(--cl-primary)]" />
+              <div className="w-8 h-8 rounded-full bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
+                <GitCommit size={14} className="text-accent-purple" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{firstLine}</p>
-                <p className="text-xs text-[var(--cl-muted-soft)] mt-0.5">
+                <p className="text-sm font-medium text-foreground truncate">{firstLine}</p>
+                <p className="text-xs text-muted-foreground/70 mt-0.5">
                   {commit.author.name} · {dateStr}
                 </p>
               </div>
-              <code className="text-xs font-mono bg-[var(--cl-surface-strong)] text-[var(--cl-muted)] px-2 py-0.5 rounded flex-shrink-0">
+              <code className="text-xs font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded flex-shrink-0">
                 {shortSha}
               </code>
               {isExpanded ? (
-                <ChevronUp size={16} className="text-[var(--cl-muted-soft)] flex-shrink-0" />
+                <ChevronUp size={16} className="text-muted-foreground/70 flex-shrink-0" />
               ) : (
-                <ChevronDown size={16} className="text-[var(--cl-muted-soft)] flex-shrink-0" />
+                <ChevronDown size={16} className="text-muted-foreground/70 flex-shrink-0" />
               )}
             </button>
 
             {isExpanded && (
-              <div className="border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)] p-3">
+              <div className="border-t border-border bg-muted/40 p-3">
                 {loadingDiff === commit.sha ? (
-                  <div className="text-xs text-[var(--cl-muted-soft)] animate-pulse">Loading diff…</div>
+                  <div className="text-xs text-muted-foreground/70 animate-pulse">Loading diff…</div>
                 ) : detail ? (
                   <div className="space-y-3">
-                    <div className="flex items-center gap-4 text-xs text-[var(--cl-muted)]">
-                      <span className="flex items-center gap-1 text-[var(--cl-success)]">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1 text-green-600">
                         <Plus size={12} /> {detail.additions} additions
                       </span>
-                      <span className="flex items-center gap-1 text-[var(--cl-error)]">
+                      <span className="flex items-center gap-1 text-destructive">
                         <Minus size={12} /> {detail.deletions} deletions
                       </span>
                       <span>{detail.files.length} file{detail.files.length !== 1 ? 's' : ''} changed</span>
                     </div>
                     {detail.files.map((file) => (
-                      <div key={file.filename} className="rounded-lg border border-[var(--cl-hairline)] overflow-hidden">
-                        <div className="flex items-center justify-between bg-[var(--cl-surface-strong)] px-3 py-1.5 text-xs font-mono">
-                          <span className="text-[var(--cl-body)] truncate">{file.filename}</span>
+                      <div key={file.filename} className="rounded-lg border border-border overflow-hidden">
+                        <div className="flex items-center justify-between bg-muted px-3 py-1.5 text-xs font-mono">
+                          <span className="text-foreground/80 truncate">{file.filename}</span>
                           <span className="flex gap-2 flex-shrink-0 ml-2">
-                            <span className="text-[var(--cl-success)]">+{file.additions}</span>
-                            <span className="text-[var(--cl-error)]">-{file.deletions}</span>
+                            <span className="text-green-600">+{file.additions}</span>
+                            <span className="text-destructive">-{file.deletions}</span>
                           </span>
                         </div>
                         {file.patch && (
@@ -170,12 +170,12 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
                                 key={i}
                                 className={
                                   line.startsWith('+')
-                                    ? 'block bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                                    ? 'block bg-green-500/10 text-green-600'
                                     : line.startsWith('-')
-                                    ? 'block bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]'
+                                    ? 'block bg-destructive/10 text-destructive'
                                     : line.startsWith('@@')
-                                    ? 'block bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)]'
-                                    : 'block text-[var(--cl-body)]'
+                                    ? 'block bg-accent-purple/10 text-accent-purple'
+                                    : 'block text-foreground/80'
                                 }
                               >
                                 {line}
@@ -187,7 +187,7 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-[var(--cl-muted-soft)]">Diff not available</p>
+                  <p className="text-xs text-muted-foreground/70">Diff not available</p>
                 )}
               </div>
             )}
@@ -199,7 +199,7 @@ export default function CommitHistory({ submissionId }: { submissionId: string }
         <button
           onClick={() => fetchCommits(page + 1, true)}
           disabled={loadingMore}
-          className="w-full py-2.5 text-sm text-[var(--cl-primary)] font-medium hover:bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] border border-[var(--cl-primary)] transition-colors disabled:opacity-50"
+          className="w-full py-2.5 text-sm text-accent-purple font-medium hover:bg-accent-purple/10 rounded-lg border border-accent-purple transition-colors disabled:opacity-50"
         >
           {loadingMore ? 'Loading…' : 'Load more commits'}
         </button>

@@ -56,25 +56,25 @@ export default function AddStudentsButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] text-[var(--cl-body)] text-sm font-medium rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground/80 text-sm font-medium rounded-lg hover:bg-muted/40 transition-colors"
       >
-        <UserPlus size={15} className="text-[var(--cl-primary)]" />
+        <UserPlus size={15} className="text-accent-purple" />
         Add Students
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--cl-scrim)] p-4">
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] w-full max-w-md max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between p-5 border-b border-[var(--cl-hairline)]">
-              <h3 className="font-semibold text-[var(--cl-ink)]">Add students to this project</h3>
-              <button onClick={() => setOpen(false)} className="text-[var(--cl-muted)] hover:text-[var(--cl-ink)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-card rounded-xl w-full max-w-md max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="font-semibold text-foreground">Add students to this project</h3>
+              <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X size={18} />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3">
               {eligibleStudents.length === 0 ? (
-                <p className="text-sm text-[var(--cl-muted)] p-4 text-center">
+                <p className="text-sm text-muted-foreground p-4 text-center">
                   Everyone at your university is already assigned to this project.
                 </p>
               ) : (
@@ -84,20 +84,20 @@ export default function AddStudentsButton({
                     <button
                       key={student.id}
                       onClick={() => toggle(student.id)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-[var(--cl-r-lg)] transition-colors text-left ${
-                        isSelected ? 'bg-[var(--cl-primary-soft)]' : 'hover:bg-[var(--cl-canvas-soft)]'
+                      className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${
+                        isSelected ? 'bg-accent-purple/10' : 'hover:bg-muted/40'
                       }`}
                     >
                       <div
-                        className={`w-5 h-5 rounded-[var(--cl-r-xs)] border flex items-center justify-center flex-shrink-0 ${
-                          isSelected ? 'bg-[var(--cl-primary)] border-[var(--cl-primary)]' : 'border-[var(--cl-hairline-strong)]'
+                        className={`w-5 h-5 rounded-sm border flex items-center justify-center flex-shrink-0 ${
+                          isSelected ? 'bg-primary border-accent-purple' : 'border-border'
                         }`}
                       >
-                        {isSelected && <Check size={12} className="text-[var(--cl-on-primary)]" />}
+                        {isSelected && <Check size={12} className="text-primary-foreground" />}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-[var(--cl-ink)] truncate">{student.full_name}</p>
-                        <p className="text-xs text-[var(--cl-muted)] truncate">{student.email}</p>
+                        <p className="text-sm font-medium text-foreground truncate">{student.full_name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{student.email}</p>
                       </div>
                     </button>
                   );
@@ -105,19 +105,19 @@ export default function AddStudentsButton({
               )}
             </div>
 
-            {error && <p className="px-5 pb-2 text-xs text-[var(--cl-error)]">{error}</p>}
+            {error && <p className="px-5 pb-2 text-xs text-destructive">{error}</p>}
 
-            <div className="p-4 border-t border-[var(--cl-hairline)] flex justify-end gap-2">
+            <div className="p-4 border-t border-border flex justify-end gap-2">
               <button
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-[var(--cl-body)] rounded-[var(--cl-r-lg)] hover:bg-[var(--cl-canvas-soft)]"
+                className="px-4 py-2 text-sm font-medium text-foreground/80 rounded-lg hover:bg-muted/40"
               >
                 Cancel
               </button>
               <button
                 onClick={submit}
                 disabled={selected.size === 0 || submitting}
-                className="flex items-center gap-2 px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-primary)] text-sm font-semibold rounded-[var(--cl-r-lg)] disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-lg disabled:opacity-50"
               >
                 {submitting && <Loader2 size={14} className="animate-spin" />}
                 Add {selected.size > 0 ? `(${selected.size})` : ''}

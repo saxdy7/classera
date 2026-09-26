@@ -76,7 +76,7 @@ export default async function StudentLiveSessionsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -85,44 +85,44 @@ export default async function StudentLiveSessionsPage() {
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">Mentor Sessions</h1>
-              <p className="text-[var(--cl-body)] mt-2">Your scheduled learning sessions</p>
+              <p className="text-foreground/80 mt-2">Your scheduled learning sessions</p>
             </div>
 
             {/* Live Sessions - Featured */}
             {live.length > 0 && (
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 bg-[var(--cl-error)] rounded-full animate-pulse"></div>
-                  <h2 className="text-lg font-semibold text-[var(--cl-ink)]">Now Live</h2>
+                  <div className="w-3 h-3 bg-destructive rounded-full animate-pulse"></div>
+                  <h2 className="text-lg font-semibold text-foreground">Now Live</h2>
                 </div>
                 <div className="grid gap-4">
                   {live.map((session) => (
                     <div
                       key={session.id}
-                      className="rounded-[var(--cl-r-xl)] p-6 border-2 border-[var(--cl-error)] transition-all bg-[rgba(239,68,68,0.12)]"
+                      className="rounded-xl p-6 border-2 border-destructive transition-all bg-destructive/10"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="inline-block px-3 py-1 bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)] rounded-full text-xs font-semibold">
+                            <span className="inline-block px-3 py-1 bg-destructive/10 text-destructive rounded-full text-xs font-semibold">
                               🔴 LIVE NOW
                             </span>
                           </div>
-                          <h3 className="text-2xl font-semibold text-[var(--cl-ink)]">{session.title}</h3>
+                          <h3 className="text-2xl font-semibold text-foreground">{session.title}</h3>
                           {session.description && (
-                            <p className="text-sm text-[var(--cl-body)] mt-2">{session.description}</p>
+                            <p className="text-sm text-foreground/80 mt-2">{session.description}</p>
                           )}
                         </div>
                         <a
                           href={session.daily_room_url || session.meeting_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-6 py-3 bg-[var(--cl-error)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold hover:bg-[var(--cl-error)] transition-colors whitespace-nowrap ml-4"
+                          className="px-6 py-3 bg-destructive text-white rounded-lg font-semibold hover:bg-destructive transition-colors whitespace-nowrap ml-4"
                         >
                           📹 Join Now
                         </a>
                       </div>
-                      <div className="flex items-center gap-6 pt-4 border-t border-[var(--cl-error)]">
+                      <div className="flex items-center gap-6 pt-4 border-t border-destructive">
                         <div className="flex items-center gap-3">
                           {session.mentor?.avatar_url && (
                             <img
@@ -132,11 +132,11 @@ export default async function StudentLiveSessionsPage() {
                             />
                           )}
                           <div>
-                            <p className="text-xs text-[var(--cl-body)]">Mentor</p>
-                            <p className="font-semibold text-[var(--cl-ink)]">{session.mentor?.full_name}</p>
+                            <p className="text-xs text-foreground/80">Mentor</p>
+                            <p className="font-semibold text-foreground">{session.mentor?.full_name}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 text-[var(--cl-body)]">
+                        <div className="flex items-center gap-2 text-foreground/80">
                           <Clock className="w-4 h-4" />
                           <span className="text-sm font-medium">{session.duration_minutes} minutes</span>
                         </div>
@@ -150,20 +150,20 @@ export default async function StudentLiveSessionsPage() {
             {/* Upcoming Sessions */}
             {upcoming.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">Coming Up</h2>
+                <h2 className="text-lg font-semibold text-foreground mb-4">Coming Up</h2>
                 <div className="space-y-3">
                   {upcoming.map((session) => (
                     <div
                       key={session.id}
-                      className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-5 border border-[var(--cl-hairline)] hover:border-[var(--cl-info)] transition-all"
+                      className="bg-card rounded-lg p-5 border border-border hover:border-accent-purple transition-all"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-[var(--cl-ink)] mb-2">{session.title}</h3>
+                          <h3 className="font-semibold text-foreground mb-2">{session.title}</h3>
                           {session.description && (
-                            <p className="text-sm text-[var(--cl-body)] mb-3">{session.description}</p>
+                            <p className="text-sm text-foreground/80 mb-3">{session.description}</p>
                           )}
-                          <div className="flex flex-wrap gap-4 text-sm text-[var(--cl-body)]">
+                          <div className="flex flex-wrap gap-4 text-sm text-foreground/80">
                             <div className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
                               {new Date(session.scheduled_at).toLocaleString()}
@@ -178,7 +178,7 @@ export default async function StudentLiveSessionsPage() {
                           </div>
                         </div>
                         <div className="flex-shrink-0">
-                          <span className="inline-block px-3 py-1 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-lg text-xs font-semibold">
+                          <span className="inline-block px-3 py-1 bg-accent-purple/10 text-accent-purple rounded-lg text-xs font-semibold">
                             Scheduled
                           </span>
                         </div>
@@ -192,21 +192,21 @@ export default async function StudentLiveSessionsPage() {
             {/* Past Sessions */}
             {past.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">Past Sessions</h2>
+                <h2 className="text-lg font-semibold text-foreground mb-4">Past Sessions</h2>
                 <div className="space-y-2">
                   {past.map((session) => (
                     <div
                       key={session.id}
-                      className="bg-[var(--cl-surface-card)] rounded-lg p-4 border border-[var(--cl-hairline)] opacity-60 hover:opacity-80 transition-opacity"
+                      className="bg-card rounded-lg p-4 border border-border opacity-60 hover:opacity-80 transition-opacity"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-semibold text-[var(--cl-ink)] text-sm">{session.title}</h4>
-                          <p className="text-xs text-[var(--cl-body)] mt-1">
+                          <h4 className="font-semibold text-foreground text-sm">{session.title}</h4>
+                          <p className="text-xs text-foreground/80 mt-1">
                             {new Date(session.scheduled_at).toLocaleString()} • {session.mentor?.full_name}
                           </p>
                         </div>
-                        <span className="text-xs bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-2 py-1 rounded font-medium">
+                        <span className="text-xs bg-muted text-foreground/80 px-2 py-1 rounded font-medium">
                           Completed
                         </span>
                       </div>
@@ -218,17 +218,17 @@ export default async function StudentLiveSessionsPage() {
 
             {/* No Sessions */}
             {sessions.length === 0 && (
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-16 text-center border border-[var(--cl-hairline)]">
-                <div className="w-20 h-20 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-card rounded-xl p-16 text-center border border-border">
+                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-4xl">📚</span>
                 </div>
-                <h3 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">No sessions scheduled</h3>
-                <p className="text-[var(--cl-body)] mb-8 text-lg">
+                <h3 className="text-2xl font-semibold text-foreground mb-2">No sessions scheduled</h3>
+                <p className="text-foreground/80 mb-8 text-lg">
                   Your mentor will schedule sessions with you here. Check back soon!
                 </p>
                 <a
                   href="/dashboard/student"
-                  className="inline-block px-6 py-3 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-primary)] transition-colors"
+                  className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary transition-colors"
                 >
                   Return to Dashboard
                 </a>

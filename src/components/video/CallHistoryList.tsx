@@ -93,7 +93,7 @@ export default function CallHistoryList() {
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
           <div key={i} className="animate-pulse">
-            <div className="h-24 bg-[var(--cl-surface-strong)] rounded-lg"></div>
+            <div className="h-24 bg-muted rounded-lg"></div>
           </div>
         ))}
       </div>
@@ -102,7 +102,7 @@ export default function CallHistoryList() {
 
   if (error) {
     return (
-      <div className="text-center py-8 text-[var(--cl-error)]">
+      <div className="text-center py-8 text-destructive">
         {error}
       </div>
     );
@@ -111,9 +111,9 @@ export default function CallHistoryList() {
   if (calls.length === 0) {
     return (
       <div className="text-center py-12">
-        <Video className="w-16 h-16 mx-auto text-[var(--cl-muted-soft)] mb-4" />
-        <p className="text-[var(--cl-muted)] text-lg">No call history yet</p>
-        <p className="text-[var(--cl-muted-soft)] text-sm mt-2">
+        <Video className="w-16 h-16 mx-auto text-muted-foreground/70 mb-4" />
+        <p className="text-muted-foreground text-lg">No call history yet</p>
+        <p className="text-muted-foreground/70 text-sm mt-2">
           Your video calls will appear here
         </p>
       </div>
@@ -136,14 +136,14 @@ export default function CallHistoryList() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
+                    <div className="w-full h-full flex items-center justify-center text-white font-semibold bg-primary">
                       {call.receiver.full_name.charAt(0)}
                     </div>
                   )}
                 </Avatar>
               ) : (
-                <div className="w-12 h-12 rounded-full bg-[var(--cl-surface-strong)] flex items-center justify-center">
-                  <User className="w-6 h-6 text-[var(--cl-muted)]" />
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                  <User className="w-6 h-6 text-muted-foreground" />
                 </div>
               )}
             </div>
@@ -151,7 +151,7 @@ export default function CallHistoryList() {
             {/* Call Details */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold text-[var(--cl-ink)] truncate">
+                <h3 className="font-semibold text-foreground truncate">
                   {call.test
                     ? call.test.title
                     : call.receiver
@@ -161,15 +161,15 @@ export default function CallHistoryList() {
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
                     call.ended_at
-                      ? 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
-                      : 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                      ? 'bg-muted text-foreground/80'
+                      : 'bg-green-500/10 text-green-600'
                   }`}
                 >
                   {call.ended_at ? 'Ended' : 'In Progress'}
                 </span>
               </div>
 
-              <div className="flex items-center space-x-4 text-sm text-[var(--cl-body)]">
+              <div className="flex items-center space-x-4 text-sm text-foreground/80">
                 <div className="flex items-center space-x-1">
                   <Video className="w-4 h-4" />
                   <span>{getCallTypeLabel(call.call_type)}</span>
@@ -193,7 +193,7 @@ export default function CallHistoryList() {
               </div>
 
               {call.test && (
-                <div className="mt-2 text-xs text-[var(--cl-primary)] bg-[var(--cl-primary-soft)] px-2 py-1 rounded inline-block">
+                <div className="mt-2 text-xs text-accent-purple bg-accent-purple/10 px-2 py-1 rounded inline-block">
                   Test Monitoring Session
                 </div>
               )}

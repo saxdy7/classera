@@ -27,7 +27,7 @@ export default async function MentorMessagesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={{ id: user.id, ...profile }} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -35,7 +35,7 @@ export default async function MentorMessagesPage() {
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h2 className="text-3xl font-semibold text-black mb-2">Messages</h2>
-              <p className="text-[var(--cl-body)]">Chat with your students in real-time</p>
+              <p className="text-foreground/80">Chat with your students in real-time</p>
             </div>
 
             <MessagesProvider userId={user.id}>

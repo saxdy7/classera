@@ -162,7 +162,7 @@ export function CourseBuilderClient({ profile }: Props) {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+        <div className="min-h-screen bg-muted/40">
             <Header profile={profile} />
             <div className="flex">
                 <Sidebar role="mentor" />
@@ -170,14 +170,14 @@ export function CourseBuilderClient({ profile }: Props) {
                     <div className="max-w-4xl mx-auto">
                         <Link
                             href="/dashboard/mentor/courses"
-                            className="inline-flex items-center gap-2 text-[var(--cl-body)] hover:text-[var(--cl-ink)] mb-6 transition-colors"
+                            className="inline-flex items-center gap-2 text-foreground/80 hover:text-foreground mb-6 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back to Courses
                         </Link>
 
                         <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Create New Course</h1>
-                        <p className="text-[var(--cl-body)] mb-8">Build your course content and curriculum</p>
+                        <p className="text-foreground/80 mb-8">Build your course content and curriculum</p>
 
                         {/* Progress Steps */}
                         <div className="flex items-center gap-4 mb-8">
@@ -186,10 +186,10 @@ export function CourseBuilderClient({ profile }: Props) {
                                     key={s}
                                     onClick={() => setStep(s)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${step === s
-                                            ? 'bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
+                                            ? 'bg-primary text-white'
                                             : step > s
-                                                ? 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
-                                                : 'bg-[var(--cl-surface-strong)] text-[var(--cl-body)]'
+                                                ? 'bg-green-500/10 text-green-600'
+                                                : 'bg-muted text-foreground/80'
                                         }`}
                                 >
                                     <span className="w-6 h-6 rounded-full bg-[rgba(255,255,255,0.2)] flex items-center justify-center text-sm">
@@ -202,37 +202,37 @@ export function CourseBuilderClient({ profile }: Props) {
 
                         {/* Step 1: Basic Info */}
                         {step === 1 && (
-                            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)] space-y-6">
+                            <div className="bg-card rounded-lg p-6 border border-border space-y-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Course Title *</label>
+                                    <label className="block text-sm font-medium text-foreground/80 mb-2">Course Title *</label>
                                     <input
                                         type="text"
                                         required
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         placeholder="e.g., Complete React.js Course"
-                                        className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Description</label>
+                                    <label className="block text-sm font-medium text-foreground/80 mb-2">Description</label>
                                     <textarea
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         placeholder="What will students learn in this course?"
-                                        className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] resize-none"
+                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
                                         rows={4}
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Level</label>
+                                        <label className="block text-sm font-medium text-foreground/80 mb-2">Level</label>
                                         <select
                                             value={formData.level}
                                             onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                         >
                                             <option value="Beginner">Beginner</option>
                                             <option value="Intermediate">Intermediate</option>
@@ -241,24 +241,24 @@ export function CourseBuilderClient({ profile }: Props) {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Duration (hours)</label>
+                                        <label className="block text-sm font-medium text-foreground/80 mb-2">Duration (hours)</label>
                                         <input
                                             type="number"
                                             min="1"
                                             value={formData.duration_hours}
                                             onChange={(e) => setFormData({ ...formData, duration_hours: parseInt(e.target.value) })}
-                                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Course Type</label>
+                                        <label className="block text-sm font-medium text-foreground/80 mb-2">Course Type</label>
                                         <select
                                             value={formData.course_type}
                                             onChange={(e) => setFormData({ ...formData, course_type: e.target.value })}
-                                            className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                         >
                                             <option value="free">Free</option>
                                             <option value="paid">Paid</option>
@@ -267,31 +267,31 @@ export function CourseBuilderClient({ profile }: Props) {
 
                                     {formData.course_type === 'paid' && (
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Price ($)</label>
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">Price ($)</label>
                                             <input
                                                 type="number"
                                                 min="0"
                                                 value={formData.price}
                                                 onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Thumbnail URL</label>
+                                    <label className="block text-sm font-medium text-foreground/80 mb-2">Thumbnail URL</label>
                                     <input
                                         type="url"
                                         value={formData.thumbnail_url}
                                         onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
                                         placeholder="https://..."
-                                        className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">Skills</label>
+                                    <label className="block text-sm font-medium text-foreground/80 mb-2">Skills</label>
                                     <div className="flex gap-2 mb-2">
                                         <input
                                             type="text"
@@ -299,18 +299,18 @@ export function CourseBuilderClient({ profile }: Props) {
                                             onChange={(e) => setNewSkill(e.target.value)}
                                             onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
                                             placeholder="Add a skill"
-                                            className="flex-1 px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                            className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                         />
                                         <button
                                             onClick={addSkill}
-                                            className="px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] transition-colors"
+                                            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors"
                                         >
                                             Add
                                         </button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {formData.skills.map(skill => (
-                                            <span key={skill} className="px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-sm flex items-center gap-2">
+                                            <span key={skill} className="px-3 py-1 bg-accent-purple/10 text-accent-purple rounded-full text-sm flex items-center gap-2">
                                                 {skill}
                                                 <button onClick={() => removeSkill(skill)} className="hover:text-indigo-900">×</button>
                                             </span>
@@ -321,7 +321,7 @@ export function CourseBuilderClient({ profile }: Props) {
                                 <button
                                     onClick={() => setStep(2)}
                                     disabled={!formData.title}
-                                    className="w-full py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity disabled:opacity-50 bg-[var(--cl-primary)]"
+                                    className="w-full py-3 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 bg-primary"
                                 >
                                     Continue to Curriculum →
                                 </button>
@@ -331,12 +331,12 @@ export function CourseBuilderClient({ profile }: Props) {
                         {/* Step 2: Curriculum */}
                         {step === 2 && (
                             <div className="space-y-6">
-                                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
+                                <div className="bg-card rounded-lg p-6 border border-border">
                                     <div className="flex items-center justify-between mb-6">
-                                        <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Course Curriculum</h2>
+                                        <h2 className="text-xl font-semibold text-foreground">Course Curriculum</h2>
                                         <button
                                             onClick={addModule}
-                                            className="px-4 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg hover:bg-[var(--cl-primary)] transition-colors flex items-center gap-2"
+                                            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors flex items-center gap-2"
                                         >
                                             <Plus className="w-4 h-4" />
                                             Add Module
@@ -344,11 +344,11 @@ export function CourseBuilderClient({ profile }: Props) {
                                     </div>
 
                                     {modules.length === 0 ? (
-                                        <div className="text-center py-12 text-[var(--cl-muted)]">
+                                        <div className="text-center py-12 text-muted-foreground">
                                             <p className="mb-4">No modules yet. Add your first module to get started.</p>
                                             <button
                                                 onClick={addModule}
-                                                className="px-6 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg hover:bg-[var(--cl-surface-strong)] transition-colors"
+                                                className="px-6 py-3 bg-muted text-foreground/80 rounded-lg hover:bg-muted transition-colors"
                                             >
                                                 <Plus className="w-4 h-4 inline mr-2" />
                                                 Add Module
@@ -357,24 +357,24 @@ export function CourseBuilderClient({ profile }: Props) {
                                     ) : (
                                         <div className="space-y-4">
                                             {modules.map((module, moduleIndex) => (
-                                                <div key={module.id} className="border border-[var(--cl-hairline)] rounded-lg overflow-hidden">
-                                                    <div className="bg-[var(--cl-canvas-soft)] p-4 flex items-center gap-4">
-                                                        <GripVertical className="w-5 h-5 text-[var(--cl-muted-soft)]" />
+                                                <div key={module.id} className="border border-border rounded-lg overflow-hidden">
+                                                    <div className="bg-muted/40 p-4 flex items-center gap-4">
+                                                        <GripVertical className="w-5 h-5 text-muted-foreground/70" />
                                                         <input
                                                             type="text"
                                                             value={module.title}
                                                             onChange={(e) => updateModule(module.id, e.target.value)}
-                                                            className="flex-1 px-3 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                            className="flex-1 px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                                         />
                                                         <button
                                                             onClick={() => addLesson(module.id)}
-                                                            className="px-3 py-2 bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] rounded-lg hover:bg-[var(--cl-info)] transition-colors text-sm"
+                                                            className="px-3 py-2 bg-accent-purple/10 text-accent-purple rounded-lg hover:bg-accent-purple transition-colors text-sm"
                                                         >
                                                             + Lesson
                                                         </button>
                                                         <button
                                                             onClick={() => removeModule(module.id)}
-                                                            className="p-2 text-[var(--cl-error)] hover:bg-[rgba(239,68,68,0.12)] rounded-lg transition-colors"
+                                                            className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                                                         >
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
@@ -383,32 +383,32 @@ export function CourseBuilderClient({ profile }: Props) {
                                                     {module.lessons.length > 0 && (
                                                         <div className="p-4 space-y-3">
                                                             {module.lessons.map((lesson, lessonIndex) => (
-                                                                <div key={lesson.id} className="flex items-center gap-3 bg-[var(--cl-surface-card)] p-3 rounded-lg border border-[var(--cl-hairline)]">
-                                                                    <span className="text-sm text-[var(--cl-muted-soft)] w-6">{lessonIndex + 1}.</span>
+                                                                <div key={lesson.id} className="flex items-center gap-3 bg-card p-3 rounded-lg border border-border">
+                                                                    <span className="text-sm text-muted-foreground/70 w-6">{lessonIndex + 1}.</span>
                                                                     <input
                                                                         type="text"
                                                                         value={lesson.title}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { title: e.target.value })}
                                                                         placeholder="Lesson title"
-                                                                        className="flex-1 px-3 py-2 border border-[var(--cl-hairline)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                                        className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                                                                     />
                                                                     <input
                                                                         type="url"
                                                                         value={lesson.videoUrl}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { videoUrl: e.target.value })}
                                                                         placeholder="Video URL"
-                                                                        className="w-48 px-3 py-2 border border-[var(--cl-hairline)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                                        className="w-48 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                                                                     />
                                                                     <input
                                                                         type="number"
                                                                         value={lesson.duration}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { duration: parseInt(e.target.value) })}
                                                                         placeholder="mins"
-                                                                        className="w-20 px-3 py-2 border border-[var(--cl-hairline)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                                        className="w-20 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                                                                     />
                                                                     <button
                                                                         onClick={() => removeLesson(module.id, lesson.id)}
-                                                                        className="p-2 text-[var(--cl-error)] hover:bg-[rgba(239,68,68,0.12)] rounded transition-colors"
+                                                                        className="p-2 text-destructive hover:bg-destructive/10 rounded transition-colors"
                                                                     >
                                                                         <Trash2 className="w-4 h-4" />
                                                                     </button>
@@ -425,13 +425,13 @@ export function CourseBuilderClient({ profile }: Props) {
                                 <div className="flex gap-4">
                                     <button
                                         onClick={() => setStep(1)}
-                                        className="flex-1 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-surface-strong)] transition-colors"
+                                        className="flex-1 py-3 bg-muted text-foreground/80 rounded-lg font-medium hover:bg-muted transition-colors"
                                     >
                                         ← Back
                                     </button>
                                     <button
                                         onClick={() => setStep(3)}
-                                        className="flex-1 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity bg-[var(--cl-primary)]"
+                                        className="flex-1 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-opacity bg-primary"
                                     >
                                         Review & Publish →
                                     </button>
@@ -442,40 +442,40 @@ export function CourseBuilderClient({ profile }: Props) {
                         {/* Step 3: Review */}
                         {step === 3 && (
                             <div className="space-y-6">
-                                <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                                    <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-6">Review Course</h2>
+                                <div className="bg-card rounded-lg p-6 border border-border">
+                                    <h2 className="text-xl font-semibold text-foreground mb-6">Review Course</h2>
 
                                     <div className="space-y-4">
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Title</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Title</span>
                                             <span className="font-medium">{formData.title}</span>
                                         </div>
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Level</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Level</span>
                                             <span className="font-medium">{formData.level}</span>
                                         </div>
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Duration</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Duration</span>
                                             <span className="font-medium">{formData.duration_hours} hours</span>
                                         </div>
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Price</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Price</span>
                                             <span className="font-medium">{formData.course_type === 'free' ? 'Free' : `$${formData.price}`}</span>
                                         </div>
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Modules</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Modules</span>
                                             <span className="font-medium">{modules.length}</span>
                                         </div>
-                                        <div className="flex justify-between py-2 border-b border-[var(--cl-hairline)]">
-                                            <span className="text-[var(--cl-body)]">Lessons</span>
+                                        <div className="flex justify-between py-2 border-b border-border">
+                                            <span className="text-foreground/80">Lessons</span>
                                             <span className="font-medium">{modules.reduce((sum, m) => sum + m.lessons.length, 0)}</span>
                                         </div>
                                         {formData.skills.length > 0 && (
                                             <div className="py-2">
-                                                <span className="text-[var(--cl-body)] block mb-2">Skills</span>
+                                                <span className="text-foreground/80 block mb-2">Skills</span>
                                                 <div className="flex flex-wrap gap-2">
                                                     {formData.skills.map(skill => (
-                                                        <span key={skill} className="px-3 py-1 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded-full text-sm">
+                                                        <span key={skill} className="px-3 py-1 bg-accent-purple/10 text-accent-purple rounded-full text-sm">
                                                             {skill}
                                                         </span>
                                                     ))}
@@ -488,14 +488,14 @@ export function CourseBuilderClient({ profile }: Props) {
                                 <div className="flex gap-4">
                                     <button
                                         onClick={() => setStep(2)}
-                                        className="flex-1 py-3 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-surface-strong)] transition-colors"
+                                        className="flex-1 py-3 bg-muted text-foreground/80 rounded-lg font-medium hover:bg-muted transition-colors"
                                     >
                                         ← Back
                                     </button>
                                     <button
                                         onClick={handleSubmit}
                                         disabled={loading || !formData.title}
-                                        className="flex-1 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 bg-[var(--cl-success)]"
+                                        className="flex-1 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 bg-green-600"
                                     >
                                         <Save className="w-5 h-5" />
                                         {loading ? 'Creating...' : 'Create Course'}

@@ -51,7 +51,7 @@ export default async function MentorLiveSessionsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="mentor" />
@@ -61,11 +61,11 @@ export default async function MentorLiveSessionsPage() {
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">Live Sessions</h1>
-                <p className="text-[var(--cl-body)]">Manage and monitor your teaching sessions</p>
+                <p className="text-foreground/80">Manage and monitor your teaching sessions</p>
               </div>
               <a
                 href="/dashboard/mentor/sessions"
-                className="px-6 py-3 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors"
+                className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary transition-colors"
               >
                 ➕ Schedule New Session
               </a>
@@ -73,51 +73,51 @@ export default async function MentorLiveSessionsPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                <p className="text-[var(--cl-body)] text-sm font-medium">Live Now</p>
-                <p className="text-3xl font-semibold text-[var(--cl-success)]">{live.length}</p>
+              <div className="bg-card rounded-lg p-6 border border-border">
+                <p className="text-foreground/80 text-sm font-medium">Live Now</p>
+                <p className="text-3xl font-semibold text-green-600">{live.length}</p>
               </div>
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                <p className="text-[var(--cl-body)] text-sm font-medium">Upcoming</p>
-                <p className="text-3xl font-semibold text-[var(--cl-info)]">{upcoming.length}</p>
+              <div className="bg-card rounded-lg p-6 border border-border">
+                <p className="text-foreground/80 text-sm font-medium">Upcoming</p>
+                <p className="text-3xl font-semibold text-accent-purple">{upcoming.length}</p>
               </div>
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
-                <p className="text-[var(--cl-body)] text-sm font-medium">Completed</p>
-                <p className="text-3xl font-semibold text-[var(--cl-body)]">{past.length}</p>
+              <div className="bg-card rounded-lg p-6 border border-border">
+                <p className="text-foreground/80 text-sm font-medium">Completed</p>
+                <p className="text-3xl font-semibold text-foreground/80">{past.length}</p>
               </div>
             </div>
 
             {/* Live Sessions */}
             {live.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-                  <span className="w-3 h-3 bg-[var(--cl-success)] rounded-full animate-pulse"></span>
+                <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <span className="w-3 h-3 bg-green-600 rounded-full animate-pulse"></span>
                   Live Now ({live.length})
                 </h2>
                 <div className="grid gap-4">
                   {live.map((session) => (
                     <div
                       key={session.id}
-                      className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border-2 border-[var(--cl-success)]"
+                      className="bg-card rounded-lg p-6 border-2 border-green-600"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{session.title}</h3>
-                          <p className="text-sm text-[var(--cl-body)]">{session.description}</p>
+                          <h3 className="text-lg font-semibold text-foreground">{session.title}</h3>
+                          <p className="text-sm text-foreground/80">{session.description}</p>
                         </div>
-                        <span className="bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] px-3 py-1 rounded-full text-xs font-semibold">
+                        <span className="bg-green-500/10 text-green-600 px-3 py-1 rounded-full text-xs font-semibold">
                           🔴 LIVE
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div className="text-sm text-[var(--cl-body)]">
+                        <div className="text-sm text-foreground/80">
                           {session.participants?.length || 0} participant{(session.participants?.length || 0) !== 1 ? 's' : ''}
                         </div>
                         <a
                           href={session.daily_room_url || session.meeting_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-4 py-2 bg-[var(--cl-success)] text-[var(--cl-on-dark)] rounded-lg text-sm font-medium hover:bg-[var(--cl-success)] transition-colors"
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
                         >
                           📹 Join Session
                         </a>
@@ -131,20 +131,20 @@ export default async function MentorLiveSessionsPage() {
             {/* Upcoming Sessions */}
             {upcoming.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Upcoming ({upcoming.length})
                 </h2>
                 <div className="grid gap-4">
                   {upcoming.map((session) => (
-                    <div key={session.id} className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)]">
+                    <div key={session.id} className="bg-card rounded-lg p-6 border border-border">
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{session.title}</h3>
-                        <span className="bg-[rgba(13,116,206,0.12)] text-[var(--cl-info)] px-3 py-1 rounded-full text-xs font-semibold">
+                        <h3 className="text-lg font-semibold text-foreground">{session.title}</h3>
+                        <span className="bg-accent-purple/10 text-accent-purple px-3 py-1 rounded-full text-xs font-semibold">
                           Scheduled
                         </span>
                       </div>
-                      <p className="text-sm text-[var(--cl-body)] mb-2">{session.description}</p>
-                      <div className="flex items-center gap-4 text-sm text-[var(--cl-body)]">
+                      <p className="text-sm text-foreground/80 mb-2">{session.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-foreground/80">
                         <span>📅 {new Date(session.scheduled_at).toLocaleString()}</span>
                         <span>⏱️ {session.duration_minutes} min</span>
                         <span>👥 {session.participants?.length || 0} invited</span>
@@ -158,23 +158,23 @@ export default async function MentorLiveSessionsPage() {
             {/* Past Sessions */}
             {past.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold text-[var(--cl-ink)] mb-4">
+                <h2 className="text-xl font-semibold text-foreground mb-4">
                   Completed ({past.length})
                 </h2>
                 <div className="grid gap-4">
                   {past.map((session) => (
                     <div
                       key={session.id}
-                      className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] p-6 border border-[var(--cl-hairline)] opacity-75"
+                      className="bg-card rounded-lg p-6 border border-border opacity-75"
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-lg font-semibold text-[var(--cl-ink)]">{session.title}</h3>
-                        <span className="bg-[var(--cl-surface-strong)] text-[var(--cl-body)] px-3 py-1 rounded-full text-xs font-semibold">
+                        <h3 className="text-lg font-semibold text-foreground">{session.title}</h3>
+                        <span className="bg-muted text-foreground/80 px-3 py-1 rounded-full text-xs font-semibold">
                           Completed
                         </span>
                       </div>
-                      <p className="text-sm text-[var(--cl-body)] mb-2">{session.description}</p>
-                      <div className="text-sm text-[var(--cl-muted)]">
+                      <p className="text-sm text-foreground/80 mb-2">{session.description}</p>
+                      <div className="text-sm text-muted-foreground">
                         📅 {new Date(session.scheduled_at).toLocaleString()}
                       </div>
                     </div>
@@ -185,15 +185,15 @@ export default async function MentorLiveSessionsPage() {
 
             {/* No Sessions */}
             {sessions?.length === 0 && (
-              <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-16 text-center border border-[var(--cl-hairline)]">
-                <div className="w-16 h-16 bg-[var(--cl-surface-strong)] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-card rounded-xl p-16 text-center border border-border">
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🎥</span>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No sessions yet</h3>
-                <p className="text-[var(--cl-body)] mb-6">Schedule your first live session to get started</p>
+                <h3 className="text-xl font-semibold text-foreground mb-2">No sessions yet</h3>
+                <p className="text-foreground/80 mb-6">Schedule your first live session to get started</p>
                 <a
                   href="/dashboard/mentor/sessions"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:bg-[var(--cl-primary)] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary transition-colors"
                 >
                   ➕ Schedule Session
                 </a>

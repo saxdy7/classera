@@ -79,36 +79,36 @@ export function AddMembersModal({ communityId, onClose, onSuccess }: AddMembersM
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div className="bg-card rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
                 {/* Header */}
-                <div className="p-6 border-b border-[var(--cl-hairline)] flex items-center justify-between">
+                <div className="p-6 border-b border-border flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)] flex items-center justify-center">
-                            <UserPlus className="w-5 h-5 text-[var(--cl-primary)]" />
+                        <div className="w-10 h-10 bg-accent-purple/10 rounded-lg flex items-center justify-center">
+                            <UserPlus className="w-5 h-5 text-accent-purple" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-[var(--cl-ink)]">Add Students</h2>
-                            <p className="text-sm text-[var(--cl-body)]">Add students directly to this community</p>
+                            <h2 className="text-xl font-semibold text-foreground">Add Students</h2>
+                            <p className="text-sm text-foreground/80">Add students directly to this community</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors"
                     >
-                        <X className="w-5 h-5 text-[var(--cl-body)]" />
+                        <X className="w-5 h-5 text-foreground/80" />
                     </button>
                 </div>
 
                 {/* Search */}
-                <div className="p-6 border-b border-[var(--cl-hairline)]">
+                <div className="p-6 border-b border-border">
                     <div className="relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
                         <input
                             type="text"
                             placeholder="Search students..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                         />
                     </div>
                 </div>
@@ -117,15 +117,15 @@ export function AddMembersModal({ communityId, onClose, onSuccess }: AddMembersM
                 <div className="p-6 overflow-y-auto max-h-96">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--cl-primary)]"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
                         </div>
                     ) : filteredStudents.length === 0 ? (
                         <div className="text-center py-12">
-                            <UserPlus className="w-12 h-12 text-[var(--cl-muted-soft)] mx-auto mb-3" />
-                            <p className="text-[var(--cl-body)] font-medium">
+                            <UserPlus className="w-12 h-12 text-muted-foreground/70 mx-auto mb-3" />
+                            <p className="text-foreground/80 font-medium">
                                 {searchQuery ? 'No students match your search' : 'All students are already members'}
                             </p>
-                            <p className="text-[var(--cl-muted-soft)] text-sm mt-1">
+                            <p className="text-muted-foreground/70 text-sm mt-1">
                                 {!searchQuery && 'Every registered student has been added to this community'}
                             </p>
                         </div>
@@ -134,17 +134,17 @@ export function AddMembersModal({ communityId, onClose, onSuccess }: AddMembersM
                             {filteredStudents.map((student) => (
                                 <div
                                     key={student.id}
-                                    className="flex items-center justify-between p-4 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] hover:bg-[var(--cl-canvas-soft)] transition-colors"
+                                    className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/40 transition-colors"
                                 >
                                     <div className="flex items-center gap-3 flex-1">
-                                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
+                                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold bg-primary">
                                             {student.full_name.charAt(0)}
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="font-semibold text-[var(--cl-ink)]">{student.full_name}</h3>
-                                            <p className="text-sm text-[var(--cl-body)]">{student.email}</p>
+                                            <h3 className="font-semibold text-foreground">{student.full_name}</h3>
+                                            <p className="text-sm text-foreground/80">{student.email}</p>
                                             {student.degree_type && (
-                                                <p className="text-xs text-[var(--cl-muted)] mt-1">
+                                                <p className="text-xs text-muted-foreground mt-1">
                                                     {student.degree_type} {student.specialization_board && `• ${student.specialization_board}`}
                                                 </p>
                                             )}
@@ -153,11 +153,11 @@ export function AddMembersModal({ communityId, onClose, onSuccess }: AddMembersM
                                     <button
                                         onClick={() => handleAddStudent(student.id)}
                                         disabled={adding === student.id}
-                                        className="px-4 py-2 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                        className="px-4 py-2 bg-primary hover:bg-primary text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                     >
                                         {adding === student.id ? (
                                             <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--cl-on-dark)]"></div>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                                                 Adding...
                                             </>
                                         ) : (

@@ -100,26 +100,26 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
     activeTab === 'trending' ? trendingCommunities : filteredCommunities;
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas)]">
+    <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <div className="text-[var(--cl-on-dark)] px-8 py-16 bg-[var(--cl-primary)]">
+      <div className="text-white px-8 py-16 bg-primary">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground text-5xl mb-3">
                 Communities
               </h1>
-              <p className="text-[var(--cl-primary)] text-lg font-medium">
+              <p className="text-accent-purple text-lg font-medium">
                 Connect, learn, and grow with your peers
               </p>
             </div>
             <div className="hidden md:block">
-              <div className="bg-[rgba(255,255,255,0.1)] backdrop-blur-md rounded-[var(--cl-r-xl)] p-8 border border-[rgba(255,255,255,0.2)]">
+              <div className="bg-[rgba(255,255,255,0.1)] backdrop-blur-md rounded-xl p-8 border border-[rgba(255,255,255,0.2)]">
                 <div className="text-center">
-                  <div className="text-5xl font-semibold text-[var(--cl-on-dark)] mb-2">
+                  <div className="text-5xl font-semibold text-white mb-2">
                     {communities.length}
                   </div>
-                  <div className="text-[var(--cl-primary)] font-medium">Active Communities</div>
+                  <div className="text-accent-purple font-medium">Active Communities</div>
                 </div>
               </div>
             </div>
@@ -127,13 +127,13 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
 
           {/* Search Bar */}
           <div className="relative max-w-2xl">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[var(--cl-muted-soft)]" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <input
               type="text"
               placeholder="Search communities..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-6 py-4 bg-[var(--cl-surface-card)] text-[var(--cl-ink)] rounded-[var(--cl-r-xl)] font-medium focus:outline-none focus:ring-2 focus:ring-[rgba(255,255,255,0.5)] placeholder:text-[var(--cl-muted-soft)]"
+              className="w-full pl-12 pr-6 py-4 bg-card text-foreground rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-[rgba(255,255,255,0.5)] placeholder:text-muted-foreground/70"
             />
           </div>
         </div>
@@ -143,56 +143,56 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
       <div className="max-w-7xl mx-auto px-8 py-16">
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition">
+          <div className="bg-card rounded-xl p-6 border border-border transition">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[var(--cl-body)] font-medium mb-1">Total Communities</div>
-                <div className="text-3xl font-semibold text-[var(--cl-ink)]">{communities.length}</div>
+                <div className="text-sm text-foreground/80 font-medium mb-1">Total Communities</div>
+                <div className="text-3xl font-semibold text-foreground">{communities.length}</div>
               </div>
-              <div className="p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
-                <MessageCircle className="w-6 h-6 text-[var(--cl-primary)]" />
+              <div className="p-3 bg-accent-purple/10 rounded-lg">
+                <MessageCircle className="w-6 h-6 text-accent-purple" />
               </div>
             </div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition">
+          <div className="bg-card rounded-xl p-6 border border-border transition">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[var(--cl-body)] font-medium mb-1">Your Memberships</div>
-                <div className="text-3xl font-semibold text-[var(--cl-ink)]">
+                <div className="text-sm text-foreground/80 font-medium mb-1">Your Memberships</div>
+                <div className="text-3xl font-semibold text-foreground">
                   {Object.keys(memberships).filter((k) => memberships[k].status === 'approved').length}
                 </div>
               </div>
-              <div className="p-3 bg-[rgba(22,163,74,0.12)] rounded-[var(--cl-r-lg)]">
-                <Users className="w-6 h-6 text-[var(--cl-success)]" />
+              <div className="p-3 bg-green-500/10 rounded-lg">
+                <Users className="w-6 h-6 text-green-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition">
+          <div className="bg-card rounded-xl p-6 border border-border transition">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[var(--cl-body)] font-medium mb-1">Pending Requests</div>
-                <div className="text-3xl font-semibold text-[var(--cl-ink)]">
+                <div className="text-sm text-foreground/80 font-medium mb-1">Pending Requests</div>
+                <div className="text-3xl font-semibold text-foreground">
                   {Object.keys(memberships).filter((k) => memberships[k].status === 'pending').length}
                 </div>
               </div>
-              <div className="p-3 bg-[rgba(171,100,0,0.12)] rounded-[var(--cl-r-lg)]">
-                <Clock className="w-6 h-6 text-[var(--cl-warning)]" />
+              <div className="p-3 bg-amber-500/10 rounded-lg">
+                <Clock className="w-6 h-6 text-amber-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-hairline)] transition">
+          <div className="bg-card rounded-xl p-6 border border-border transition">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[var(--cl-body)] font-medium mb-1">Total Members</div>
-                <div className="text-3xl font-semibold text-[var(--cl-ink)]">
+                <div className="text-sm text-foreground/80 font-medium mb-1">Total Members</div>
+                <div className="text-3xl font-semibold text-foreground">
                   {communities.reduce((sum, c) => sum + (c.community_members?.[0]?.count || 0), 0)}
                 </div>
               </div>
-              <div className="p-3 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-lg)]">
-                <Activity className="w-6 h-6 text-[var(--cl-primary)]" />
+              <div className="p-3 bg-accent-purple/10 rounded-lg">
+                <Activity className="w-6 h-6 text-accent-purple" />
               </div>
             </div>
           </div>
@@ -223,7 +223,7 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
         {/* Communities Grid */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
           </div>
         ) : displayedCommunities.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -234,18 +234,18 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
               return (
                 <div
                   key={community.id}
-                  className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] overflow-hidden hover:border-[var(--cl-primary)] transition-all group"
+                  className="bg-card rounded-xl border border-border overflow-hidden hover:border-accent-purple transition-all group"
                 >
                   {/* Card Header with Gradient */}
-                  <div className="h-32 relative overflow-hidden bg-[var(--cl-primary)]">
+                  <div className="h-32 relative overflow-hidden bg-primary">
                     <div className="absolute inset-0 opacity-20">
-                      <div className="absolute top-0 left-0 w-40 h-40 bg-[var(--cl-surface-card)] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-                      <div className="absolute bottom-0 right-0 w-32 h-32 bg-[var(--cl-surface-card)] rounded-full translate-x-1/4 translate-y-1/4"></div>
+                      <div className="absolute top-0 left-0 w-40 h-40 bg-card rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                      <div className="absolute bottom-0 right-0 w-32 h-32 bg-card rounded-full translate-x-1/4 translate-y-1/4"></div>
                     </div>
 
                     {/* Mentor Avatar - Positioned Over Gradient */}
                     <div className="absolute -bottom-4 right-6">
-                      <div className="w-16 h-16 rounded-[var(--cl-r-xl)] bg-[var(--cl-surface-card)] border-4 border-[var(--cl-primary)] flex items-center justify-center text-sm font-semibold text-[var(--cl-primary)] overflow-hidden">
+                      <div className="w-16 h-16 rounded-xl bg-card border-4 border-accent-purple flex items-center justify-center text-sm font-semibold text-accent-purple overflow-hidden">
                         {community.mentor?.avatar_url ? (
                           <img
                             src={community.mentor.avatar_url}
@@ -261,22 +261,22 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
 
                   {/* Card Body */}
                   <div className="p-6 pt-10">
-                    <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2 line-clamp-2 group-hover:text-[var(--cl-primary)] transition">
+                    <h3 className="text-xl font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-accent-purple transition">
                       {community.name}
                     </h3>
 
-                    <p className="text-sm text-[var(--cl-body)] mb-4 line-clamp-2 font-medium">
+                    <p className="text-sm text-foreground/80 mb-4 line-clamp-2 font-medium">
                       {community.description || 'No description available'}
                     </p>
 
                     {/* Mentor Info */}
-                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[var(--cl-hairline)]">
-                      <div className="w-7 h-7 rounded-lg bg-[var(--cl-primary-soft)] flex items-center justify-center text-xs font-semibold text-[var(--cl-primary)]">
+                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border">
+                      <div className="w-7 h-7 rounded-lg bg-accent-purple/10 flex items-center justify-center text-xs font-semibold text-accent-purple">
                         👨‍🏫
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-[var(--cl-muted)]">By</div>
-                        <div className="text-sm font-semibold text-[var(--cl-ink)] truncate">
+                        <div className="text-xs text-muted-foreground">By</div>
+                        <div className="text-sm font-semibold text-foreground truncate">
                           {community.mentor?.full_name || 'Unknown'}
                         </div>
                       </div>
@@ -284,12 +284,12 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
 
                     {/* Stats */}
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="flex items-center gap-1.5 text-sm font-medium text-[var(--cl-body)]">
-                        <Users className="w-4 h-4 text-[var(--cl-primary)]" />
+                      <div className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
+                        <Users className="w-4 h-4 text-accent-purple" />
                         <span>{memberCount}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-sm font-medium text-[var(--cl-body)]">
-                        <MessageCircle className="w-4 h-4 text-[var(--cl-primary)]" />
+                      <div className="flex items-center gap-1.5 text-sm font-medium text-foreground/80">
+                        <MessageCircle className="w-4 h-4 text-accent-purple" />
                         <span>Active</span>
                       </div>
                     </div>
@@ -298,12 +298,12 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
                     {membership && (
                       <div className="mb-4">
                         {membership.status === 'approved' && (
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)] text-xs font-semibold rounded-lg border border-[var(--cl-success)]">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 text-green-600 text-xs font-semibold rounded-lg border border-green-600">
                             ✓ Member
                           </div>
                         )}
                         {membership.status === 'pending' && (
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)] text-xs font-semibold rounded-lg border border-[var(--cl-warning)]">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 text-amber-600 text-xs font-semibold rounded-lg border border-amber-500">
                             ⏳ Pending
                           </div>
                         )}
@@ -321,8 +321,8 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
                       }}
                       className={`w-full px-4 py-3 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
                         membership?.status === 'approved'
-                          ? 'bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)]'
-                          : 'bg-[var(--cl-surface-strong)] hover:bg-[var(--cl-surface-strong)] text-[var(--cl-ink)]'
+                          ? 'bg-primary hover:bg-primary text-white'
+                          : 'bg-muted hover:bg-muted text-foreground'
                       }`}
                     >
                       {membership?.status === 'approved' ? (
@@ -340,11 +340,11 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
           </div>
         ) : (
           <div className="text-center py-20">
-            <div className="w-24 h-24 bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-6">
-              <MessageCircle className="w-12 h-12 text-[var(--cl-primary)]" />
+            <div className="w-24 h-24 bg-accent-purple/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+              <MessageCircle className="w-12 h-12 text-accent-purple" />
             </div>
-            <h3 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">No Communities Found</h3>
-            <p className="text-[var(--cl-body)] font-medium">
+            <h3 className="text-2xl font-semibold text-foreground mb-2">No Communities Found</h3>
+            <p className="text-foreground/80 font-medium">
               {searchQuery ? 'Try adjusting your search' : 'No communities available right now'}
             </p>
           </div>
@@ -352,11 +352,11 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
       </div>
 
       {/* Right Sidebar */}
-      <div className="fixed right-0 top-20 w-80 h-[calc(100vh-80px)] bg-[var(--cl-surface-card)] border-l border-[var(--cl-hairline)] p-8 overflow-y-auto hidden xl:block">
+      <div className="fixed right-0 top-20 w-80 h-[calc(100vh-80px)] bg-card border-l border-border p-8 overflow-y-auto hidden xl:block">
         {/* Trending Communities */}
         <div className="mb-10">
-          <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[var(--cl-error)]" />
+          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-destructive" />
             Trending Now
           </h3>
           <div className="space-y-3">
@@ -364,14 +364,14 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
               <Link
                 key={c.id}
                 href={`/dashboard/student/communities/${c.id}`}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--cl-surface-strong)] transition group"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition group"
               >
-                <div className="text-xl font-semibold text-[var(--cl-warning)]">{idx + 1}</div>
+                <div className="text-xl font-semibold text-amber-600">{idx + 1}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-[var(--cl-ink)] truncate group-hover:text-[var(--cl-primary)]">
+                  <div className="text-sm font-semibold text-foreground truncate group-hover:text-accent-purple">
                     {c.name}
                   </div>
-                  <div className="text-xs text-[var(--cl-muted)]">
+                  <div className="text-xs text-muted-foreground">
                     {c.community_members?.[0]?.count || 0} members
                   </div>
                 </div>
@@ -381,12 +381,12 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
         </div>
 
         {/* Quick Tips */}
-        <div className="bg-[var(--cl-primary-soft)] rounded-[var(--cl-r-xl)] p-6 border border-[var(--cl-primary)]">
-          <h4 className="text-sm font-semibold text-[var(--cl-primary)] mb-3 flex items-center gap-2">
+        <div className="bg-accent-purple/10 rounded-xl p-6 border border-accent-purple">
+          <h4 className="text-sm font-semibold text-accent-purple mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             Pro Tips
           </h4>
-          <ul className="space-y-2 text-xs text-[var(--cl-primary)] font-medium">
+          <ul className="space-y-2 text-xs text-accent-purple font-medium">
             <li>✓ Join communities related to your interests</li>
             <li>✓ Ask questions in the discussion forum</li>
             <li>✓ Share your knowledge with peers</li>

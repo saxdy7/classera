@@ -11,10 +11,10 @@ export const RoadmapNode = memo(({ data }: NodeProps) => {
     return (
         <div
             className={`px-4 py-3 rounded-lg border-2 min-w-[200px] max-w-[250px] transition-all ${isCompleted
-                    ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
+                    ? 'bg-green-500/10 border-green-600'
                     : isInProgress
-                        ? 'bg-[rgba(13,116,206,0.12)] border-[var(--cl-info)]'
-                        : 'bg-[var(--cl-surface-card)] border-[var(--cl-primary)] hover:border-[var(--cl-primary)]'
+                        ? 'bg-accent-purple/10 border-accent-purple'
+                        : 'bg-card border-accent-purple hover:border-accent-purple'
                 }`}
             style={{
                 borderColor: data.color || '#9333ea',
@@ -29,27 +29,27 @@ export const RoadmapNode = memo(({ data }: NodeProps) => {
             <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 mt-0.5">
                     {isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5 text-[var(--cl-success)]" />
+                        <CheckCircle2 className="h-5 w-5 text-green-600" />
                     ) : isInProgress ? (
-                        <Circle className="h-5 w-5 text-[var(--cl-info)] animate-pulse" />
+                        <Circle className="h-5 w-5 text-accent-purple animate-pulse" />
                     ) : (
-                        <Circle className="h-5 w-5 text-[var(--cl-muted-soft)]" />
+                        <Circle className="h-5 w-5 text-muted-foreground/70" />
                     )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-sm text-[var(--cl-ink)] mb-1 line-clamp-2">
+                    <h4 className="font-semibold text-sm text-foreground mb-1 line-clamp-2">
                         {data.title}
                     </h4>
                     {data.description && (
-                        <p className="text-xs text-[var(--cl-body)] line-clamp-2 mb-2">
+                        <p className="text-xs text-foreground/80 line-clamp-2 mb-2">
                             {data.description}
                         </p>
                     )}
 
-                    <div className="flex items-center gap-3 text-xs text-[var(--cl-muted)]">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         {data.node_type && (
-                            <span className="px-2 py-0.5 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] rounded">
+                            <span className="px-2 py-0.5 bg-accent-purple/10 text-accent-purple rounded">
                                 {data.node_type}
                             </span>
                         )}

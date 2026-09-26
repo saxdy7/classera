@@ -12,17 +12,17 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
  * informational ones use role="status" to avoid interrupting screen readers.
  */
 const VARIANTS: Record<NonNullable<AlertProps['variant']>, string> = {
-    default: 'border-[var(--cl-hairline)] bg-[rgba(13,116,206,0.08)] text-[var(--cl-ink)] border-l-[3px] border-l-[var(--cl-info)]',
-    destructive: 'border-[var(--cl-hairline)] bg-[rgba(239,68,68,0.08)] text-[var(--cl-ink)] border-l-[3px] border-l-[var(--cl-error)]',
-    success: 'border-[var(--cl-hairline)] bg-[rgba(22,163,74,0.08)] text-[var(--cl-ink)] border-l-[3px] border-l-[var(--cl-success)]',
-    warning: 'border-[var(--cl-hairline)] bg-[rgba(171,100,0,0.08)] text-[var(--cl-ink)] border-l-[3px] border-l-[var(--cl-warning)]',
+    default: 'border-border bg-[rgba(13,116,206,0.08)] text-foreground border-l-[3px] border-l-[var(--cl-info)]',
+    destructive: 'border-border bg-destructive/10 text-foreground border-l-[3px] border-l-[var(--cl-error)]',
+    success: 'border-border bg-[rgba(22,163,74,0.08)] text-foreground border-l-[3px] border-l-[var(--cl-success)]',
+    warning: 'border-border bg-[rgba(171,100,0,0.08)] text-foreground border-l-[3px] border-l-[var(--cl-warning)]',
 };
 
 export function Alert({ className = "", variant = 'default', ...props }: AlertProps) {
     return (
         <div
             role={variant === 'destructive' ? 'alert' : 'status'}
-            className={`relative w-full rounded-[var(--cl-r-lg)] border p-4 ${VARIANTS[variant]} ${className}`}
+            className={`relative w-full rounded-lg border p-4 ${VARIANTS[variant]} ${className}`}
             {...props}
         />
     );
@@ -31,7 +31,7 @@ export function Alert({ className = "", variant = 'default', ...props }: AlertPr
 export function AlertDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
     return (
         <div
-            className={`text-sm leading-[1.5] text-[var(--cl-body)] [&_p]:leading-relaxed ${className}`}
+            className={`text-sm leading-[1.5] text-foreground/80 [&_p]:leading-relaxed ${className}`}
             {...props}
         />
     );
@@ -40,7 +40,7 @@ export function AlertDescription({ className = "", ...props }: React.HTMLAttribu
 export function AlertTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
     return (
         <h5
-            className={`mb-1 text-[16px] font-semibold leading-none tracking-tight text-[var(--cl-ink)] ${className}`}
+            className={`mb-1 text-[16px] font-semibold leading-none tracking-tight text-foreground ${className}`}
             {...props}
         />
     );

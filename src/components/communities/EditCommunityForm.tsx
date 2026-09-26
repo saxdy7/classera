@@ -54,12 +54,12 @@ export function EditCommunityForm({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-8">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-6">Basic Information</h2>
+            <div className="bg-card rounded-xl border border-border p-8">
+                <h2 className="text-2xl font-semibold text-foreground mb-6">Basic Information</h2>
 
                 <div className="space-y-4">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                        <label htmlFor="name" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Community Name *
                         </label>
                         <input
@@ -68,13 +68,13 @@ export function EditCommunityForm({
                             name="name"
                             defaultValue={initialData.name}
                             required
-                            className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                             placeholder="e.g., LPU – Frontend Interview Prep"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="description" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                        <label htmlFor="description" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Description *
                         </label>
                         <textarea
@@ -83,20 +83,20 @@ export function EditCommunityForm({
                             defaultValue={initialData.description || ''}
                             required
                             rows={4}
-                            className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent resize-none"
+                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none"
                             placeholder="Describe the purpose of this community..."
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="specialization" className="block text-sm font-semibold text-[var(--cl-body)] mb-2">
+                        <label htmlFor="specialization" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Specialization (Optional)
                         </label>
                         <select
                             id="specialization"
                             name="specialization"
                             defaultValue={initialData.specialization || ''}
-                            className="w-full px-4 py-3 rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                         >
                             <option value="">None</option>
                             <option value="Full Stack Development">Full Stack Development</option>
@@ -118,9 +118,9 @@ export function EditCommunityForm({
                             id="is_active"
                             name="is_active"
                             defaultChecked={initialData.is_active}
-                            className="w-5 h-5 rounded border-[var(--cl-hairline-strong)] text-[var(--cl-primary)] focus:ring-[var(--cl-primary)]"
+                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
                         />
-                        <label htmlFor="is_active" className="text-sm font-semibold text-[var(--cl-body)]">
+                        <label htmlFor="is_active" className="text-sm font-semibold text-foreground/80">
                             Community is active
                         </label>
                     </div>
@@ -131,7 +131,7 @@ export function EditCommunityForm({
                 <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-8 py-3 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-semibold transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary text-white rounded-lg font-semibold transition-colors disabled:opacity-50"
                 >
                     <Save className="w-5 h-5" />
                     {isSaving ? 'Saving...' : 'Save Changes'}

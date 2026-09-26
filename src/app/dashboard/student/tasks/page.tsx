@@ -25,7 +25,7 @@ export default async function StudentTasksPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+    <div className="min-h-screen bg-muted/40">
       <Header profile={profile} />
       <div className="flex">
         <Sidebar role="student" />
@@ -35,7 +35,7 @@ export default async function StudentTasksPage() {
               <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
                 My Tasks
               </h1>
-              <p className="text-[var(--cl-body)]">Manage your tasks with Kanban board</p>
+              <p className="text-foreground/80">Manage your tasks with Kanban board</p>
             </div>
 
             <TaskBoardClient initialTasks={tasks || []} userId={user.id} />

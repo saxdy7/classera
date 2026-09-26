@@ -66,7 +66,7 @@ export function EnrolledCourses() {
         return (
             <div className="space-y-4">
                 {[1, 2, 3].map(i => (
-                    <div key={i} className="h-32 bg-[var(--cl-surface-strong)] rounded-[var(--cl-r-lg)] animate-pulse" />
+                    <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
                 ))}
             </div>
         );
@@ -74,13 +74,13 @@ export function EnrolledCourses() {
 
     if (enrollments.length === 0) {
         return (
-            <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] border border-[var(--cl-hairline)] p-12 text-center">
-                <BookOpen className="w-16 h-16 text-[var(--cl-muted-soft)] mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">No enrolled courses</h3>
-                <p className="text-[var(--cl-body)] mb-6">Start learning by enrolling in a course!</p>
+            <div className="bg-card rounded-xl border border-border p-12 text-center">
+                <BookOpen className="w-16 h-16 text-muted-foreground/70 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">No enrolled courses</h3>
+                <p className="text-foreground/80 mb-6">Start learning by enrolling in a course!</p>
                 <Link
                     href="/dashboard/student/courses"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-[var(--cl-on-dark)] rounded-[var(--cl-r-lg)] font-medium hover:opacity-90 transition-opacity bg-[var(--cl-primary)]"
+                    className="inline-flex items-center gap-2 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-opacity bg-primary"
                 >
                     Browse Courses
                     <ChevronRight className="w-4 h-4" />
@@ -115,7 +115,7 @@ export function EnrolledCourses() {
                 {enrollments.map(enrollment => (
                     <div
                         key={enrollment.id}
-                        className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] p-4 transition-shadow"
+                        className="bg-card rounded-lg border border-border p-4 transition-shadow"
                     >
                         <div className="flex gap-4">
                             {/* Thumbnail */}
@@ -128,7 +128,7 @@ export function EnrolledCourses() {
                                 />
                                 {enrollment.completed && (
                                     <div className="absolute inset-0 bg-[rgba(22,163,74,0.8)] flex items-center justify-center">
-                                        <span className="text-[var(--cl-on-dark)] font-semibold text-sm">✓ COMPLETED</span>
+                                        <span className="text-white font-semibold text-sm">✓ COMPLETED</span>
                                     </div>
                                 )}
                             </div>
@@ -137,16 +137,16 @@ export function EnrolledCourses() {
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-4">
                                     <div>
-                                        <h3 className="font-semibold text-[var(--cl-ink)] line-clamp-1">
+                                        <h3 className="font-semibold text-foreground line-clamp-1">
                                             {enrollment.course?.title || `External Course (${enrollment.external_platform})`}
                                         </h3>
-                                        <p className="text-sm text-[var(--cl-body)] mt-1">
+                                        <p className="text-sm text-foreground/80 mt-1">
                                             {enrollment.course?.mentor?.full_name || enrollment.external_platform}
                                         </p>
                                     </div>
                                     <button
                                         onClick={() => handleUnenroll(enrollment.id)}
-                                        className="p-2 text-[var(--cl-muted-soft)] hover:text-[var(--cl-error)] hover:bg-[rgba(239,68,68,0.12)] rounded-lg transition-colors"
+                                        className="p-2 text-muted-foreground/70 hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -155,12 +155,12 @@ export function EnrolledCourses() {
                                 {/* Progress Bar */}
                                 <div className="mt-3">
                                     <div className="flex items-center justify-between text-sm mb-1">
-                                        <span className="text-[var(--cl-body)]">Progress</span>
-                                        <span className="font-semibold text-[var(--cl-primary)]">{enrollment.progress_percentage}%</span>
+                                        <span className="text-foreground/80">Progress</span>
+                                        <span className="font-semibold text-accent-purple">{enrollment.progress_percentage}%</span>
                                     </div>
-                                    <div className="h-2 bg-[var(--cl-surface-strong)] rounded-full overflow-hidden">
+                                    <div className="h-2 bg-muted rounded-full overflow-hidden">
                                         <div
-                                            className="h-full transition-all bg-[var(--cl-primary)]"
+                                            className="h-full transition-all bg-primary"
                                             style={{ width: `${enrollment.progress_percentage}%` }}
                                         />
                                     </div>
@@ -168,13 +168,13 @@ export function EnrolledCourses() {
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-4 mt-3">
-                                    <div className="flex items-center gap-1 text-sm text-[var(--cl-muted)]">
+                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                         <Clock className="w-4 h-4" />
                                         {enrollment.course?.duration_hours || '10'} hours
                                     </div>
                                     <Link
                                         href={enrollment.course ? `/dashboard/student/courses/${enrollment.course_id}/learn` : '#'}
-                                        className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-[var(--cl-on-dark)] rounded-lg font-medium hover:opacity-90 transition-opacity text-sm bg-[var(--cl-primary)]"
+                                        className="ml-auto inline-flex items-center gap-2 px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-opacity text-sm bg-primary"
                                     >
                                         <Play className="w-4 h-4" />
                                         {enrollment.progress_percentage > 0 ? 'Continue' : 'Start Learning'}

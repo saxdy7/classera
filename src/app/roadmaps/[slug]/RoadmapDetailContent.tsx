@@ -84,7 +84,7 @@ export function RoadmapDetailContent() {
         // ... existing loading state
         return (
             <div className="flex items-center justify-center min-h-[60vh] p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--cl-primary)]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-purple"></div>
             </div>
         );
     }
@@ -93,7 +93,7 @@ export function RoadmapDetailContent() {
         // ... existing not found
         return (
             <div className="p-8 text-center">
-                <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-2">
+                <h2 className="text-2xl font-semibold text-foreground mb-2">
                     Roadmap Not Found
                 </h2>
                 <Button onClick={() => router.push('/roadmaps')}>
@@ -105,10 +105,10 @@ export function RoadmapDetailContent() {
 
     const getDifficultyColor = (difficulty: string) => {
         switch (difficulty) {
-            case 'beginner': return 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]';
-            case 'intermediate': return 'bg-[rgba(171,100,0,0.12)] text-[var(--cl-warning)]';
-            case 'advanced': return 'bg-[rgba(239,68,68,0.12)] text-[var(--cl-error)]';
-            default: return 'bg-[var(--cl-surface-strong)] text-[var(--cl-ink)]';
+            case 'beginner': return 'bg-green-500/10 text-green-600';
+            case 'intermediate': return 'bg-amber-500/10 text-amber-600';
+            case 'advanced': return 'bg-destructive/10 text-destructive';
+            default: return 'bg-muted text-foreground';
         }
     };
 
@@ -135,12 +135,12 @@ export function RoadmapDetailContent() {
                         <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-3">
                             {roadmap.title}
                         </h1>
-                        <p className="text-lg text-[var(--cl-body)] mb-4">
+                        <p className="text-lg text-foreground/80 mb-4">
                             {roadmap.description}
                         </p>
 
                         {/* Stats */}
-                        <div className="flex items-center gap-6 text-sm text-[var(--cl-body)]">
+                        <div className="flex items-center gap-6 text-sm text-foreground/80">
                             <div className="flex items-center gap-2">
                                 <BookOpen className="h-5 w-5" />
                                 <span>{roadmap.total_nodes} learning steps</span>
@@ -156,7 +156,7 @@ export function RoadmapDetailContent() {
                         size="lg"
                         onClick={startLearningPlan}
                         disabled={starting}
-                        className="ml-4 bg-[var(--cl-primary)] hover:bg-[var(--cl-primary)]"
+                        className="ml-4 bg-primary hover:bg-primary"
                     >
                         {starting ? (
                             <>Starting...</>
@@ -174,7 +174,7 @@ export function RoadmapDetailContent() {
                 {/* Main Content - Node List */}
                 <div className={`transition-all duration-300 ${selectedNode ? 'w-full md:w-2/3' : 'w-full'}`}>
                     <Card className="p-8">
-                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)] mb-6">
+                        <h2 className="text-2xl font-semibold text-foreground mb-6">
                             Learning Path
                         </h2>
 
@@ -191,16 +191,16 @@ export function RoadmapDetailContent() {
                                             key={node.id}
                                             onClick={() => setSelectedNode(node)}
                                             className={`flex items-start gap-4 p-6 rounded-lg border-2 transition-all cursor-pointer ${isSelected
-                                                ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)] ring-2 ring-[var(--cl-primary)]'
+                                                ? 'border-accent-purple bg-accent-purple/10 ring-2 ring-ring'
                                                 : isCompleted
-                                                    ? 'bg-[rgba(22,163,74,0.12)] border-[var(--cl-success)]'
-                                                    : 'bg-[var(--cl-surface-card)] border-[var(--cl-hairline)] hover:border-[var(--cl-primary)]'
+                                                    ? 'bg-green-500/10 border-green-600'
+                                                    : 'bg-card border-border hover:border-accent-purple'
                                                 }`}
                                         >
                                             <div className="flex-shrink-0">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${isCompleted
-                                                    ? 'bg-[var(--cl-success)] text-[var(--cl-on-dark)]'
-                                                    : 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
+                                                    ? 'bg-green-600 text-white'
+                                                    : 'bg-accent-purple/10 text-accent-purple'
                                                     }`}>
                                                     {isCompleted ? (
                                                         <CheckCircle2 className="h-6 w-6" />
@@ -212,7 +212,7 @@ export function RoadmapDetailContent() {
 
                                             <div className="flex-1">
                                                 <div className="flex items-center justify-between mb-2">
-                                                    <h3 className="text-lg font-semibold text-[var(--cl-ink)]">
+                                                    <h3 className="text-lg font-semibold text-foreground">
                                                         {node.title}
                                                     </h3>
                                                     <div className="flex items-center gap-2">
@@ -223,10 +223,10 @@ export function RoadmapDetailContent() {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <p className="text-[var(--cl-body)] mb-2 line-clamp-2">
+                                                <p className="text-foreground/80 mb-2 line-clamp-2">
                                                     {node.description}
                                                 </p>
-                                                <p className="text-sm text-[var(--cl-primary)] font-medium">
+                                                <p className="text-sm text-accent-purple font-medium">
                                                     Click to view details &rarr;
                                                 </p>
                                             </div>
@@ -235,7 +235,7 @@ export function RoadmapDetailContent() {
                                 })}
                             </div>
                         ) : (
-                            <p className="text-[var(--cl-body)] text-center py-8">
+                            <p className="text-foreground/80 text-center py-8">
                                 No learning steps defined yet
                             </p>
                         )}
@@ -243,34 +243,34 @@ export function RoadmapDetailContent() {
                 </div>
 
                 {/* Right Sidebar for Details */}
-                <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-[var(--cl-surface-card)] transform transition-transform duration-300 z-50 overflow-y-auto ${selectedNode ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className={`fixed inset-y-0 right-0 w-full md:w-[450px] bg-card transform transition-transform duration-300 z-50 overflow-y-auto ${selectedNode ? 'translate-x-0' : 'translate-x-full'}`}>
                     {selectedNode && (
                         <div className="p-8">
                             <button
                                 onClick={() => setSelectedNode(null)}
-                                className="absolute top-4 right-4 p-2 hover:bg-[var(--cl-surface-strong)] rounded-full"
+                                className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full"
                             >
-                                <X className="h-6 w-6 text-[var(--cl-muted)]" />
+                                <X className="h-6 w-6 text-muted-foreground" />
                             </button>
 
                             <div className="mt-8">
-                                <Badge className="mb-4 bg-[var(--cl-primary-soft)] text-[var(--cl-primary)] hover:bg-[var(--cl-primary)]">
+                                <Badge className="mb-4 bg-accent-purple/10 text-accent-purple hover:bg-primary">
                                     Step {roadmap.nodes.findIndex((n: any) => n.id === selectedNode.id) + 1}
                                 </Badge>
 
-                                <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-6">
+                                <h2 className="text-3xl font-semibold text-foreground mb-6">
                                     {selectedNode.title}
                                 </h2>
 
                                 <div className="prose prose-purple max-w-none mb-8">
                                     <h3 className="text-xl font-semibold mb-3">Overview</h3>
-                                    <p className="text-[var(--cl-body)] leading-relaxed whitespace-pre-line">
+                                    <p className="text-foreground/80 leading-relaxed whitespace-pre-line">
                                         {selectedNode.detailed_summary || selectedNode.description}
                                     </p>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <h3 className="text-xl font-semibold text-[var(--cl-ink)] flex items-center gap-2">
+                                    <h3 className="text-xl font-semibold text-foreground flex items-center gap-2">
                                         <BookOpen className="h-5 w-5" />
                                         Learning Resources
                                     </h3>
@@ -285,19 +285,19 @@ export function RoadmapDetailContent() {
                                                         href={resource.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="block p-4 rounded-lg border hover:border-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] transition-all group"
+                                                        className="block p-4 rounded-lg border hover:border-accent-purple hover:bg-accent-purple/10 transition-all group"
                                                     >
                                                         <div className="flex items-start gap-3">
                                                             {resource.type === 'video' ? (
-                                                                <Video className="h-5 w-5 text-[var(--cl-error)] mt-1" />
+                                                                <Video className="h-5 w-5 text-destructive mt-1" />
                                                             ) : (
-                                                                <FileText className="h-5 w-5 text-[var(--cl-info)] mt-1" />
+                                                                <FileText className="h-5 w-5 text-accent-purple mt-1" />
                                                             )}
                                                             <div>
-                                                                <div className="font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-primary)]">
+                                                                <div className="font-medium text-foreground group-hover:text-accent-purple">
                                                                     {resource.title}
                                                                 </div>
-                                                                <div className="text-xs text-[var(--cl-muted)] mt-1 flex items-center gap-1">
+                                                                <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                                                                     {resource.type === 'video' ? 'Video Tutorial' : 'Article / Documentation'} <ExternalLink className="h-3 w-3" />
                                                                 </div>
                                                             </div>
@@ -313,15 +313,15 @@ export function RoadmapDetailContent() {
                                                             href={video.url || video}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="block p-4 rounded-lg border hover:border-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] transition-all group"
+                                                            className="block p-4 rounded-lg border hover:border-accent-purple hover:bg-accent-purple/10 transition-all group"
                                                         >
                                                             <div className="flex items-start gap-3">
-                                                                <Video className="h-5 w-5 text-[var(--cl-error)] mt-1" />
+                                                                <Video className="h-5 w-5 text-destructive mt-1" />
                                                                 <div>
-                                                                    <div className="font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-primary)]">
+                                                                    <div className="font-medium text-foreground group-hover:text-accent-purple">
                                                                         {video.title || "Watch Video Tutorial"}
                                                                     </div>
-                                                                    <div className="text-xs text-[var(--cl-muted)] mt-1 flex items-center gap-1">
+                                                                    <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                                                                         Video Resource <ExternalLink className="h-3 w-3" />
                                                                     </div>
                                                                 </div>
@@ -334,15 +334,15 @@ export function RoadmapDetailContent() {
                                                             href={article.url || article}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="block p-4 rounded-lg border hover:border-[var(--cl-primary)] hover:bg-[var(--cl-primary-soft)] transition-all group"
+                                                            className="block p-4 rounded-lg border hover:border-accent-purple hover:bg-accent-purple/10 transition-all group"
                                                         >
                                                             <div className="flex items-start gap-3">
-                                                                <FileText className="h-5 w-5 text-[var(--cl-info)] mt-1" />
+                                                                <FileText className="h-5 w-5 text-accent-purple mt-1" />
                                                                 <div>
-                                                                    <div className="font-medium text-[var(--cl-ink)] group-hover:text-[var(--cl-primary)]">
+                                                                    <div className="font-medium text-foreground group-hover:text-accent-purple">
                                                                         {article.title || "Read Article"}
                                                                     </div>
-                                                                    <div className="text-xs text-[var(--cl-muted)] mt-1 flex items-center gap-1">
+                                                                    <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                                                                         Article / Documentation <ExternalLink className="h-3 w-3" />
                                                                     </div>
                                                                 </div>
@@ -353,7 +353,7 @@ export function RoadmapDetailContent() {
                                             )}
                                         </div>
                                     ) : (
-                                        <p className="text-[var(--cl-muted)] italic">No resources available.</p>
+                                        <p className="text-muted-foreground italic">No resources available.</p>
                                     )}
                                 </div>
                             </div>

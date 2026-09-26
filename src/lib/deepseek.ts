@@ -17,6 +17,20 @@ export const deepseek = new OpenAI({
     dangerouslyAllowBrowser: false
 });
 
+/**
+ * The Groq model every route uses.
+ *
+ * Centralised here because the previous ids were hard-coded in eight routes and
+ * had been retired by Groq — every call returned
+ * `model_not_found` for the retired llama ids,
+ * which is why the AI chat, question generation and evaluation all failed.
+ * Change it in one place now.
+ */
+export const GROQ_MODEL = 'openai/gpt-oss-120b';
+
+/** Smaller/cheaper jobs previously used llama-3.1-8b-instant; same model now. */
+export const GROQ_MODEL_FAST = 'openai/gpt-oss-120b';
+
 // Convenience factory — some routes destructure both clients via getAIClients()
 export function getAIClients() {
     return { deepseek, groq };

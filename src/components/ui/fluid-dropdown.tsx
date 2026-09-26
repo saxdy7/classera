@@ -44,7 +44,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           "disabled:pointer-events-none disabled:opacity-50",
-          variant === "outline" && "border border-[var(--cl-hairline-strong)] bg-transparent",
+          variant === "outline" && "border border-border bg-transparent",
           className
         )}
         {...props}
@@ -147,13 +147,13 @@ export function Component() {
             variant="outline"
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
-              "w-full justify-between bg-[var(--cl-surface-inverse)] text-[var(--cl-muted-soft)]",
+              "w-full justify-between bg-neutral-900 text-muted-foreground/70",
               "hover:bg-neutral-800 hover:text-neutral-200",
               "focus:ring-2 focus:ring-neutral-700 focus:ring-offset-2 focus:ring-offset-black",
               "transition-all duration-200 ease-in-out",
-              "border border-transparent focus:border-[var(--cl-hairline-strong)]",
+              "border border-transparent focus:border-border",
               "h-10",
-              isOpen && "bg-[var(--cl-surface-inverse)] text-[var(--cl-muted-soft)]",
+              isOpen && "bg-neutral-900 text-muted-foreground/70",
             )}
             aria-expanded={isOpen}
             aria-haspopup="true"
@@ -205,7 +205,7 @@ export function Component() {
                 onKeyDown={handleKeyDown}
               >
                 <motion.div
-                  className="w-full rounded-lg border border-[var(--cl-hairline-strong)] bg-[var(--cl-surface-inverse)] p-1"
+                  className="w-full rounded-lg border border-border bg-neutral-900 p-1"
                   initial={{ borderRadius: 8 }}
                   animate={{
                     borderRadius: 12,
@@ -221,7 +221,7 @@ export function Component() {
                   >
                     <motion.div
                       layoutId="hover-highlight"
-                      className="absolute inset-x-1 bg-[var(--cl-surface-inverse)] rounded-md"
+                      className="absolute inset-x-1 bg-neutral-900 rounded-md"
                       animate={{
                         y: categories.findIndex((c) => (hoveredCategory || selectedCategory.id) === c.id) * 40 +
                           (categories.findIndex((c) => (hoveredCategory || selectedCategory.id) === c.id) > 0 ? 20 : 0),
@@ -237,7 +237,7 @@ export function Component() {
                       <React.Fragment key={category.id}>
                         {index === 1 && (
                           <motion.div 
-                            className="mx-4 my-2.5 border-t border-[var(--cl-hairline-strong)]" 
+                            className="mx-4 my-2.5 border-t border-border" 
                             variants={itemVariants} 
                           />
                         )}
@@ -253,8 +253,8 @@ export function Component() {
                             "transition-colors duration-150",
                             "focus:outline-none",
                             selectedCategory.id === category.id || hoveredCategory === category.id
-                              ? "text-[var(--cl-muted-soft)]"
-                              : "text-[var(--cl-muted-soft)]",
+                              ? "text-muted-foreground/70"
+                              : "text-muted-foreground/70",
                           )}
                           whileTap={{ scale: 0.98 }}
                           variants={itemVariants}

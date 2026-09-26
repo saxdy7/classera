@@ -142,7 +142,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
     if (loading) {
         return (
             <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-[var(--cl-primary)] border-t-transparent rounded-full animate-spin" />
+                <div className="w-16 h-16 border-4 border-accent-purple border-t-transparent rounded-full animate-spin" />
             </div>
         );
     }
@@ -151,12 +151,12 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
         return (
             <>
                 <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-                <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[500px] z-50 bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 text-center">
-                    <FileText className="w-12 h-12 mx-auto text-[var(--cl-muted-soft)] mb-4" />
-                    <h3 className="text-xl font-semibold text-[var(--cl-ink)] mb-2">
+                <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[500px] z-50 bg-card rounded-xl p-8 text-center">
+                    <FileText className="w-12 h-12 mx-auto text-muted-foreground/70 mb-4" />
+                    <h3 className="text-xl font-semibold text-foreground mb-2">
                         {gradableQuestions.length === 0 ? 'No Gradable Questions' : 'No Submissions'}
                     </h3>
-                    <p className="text-[var(--cl-muted)] mb-6">
+                    <p className="text-muted-foreground mb-6">
                         {gradableQuestions.length === 0 
                             ? 'This test only has MCQ questions which are auto-graded.'
                             : 'No students have submitted this test yet.'
@@ -164,7 +164,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                     </p>
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-[var(--cl-surface-strong)] text-[var(--cl-body)] rounded-lg font-medium hover:bg-[var(--cl-surface-strong)] transition-colors"
+                        className="px-6 py-2 bg-muted text-foreground/80 rounded-lg font-medium hover:bg-muted transition-colors"
                     >
                         Close
                     </button>
@@ -179,40 +179,40 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
     return (
         <>
             <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-            <div className="fixed inset-4 md:inset-8 z-50 flex flex-col bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] overflow-hidden">
+            <div className="fixed inset-4 md:inset-8 z-50 flex flex-col bg-card rounded-xl overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-[var(--cl-hairline)]">
+                <div className="flex items-center justify-between p-6 border-b border-border">
                     <div>
-                        <h2 className="text-2xl font-semibold text-[var(--cl-ink)]">Manual Grading</h2>
-                        <p className="text-sm text-[var(--cl-muted)] mt-1">{testTitle}</p>
+                        <h2 className="text-2xl font-semibold text-foreground">Manual Grading</h2>
+                        <p className="text-sm text-muted-foreground mt-1">{testTitle}</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Student Navigation */}
-                <div className="flex items-center justify-between p-4 border-b border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                <div className="flex items-center justify-between p-4 border-b border-border bg-muted/40">
                     <button
                         onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
                         disabled={currentIndex === 0}
-                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--cl-on-dark)] font-semibold bg-[var(--cl-primary)]">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold bg-primary">
                             {currentSubmission.student.full_name.charAt(0)}
                         </div>
                         <div>
-                            <p className="font-semibold text-[var(--cl-ink)]">{currentSubmission.student.full_name}</p>
-                            <p className="text-sm text-[var(--cl-muted)]">{currentSubmission.student.email}</p>
+                            <p className="font-semibold text-foreground">{currentSubmission.student.full_name}</p>
+                            <p className="text-sm text-muted-foreground">{currentSubmission.student.email}</p>
                         </div>
-                        <span className="text-sm text-[var(--cl-muted-soft)]">
+                        <span className="text-sm text-muted-foreground/70">
                             {currentIndex + 1} of {submissions.length}
                         </span>
                     </div>
@@ -220,7 +220,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                     <button
                         onClick={() => setCurrentIndex(prev => Math.min(submissions.length - 1, prev + 1))}
                         disabled={currentIndex === submissions.length - 1}
-                        className="p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <ChevronRight className="w-5 h-5" />
                     </button>
@@ -234,45 +234,45 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                             const grade = currentGrades[question.id] || { score: 0, feedback: '' };
 
                             return (
-                                <div key={question.id} className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6">
+                                <div key={question.id} className="bg-muted/40 rounded-lg p-6">
                                     <div className="flex items-start justify-between mb-4">
                                         <div>
                                             <span className={`text-xs px-2 py-1 rounded-full ${
                                                 question.type === 'descriptive' 
-                                                    ? 'bg-[var(--cl-primary-soft)] text-[var(--cl-primary)]'
-                                                    : 'bg-[rgba(22,163,74,0.12)] text-[var(--cl-success)]'
+                                                    ? 'bg-accent-purple/10 text-accent-purple'
+                                                    : 'bg-green-500/10 text-green-600'
                                             }`}>
                                                 {question.type === 'descriptive' ? 'Essay' : 'Short Answer'}
                                             </span>
-                                            <p className="text-sm text-[var(--cl-muted)] mt-2">Max: {question.marks} marks</p>
+                                            <p className="text-sm text-muted-foreground mt-2">Max: {question.marks} marks</p>
                                         </div>
                                     </div>
 
-                                    <h3 className="text-lg font-semibold text-[var(--cl-ink)] mb-4">
+                                    <h3 className="text-lg font-semibold text-foreground mb-4">
                                         Q{qIndex + 1}. {question.question}
                                     </h3>
 
                                     {question.correctAnswer && (
-                                        <div className="mb-4 p-3 bg-[rgba(22,163,74,0.12)] border border-[var(--cl-success)] rounded-lg">
-                                            <p className="text-sm font-medium text-[var(--cl-success)]">Expected Answer / Guidelines:</p>
-                                            <p className="text-sm text-[var(--cl-success)] mt-1">{question.correctAnswer}</p>
+                                        <div className="mb-4 p-3 bg-green-500/10 border border-green-600 rounded-lg">
+                                            <p className="text-sm font-medium text-green-600">Expected Answer / Guidelines:</p>
+                                            <p className="text-sm text-green-600 mt-1">{question.correctAnswer}</p>
                                         </div>
                                     )}
 
                                     <div className="mb-4">
-                                        <p className="text-sm font-medium text-[var(--cl-body)] mb-2">Student's Answer:</p>
-                                        <div className="p-4 bg-[var(--cl-surface-card)] border border-[var(--cl-hairline)] rounded-lg min-h-[100px]">
+                                        <p className="text-sm font-medium text-foreground/80 mb-2">Student's Answer:</p>
+                                        <div className="p-4 bg-card border border-border rounded-lg min-h-[100px]">
                                             {answer ? (
-                                                <p className="text-[var(--cl-ink)] whitespace-pre-wrap">{answer}</p>
+                                                <p className="text-foreground whitespace-pre-wrap">{answer}</p>
                                             ) : (
-                                                <p className="text-[var(--cl-muted-soft)] italic">No answer provided</p>
+                                                <p className="text-muted-foreground/70 italic">No answer provided</p>
                                             )}
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Score (out of {question.marks})
                                             </label>
                                             <input
@@ -286,11 +286,11 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                                                     'score',
                                                     Math.min(question.marks, Math.max(0, parseInt(e.target.value) || 0))
                                                 )}
-                                                className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                                            <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Feedback
                                             </label>
                                             <input
@@ -303,7 +303,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                                                     e.target.value
                                                 )}
                                                 placeholder="Optional feedback for the student..."
-                                                className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-primary)]"
+                                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                                             />
                                         </div>
                                     </div>
@@ -314,14 +314,14 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between p-4 border-t border-[var(--cl-hairline)] bg-[var(--cl-canvas-soft)]">
+                <div className="flex items-center justify-between p-4 border-t border-border bg-muted/40">
                     <div className="flex items-center gap-4">
-                        <span className="text-sm text-[var(--cl-body)]">
+                        <span className="text-sm text-foreground/80">
                             Current Score: {Object.values(currentGrades).reduce((sum, g) => sum + (g.score || 0), 0)} / 
                             {gradableQuestions.reduce((sum, q) => sum + q.marks, 0)}
                         </span>
                         {currentSubmission.manual_grades && (
-                            <span className="inline-flex items-center gap-1 text-xs text-[var(--cl-success)]">
+                            <span className="inline-flex items-center gap-1 text-xs text-green-600">
                                 <CheckCircle className="w-4 h-4" />
                                 Previously graded
                             </span>
@@ -330,14 +330,14 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 text-[var(--cl-body)] hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                            className="px-4 py-2 text-foreground/80 hover:bg-muted rounded-lg transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={saveGrades}
                             disabled={saving}
-                            className="inline-flex items-center gap-2 px-6 py-2 bg-[var(--cl-primary)] text-[var(--cl-on-dark)] rounded-lg font-medium hover:bg-[var(--cl-primary)] transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary transition-colors disabled:opacity-50"
                         >
                             <Save className="w-4 h-4" />
                             {saving ? 'Saving...' : 'Save Grades'}

@@ -27,22 +27,22 @@ export function StatCard({
   icon: Icon,
   label,
   value,
-  iconBg = 'bg-[var(--cl-surface-strong)]',
-  iconColor = 'text-[var(--cl-ink)]',
+  iconBg = 'bg-muted',
+  iconColor = 'text-foreground',
   delta,
 }: StatCardProps) {
   const deltaColor =
     delta?.direction === 'up'
-      ? 'text-[var(--cl-success)]'
+      ? 'text-green-600'
       : delta?.direction === 'down'
-        ? 'text-[var(--cl-error)]'
-        : 'text-[var(--cl-muted)]';
+        ? 'text-destructive'
+        : 'text-muted-foreground';
 
   return (
-    <div className="rounded-[var(--cl-r-lg)] border border-[var(--cl-hairline)] bg-[var(--cl-surface-card)] p-6 transition-colors duration-[var(--cl-dur-micro)] hover:border-[var(--cl-hairline-strong)]">
+    <div className="rounded-lg border border-border bg-card p-6 transition-colors duration-200 hover:border-border">
       <div className="flex items-start justify-between gap-3">
         <span className="cl-eyebrow">{label}</span>
-        <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[var(--cl-r-md)] ${iconBg}`}>
+        <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg ${iconBg}`}>
           <Icon className={`h-4 w-4 ${iconColor}`} aria-hidden="true" />
         </div>
       </div>
@@ -53,7 +53,7 @@ export function StatCard({
         <p className={`mt-1.5 text-[13px] leading-[1.4] ${deltaColor}`}>
           {/* Direction is spelled out, never encoded in colour alone. */}
           <span className="cl-mono">{delta.value}</span>
-          <span className="text-[var(--cl-muted)]">
+          <span className="text-muted-foreground">
             {delta.direction === 'up' ? ' increase' : delta.direction === 'down' ? ' decrease' : ' no change'}
           </span>
         </p>

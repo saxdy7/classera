@@ -106,13 +106,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-primary)]">
-                <User className="w-10 h-10 text-[var(--cl-on-dark)]" />
+              <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-4 bg-primary">
+                <User className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-semibold text-black mb-2">
                 Welcome, Mentor!
               </h2>
-              <p className="text-[var(--cl-body)]">
+              <p className="text-foreground/80">
                 Let&rsquo;s set up your teaching profile
               </p>
             </div>
@@ -131,13 +131,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-info)]">
-                <GraduationCap className="w-10 h-10 text-[var(--cl-on-dark)]" />
+              <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-4 bg-accent-purple">
+                <GraduationCap className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-semibold text-black mb-2">
                 Your Institution
               </h2>
-              <p className="text-[var(--cl-body)]">
+              <p className="text-foreground/80">
                 Where do you teach or mentor?
               </p>
             </div>
@@ -159,13 +159,13 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-primary)]">
-                <Briefcase className="w-10 h-10 text-[var(--cl-on-dark)]" />
+              <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-4 bg-primary">
+                <Briefcase className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-semibold text-black mb-2">
                 Your Expertise
               </h2>
-              <p className="text-[var(--cl-body)]">
+              <p className="text-foreground/80">
                 What subjects do you teach?
               </p>
             </div>
@@ -197,44 +197,44 @@ export default function MentorOnboarding() {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-right duration-300">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-[var(--cl-r-xl)] flex items-center justify-center mx-auto mb-4 bg-[var(--cl-success)]">
-                <Target className="w-10 h-10 text-[var(--cl-on-dark)]" />
+              <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-4 bg-green-600">
+                <Target className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-3xl font-semibold text-black mb-2">
                 All Set!
               </h2>
-              <p className="text-[var(--cl-body)]">
+              <p className="text-foreground/80">
                 Connect your GitHub account (optional)
               </p>
             </div>
 
-            <div className="bg-[var(--cl-canvas-soft)] rounded-[var(--cl-r-lg)] p-6 space-y-4">
+            <div className="bg-muted/40 rounded-lg p-6 space-y-4">
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Full Name</p>
+                <p className="text-sm text-foreground/80 mb-1">Full Name</p>
                 <p className="font-semibold text-black">{formData.full_name}</p>
               </div>
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Institution</p>
+                <p className="text-sm text-foreground/80 mb-1">Institution</p>
                 <p className="font-semibold text-black">{formData.university}</p>
               </div>
               <div>
-                <p className="text-sm text-[var(--cl-body)] mb-1">Area of Expertise</p>
+                <p className="text-sm text-foreground/80 mb-1">Area of Expertise</p>
                 <p className="font-semibold text-black">{formData.expertise}</p>
               </div>
               {formData.years_of_experience && (
                 <div>
-                  <p className="text-sm text-[var(--cl-body)] mb-1">Experience</p>
+                  <p className="text-sm text-foreground/80 mb-1">Experience</p>
                   <p className="font-semibold text-black">{formData.years_of_experience} years</p>
                 </div>
               )}
             </div>
 
-            <div className="bg-[rgba(13,116,206,0.12)] border border-[var(--cl-info)] rounded-[var(--cl-r-lg)] p-6 space-y-4">
+            <div className="bg-accent-purple/10 border border-accent-purple rounded-lg p-6 space-y-4">
               <div className="flex items-start gap-3">
-                <Github className="w-6 h-6 text-[var(--cl-info)] flex-shrink-0 mt-1" />
+                <Github className="w-6 h-6 text-accent-purple flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-[var(--cl-info)] mb-1">Connect GitHub</h3>
-                  <p className="text-sm text-[var(--cl-info)] mb-4">
+                  <h3 className="font-semibold text-accent-purple mb-1">Connect GitHub</h3>
+                  <p className="text-sm text-accent-purple mb-4">
                     Connect your GitHub account to showcase your projects and expertise. Students can view your contributions and code quality metrics.
                   </p>
                   <GitHubConnectButton
@@ -253,8 +253,8 @@ export default function MentorOnboarding() {
               type="url"
             />
 
-            <div className="border-t border-[var(--cl-hairline)] pt-4">
-              <p className="text-xs text-[var(--cl-body)] text-center">
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-foreground/80 text-center">
                 You can add or update your GitHub and LinkedIn profiles later in your profile settings
               </p>
             </div>
@@ -264,14 +264,14 @@ export default function MentorOnboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--cl-canvas)]">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
       <div className="w-full max-w-2xl">
-        <div className="bg-[var(--cl-surface-card)] rounded-[var(--cl-r-xl)] p-8 md:p-12">
+        <div className="bg-card rounded-xl p-8 md:p-12">
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
           <div className="mt-8 mb-8">
             {error && (
-              <div className="mb-6 p-4 bg-[rgba(239,68,68,0.12)] border border-[var(--cl-error)] text-[var(--cl-error)] rounded-[var(--cl-r-lg)] text-sm">
+              <div className="mb-6 p-4 bg-destructive/10 border border-destructive text-destructive rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -279,7 +279,7 @@ export default function MentorOnboarding() {
             {renderStep()}
           </div>
 
-          <div className="flex items-center justify-between gap-4 pt-6 border-t border-[var(--cl-hairline)]">
+          <div className="flex items-center justify-between gap-4 pt-6 border-t border-border">
             <Button
               variant="ghost"
               onClick={handleBack}

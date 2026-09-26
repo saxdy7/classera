@@ -285,7 +285,7 @@ export default function ProctoringWindow({
               </div>
               <div
                 ref={webcamRef}
-                className="w-full h-64 bg-[var(--cl-surface-inverse)] rounded-lg overflow-hidden"
+                className="w-full h-64 bg-neutral-900 rounded-lg overflow-hidden"
               />
             </div>
           )}
@@ -316,7 +316,7 @@ export default function ProctoringWindow({
               {isScreenShareOn && (
                 <div
                   ref={screenRef}
-                  className="w-full h-64 bg-[var(--cl-surface-inverse)] rounded-lg overflow-hidden"
+                  className="w-full h-64 bg-neutral-900 rounded-lg overflow-hidden"
                 />
               )}
             </div>
@@ -324,9 +324,9 @@ export default function ProctoringWindow({
 
           {/* Recording Status */}
           {enableRecording && (
-            <div className="flex items-center justify-between p-3 bg-[rgba(239,68,68,0.12)] dark:bg-[rgba(239,68,68,0.2)] rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-destructive/10 dark:bg-[rgba(239,68,68,0.2)] rounded-lg">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-[var(--cl-error)] rounded-full animate-pulse" />
+                <div className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
                 <span className="text-sm font-medium">
                   {isRecording ? 'Recording in progress' : 'Not recording'}
                 </span>
@@ -335,7 +335,7 @@ export default function ProctoringWindow({
           )}
 
           {/* Info */}
-          <div className="text-xs text-[var(--cl-muted)] space-y-1">
+          <div className="text-xs text-muted-foreground space-y-1">
             <p>• Your session is being proctored</p>
             {enableWebcam && <p>• Keep your camera on throughout the test</p>}
             {enableScreenShare && <p>• Screen sharing must remain active</p>}

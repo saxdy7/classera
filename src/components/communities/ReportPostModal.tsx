@@ -85,18 +85,18 @@ export function ReportPostModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-[var(--cl-surface-card)] dark:bg-[var(--cl-surface-inverse)] rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-card dark:bg-neutral-900 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-[var(--cl-surface-card)] dark:bg-[var(--cl-surface-inverse)] border-b border-[var(--cl-hairline)] dark:border-[var(--cl-hairline-strong)] p-6 flex items-center justify-between">
+        <div className="sticky top-0 bg-card dark:bg-neutral-900 border-b border-border dark:border-border p-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Flag className="w-5 h-5 text-[var(--cl-error)]" />
-            <h2 className="text-lg font-semibold text-[var(--cl-ink)] dark:text-[var(--cl-on-dark)]">
+            <Flag className="w-5 h-5 text-destructive" />
+            <h2 className="text-lg font-semibold text-foreground dark:text-white">
               Report {contentType}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-[var(--cl-surface-strong)] dark:hover:bg-[var(--cl-surface-inverse)] rounded-lg transition-colors"
+            className="p-1 hover:bg-muted dark:hover:bg-neutral-900 rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -105,8 +105,8 @@ export function ReportPostModal({
         {/* Content */}
         <div className="p-6">
           {success ? (
-            <div className="bg-[rgba(22,163,74,0.12)] dark:bg-[rgba(22,163,74,0.2)] border border-[var(--cl-success)] dark:border-[var(--cl-success)] rounded-lg p-4 text-center">
-              <p className="text-[var(--cl-success)] dark:text-[var(--cl-success)] font-medium">
+            <div className="bg-green-500/10 dark:bg-[rgba(22,163,74,0.2)] border border-green-600 dark:border-green-600 rounded-lg p-4 text-center">
+              <p className="text-green-600 dark:text-green-600 font-medium">
                 Thank you for your report. Our moderation team will review it shortly.
               </p>
             </div>
@@ -114,13 +114,13 @@ export function ReportPostModal({
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Reason */}
               <div>
-                <label className="block text-sm font-medium text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)] mb-2">
+                <label className="block text-sm font-medium text-foreground/80 dark:text-muted-foreground/70 mb-2">
                   Reason for Report *
                 </label>
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] dark:border-[var(--cl-hairline-strong)] rounded-lg bg-[var(--cl-surface-card)] dark:bg-[var(--cl-surface-inverse)] text-[var(--cl-ink)] dark:text-[var(--cl-on-dark)] focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors"
+                  className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors"
                 >
                   <option value="">Select a reason...</option>
                   {REPORT_REASONS.map((r) => (
@@ -133,7 +133,7 @@ export function ReportPostModal({
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)] mb-2">
+                <label className="block text-sm font-medium text-foreground/80 dark:text-muted-foreground/70 mb-2">
                   Additional Details (Optional)
                 </label>
                 <textarea
@@ -141,23 +141,23 @@ export function ReportPostModal({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Provide more context to help our moderation team..."
                   rows={4}
-                  className="w-full px-4 py-2 border border-[var(--cl-hairline-strong)] dark:border-[var(--cl-hairline-strong)] rounded-lg bg-[var(--cl-surface-card)] dark:bg-[var(--cl-surface-inverse)] text-[var(--cl-ink)] dark:text-[var(--cl-on-dark)] placeholder-[var(--cl-muted-soft)] dark:placeholder-[var(--cl-muted-soft)] focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors resize-none"
+                  className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white placeholder-muted-foreground dark:placeholder-muted-foreground focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors resize-none"
                 />
-                <p className="text-xs text-[var(--cl-muted)] dark:text-[var(--cl-muted-soft)] mt-1">
+                <p className="text-xs text-muted-foreground dark:text-muted-foreground/70 mt-1">
                   {description.length}/500 characters
                 </p>
               </div>
 
               {/* Error Message */}
               {error && (
-                <div className="bg-[rgba(239,68,68,0.12)] dark:bg-[rgba(239,68,68,0.2)] border border-[var(--cl-error)] dark:border-[var(--cl-error)] rounded-lg p-3">
-                  <p className="text-[var(--cl-error)] dark:text-[var(--cl-error)] text-sm">{error}</p>
+                <div className="bg-destructive/10 dark:bg-[rgba(239,68,68,0.2)] border border-destructive dark:border-destructive rounded-lg p-3">
+                  <p className="text-destructive dark:text-destructive text-sm">{error}</p>
                 </div>
               )}
 
               {/* Info */}
-              <div className="bg-[rgba(13,116,206,0.12)] dark:bg-[rgba(13,116,206,0.2)] border border-[var(--cl-info)] dark:border-[var(--cl-info)] rounded-lg p-3">
-                <p className="text-[var(--cl-info)] dark:text-[var(--cl-info)] text-xs">
+              <div className="bg-accent-purple/10 dark:bg-[rgba(13,116,206,0.2)] border border-accent-purple dark:border-accent-purple rounded-lg p-3">
+                <p className="text-accent-purple dark:text-accent-purple text-xs">
                   Your report will be reviewed by the community mentor. Thank you for helping keep our community safe.
                 </p>
               </div>
@@ -167,14 +167,14 @@ export function ReportPostModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-4 py-2 border border-[var(--cl-hairline-strong)] dark:border-[var(--cl-hairline-strong)] rounded-lg text-[var(--cl-body)] dark:text-[var(--cl-muted-soft)] hover:bg-[var(--cl-canvas-soft)] dark:hover:bg-[var(--cl-surface-inverse)] font-medium transition-colors"
+                  className="flex-1 px-4 py-2 border border-border dark:border-border rounded-lg text-foreground/80 dark:text-muted-foreground/70 hover:bg-muted/40 dark:hover:bg-neutral-900 font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !reason}
-                  className="flex-1 px-4 py-2 bg-[var(--cl-error)] hover:bg-[var(--cl-error)] disabled:bg-[var(--cl-surface-strong)] text-[var(--cl-on-dark)] rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-destructive hover:bg-destructive disabled:bg-muted text-white rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
                 >
                   {loading ? 'Submitting...' : 'Submit Report'}
                 </button>

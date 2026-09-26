@@ -100,7 +100,7 @@ export default async function StudentSessionsPage() {
     ) || [];
 
     return (
-        <div className="min-h-screen bg-[var(--cl-canvas-soft)]">
+        <div className="min-h-screen bg-muted/40">
             <Header profile={{ id: user.id, ...profile }} />
             <div className="flex">
                 <Sidebar role="student" />

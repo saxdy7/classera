@@ -138,26 +138,26 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-            <Card className="max-w-3xl w-full p-8 relative bg-[var(--cl-surface-card)]">
+            <Card className="max-w-3xl w-full p-8 relative bg-card">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 hover:bg-[var(--cl-surface-strong)] rounded-lg transition-colors"
+                    className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
                 >
                     <X className="h-5 w-5" />
                 </button>
 
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-semibold text-[var(--cl-ink)] mb-2">
+                    <h2 className="text-3xl font-semibold text-foreground mb-2">
                         What can I help you learn?
                     </h2>
-                    <p className="text-[var(--cl-body)]">
+                    <p className="text-foreground/80">
                         Enter a topic below to generate a personalized course for it
                     </p>
                 </div>
 
                 {/* Topic Input */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-2">
+                    <label className="block text-sm font-medium text-foreground/80 mb-2">
                         What can I help you learn?
                     </label>
                     <input
@@ -165,13 +165,13 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                         value={topic}
                         onChange={(e) => setTopic(e.target.value)}
                         placeholder="Enter a topic"
-                        className="w-full px-4 py-3 border border-[var(--cl-hairline-strong)] rounded-lg focus:ring-2 focus:ring-[var(--cl-primary)] focus:border-transparent"
+                        className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                     />
                 </div>
 
                 {/* Format Selection */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium text-[var(--cl-body)] mb-3">
+                    <label className="block text-sm font-medium text-foreground/80 mb-3">
                         Choose the format
                     </label>
                     <div className="grid grid-cols-3 gap-4">
@@ -183,18 +183,18 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                                 <button
                                     key={format.id}
                                     onClick={() => setSelectedFormat(format.id)}
-                                    className={`p-6 border-2 rounded-[var(--cl-r-lg)] transition-all ${isSelected
-                                        ? 'border-[var(--cl-primary)] bg-[var(--cl-primary-soft)]'
-                                        : 'border-[var(--cl-hairline)] hover:border-[var(--cl-hairline-strong)]'
+                                    className={`p-6 border-2 rounded-lg transition-all ${isSelected
+                                        ? 'border-accent-purple bg-accent-purple/10'
+                                        : 'border-border hover:border-border'
                                         }`}
                                 >
-                                    <Icon className={`h-8 w-8 mx-auto mb-3 ${isSelected ? 'text-[var(--cl-primary)]' : 'text-[var(--cl-muted-soft)]'
+                                    <Icon className={`h-8 w-8 mx-auto mb-3 ${isSelected ? 'text-accent-purple' : 'text-muted-foreground/70'
                                         }`} />
-                                    <div className={`font-semibold mb-1 ${isSelected ? 'text-[var(--cl-ink)]' : 'text-[var(--cl-body)]'
+                                    <div className={`font-semibold mb-1 ${isSelected ? 'text-foreground' : 'text-foreground/80'
                                         }`}>
                                         {format.label}
                                     </div>
-                                    <div className="text-xs text-[var(--cl-muted)]">
+                                    <div className="text-xs text-muted-foreground">
                                         {format.description}
                                     </div>
                                 </button>
@@ -210,9 +210,9 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                             type="checkbox"
                             checked={showQuestions}
                             onChange={(e) => setShowQuestions(e.target.checked)}
-                            className="rounded border-[var(--cl-hairline-strong)]"
+                            className="rounded border-border"
                         />
-                        <span className="text-sm text-[var(--cl-body)]">
+                        <span className="text-sm text-foreground/80">
                             Answer the following questions for a better course
                         </span>
                     </label>
@@ -222,7 +222,7 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                 <Button
                     onClick={handleGenerate}
                     disabled={!topic.trim() || generating}
-                    className="w-full bg-[var(--cl-surface-inverse)] hover:bg-[var(--cl-surface-inverse)] text-[var(--cl-on-dark)] py-4 rounded-lg flex items-center justify-center gap-2 text-lg font-medium"
+                    className="w-full bg-neutral-900 hover:bg-neutral-900 text-white py-4 rounded-lg flex items-center justify-center gap-2 text-lg font-medium"
                 >
                     <Sparkles className="h-5 w-5" />
                     {generating ? 'Generating...' : 'Generate'}

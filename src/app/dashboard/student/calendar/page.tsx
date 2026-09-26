@@ -7,7 +7,7 @@ export default function StudentCalendarPage() {
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Calendar
         </h1>
-        <p className="text-[var(--cl-body)] mt-2">View your schedule and upcoming events</p>
+        <p className="text-foreground/80 mt-2">View your schedule and upcoming events</p>
       </div>
       <CalendarWidget />
     </div>
