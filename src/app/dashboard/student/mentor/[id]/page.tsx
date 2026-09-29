@@ -4,10 +4,11 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import { Mail, GraduationCap, BookOpen, ArrowLeft, Github, GitBranch, Users, TrendingUp, Linkedin, Briefcase, MapPin, ExternalLink, Clock } from 'lucide-react';
+import { Mail, GraduationCap, BookOpen, BadgeCheck, ArrowLeft, Github, GitBranch, Users, TrendingUp, Linkedin, Briefcase, MapPin, ExternalLink, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { MentorActions } from '@/components/student/MentorActions';
 import { extractGithubUsername, getGithubUser } from '@/lib/github';
+import { Empty } from '@/components/shell';
 
 function parseExpertise(expertise: any): string {
   if (!expertise) return '';
@@ -360,7 +361,7 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                     <div className="text-center py-8 text-muted-foreground/70">
                       <Linkedin className="w-10 h-10 mx-auto mb-2 opacity-30" />
                       <p className="text-sm font-medium">LinkedIn not linked</p>
-                      <p className="text-xs text-muted-foreground/70 mt-1">Mentor hasn't added a LinkedIn profile</p>
+                      <p className="text-xs text-muted-foreground/70 mt-1">Mentor hasn&rsquo;t added a LinkedIn profile</p>
                     </div>
                   )}
                 </div>
@@ -382,38 +383,39 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
                   </p>
                 </div>
 
-                {/* Skills/Specializations */}
-                <div className="bg-card rounded-xl p-6 md:p-8 border border-border">
-                  <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-amber-500/10 rounded-lg flex items-center justify-center">
-                      <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                      </svg>
-                    </div>
+                {/* Specializations — neutral chips. The old set mixed purple and
+                    amber pills at random, which read as meaningful state when it
+                    was not. */}
+                <div className="rounded-xl border bg-card p-6">
+                  <h2 className="flex items-center gap-2 text-base font-bold tracking-tight text-foreground">
+                    <BadgeCheck className="size-4 text-muted-foreground" />
                     Specializations
                   </h2>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-4 py-2 bg-accent-purple/10 border border-accent-purple text-accent-purple rounded-lg text-sm font-medium">{parseExpertise(mentor.expertise) || 'General Mentorship'}</span>
-                    <span className="px-4 py-2 bg-accent-purple/10 border border-accent-purple text-accent-purple rounded-lg text-sm font-medium">Career Guidance</span>
-                    <span className="px-4 py-2 bg-amber-500/10 border border-amber-500 text-amber-600 rounded-lg text-sm font-medium">Academic Support</span>
-                    <span className="px-4 py-2 bg-accent-purple/10 border border-accent-purple text-accent-purple rounded-lg text-sm font-medium">Industry Insights</span>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {[
+                      parseExpertise(mentor.expertise) || 'General Mentorship',
+                      'Career Guidance',
+                      'Academic Support',
+                      'Industry Insights',
+                    ].map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center rounded-full border bg-muted px-3 py-1 text-sm font-medium text-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
-                {/* Available Courses */}
-                <div className="bg-card rounded-xl p-6 md:p-8 border border-border">
-                  <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-accent-purple/10 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-4 h-4 text-accent-purple" />
-                    </div>
-                    Available Courses
+                {/* Available courses */}
+                <div className="rounded-xl border bg-card p-6">
+                  <h2 className="flex items-center gap-2 text-base font-bold tracking-tight text-foreground">
+                    <BookOpen className="size-4 text-muted-foreground" />
+                    Available courses
                   </h2>
-                  <div className="text-center py-12 rounded-xl border-2 border-dashed border-border bg-background">
-                    <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mx-auto mb-4">
-                      <BookOpen className="w-8 h-8 text-muted-foreground/70" />
-                    </div>
-                    <h3 className="font-semibold text-foreground mb-1">No Courses Yet</h3>
-                    <p className="text-sm text-muted-foreground">Check back later for course offerings</p>
+                  <div className="mt-4 rounded-xl border border-dashed bg-muted/40">
+                    <Empty icon={BookOpen} title="No courses yet" description="Check back later for course offerings." />
                   </div>
                 </div>
               </div>

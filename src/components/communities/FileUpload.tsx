@@ -104,11 +104,7 @@ export function FileUpload({
     if (onFileSelect) {
         return (
             <div className="relative">
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden"
                     disabled={disabled}
                 />
 
@@ -153,13 +149,7 @@ export function FileUpload({
     // Multiple files mode UI
     return (
         <div className="space-y-3">
-            <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                disabled={disabled || uploading}
-                accept="image/*,.pdf,.doc,.docx,.txt,.zip"
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" disabled={disabled || uploading} accept="image/*,.pdf,.doc,.docx,.txt,.zip"
             />
 
             {/* Uploaded Images Preview */}

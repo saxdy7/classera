@@ -435,18 +435,16 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-          <input
-            type="text"
-            placeholder="Search sessions by title or description..."
+          <input type="text" placeholder="Search sessions by title or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full pl-11 pr-4 py-3 rounded-lg border border-border"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple bg-card"
+ className="px-4 py-3 rounded-lg border border-border bg-card"
         >
           <option value="all">All Types</option>
           <option value="mentor_meeting">Mentor Meetings</option>
@@ -611,12 +609,11 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-foreground/80 mb-2">Title *</label>
-                <input
-                  type="text"
+                <input type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g., Weekly Check-in, Final Exam Proctoring"
-                  className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ placeholder="e.g., Weekly Check-in, Final Exam Proctoring"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                 />
               </div>
 
@@ -626,9 +623,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="What will this session cover?"
+ placeholder="What will this session cover?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                 />
               </div>
 
@@ -636,22 +633,20 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground/80 mb-2">Date & Time *</label>
-                  <input
-                    type="datetime-local"
+                  <input type="datetime-local"
                     value={formData.scheduled_at}
                     onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground/80 mb-2">Duration (minutes)</label>
-                  <input
-                    type="number"
+                  <input type="number"
                     value={formData.duration_minutes}
                     onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
                     min={15}
                     max={480}
-                    className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                   />
                 </div>
               </div>
@@ -663,7 +658,7 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                   <select
                     value={formData.test_id}
                     onChange={(e) => setFormData({ ...formData, test_id: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                   >
                     <option value="">Select a test...</option>
                     {tests.map(test => (
@@ -694,14 +689,13 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                         : 'border-border hover:border-border'
                         }`}
                     >
-                      <input
-                        type="checkbox"
+                      <input type="checkbox"
                         checked={formData.settings[setting.key as keyof typeof formData.settings]}
                         onChange={(e) => setFormData({
                           ...formData,
                           settings: { ...formData.settings, [setting.key]: e.target.checked }
                         })}
-                        className="sr-only"
+ className="sr-only"
                       />
                       <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-accent-purple' : 'text-muted-foreground/70'
                         }`} />
@@ -740,11 +734,10 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                         className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-muted border-b border-border last:border-b-0 transition-colors ${formData.participant_ids.includes(student.id) ? 'bg-accent-purple/10' : ''
                           }`}
                       >
-                        <input
-                          type="checkbox"
+                        <input type="checkbox"
                           checked={formData.participant_ids.includes(student.id)}
                           onChange={() => toggleParticipant(student.id)}
-                          className="rounded border-border text-accent-purple focus:ring-ring cursor-pointer"
+ className="rounded border-border text-accent-purple cursor-pointer"
                         />
                         <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 bg-primary">
                           {student.full_name?.charAt(0) || '?'}
@@ -794,12 +787,11 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-foreground/80 mb-2">Title *</label>
-                <input
-                  type="text"
+                <input type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Session title"
-                  className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ placeholder="Session title"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                 />
               </div>
 
@@ -809,9 +801,9 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="What will this session cover?"
+ placeholder="What will this session cover?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                 />
               </div>
 
@@ -819,22 +811,20 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground/80 mb-2">Date & Time *</label>
-                  <input
-                    type="datetime-local"
+                  <input type="datetime-local"
                     value={formData.scheduled_at}
                     onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground/80 mb-2">Duration (minutes)</label>
-                  <input
-                    type="number"
+                  <input type="number"
                     value={formData.duration_minutes}
                     onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
                     min={15}
                     max={480}
-                    className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                   />
                 </div>
               </div>
@@ -858,14 +848,13 @@ export function LiveSessionsClient({ profile, initialSessions, students, tests }
                         : 'border-border hover:border-border'
                         }`}
                     >
-                      <input
-                        type="checkbox"
+                      <input type="checkbox"
                         checked={formData.settings[setting.key as keyof typeof formData.settings]}
                         onChange={(e) => setFormData({
                           ...formData,
                           settings: { ...formData.settings, [setting.key]: e.target.checked }
                         })}
-                        className="sr-only"
+ className="sr-only"
                       />
                       <setting.icon className={`w-4 h-4 ${formData.settings[setting.key as keyof typeof formData.settings] ? 'text-accent-purple' : 'text-muted-foreground/70'
                         }`} />

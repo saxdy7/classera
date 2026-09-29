@@ -10,12 +10,12 @@ export function Select({ label, error, options, className = '', ...props }: Sele
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-foreground/80 mb-2">
+        <label className="mb-1.5 block text-sm font-medium text-foreground">
           {label}
         </label>
       )}
       <select
-        className={`w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors bg-card text-black ${error ? 'border-destructive' : ''} ${className}`}
+        className={`w-full rounded-lg border bg-card px-3 text-sm text-foreground transition-colors ${error ? 'border-destructive' : ''} ${className}`}
         {...props}
       >
         {options.map((option) => (

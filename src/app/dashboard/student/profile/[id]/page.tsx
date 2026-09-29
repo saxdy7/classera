@@ -8,6 +8,7 @@ import { Mail, BookOpen, ArrowLeft, Github, Users, Code, MapPin, ExternalLink, A
 import Link from 'next/link';
 import { StudentConnectionActions } from '@/components/student/StudentConnectionActions';
 import { ProfileContent } from '@/components/student/ProfileContent';
+import { btnPrimary, btnSecondary } from '@/components/shell';
 
 export default async function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -92,30 +93,30 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
               
               {/* More Options Menu */}
               <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
-                  <Share2 className="w-5 h-5 text-foreground/80" />
+                <button className={`${btnSecondary} size-9 px-0`}>
+                  <Share2 className="size-4" />
                 </button>
-                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
-                  <Download className="w-5 h-5 text-foreground/80" />
+                <button className={`${btnSecondary} size-9 px-0`}>
+                  <Download className="size-4" />
                 </button>
-                <button className="p-2 hover:bg-card rounded-lg transition border border-border">
-                  <MoreVertical className="w-5 h-5 text-foreground/80" />
+                <button className={`${btnSecondary} size-9 px-0`}>
+                  <MoreVertical className="size-4" />
                 </button>
               </div>
             </div>
           </div>
 
           {/* Profile Header Card */}
-          <div className="bg-card rounded-xl p-8 mb-10 max-w-2xl">
+          <div className="mb-6 rounded-xl border bg-card p-6">
             <div className="flex flex-col md:flex-row gap-8 items-start">
               {/* Avatar */}
               <div className="flex-shrink-0">
                 <Image
                   src={student.avatar_url || `https://ui-avatars.com/api/?name=${student.full_name}`}
                   alt={student.full_name}
-                  width={140}
-                  height={140}
-                  className="rounded-full border-4 border-accent-purple"
+                  width={112}
+                  height={112}
+                  className="size-28 rounded-full border object-cover"
                 />
               </div>
 
@@ -124,12 +125,12 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Badges */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {student.specialization_board && (
-                    <span className="px-3 py-1.5 bg-accent-purple/10 text-accent-purple rounded-full text-xs font-semibold border border-accent-purple">
+                    <span className="inline-flex items-center rounded-full border bg-muted px-3 py-1 text-xs font-medium text-foreground">
                       {student.specialization_board}
                     </span>
                   )}
                   {student.current_semester && (
-                    <span className="px-3 py-1.5 bg-accent-purple/10 text-accent-purple rounded-full text-xs font-semibold border border-accent-purple">
+                    <span className="inline-flex items-center rounded-full border bg-muted px-3 py-1 text-xs font-medium text-foreground">
                       Semester {student.current_semester}
                     </span>
                   )}
@@ -143,15 +144,15 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Contact Info */}
                 <div className="space-y-3 mb-6 pb-6 border-b border-border">
                   {student.universities && (
-                    <div className="flex items-center gap-3 text-foreground/80">
-                      <MapPin className="w-5 h-5 text-accent-purple flex-shrink-0" />
+                    <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <MapPin className="size-4 shrink-0 text-muted-foreground" />
                       <span>{student.universities.name}</span>
                     </div>
                   )}
                   {student.email && (
-                    <div className="flex items-center gap-3 text-foreground/80">
-                      <Mail className="w-5 h-5 text-accent-purple flex-shrink-0" />
-                      <a href={`mailto:${student.email}`} className="hover:text-indigo-600 underline">
+                    <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Mail className="size-4 shrink-0 text-muted-foreground" />
+                      <a href={`mailto:${student.email}`} className="text-foreground hover:underline">
                         {student.email}
                       </a>
                     </div>
@@ -161,13 +162,13 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {/* Social Links */}
                 <div className="flex gap-3">
                   {student.github_url && (
-                    <a href={student.github_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg hover:bg-neutral-900 transition text-sm font-medium">
+                    <a href={student.github_url} target="_blank" rel="noopener noreferrer" className={btnPrimary}>
                       <Github className="w-4 h-4" />
                       GitHub
                     </a>
                   )}
                   {student.linkedin_url && (
-                    <a href={student.linkedin_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg hover:bg-accent-purple transition text-sm font-medium">
+                    <a href={student.linkedin_url} target="_blank" rel="noopener noreferrer" className={btnSecondary}>
                       <ExternalLink className="w-4 h-4" />
                       LinkedIn
                     </a>
@@ -189,7 +190,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
           </div>
 
           {/* Main Content Grid */}
-          <div className="max-w-2xl">
+          <div>
             <ProfileContent 
               roadmaps={roadmaps}
               courses={courses ? courses.map((c: any) => (c.courses ? { id: c.courses.id, title: c.courses.title, subject: c.courses.subject } : null)).filter((c): c is any => c !== null) : null}

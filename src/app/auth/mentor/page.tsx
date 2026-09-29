@@ -198,12 +198,10 @@ export default function MentorAuth() {
                 <label className="block text-sm font-medium text-muted-foreground mb-2">
                   Full Name
                 </label>
-                <input
-                  type="text"
-                  placeholder="Dr. Jane Smith"
+                <input type="text" placeholder="Dr. Jane Smith"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground"
+ className="w-full px-4 py-3 bg-card border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground"
                   required
                 />
               </div>
@@ -216,12 +214,10 @@ export default function MentorAuth() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="email"
-                  placeholder="mentor@university.edu"
+                <input type="email" placeholder="mentor@university.edu"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground"
+ className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground"
                   required
                 />
               </div>
@@ -234,12 +230,10 @@ export default function MentorAuth() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
+                <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground"
+ className="w-full pl-12 pr-12 py-3 bg-card border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground"
                   required
                 />
                 <button
@@ -260,12 +254,10 @@ export default function MentorAuth() {
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
+                  <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground"
+ className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground"
                     required
                   />
                 </div>
@@ -287,10 +279,7 @@ export default function MentorAuth() {
             {/* Terms (Sign Up only) */}
             {!isSignIn && (
               <div className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  className="mt-1 w-4 h-4 text-accent-purple bg-background border-border rounded focus:ring-ring"
+                <input type="checkbox" id="terms" className="mt-1 w-4 h-4 text-accent-purple bg-background border-border rounded"
                   required
                 />
                 <label htmlFor="terms" className="text-sm text-muted-foreground">

@@ -197,8 +197,8 @@ export function CoursesContent() {
                                 value={form.topic}
                                 onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
                                 onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
-                                placeholder="e.g. SQL for Beginners, Python, React..."
-                                className="flex-1 px-4 py-3 border border-border rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all"
+ placeholder="e.g. SQL for Beginners, Python, React..."
+ className="flex-1 px-4 py-3 border border-border rounded-lg text-sm text-foreground placeholder-muted-foreground transition-all"
                             />
                             <button
                                 onClick={generate}
@@ -215,7 +215,7 @@ export function CoursesContent() {
                                 <select
                                     value={form.difficulty}
                                     onChange={e => setForm(f => ({ ...f, difficulty: e.target.value }))}
-                                    className="w-full px-3 py-2.5 border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-accent-purple bg-card"
+ className="w-full px-3 py-2.5 border border-border rounded-lg text-sm text-foreground bg-card"
                                 >
                                     <option value="beginner">Beginner</option>
                                     <option value="intermediate">Intermediate</option>
@@ -227,7 +227,7 @@ export function CoursesContent() {
                                 <select
                                     value={form.num_modules}
                                     onChange={e => setForm(f => ({ ...f, num_modules: e.target.value }))}
-                                    className="w-full px-3 py-2.5 border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-accent-purple bg-card"
+ className="w-full px-3 py-2.5 border border-border rounded-lg text-sm text-foreground bg-card"
                                 >
                                     {['3', '4', '5', '6', '7', '8'].map(n => (
                                         <option key={n} value={n}>{n} chapters</option>

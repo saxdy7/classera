@@ -198,24 +198,22 @@ export function AIQuestionGenerator({ onAddQuestions, testSubject }: AIQuestionG
                       {/* Topic Input */}
                       <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-2">Topic *</label>
-                        <input
-                          type="text"
+                        <input type="text"
                           value={topic}
                           onChange={(e) => setTopic(e.target.value)}
-                          placeholder="e.g., Photosynthesis, World War II, Algebra"
-                          className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ placeholder="e.g., Photosynthesis, World War II, Algebra"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                         />
                       </div>
 
                       {/* Subject */}
                       <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-2">Subject (Optional)</label>
-                        <input
-                          type="text"
+                        <input type="text"
                           value={subject}
                           onChange={(e) => setSubject(e.target.value)}
-                          placeholder="e.g., Biology, History, Mathematics"
-                          className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ placeholder="e.g., Biology, History, Mathematics"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                         />
                       </div>
                     </>
@@ -227,9 +225,9 @@ export function AIQuestionGenerator({ onAddQuestions, testSubject }: AIQuestionG
                       <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        placeholder="Paste your study material, textbook content, or notes here. The AI will generate questions based on this content..."
+ placeholder="Paste your study material, textbook content, or notes here. The AI will generate questions based on this content..."
                         rows={8}
-                        className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                       />
                       <p className="text-sm text-muted-foreground mt-1">{content.length} characters</p>
                     </div>
@@ -242,7 +240,7 @@ export function AIQuestionGenerator({ onAddQuestions, testSubject }: AIQuestionG
                       <select
                         value={count}
                         onChange={(e) => setCount(parseInt(e.target.value))}
-                        className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                       >
                         {[3, 5, 10, 15, 20].map(n => (
                           <option key={n} value={n}>{n} questions</option>
@@ -254,7 +252,7 @@ export function AIQuestionGenerator({ onAddQuestions, testSubject }: AIQuestionG
                       <select
                         value={difficulty}
                         onChange={(e) => setDifficulty(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                       >
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
@@ -266,7 +264,7 @@ export function AIQuestionGenerator({ onAddQuestions, testSubject }: AIQuestionG
                       <select
                         value={questionType}
                         onChange={(e) => setQuestionType(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg border border-border focus:ring-2 focus:ring-ring focus:border-accent-purple"
+ className="w-full px-4 py-3 rounded-lg border border-border"
                       >
                         <option value="mcq">Multiple Choice</option>
                         <option value="short_answer">Short Answer</option>

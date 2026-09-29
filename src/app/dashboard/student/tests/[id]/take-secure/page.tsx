@@ -334,20 +334,19 @@ export default function TakeTestPageSecure() {
                 onSelect={(answer) => handleAnswerChange(question.id, answer)}
               />
             ) : question.type === 'short_answer' ? (
-              <input
-                type="text"
+              <input type="text"
                 value={answers[question.id] || ''}
                 onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-                placeholder="Type your short answer here..."
-                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
+ placeholder="Type your short answer here..."
+ className="w-full px-4 py-3 border-2 border-border rounded-lg transition-colors"
               />
             ) : (
               <textarea
                 value={answers[question.id] || ''}
                 onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-                placeholder="Type your answer here..."
+ placeholder="Type your answer here..."
                 rows={8}
-                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors resize-none"
+ className="w-full px-4 py-3 border-2 border-border rounded-lg transition-colors resize-none"
               />
             )}
           </div>

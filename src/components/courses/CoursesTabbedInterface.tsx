@@ -255,11 +255,10 @@ export function CoursesTabbedInterface() {
                       {scheduleOptions.map(option => (
                         <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
                           <div className="relative flex-shrink-0">
-                            <input
-                              type="checkbox"
+                            <input type="checkbox"
                               checked={selectedSchedule.includes(option.value)}
                               onChange={() => toggleCheckbox(option.value, selectedSchedule, setSelectedSchedule)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+ className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border"
                             />
                             <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedSchedule.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -303,11 +302,10 @@ export function CoursesTabbedInterface() {
                       {typeOptions.map(option => (
                         <label key={option.value} className="flex items-center gap-3 cursor-pointer group/item">
                           <div className="relative flex-shrink-0">
-                            <input
-                              type="checkbox"
+                            <input type="checkbox"
                               checked={selectedTypes.includes(option.value)}
                               onChange={() => toggleCheckbox(option.value, selectedTypes, setSelectedTypes)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+ className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border"
                             />
                             <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedTypes.includes(option.value) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -351,11 +349,10 @@ export function CoursesTabbedInterface() {
                       {platformOptions.map(platform => (
                         <label key={platform} className="flex items-center gap-3 cursor-pointer group/item">
                           <div className="relative flex-shrink-0">
-                            <input
-                              type="checkbox"
+                            <input type="checkbox"
                               checked={selectedPlatforms.includes(platform)}
                               onChange={() => toggleCheckbox(platform, selectedPlatforms, setSelectedPlatforms)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+ className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border"
                             />
                             <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedPlatforms.includes(platform) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -399,11 +396,10 @@ export function CoursesTabbedInterface() {
                       {levelOptions.map(level => (
                         <label key={level} className="flex items-center gap-3 cursor-pointer group/item">
                           <div className="relative flex-shrink-0">
-                            <input
-                              type="checkbox"
+                            <input type="checkbox"
                               checked={selectedLevels.includes(level)}
                               onChange={() => toggleCheckbox(level, selectedLevels, setSelectedLevels)}
-                              className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border focus:ring-2 focus:ring-[var(--cl-hairline-strong)] focus:ring-offset-0"
+ className="appearance-none w-5 h-5 rounded border-2 border-border cursor-pointer transition-all checked:bg-neutral-900 checked:border-border hover:border-border"
                             />
                             <svg className="absolute top-0.5 left-0.5 w-4 h-4 text-white pointer-events-none opacity-0 transition-opacity" style={{ opacity: selectedLevels.includes(level) ? 1 : 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -491,7 +487,7 @@ export function CoursesTabbedInterface() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none bg-card border border-border rounded-lg px-4 py-2 pr-10 text-sm font-semibold text-foreground/80 hover:border-border focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
+ className="appearance-none bg-card border border-border rounded-lg px-4 py-2 pr-10 text-sm font-semibold text-foreground/80 hover:border-border cursor-pointer"
                   >
                     <option value="updated">Last updated</option>
                     <option value="rating">Highest rated</option>
@@ -506,12 +502,10 @@ export function CoursesTabbedInterface() {
             {/* Search Bar */}
             <div className="mb-8 relative group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70 group-focus-within:text-accent-purple transition-colors" />
-              <input
-                type="text"
-                placeholder="Search internal curated courses..."
+              <input type="text" placeholder="Search internal curated courses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-4 py-4 bg-card border-2 border-border rounded-xl focus:outline-none focus:border-accent-purple transition-all text-foreground/80"
+ className="w-full pl-14 pr-4 py-4 bg-card border-2 border-border rounded-xl transition-all text-foreground/80"
               />
             </div>
 

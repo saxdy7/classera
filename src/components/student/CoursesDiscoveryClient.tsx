@@ -230,9 +230,7 @@ export function CoursesDiscoveryClient() {
                     <div className="flex flex-col lg:flex-row gap-3">
                         <div className="flex-1 relative min-w-0">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-                            <input
-                                type="text"
-                                placeholder="Search courses... (Press Enter for live web search)"
+                            <input type="text" placeholder="Search courses... (Press Enter for live web search)"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={(e) => {
@@ -240,7 +238,7 @@ export function CoursesDiscoveryClient() {
                                         liveSearchCourses(searchQuery);
                                     }
                                 }}
-                                className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-base"
+ className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg transition-colors text-base"
                             />
                         </div>
 
@@ -294,8 +292,8 @@ export function CoursesDiscoveryClient() {
                                     <select
                                         value={selectedType}
                                         onChange={(e) => setSelectedType(e.target.value)}
-                                        className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm cursor-pointer appearance-none"
-                                        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
+ className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg text-sm cursor-pointer appearance-none"
+ style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         <option value="all">All Types</option>
                                         <option value="free">Free</option>
@@ -309,8 +307,8 @@ export function CoursesDiscoveryClient() {
                                     <select
                                         value={selectedPlatform}
                                         onChange={(e) => setSelectedPlatform(e.target.value)}
-                                        className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm cursor-pointer appearance-none"
-                                        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
+ className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg text-sm cursor-pointer appearance-none"
+ style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         {platforms.map((platform) => (
                                             <option key={platform} value={platform}>
@@ -326,8 +324,8 @@ export function CoursesDiscoveryClient() {
                                     <select
                                         value={selectedLevel}
                                         onChange={(e) => setSelectedLevel(e.target.value)}
-                                        className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm cursor-pointer appearance-none"
-                                        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
+ className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg text-sm cursor-pointer appearance-none"
+ style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         {levels.map((level) => (
                                             <option key={level} value={level}>
@@ -343,8 +341,8 @@ export function CoursesDiscoveryClient() {
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm cursor-pointer appearance-none"
-                                        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
+ className="w-full h-11 px-3 bg-muted/40 border border-border rounded-lg text-sm cursor-pointer appearance-none"
+ style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1rem' }}
                                     >
                                         <option value="popular">Most Popular</option>
                                         <option value="rating">Highest Rated</option>

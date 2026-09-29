@@ -106,13 +106,11 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
               <label htmlFor="title" className="block text-sm font-semibold text-foreground/80 mb-2">
                 Title <span className="text-destructive">*</span>
               </label>
-              <input
-                type="text"
-                id="title"
+              <input type="text" id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-4 py-3 rounded-lg border border-border"
               />
             </div>
           )}
@@ -122,12 +120,10 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
               <label htmlFor="title" className="block text-sm font-semibold text-foreground/80 mb-2">
                 Title <span className="text-muted-foreground/70">(Optional)</span>
               </label>
-              <input
-                type="text"
-                id="title"
+              <input type="text" id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-4 py-3 rounded-lg border border-border"
               />
             </div>
           )}
@@ -137,13 +133,12 @@ export function EditPostModal({ post, onClose, onSuccess }: EditPostModalProps) 
             <label htmlFor="content" className="block text-sm font-semibold text-foreground/80 mb-2">
               Content <span className="text-destructive">*</span>
             </label>
-            <textarea
-              id="content"
+            <textarea id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
               rows={8}
-              className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none"
+ className="w-full px-4 py-3 rounded-lg border border-border resize-none"
             />
             <div className="flex justify-between items-center mt-2">
               <span className="text-sm text-muted-foreground">

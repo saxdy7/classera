@@ -101,12 +101,7 @@ export function MessageInput({ onTyping }: MessageInputProps) {
 
             <div className="flex items-end gap-2">
                 <div className="flex flex-1 items-end gap-1 rounded-lg border border-border bg-card p-1.5 transition-colors focus-within:border-foreground focus-within:ring-[3px] focus-within:ring-ring/50">
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        className="hidden"
-                        onChange={handleFileSelect}
-                        accept="image/*,.pdf,.doc,.docx,.txt"
+                    <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} accept="image/*,.pdf,.doc,.docx,.txt"
                     />
 
                     <button 
@@ -133,8 +128,8 @@ export function MessageInput({ onTyping }: MessageInputProps) {
                                 handleSend();
                             }
                         }}
-                        placeholder="Type a message..."
-                        className="min-h-[40px] max-h-32 flex-1 resize-none border-0 bg-transparent px-2 py-2.5 text-[15px] leading-relaxed text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0 focus:outline-none focus:ring-0"
+ placeholder="Type a message..."
+ className="min-h-[40px] max-h-32 flex-1 resize-none border-0 bg-transparent px-2 py-2.5 text-[15px] leading-relaxed text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0"
                         rows={1}
                         style={{ height: '40px' }}
                         disabled={isSending}

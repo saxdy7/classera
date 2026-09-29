@@ -81,13 +81,12 @@ export function FieldOfStudySearch({
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <div className="relative">
-        <input
-          type="text"
+        <input type="text"
           value={value}
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className={`w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors bg-card text-black placeholder:text-muted-foreground/70 ${className}`}
+          className={`w-full px-4 py-3 border-2 border-border rounded-lg transition-colors bg-card text-black placeholder:text-muted-foreground/70 ${className}`}
         />
         {loading && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">

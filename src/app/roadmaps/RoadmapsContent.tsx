@@ -267,8 +267,8 @@ export function RoadmapsContent() {
                                 value={form.topic}
                                 onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
                                 onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
-                                placeholder="e.g. Full Stack Developer, Data Scientist..."
-                                className="flex-1 px-4 py-3 border border-border bg-muted/40 rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] focus:border-accent-purple transition-all"
+ placeholder="e.g. Full Stack Developer, Data Scientist..."
+ className="flex-1 px-4 py-3 border border-border bg-muted/40 rounded-lg text-sm text-foreground placeholder-muted-foreground transition-all"
                             />
                             <button
                                 onClick={generate}
@@ -290,7 +290,7 @@ export function RoadmapsContent() {
                                     <select
                                         value={(form as any)[key]}
                                         onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                                        className="w-full px-3 py-2.5 border border-border bg-muted/40 rounded-lg text-sm text-foreground focus:outline-none focus:border-accent-purple"
+ className="w-full px-3 py-2.5 border border-border bg-muted/40 rounded-lg text-sm text-foreground"
                                     >
                                         {opts.map(([v, l]) => <option key={v} value={v} className="bg-card">{l}</option>)}
                                     </select>

@@ -20,7 +20,7 @@ interface Task {
   user_id: string;
   title: string;
   description: string | null;
-  status: 'todo' | 'in_progress' | 'review' | 'done';
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   due_date: string | null;
   labels: string[];
@@ -29,11 +29,19 @@ interface Task {
   updated_at: string;
 }
 
+/**
+ * Columns map 1:1 onto the `tasks.status` CHECK constraint
+ * ('pending', 'in_progress', 'completed', 'cancelled').
+ *
+ * They previously read 'todo' / 'review' / 'done', which the database rejects —
+ * so every card created from this board failed to insert, and dragging wrote an
+ * illegal status. Three of the four columns could never hold a row.
+ */
 const columns = [
-  { id: 'todo', title: 'To Do', color: 'bg-muted' },
-  { id: 'in_progress', title: 'In Progress', color: 'bg-accent-purple' },
-  { id: 'review', title: 'Review', color: 'bg-amber-500' },
-  { id: 'done', title: 'Done', color: 'bg-green-600' },
+  { id: 'pending', title: 'To do', dot: 'bg-muted-foreground/40' },
+  { id: 'in_progress', title: 'In progress', dot: 'bg-accent-purple' },
+  { id: 'completed', title: 'Completed', dot: 'bg-green-600' },
+  { id: 'cancelled', title: 'Cancelled', dot: 'bg-muted-foreground/30' },
 ];
 
 const priorityColors = {
@@ -51,6 +59,7 @@ export default function TaskBoard() {
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<Task['priority']>('medium');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTasks();
@@ -61,7 +70,7 @@ export default function TaskBoard() {
       setLoading(true);
       const response = await fetch('/api/tasks');
       const data = await response.json();
-      setTasks(data.tasks || []);
+      setTasks(Array.isArray(data?.tasks) ? data.tasks : []);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     } finally {
@@ -86,16 +95,25 @@ export default function TaskBoard() {
       });
 
       const data = await response.json();
-      setTasks([...tasks, data.task]);
-      
+      // A rejected insert answers `{ error }` with no `task`. Pushing that
+      // undefined into state made the next render read `task.status` on it,
+      // which is the "Cannot read properties of undefined" crash.
+      if (!response.ok || !data?.task) {
+        setError(typeof data?.error === 'string' ? data.error : 'Could not create the task.');
+        return;
+      }
+      setTasks((prev) => [...prev, data.task]);
+      setError(null);
+
       // Reset form
       setNewTaskTitle('');
       setNewTaskDescription('');
       setNewTaskPriority('medium');
       setNewTaskDueDate('');
       setShowAddTask(null);
-    } catch (error) {
-      console.error('Error adding task:', error);
+    } catch (err) {
+      console.error('Error adding task:', err);
+      setError('Could not reach the server.');
     }
   };
 
@@ -149,7 +167,7 @@ export default function TaskBoard() {
   };
 
   const getTasksByStatus = (status: string) => {
-    return tasks.filter((task) => task.status === status);
+    return tasks.filter((task) => task?.status === status);
   };
 
   if (loading) {
@@ -168,22 +186,26 @@ export default function TaskBoard() {
   }
 
   return (
-    <div className="p-6">
+    <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-          Task Board
-        </h1>
-        <p className="text-foreground/80 mt-2">Organize and track your tasks</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Task board</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Organise and track your tasks.</p>
       </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </div>
+      )}
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {columns.map((column) => (
-            <div key={column.id} className="bg-muted/40 rounded-lg p-4">
+            <div key={column.id} className="rounded-xl border bg-muted/40 p-4">
               {/* Column Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${column.color}`}></div>
+                  <div className={`w-3 h-3 rounded-full ${column.dot}`}></div>
                   <h3 className="font-semibold text-foreground">{column.title}</h3>
                   <span className="text-sm text-muted-foreground">
                     {getTasksByStatus(column.id).length}
@@ -201,36 +223,32 @@ export default function TaskBoard() {
               {/* Add Task Form */}
               {showAddTask === column.id && (
                 <Card className="p-3 mb-3 space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Task title..."
+                  <input type="text" placeholder="Task title..."
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
-                    className="w-full px-2 py-1 border rounded text-sm"
+ className="w-full px-2 py-1 border rounded text-sm"
                     autoFocus
                   />
-                  <textarea
-                    placeholder="Description (optional)"
+                  <textarea placeholder="Description (optional)"
                     value={newTaskDescription}
                     onChange={(e) => setNewTaskDescription(e.target.value)}
-                    className="w-full px-2 py-1 border rounded text-sm"
+ className="w-full px-2 py-1 border rounded text-sm"
                     rows={2}
                   />
                   <select
                     value={newTaskPriority}
                     onChange={(e) => setNewTaskPriority(e.target.value as Task['priority'])}
-                    className="w-full px-2 py-1 border rounded text-sm"
+ className="w-full px-2 py-1 border rounded text-sm"
                   >
                     <option value="low">Low Priority</option>
                     <option value="medium">Medium Priority</option>
                     <option value="high">High Priority</option>
                     <option value="urgent">Urgent</option>
                   </select>
-                  <input
-                    type="date"
+                  <input type="date"
                     value={newTaskDueDate}
                     onChange={(e) => setNewTaskDueDate(e.target.value)}
-                    className="w-full px-2 py-1 border rounded text-sm"
+ className="w-full px-2 py-1 border rounded text-sm"
                   />
                   <div className="flex space-x-2">
                     <Button

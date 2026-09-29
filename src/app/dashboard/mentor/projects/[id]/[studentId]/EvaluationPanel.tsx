@@ -172,8 +172,7 @@ export default function EvaluationPanel({
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input
-                    type="range"
+                  <input type="range"
                     min={0}
                     max={c.max_points}
                     step={1}
@@ -184,16 +183,14 @@ export default function EvaluationPanel({
                         [c.id]: { ...prev[c.id], score: Number(e.target.value) },
                       }))
                     }
-                    className="flex-1 accent-[var(--accent-purple)]"
+ className="flex-1 accent-[var(--accent-purple)]"
                   />
                   <span className="text-sm font-semibold text-accent-purple w-16 text-right">
                     {cs.score}/{c.max_points}
                     <span className="font-normal text-muted-foreground ml-1">({pct}%)</span>
                   </span>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Comment for this criterion (optional)"
+                <input type="text" placeholder="Comment for this criterion (optional)"
                   value={cs.comment}
                   onChange={(e) =>
                     setCriterionScores((prev) => ({
@@ -201,7 +198,7 @@ export default function EvaluationPanel({
                       [c.id]: { ...prev[c.id], comment: e.target.value },
                     }))
                   }
-                  className="w-full text-xs border border-border rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-ring placeholder-muted-foreground"
+ className="w-full text-xs border border-border rounded-lg px-2.5 py-1.5 placeholder-muted-foreground"
                 />
               </div>
             );
@@ -223,14 +220,13 @@ export default function EvaluationPanel({
           Score (out of {maxScore})
         </label>
         <div className="flex items-center gap-3">
-          <input
-            type="number"
+          <input type="number"
             value={score}
             min={0}
             max={maxScore}
             onChange={(e) => setScore(e.target.value)}
-            placeholder="—"
-            className="w-24 px-3 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring text-center font-semibold text-lg"
+ placeholder="—"
+ className="w-24 px-3 py-2.5 border border-border rounded-lg text-sm text-center font-semibold text-lg"
           />
           <span className="text-muted-foreground text-sm">/ {maxScore}</span>
           {score !== '' && (
@@ -249,9 +245,9 @@ export default function EvaluationPanel({
         <textarea
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Provide detailed feedback on code quality, structure, collaboration, and areas for improvement..."
+ placeholder="Provide detailed feedback on code quality, structure, collaboration, and areas for improvement..."
           rows={5}
-          className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm resize-none"
         />
       </div>
 
@@ -292,13 +288,12 @@ export default function EvaluationPanel({
         )}
 
         <div className="flex gap-2">
-          <input
-            type="text"
+          <input type="text"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && comment.trim()) { e.preventDefault(); save({ withComment: true }); } }}
-            placeholder="Add a comment..."
-            className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Add a comment..."
+ className="flex-1 px-3 py-2 border border-border rounded-lg text-sm"
           />
           <button
             onClick={() => save({ withComment: true })}

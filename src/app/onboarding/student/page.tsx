@@ -112,9 +112,7 @@ export default function StudentOnboarding() {
               </p>
             </div>
 
-            <Input
-              label="Full Name"
-              placeholder="John Doe"
+            <Input label="Full Name" placeholder="John Doe"
               value={formData.full_name}
               onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
               icon={<User className="w-5 h-5" />}
@@ -241,9 +239,7 @@ export default function StudentOnboarding() {
               </div>
             </div>
 
-            <Input
-              label="LinkedIn Profile (Optional)"
-              placeholder="https://linkedin.com/in/yourprofile"
+            <Input label="LinkedIn Profile (Optional)" placeholder="https://linkedin.com/in/yourprofile"
               value={formData.linkedin_url}
               onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
               type="url"

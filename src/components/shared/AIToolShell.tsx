@@ -81,13 +81,12 @@ export function AIToolShell({
           {history.length > 5 && (
             <div className="flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3 transition-colors focus-within:border-foreground focus-within:ring-[3px] focus-within:ring-ring/50">
               <Search size={14} className="flex-shrink-0 text-muted-foreground" aria-hidden="true" />
-              <input
-                type="search"
+              <input type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Filter"
+ placeholder="Filter"
                 aria-label={`Filter ${historyLabel.toLowerCase()}`}
-                className="min-w-0 flex-1 border-0 bg-transparent p-0 text-[13px] text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0 focus:outline-none focus:ring-0 [&::-webkit-search-cancel-button]:appearance-none"
+ className="min-w-0 flex-1 border-0 bg-transparent p-0 text-[13px] text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0 [&::-webkit-search-cancel-button]:appearance-none"
               />
               {query && (
                 <button

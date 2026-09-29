@@ -2,10 +2,11 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import { BookOpen, Users, Plus, Eye, Edit, Trash2, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Stat, Toolbar, btnPrimary } from '@/components/shell';
+import { Stagger } from '@/components/motion';
 
 export default async function MentorCoursesPage() {
   const supabase = await createClient();
@@ -41,64 +42,30 @@ export default async function MentorCoursesPage() {
   const totalStudents = courses?.reduce((sum, c) => sum + (c.enrolled_count || 0), 0) || 0;
 
   return (
-    <div className="min-h-screen bg-muted/40">
-      <Header profile={profile} />
+    <div className="min-h-screen bg-background">
+      <Header profile={profile} title="Courses" />
       <div className="flex">
         <Sidebar role="mentor" />
-        <main className="flex-1 p-8 cl-main">
+        <main className="flex-1 cl-main p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-semibold text-black mb-2">My Courses</h2>
-                <p className="text-foreground/80">Create and manage your courses</p>
-              </div>
-              <Link
-                href="/dashboard/mentor/courses/create"
-                className="px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
-              >
-                <Plus className="w-5 h-5" />
-                Create Course
-              </Link>
-            </div>
+            <Toolbar
+              className="mb-6"
+              left={<p className="text-sm text-muted-foreground">Create and manage your courses.</p>}
+              right={
+                <Link href="/dashboard/mentor/courses/create" className={btnPrimary}>
+                  <Plus className="size-4" />
+                  Create course
+                </Link>
+              }
+            />
 
-            {/* Course Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent-purple/10 rounded-lg flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 text-accent-purple" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/80">Total Courses</p>
-                    <p className="text-2xl font-semibold text-black">{totalCourses}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent-purple/10 rounded-lg flex items-center justify-center">
-                    <Users className="w-6 h-6 text-accent-purple" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/80">Total Students</p>
-                    <p className="text-2xl font-semibold text-black">{totalStudents}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/80">Published</p>
-                    <p className="text-2xl font-semibold text-black">{publishedCourses}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Course stats — shared Stat tile, so these match every other
+                stat row in the product instead of the old coloured icon plates. */}
+            <Stagger className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3" each={0.05}>
+              <Stat label="Total courses" value={totalCourses} icon={BookOpen} />
+              <Stat label="Total students" value={totalStudents} icon={Users} />
+              <Stat label="Published" value={publishedCourses} icon={Eye} />
+            </Stagger>
 
             {/* Courses List */}
             {courses && courses.length > 0 ? (
@@ -188,7 +155,6 @@ export default async function MentorCoursesPage() {
           </div>
         </main>
       </div>
-      <FloatingAIAssistant />
     </div>
   );
 }

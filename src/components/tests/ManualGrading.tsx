@@ -275,9 +275,7 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Score (out of {question.marks})
                                             </label>
-                                            <input
-                                                type="number"
-                                                min="0"
+                                            <input type="number" min="0"
                                                 max={question.marks}
                                                 value={grade.score}
                                                 onChange={(e) => updateGrade(
@@ -286,15 +284,14 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                                                     'score',
                                                     Math.min(question.marks, Math.max(0, parseInt(e.target.value) || 0))
                                                 )}
-                                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-2 border border-border rounded-lg"
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Feedback
                                             </label>
-                                            <input
-                                                type="text"
+                                            <input type="text"
                                                 value={grade.feedback}
                                                 onChange={(e) => updateGrade(
                                                     currentSubmission.id,
@@ -302,8 +299,8 @@ export function ManualGrading({ testId, testTitle, questions, onClose }: ManualG
                                                     'feedback',
                                                     e.target.value
                                                 )}
-                                                placeholder="Optional feedback for the student..."
-                                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Optional feedback for the student..."
+ className="w-full px-4 py-2 border border-border rounded-lg"
                                             />
                                         </div>
                                     </div>

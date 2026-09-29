@@ -72,10 +72,7 @@ export default function JobPortalPage() {
             <div className="flex gap-3 mb-10">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/70" size={18} />
-                <input 
-                  type="text" 
-                  placeholder="Search jobs, companies, or skills..." 
-                  className="w-full pl-12 pr-4 py-3.5 bg-card border border-border rounded-xl focus:ring-4 focus:ring-ring focus:border-accent-purple outline-none transition-all font-semibold text-foreground/80"
+                <input type="text" placeholder="Search jobs, companies, or skills..." className="w-full pl-12 pr-4 py-3.5 bg-card border border-border rounded-xl outline-none transition-all font-semibold text-foreground/80"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />

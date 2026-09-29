@@ -480,12 +480,11 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-        <input
-          type="text"
+        <input type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search posts..."
-          className="w-full pl-12 pr-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ placeholder="Search posts..."
+ className="w-full pl-12 pr-4 py-3 rounded-lg border border-border"
         />
       </div>
 
@@ -831,8 +830,7 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
                           You
                         </div>
                         <div className="flex-1 flex gap-2">
-                          <input
-                            type="text"
+                          <input type="text"
                             value={newComment[post.id] || ''}
                             onChange={(e) =>
                               setNewComment({ ...newComment, [post.id]: e.target.value })
@@ -843,8 +841,8 @@ export function CommunityFeed({ communityId, userId, userRole, isMentor, activeF
                                 handleAddComment(post.id);
                               }
                             }}
-                            placeholder="Write a comment..."
-                            className="flex-1 px-4 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ placeholder="Write a comment..."
+ className="flex-1 px-4 py-2 rounded-lg border border-border"
                           />
                           <button
                             onClick={() => handleAddComment(post.id)}

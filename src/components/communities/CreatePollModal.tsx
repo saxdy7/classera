@@ -116,14 +116,13 @@ export function CreatePollModal({
             <label className="block text-sm font-semibold text-foreground/80 mb-2">
               Poll Question *
             </label>
-            <input
-              type="text"
+            <input type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask your community a question..."
+ placeholder="Ask your community a question..."
               required
               maxLength={200}
-              className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-4 py-3 rounded-lg border border-border"
             />
             <p className="text-xs text-muted-foreground mt-1">
               {question.length}/200 characters
@@ -138,14 +137,13 @@ export function CreatePollModal({
             <div className="space-y-3">
               {options.map((option, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <input
-                    type="text"
+                  <input type="text"
                     value={option}
                     onChange={(e) => handleOptionChange(index, e.target.value)}
                     placeholder={`Option ${index + 1}`}
                     required
                     maxLength={100}
-                    className="flex-1 px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="flex-1 px-4 py-3 rounded-lg border border-border"
                   />
                   {options.length > 2 && (
                     <button
@@ -183,7 +181,7 @@ export function CreatePollModal({
             <select
               value={duration}
               onChange={(e) => setDuration(Number(e.target.value))}
-              className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-4 py-3 rounded-lg border border-border"
             >
               <option value={1}>1 hour</option>
               <option value={6}>6 hours</option>

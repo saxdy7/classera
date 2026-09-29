@@ -124,12 +124,10 @@ export function CommunitiesClient({ userId, universityId }: CommunitiesClientPro
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1 group">
                         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground/70 group-focus-within:text-accent-purple transition-colors" />
-                        <input
-                            type="text"
-                            placeholder="Search discussions, groups or tags..."
+                        <input type="text" placeholder="Search discussions, groups or tags..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-14 pr-6 py-5 rounded-xl bg-card border border-border focus:outline-none focus:ring-4 focus:ring-ring focus:border-accent-purple transition-all text-lg"
+ className="w-full pl-14 pr-6 py-5 rounded-xl bg-card border border-border transition-all text-lg"
                         />
                     </div>
                     <button className="px-8 py-5 bg-primary hover:bg-primary text-white rounded-xl font-semibold text-lg transition-all active:scale-95 flex items-center justify-center gap-2">

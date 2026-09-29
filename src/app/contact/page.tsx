@@ -119,36 +119,28 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="group">
                       <label className="text-sm font-semibold text-foreground/80 mb-2 block">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="John Doe"
+                      <input type="text" required placeholder="John Doe"
                         value={formData.fullName}
                         onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                        className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all group-hover:border-border"
+ className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground transition-all group-hover:border-border"
                       />
                     </div>
                     <div className="group">
                       <label className="text-sm font-semibold text-foreground/80 mb-2 block">Email Address *</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="john@school.edu"
+                      <input type="email" required placeholder="john@school.edu"
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all group-hover:border-border"
+ className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground transition-all group-hover:border-border"
                       />
                     </div>
                   </div>
 
                   <div className="group">
                     <label className="text-sm font-semibold text-foreground/80 mb-2 block">Organization / School</label>
-                    <input
-                      type="text"
-                      placeholder="Your institution name"
+                    <input type="text" placeholder="Your institution name"
                       value={formData.organization}
                       onChange={(e) => setFormData({...formData, organization: e.target.value})}
-                      className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all group-hover:border-border"
+ className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground transition-all group-hover:border-border"
                     />
                   </div>
 
@@ -185,13 +177,10 @@ export default function ContactPage() {
 
                   <div className="group">
                     <label className="text-sm font-semibold text-foreground/80 mb-2 block">Message *</label>
-                    <textarea
-                      required
-                      rows={6}
-                      placeholder="Tell us about your needs, questions, or how we can help you transform your educational experience..."
+                    <textarea required rows={6} placeholder="Tell us about your needs, questions, or how we can help you transform your educational experience..."
                       value={formData.message}
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all resize-none group-hover:border-border"
+ className="w-full bg-muted/40 border-2 border-border rounded-xl px-5 py-4 text-foreground placeholder-muted-foreground transition-all resize-none group-hover:border-border"
                     ></textarea>
                   </div>
 

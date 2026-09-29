@@ -138,12 +138,10 @@ export function MessagesClient({ currentUserId, currentUserName }: MessagesClien
         <div className="p-4 border-b border-border">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-            <input
-              type="text"
-              placeholder="Search messages..."
+            <input type="text" placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground/70"
+ className="w-full pl-10 pr-4 py-2 border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground/70"
             />
           </div>
         </div>

@@ -20,6 +20,7 @@ interface ExternalCourse {
 export function ExternalCoursesTab() {
   const [courses, setCourses] = useState<ExternalCourse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -28,13 +29,23 @@ export function ExternalCoursesTab() {
 
   const fetchCourses = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/hub/external-courses');
       const data = await response.json();
-      setCourses(data || []);
-    } catch (error) {
-      console.error('Error fetching external courses:', error);
+      // The route answers with `{ error }` when the scraper key is missing or
+      // the upstream scrape fails. That object used to be stored as-is, so the
+      // next render called `.filter` on a non-array and crashed the page.
+      if (Array.isArray(data)) {
+        setCourses(data);
+      } else {
+        setCourses([]);
+        setError(typeof data?.error === 'string' ? data.error : 'Could not load external courses.');
+      }
+    } catch (err) {
+      console.error('Error fetching external courses:', err);
       setCourses([]);
+      setError('Could not reach the course service.');
     } finally {
       setLoading(false);
     }
@@ -51,12 +62,10 @@ export function ExternalCoursesTab() {
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-        <input
-          type="text"
-          placeholder="Search Coursera, Udemy, ACS Code Hub..."
+        <input type="text" placeholder="Search Coursera, Udemy, ACS Code Hub..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
+ className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg transition-colors"
         />
       </div>
 
@@ -78,9 +87,18 @@ export function ExternalCoursesTab() {
           ))}
         </div>
       ) : filteredCourses.length === 0 ? (
-        <div className="text-center py-20 bg-muted/40 rounded-xl border-2 border-dashed border-border">
-          <BookOpen className="w-16 h-16 text-muted-foreground/70 mx-auto mb-4" />
-          <p className="text-muted-foreground/70 font-medium text-lg">Scraping Coursera & Udemy for new courses...</p>
+        <div className="rounded-xl border border-dashed bg-muted/40 py-16 text-center">
+          <BookOpen className="mx-auto mb-3 size-12 text-muted-foreground/40" strokeWidth={1.25} />
+          <p className="text-base font-semibold text-foreground">
+            {error ? 'External courses are unavailable' : searchQuery ? 'No matching courses' : 'No external courses yet'}
+          </p>
+          <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
+            {error
+              ? error
+              : searchQuery
+                ? 'Try a different search term.'
+                : 'Courses from Coursera and Udemy appear here once they have been indexed.'}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

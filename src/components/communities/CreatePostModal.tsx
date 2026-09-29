@@ -155,9 +155,7 @@ export function CreatePostModal({
             <label htmlFor="title" className="block text-xs font-semibold text-muted-foreground/70 uppercase tracking-[0.2em] mb-3">
               Title {(postType === 'question' || postType === 'announcement') ? <span className="text-destructive">*</span> : <span className="italic opacity-60">(Optional)</span>}
             </label>
-            <input
-              type="text"
-              id="title"
+            <input type="text" id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={
@@ -168,7 +166,7 @@ export function CreatePostModal({
                     : 'Give your post a catchy title...'
               }
               required={postType === 'question' || postType === 'announcement'}
-              className="w-full px-6 py-4 rounded-xl bg-muted/40 border border-border focus:outline-none focus:ring-4 focus:ring-ring focus:border-accent-purple transition-all font-semibold text-foreground/80 placeholder:text-muted-foreground/70"
+ className="w-full px-6 py-4 rounded-xl bg-muted/40 border border-border transition-all font-semibold text-foreground/80 placeholder:text-muted-foreground/70"
             />
           </div>
 
@@ -177,8 +175,7 @@ export function CreatePostModal({
             <label htmlFor="content" className="block text-xs font-semibold text-muted-foreground/70 uppercase tracking-[0.2em] mb-3">
               {postType === 'question' ? 'Question Details' : 'Description'} <span className="text-destructive">*</span>
             </label>
-            <textarea
-              id="content"
+            <textarea id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder={
@@ -190,7 +187,7 @@ export function CreatePostModal({
               }
               required
               rows={6}
-              className="w-full px-6 py-5 rounded-[1.5rem] bg-muted/40 border border-border focus:outline-none focus:ring-4 focus:ring-ring focus:border-accent-purple transition-all font-medium text-foreground/80 placeholder:text-muted-foreground/70 leading-relaxed resize-none"
+ className="w-full px-6 py-5 rounded-[1.5rem] bg-muted/40 border border-border transition-all font-medium text-foreground/80 placeholder:text-muted-foreground/70 leading-relaxed resize-none"
             />
             <div className="flex justify-between items-center mt-3">
               <span className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">

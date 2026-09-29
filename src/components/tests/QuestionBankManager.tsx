@@ -217,19 +217,17 @@ export default function QuestionBankManager() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
-            <input
-              type="text"
-              placeholder="Search questions..."
+            <input type="text" placeholder="Search questions..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg"
+ className="w-full pl-10 pr-4 py-2 border rounded-lg"
             />
           </div>
 
           <select
             value={filters.type}
             onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-            className="px-4 py-2 border rounded-lg"
+ className="px-4 py-2 border rounded-lg"
           >
             <option value="">All Types</option>
             <option value="mcq">Multiple Choice</option>
@@ -241,7 +239,7 @@ export default function QuestionBankManager() {
           <select
             value={filters.difficulty}
             onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
-            className="px-4 py-2 border rounded-lg"
+ className="px-4 py-2 border rounded-lg"
           >
             <option value="">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -249,12 +247,10 @@ export default function QuestionBankManager() {
             <option value="hard">Hard</option>
           </select>
 
-          <input
-            type="text"
-            placeholder="Subject filter..."
+          <input type="text" placeholder="Subject filter..."
             value={filters.subject}
             onChange={(e) => setFilters({ ...filters, subject: e.target.value })}
-            className="px-4 py-2 border rounded-lg"
+ className="px-4 py-2 border rounded-lg"
           />
         </div>
       </Card>
@@ -377,7 +373,7 @@ export default function QuestionBankManager() {
                     onChange={(e) =>
                       setFormData({ ...formData, question_text: e.target.value })
                     }
-                    className="w-full px-4 py-2 border rounded-lg"
+ className="w-full px-4 py-2 border rounded-lg"
                     rows={3}
                     required
                   />
@@ -394,7 +390,7 @@ export default function QuestionBankManager() {
                           question_type: e.target.value as Question['question_type'],
                         })
                       }
-                      className="w-full px-4 py-2 border rounded-lg"
+ className="w-full px-4 py-2 border rounded-lg"
                     >
                       <option value="mcq">Multiple Choice</option>
                       <option value="coding">Coding</option>
@@ -413,7 +409,7 @@ export default function QuestionBankManager() {
                           difficulty: e.target.value as Question['difficulty'],
                         })
                       }
-                      className="w-full px-4 py-2 border rounded-lg"
+ className="w-full px-4 py-2 border rounded-lg"
                     >
                       <option value="easy">Easy</option>
                       <option value="medium">Medium</option>
@@ -425,25 +421,23 @@ export default function QuestionBankManager() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Subject</label>
-                    <input
-                      type="text"
+                    <input type="text"
                       value={formData.subject}
                       onChange={(e) =>
                         setFormData({ ...formData, subject: e.target.value })
                       }
-                      className="w-full px-4 py-2 border rounded-lg"
+ className="w-full px-4 py-2 border rounded-lg"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Topic</label>
-                    <input
-                      type="text"
+                    <input type="text"
                       value={formData.topic}
                       onChange={(e) =>
                         setFormData({ ...formData, topic: e.target.value })
                       }
-                      className="w-full px-4 py-2 border rounded-lg"
+ className="w-full px-4 py-2 border rounded-lg"
                     />
                   </div>
                 </div>
@@ -453,16 +447,13 @@ export default function QuestionBankManager() {
                     <label className="block text-sm font-medium mb-2">Options</label>
                     {formData.options.map((option, idx) => (
                       <div key={idx} className="flex items-center space-x-2 mb-2">
-                        <input
-                          type="radio"
-                          name="correct"
+                        <input type="radio" name="correct"
                           checked={formData.correct_answer === idx.toString()}
                           onChange={() =>
                             setFormData({ ...formData, correct_answer: idx.toString() })
                           }
                         />
-                        <input
-                          type="text"
+                        <input type="text"
                           value={option}
                           onChange={(e) => {
                             const newOptions = [...formData.options];
@@ -470,7 +461,7 @@ export default function QuestionBankManager() {
                             setFormData({ ...formData, options: newOptions });
                           }}
                           placeholder={`Option ${idx + 1}`}
-                          className="flex-1 px-4 py-2 border rounded-lg"
+ className="flex-1 px-4 py-2 border rounded-lg"
                         />
                       </div>
                     ))}
@@ -479,14 +470,13 @@ export default function QuestionBankManager() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Marks</label>
-                  <input
-                    type="number"
+                  <input type="number"
                     value={formData.marks}
                     onChange={(e) =>
                       setFormData({ ...formData, marks: parseInt(e.target.value) })
                     }
-                    min="1"
-                    className="w-full px-4 py-2 border rounded-lg"
+ min="1"
+ className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
 

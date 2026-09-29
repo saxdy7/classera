@@ -120,7 +120,7 @@ export function ReportPostModal({
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors"
+ className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white transition-colors"
                 >
                   <option value="">Select a reason...</option>
                   {REPORT_REASONS.map((r) => (
@@ -139,9 +139,9 @@ export function ReportPostModal({
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Provide more context to help our moderation team..."
+ placeholder="Provide more context to help our moderation team..."
                   rows={4}
-                  className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white placeholder-muted-foreground dark:placeholder-muted-foreground focus:ring-2 focus:ring-[var(--cl-info)] focus:border-transparent transition-colors resize-none"
+ className="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-card dark:bg-neutral-900 text-foreground dark:text-white placeholder-muted-foreground dark:placeholder-muted-foreground transition-colors resize-none"
                 />
                 <p className="text-xs text-muted-foreground dark:text-muted-foreground/70 mt-1">
                   {description.length}/500 characters

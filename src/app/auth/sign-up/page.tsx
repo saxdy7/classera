@@ -102,14 +102,12 @@ export default function SignUpPage() {
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="fullName"
-                  type="text"
+                <input id="fullName" type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                  placeholder="John Doe"
+ className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground"
+ placeholder="John Doe"
                 />
               </div>
             </div>
@@ -120,14 +118,12 @@ export default function SignUpPage() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="email"
-                  type="email"
+                <input id="email" type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                  placeholder="you@university.edu"
+ className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground"
+ placeholder="you@university.edu"
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">Use your university email to verify authenticity</p>
@@ -171,14 +167,13 @@ export default function SignUpPage() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="password"
+                <input id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-12 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                  placeholder="••••••••"
+ className="w-full pl-11 pr-12 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground"
+ placeholder="••••••••"
                 />
                 <button
                   type="button"
@@ -196,14 +191,13 @@ export default function SignUpPage() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="confirmPassword"
+                <input id="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                  placeholder="••••••••"
+ className="w-full pl-11 pr-4 py-3 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground"
+ placeholder="••••••••"
                 />
               </div>
             </div>

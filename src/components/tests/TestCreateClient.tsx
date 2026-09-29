@@ -147,13 +147,12 @@ export function TestCreateClient({ profile }: Props) {
                                         <label className="block text-sm font-medium text-foreground/80 mb-2">
                                             Test Title *
                                         </label>
-                                        <input
-                                            type="text"
+                                        <input type="text"
                                             required
                                             value={formData.title}
                                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                            placeholder="e.g., Mathematics Mid-term Exam"
-                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="e.g., Mathematics Mid-term Exam"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                         />
                                     </div>
 
@@ -164,8 +163,8 @@ export function TestCreateClient({ profile }: Props) {
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            placeholder="Optional description..."
-                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="Optional description..."
+ className="w-full px-4 py-3 border border-border rounded-lg resize-none"
                                             rows={3}
                                         />
                                     </div>
@@ -175,13 +174,10 @@ export function TestCreateClient({ profile }: Props) {
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Duration (minutes) *
                                             </label>
-                                            <input
-                                                type="number"
-                                                required
-                                                min="1"
+                                            <input type="number" required min="1"
                                                 value={formData.duration_minutes}
                                                 onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                             />
                                         </div>
 
@@ -189,11 +185,10 @@ export function TestCreateClient({ profile }: Props) {
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Schedule Date & Time
                                             </label>
-                                            <input
-                                                type="datetime-local"
+                                            <input type="datetime-local"
                                                 value={formData.scheduled_at}
                                                 onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                             />
                                         </div>
 
@@ -201,13 +196,10 @@ export function TestCreateClient({ profile }: Props) {
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                                 Passing % 
                                             </label>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
+                                            <input type="number" min="0" max="100"
                                                 value={formData.passing_percentage}
                                                 onChange={(e) => setFormData({ ...formData, passing_percentage: parseInt(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                             />
                                         </div>
                                     </div>
@@ -223,11 +215,10 @@ export function TestCreateClient({ profile }: Props) {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.randomize_questions}
                                             onChange={(e) => setFormData({ ...formData, randomize_questions: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple"
                                         />
                                         <div>
                                             <span className="text-sm font-medium text-foreground/80">Randomize Questions</span>
@@ -236,11 +227,10 @@ export function TestCreateClient({ profile }: Props) {
                                     </label>
 
                                     <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.show_results_immediately}
                                             onChange={(e) => setFormData({ ...formData, show_results_immediately: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple"
                                         />
                                         <div>
                                             <span className="text-sm font-medium text-foreground/80">Show Results Immediately</span>
@@ -249,11 +239,10 @@ export function TestCreateClient({ profile }: Props) {
                                     </label>
 
                                     <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.allow_review}
                                             onChange={(e) => setFormData({ ...formData, allow_review: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple"
                                         />
                                         <div>
                                             <span className="text-sm font-medium text-foreground/80">Allow Answer Review</span>
@@ -262,11 +251,10 @@ export function TestCreateClient({ profile }: Props) {
                                     </label>
 
                                     <label className="flex items-start gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted transition-colors">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.enable_anti_cheat}
                                             onChange={(e) => setFormData({ ...formData, enable_anti_cheat: e.target.checked })}
-                                            className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 mt-0.5 rounded border-border text-accent-purple"
                                         />
                                         <div>
                                             <span className="text-sm font-medium text-foreground/80">Anti-Cheating Measures</span>
@@ -285,21 +273,19 @@ export function TestCreateClient({ profile }: Props) {
 
                                 <div className="space-y-3">
                                     <label className="flex items-center gap-3">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.enable_screen_recording}
                                             onChange={(e) => setFormData({ ...formData, enable_screen_recording: e.target.checked })}
-                                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 rounded border-border text-accent-purple"
                                         />
                                         <span className="text-sm font-medium text-foreground/80">Enable Screen Recording</span>
                                     </label>
 
                                     <label className="flex items-center gap-3">
-                                        <input
-                                            type="checkbox"
+                                        <input type="checkbox"
                                             checked={formData.enable_face_monitoring}
                                             onChange={(e) => setFormData({ ...formData, enable_face_monitoring: e.target.checked })}
-                                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
+ className="w-5 h-5 rounded border-border text-accent-purple"
                                         />
                                         <span className="text-sm font-medium text-foreground/80">Enable Face Monitoring</span>
                                     </label>

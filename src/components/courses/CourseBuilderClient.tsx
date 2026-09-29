@@ -205,13 +205,12 @@ export function CourseBuilderClient({ profile }: Props) {
                             <div className="bg-card rounded-lg p-6 border border-border space-y-6">
                                 <div>
                                     <label className="block text-sm font-medium text-foreground/80 mb-2">Course Title *</label>
-                                    <input
-                                        type="text"
+                                    <input type="text"
                                         required
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        placeholder="e.g., Complete React.js Course"
-                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="e.g., Complete React.js Course"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                     />
                                 </div>
 
@@ -220,8 +219,8 @@ export function CourseBuilderClient({ profile }: Props) {
                                     <textarea
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        placeholder="What will students learn in this course?"
-                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="What will students learn in this course?"
+ className="w-full px-4 py-3 border border-border rounded-lg resize-none"
                                         rows={4}
                                     />
                                 </div>
@@ -232,7 +231,7 @@ export function CourseBuilderClient({ profile }: Props) {
                                         <select
                                             value={formData.level}
                                             onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                         >
                                             <option value="Beginner">Beginner</option>
                                             <option value="Intermediate">Intermediate</option>
@@ -242,12 +241,10 @@ export function CourseBuilderClient({ profile }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-foreground/80 mb-2">Duration (hours)</label>
-                                        <input
-                                            type="number"
-                                            min="1"
+                                        <input type="number" min="1"
                                             value={formData.duration_hours}
                                             onChange={(e) => setFormData({ ...formData, duration_hours: parseInt(e.target.value) })}
-                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                         />
                                     </div>
                                 </div>
@@ -258,7 +255,7 @@ export function CourseBuilderClient({ profile }: Props) {
                                         <select
                                             value={formData.course_type}
                                             onChange={(e) => setFormData({ ...formData, course_type: e.target.value })}
-                                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                         >
                                             <option value="free">Free</option>
                                             <option value="paid">Paid</option>
@@ -268,12 +265,10 @@ export function CourseBuilderClient({ profile }: Props) {
                                     {formData.course_type === 'paid' && (
                                         <div>
                                             <label className="block text-sm font-medium text-foreground/80 mb-2">Price ($)</label>
-                                            <input
-                                                type="number"
-                                                min="0"
+                                            <input type="number" min="0"
                                                 value={formData.price}
                                                 onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                             />
                                         </div>
                                     )}
@@ -281,25 +276,23 @@ export function CourseBuilderClient({ profile }: Props) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-foreground/80 mb-2">Thumbnail URL</label>
-                                    <input
-                                        type="url"
+                                    <input type="url"
                                         value={formData.thumbnail_url}
                                         onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                                        placeholder="https://..."
-                                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="https://..."
+ className="w-full px-4 py-3 border border-border rounded-lg"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-foreground/80 mb-2">Skills</label>
                                     <div className="flex gap-2 mb-2">
-                                        <input
-                                            type="text"
+                                        <input type="text"
                                             value={newSkill}
                                             onChange={(e) => setNewSkill(e.target.value)}
                                             onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
-                                            placeholder="Add a skill"
-                                            className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Add a skill"
+ className="flex-1 px-4 py-2 border border-border rounded-lg"
                                         />
                                         <button
                                             onClick={addSkill}
@@ -360,11 +353,10 @@ export function CourseBuilderClient({ profile }: Props) {
                                                 <div key={module.id} className="border border-border rounded-lg overflow-hidden">
                                                     <div className="bg-muted/40 p-4 flex items-center gap-4">
                                                         <GripVertical className="w-5 h-5 text-muted-foreground/70" />
-                                                        <input
-                                                            type="text"
+                                                        <input type="text"
                                                             value={module.title}
                                                             onChange={(e) => updateModule(module.id, e.target.value)}
-                                                            className="flex-1 px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="flex-1 px-3 py-2 border border-border rounded-lg"
                                                         />
                                                         <button
                                                             onClick={() => addLesson(module.id)}
@@ -385,26 +377,23 @@ export function CourseBuilderClient({ profile }: Props) {
                                                             {module.lessons.map((lesson, lessonIndex) => (
                                                                 <div key={lesson.id} className="flex items-center gap-3 bg-card p-3 rounded-lg border border-border">
                                                                     <span className="text-sm text-muted-foreground/70 w-6">{lessonIndex + 1}.</span>
-                                                                    <input
-                                                                        type="text"
+                                                                    <input type="text"
                                                                         value={lesson.title}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { title: e.target.value })}
-                                                                        placeholder="Lesson title"
-                                                                        className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Lesson title"
+ className="flex-1 px-3 py-2 border border-border rounded-lg text-sm"
                                                                     />
-                                                                    <input
-                                                                        type="url"
+                                                                    <input type="url"
                                                                         value={lesson.videoUrl}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { videoUrl: e.target.value })}
-                                                                        placeholder="Video URL"
-                                                                        className="w-48 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Video URL"
+ className="w-48 px-3 py-2 border border-border rounded-lg text-sm"
                                                                     />
-                                                                    <input
-                                                                        type="number"
+                                                                    <input type="number"
                                                                         value={lesson.duration}
                                                                         onChange={(e) => updateLesson(module.id, lesson.id, { duration: parseInt(e.target.value) })}
-                                                                        placeholder="mins"
-                                                                        className="w-20 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="mins"
+ className="w-20 px-3 py-2 border border-border rounded-lg text-sm"
                                                                     />
                                                                     <button
                                                                         onClick={() => removeLesson(module.id, lesson.id)}

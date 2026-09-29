@@ -132,14 +132,14 @@ export function FloatingAI() {
 
           {/* Input */}
           <div className="p-3 bg-card border-t border-border">
-            <div className="flex items-center gap-2 bg-muted/40 rounded-xl px-3 py-1.5 border border-border focus-within:border-accent-purple focus-within:ring-2 focus-within:ring-ring transition-all">
-              <input
-                type="text"
+            <div className="flex items-center gap-2 rounded-xl border bg-card px-3 py-1.5 transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/40">
+              <input type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                placeholder="Message AI..."
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xs font-medium text-foreground placeholder:text-muted-foreground py-1.5"
+ placeholder="Message AI..."
+                data-bare
+ className="flex-1 bg-transparent py-1.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
               />
               <button
                 onClick={() => sendMessage()}

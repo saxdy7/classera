@@ -48,10 +48,10 @@ export function Input({ label, error, hint, icon, className = '', id, ...props }
             'placeholder:text-muted-foreground/70',
             'border transition-colors duration-200 ease-out',
             // Expo: focus thickens the border to ink, plus a soft neutral ring.
-            'focus:outline-none focus:ring-[3px] focus:ring-ring/50',
+            '',
             error
               ? 'border-destructive focus:border-destructive'
-              : 'border-border focus:border-foreground',
+              : 'border-border',
             className,
           ].join(' ')}
           {...props}

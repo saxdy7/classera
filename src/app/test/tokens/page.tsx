@@ -78,14 +78,12 @@ export default function GrantTokensPage() {
               Tokens to Grant
             </label>
             <div className="flex gap-2">
-              <input
-                type="number"
-                min="1"
+              <input type="number" min="1"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={loading}
-                className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] disabled:bg-muted/40"
-                placeholder="100"
+ className="flex-1 px-4 py-2 border border-border rounded-lg disabled:bg-muted/40"
+ placeholder="100"
               />
               <button
                 onClick={handleGrant}

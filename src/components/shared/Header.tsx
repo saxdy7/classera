@@ -9,13 +9,10 @@ import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { NotificationBell } from '@/components/shared/NotificationBell';
 import GlobalSearch from '@/components/shared/GlobalSearch';
+import { SidebarTrigger } from '@/components/shared/SidebarTrigger';
 import { BreadCrumbs } from '@/components/shared/BreadCrumbs';
 
 interface HeaderProps {
-  /**
-   * Optional: the public portfolio page renders <Header /> with no profile.
-   * Previously this was a required prop, so that page threw on `profile.role`.
-   */
   profile?: {
     id?: string;
     full_name?: string;
@@ -23,20 +20,26 @@ interface HeaderProps {
     avatar_url?: string;
     role?: string;
   };
+  /** Renames the final breadcrumb. Falls back to the route segment. */
+  title?: string;
+  /** Small pills rendered beside the trail — status, context, counts. */
+  meta?: React.ReactNode;
 }
 
 /**
- * App header — composition taken from aria's `(main)/home/layout.tsx` and
- * looma's dashboard layout:
+ * App header.
  *
- *   <header class="flex h-16 shrink-0 items-center justify-between px-4 border-b">
- *     [ divider · Breadcrumbs ]  ……  [ search ] [ outline icon-sm buttons ] [ UserMenu ]
+ * Left: the sidebar trigger and a route-derived breadcrumb trail
+ * (Dashboard › Courses), matching the reference. A page may pass `title` to
+ * rename the final crumb, and `meta` to sit status pills beside it.
+ * Right: search, support, messages, notifications, one CTA, and the avatar.
  *
- * The sidebar is full-height and sits to the LEFT of the header (aria/looma
- * both do this), so on md+ the header is offset by the rail width via
- * `--cl-sidebar-w`, which the Sidebar publishes.
+ * The sidebar is full-height and sits to the LEFT of the header, so on md+ the
+ * bar is offset by the rail width via `--cl-sidebar-w`, which Sidebar publishes.
  */
-export function Header({ profile = {} }: HeaderProps) {
+
+
+export function Header({ profile = {}, title, meta }: HeaderProps) {
   const router = useRouter();
   const supabase = createClient();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -70,70 +73,83 @@ export function Header({ profile = {} }: HeaderProps) {
     return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  /** aria: `variant="outline" size="icon-sm"` with a neutral-100 fill. */
-  const iconBtn =
-    'flex size-8 items-center justify-center rounded-md border bg-neutral-100 text-foreground transition-all hover:text-accent-purple focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 cursor-pointer';
+  const ghost =
+    'hidden lg:inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50';
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-background px-4',
-        // Sit beside the full-height rail on desktop.
+        'sticky top-0 z-40 flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-background px-4',
         'md:ml-[var(--cl-sidebar-w,260px)] md:transition-[margin-left] md:duration-200',
       )}
     >
-      {/* Left: divider + breadcrumbs (aria) */}
+      {/* Left: trigger · breadcrumb trail · status pills.
+          The trail (Dashboard › Canvas) is the reference's header treatment;
+          `title` still overrides the final crumb when a page passes one. */}
       <div className="flex min-w-0 items-center gap-2">
-        {/* Mobile wordmark — the rail (and its logo) is hidden below md */}
-        <Link href={`/dashboard/${profile.role ?? 'student'}`} className="text-base font-semibold tracking-tight text-foreground md:hidden">
+        <SidebarTrigger className="-ml-1 hidden md:flex" />
+        <Link href={`/dashboard/${profile.role ?? 'student'}`} className="shrink-0 text-base font-semibold tracking-tight text-foreground md:hidden">
           Classera
         </Link>
-        <div className="mx-2 hidden h-4 w-px bg-border md:block" />
-        <BreadCrumbs className="hidden md:flex" />
+        <BreadCrumbs className="hidden md:flex" overrideLast={title ?? undefined} />
+        {meta && <div className="hidden items-center gap-2 md:flex">{meta}</div>}
       </div>
 
       {/* Right cluster */}
-      <div className="flex items-center gap-3">
-        <div className="hidden w-64 md:block">
+      <div className="flex shrink-0 items-center gap-1.5">
+        <div className="hidden w-56 xl:block">
           <GlobalSearch />
         </div>
 
+        <Link href="/contact" className={ghost}>
+          <HelpCircle className="size-4" />
+          Support
+        </Link>
+
         {profile.role && (
-          <Link href={`/dashboard/${profile.role}/messages`} aria-label="Messages" title="Messages" className={iconBtn}>
+          <Link
+            href={`/dashboard/${profile.role}/messages`}
+            aria-label="Messages"
+            title="Messages"
+            className="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
             <MessageSquare className="size-4" />
           </Link>
         )}
 
         {profile.id && <NotificationBell userId={profile.id} />}
 
-        <Link href="/contact" aria-label="Help & guides" title="Help & Guides" className={iconBtn}>
-          <HelpCircle className="size-4" />
+        {/* The one prominent CTA, per Amboras */}
+        <Link
+          href="/roadmaps"
+          className="ml-1 hidden h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:inline-flex"
+        >
+          Explore
         </Link>
 
         {/* UserMenu */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative ml-0.5" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             aria-haspopup="menu"
             aria-expanded={showDropdown}
-            className="flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="flex cursor-pointer items-center gap-1 rounded-lg p-0.5 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
           >
             {profile.avatar_url ? (
-              <Image src={profile.avatar_url} alt="" className="size-8 rounded-full border object-cover" width={32} height={32} />
+              <Image src={profile.avatar_url} alt="" className="size-7 rounded-full border object-cover" width={28} height={28} />
             ) : (
-              <div className="flex size-8 items-center justify-center rounded-full border bg-primary/10 text-[11px] font-semibold text-primary">
+              <div className="flex size-7 items-center justify-center rounded-full border bg-muted text-[11px] font-semibold text-foreground">
                 {getInitials(profile.full_name)}
               </div>
             )}
-            <ChevronDown className={cn('size-4 text-muted-foreground transition-transform duration-200', showDropdown && 'rotate-180')} />
+            <ChevronDown className={cn('size-3.5 text-muted-foreground transition-transform duration-200', showDropdown && 'rotate-180')} />
           </button>
 
           {showDropdown && (
-            <div role="menu" className="absolute right-0 mt-2 w-60 rounded-lg border bg-popover py-1.5 text-popover-foreground shadow-md">
+            <div role="menu" className="absolute right-0 mt-2 w-60 rounded-xl border bg-popover py-1.5 text-popover-foreground shadow-md">
               <div className="border-b px-3 py-2.5">
                 <p className="truncate text-sm font-semibold capitalize text-foreground">{profile.full_name || 'User'}</p>
                 <p className="truncate text-xs text-muted-foreground">{profile.email}</p>
-                {profile.role && <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{profile.role}</p>}
               </div>
               <Link
                 href={`/dashboard/${profile.role}/settings`}
@@ -146,7 +162,7 @@ export function Header({ profile = {} }: HeaderProps) {
               <button
                 onClick={handleSignOut}
                 role="menuitem"
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10"
+                className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10"
               >
                 <LogOut className="size-4" />
                 Sign out

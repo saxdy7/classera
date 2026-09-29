@@ -164,19 +164,17 @@ export function QuestionBankSelector({ onSelect, existingQuestionIds = [] }: Que
                             <div className="grid grid-cols-4 gap-3">
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search..."
+                                    <input type="text" placeholder="Search..."
                                         value={filters.search}
                                         onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full pl-10 pr-4 py-2 border border-border rounded-lg text-sm"
                                     />
                                 </div>
 
                                 <select
                                     value={filters.type}
                                     onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                                    className="px-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="px-4 py-2 border border-border rounded-lg text-sm"
                                 >
                                     <option value="">All Types</option>
                                     <option value="mcq">Multiple Choice</option>
@@ -188,7 +186,7 @@ export function QuestionBankSelector({ onSelect, existingQuestionIds = [] }: Que
                                 <select
                                     value={filters.difficulty}
                                     onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
-                                    className="px-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="px-4 py-2 border border-border rounded-lg text-sm"
                                 >
                                     <option value="">All Difficulties</option>
                                     <option value="easy">Easy</option>
@@ -196,12 +194,10 @@ export function QuestionBankSelector({ onSelect, existingQuestionIds = [] }: Que
                                     <option value="hard">Hard</option>
                                 </select>
 
-                                <input
-                                    type="text"
-                                    placeholder="Subject..."
+                                <input type="text" placeholder="Subject..."
                                     value={filters.subject}
                                     onChange={(e) => setFilters({ ...filters, subject: e.target.value })}
-                                    className="px-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="px-4 py-2 border border-border rounded-lg text-sm"
                                 />
                             </div>
                         </div>

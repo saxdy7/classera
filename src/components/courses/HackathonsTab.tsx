@@ -51,12 +51,10 @@ export function HackathonsTab() {
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-        <input
-          type="text"
-          placeholder="Search for Unstop, MLH, LinkedIn events..."
+        <input type="text" placeholder="Search for Unstop, MLH, LinkedIn events..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-destructive transition-colors"
+ className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:border-destructive transition-colors"
         />
       </div>
 

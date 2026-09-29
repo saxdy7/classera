@@ -157,9 +157,7 @@ export function CoursesTab() {
         <div className="flex flex-col lg:flex-row gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-            <input
-              type="text"
-              placeholder="Search courses by name, instructor, skills..."
+            <input type="text" placeholder="Search courses by name, instructor, skills..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -167,7 +165,7 @@ export function CoursesTab() {
                   liveSearchCourses(searchQuery);
                 }
               }}
-              className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
+ className="w-full pl-12 pr-4 py-3 border-2 border-border rounded-lg transition-colors"
             />
           </div>
 
@@ -218,7 +216,7 @@ export function CoursesTab() {
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-3 py-2 bg-card border border-border rounded-lg"
                 >
                   <option value="all">All Types</option>
                   <option value="free">Free</option>
@@ -231,7 +229,7 @@ export function CoursesTab() {
                 <select
                   value={selectedPlatform}
                   onChange={(e) => setSelectedPlatform(e.target.value)}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-3 py-2 bg-card border border-border rounded-lg"
                 >
                   {platforms.map(platform => (
                     <option key={platform} value={platform}>{platform === 'all' ? 'All Platforms' : platform}</option>
@@ -244,7 +242,7 @@ export function CoursesTab() {
                 <select
                   value={selectedLevel}
                   onChange={(e) => setSelectedLevel(e.target.value)}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-3 py-2 bg-card border border-border rounded-lg"
                 >
                   {levels.map(level => (
                     <option key={level} value={level}>{level === 'all' ? 'All Levels' : level}</option>
@@ -257,7 +255,7 @@ export function CoursesTab() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-3 py-2 bg-card border border-border rounded-lg"
                 >
                   <option value="popular">Most Popular</option>
                   <option value="rating">Highest Rated</option>

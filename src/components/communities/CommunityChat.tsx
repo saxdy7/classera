@@ -358,13 +358,10 @@ export function CommunityChat({
                 <div className="px-4 py-3 border-b border-border bg-muted/40">
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
-                        <input
-                            autoFocus
-                            type="text"
-                            placeholder="Search messages…"
+                        <input autoFocus type="text" placeholder="Search messages…"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full pl-9 pr-4 py-2 rounded-lg border border-border text-sm"
                         />
                         {searchQuery && (
                             <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-foreground/80">
@@ -492,15 +489,13 @@ export function CommunityChat({
                                         <X className="w-5 h-5" />
                                     </button>
                                 )}
-                                <input
-                                    ref={inputRef}
-                                    type="text"
+                                <input ref={inputRef} type="text"
                                     value={newMessage}
                                     onChange={e => setNewMessage(e.target.value)}
                                     onKeyDown={e => { if (e.key === 'Escape') cancelEdit(); }}
                                     placeholder={editingId ? 'Edit your message… (Esc to cancel)' : 'Type a message…'}
                                     disabled={sending}
-                                    className={`flex-1 px-4 py-3 rounded-lg border text-sm focus:outline-none focus:border-foreground focus:ring-[3px] focus:ring-ring/50 transition-all disabled:opacity-60 ${editingId ? 'border-amber-500 bg-amber-500/10' : 'border-border bg-card'
+                                    className={`flex-1 px-4 py-3 rounded-lg border text-sm transition-all disabled:opacity-60 ${editingId ? 'border-amber-500 bg-amber-500/10' : 'border-border bg-card'
                                         }`}
                                 />
                                 <button

@@ -109,13 +109,12 @@ export default function TaskBoardClient({ initialTasks, userId }: { initialTasks
 
       {showNewTask && (
         <div className="mb-6 p-4 bg-card rounded-xl border border-border">
-          <input
-            type="text"
+          <input type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addTask()}
-            placeholder="Task title..."
-            className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring mb-3"
+ placeholder="Task title..."
+ className="w-full px-4 py-3 border border-border rounded-lg mb-3"
             autoFocus
           />
           <div className="flex gap-2">

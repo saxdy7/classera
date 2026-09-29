@@ -164,8 +164,8 @@ export function GuidesContent() {
                                 value={topic}
                                 onChange={e => setTopic(e.target.value)}
                                 onKeyDown={e => { if (e.key === 'Enter') debouncedGenerate(); }}
-                                placeholder="e.g. How REST APIs work, What is recursion, Docker explained..."
-                                className="flex-1 px-4 py-3 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--cl-info)] focus:border-accent-purple transition-all"
+ placeholder="e.g. How REST APIs work, What is recursion, Docker explained..."
+ className="flex-1 px-4 py-3 border border-border rounded-lg text-sm transition-all"
                             />
                             <button onClick={generate} disabled={!topic.trim() || loading}
                                 className="px-5 py-3 bg-accent-purple text-white rounded-lg font-semibold text-sm hover:bg-accent-purple disabled:opacity-40 transition-colors flex items-center gap-2 flex-shrink-0">

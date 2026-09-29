@@ -96,12 +96,11 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
           <label className="block text-sm font-medium text-foreground/80 mb-2">GitHub Repository URL</label>
           <div className="relative">
             <GitBranch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
-            <input
-              type="url"
+            <input type="url"
               value={repoUrl}
               onChange={(e) => setRepoUrl(e.target.value)}
-              placeholder="https://github.com/username/repository"
-              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="https://github.com/username/repository"
+ className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm"
               required
             />
           </div>
@@ -116,12 +115,11 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
           <label className="block text-sm font-medium text-foreground/80 mb-2">Submission Link</label>
           <div className="relative">
             <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/70" />
-            <input
-              type="url"
+            <input type="url"
               value={submissionUrl}
               onChange={(e) => setSubmissionUrl(e.target.value)}
-              placeholder="https://…"
-              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="https://…"
+ className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm"
               required
             />
           </div>
@@ -137,8 +135,8 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
               value={submissionText}
               onChange={(e) => setSubmissionText(e.target.value)}
               rows={6}
-              placeholder="Write your response…"
-              className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="Write your response…"
+ className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm resize-none"
               required
             />
           </div>
@@ -162,12 +160,11 @@ export default function SubmissionForm({ assignmentId, submissionType, existing 
         <label className="block text-sm font-medium text-foreground/80 mb-2">
           Live preview link <span className="text-muted-foreground/70 font-normal">(optional)</span>
         </label>
-        <input
-          type="url"
+        <input type="url"
           value={deployUrl}
           onChange={(e) => setDeployUrl(e.target.value)}
-          placeholder="https://your-project.vercel.app"
-          className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="https://your-project.vercel.app"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm"
         />
       </div>
 

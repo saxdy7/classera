@@ -117,9 +117,7 @@ export default function MentorOnboarding() {
               </p>
             </div>
 
-            <Input
-              label="Full Name"
-              placeholder="Dr. Jane Smith"
+            <Input label="Full Name" placeholder="Dr. Jane Smith"
               value={formData.full_name}
               onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
               icon={<User className="w-5 h-5" />}
@@ -170,16 +168,13 @@ export default function MentorOnboarding() {
               </p>
             </div>
 
-            <Input
-              label="Area of Expertise"
-              placeholder="e.g., Full Stack Development, AI/ML, Web Development (comma-separated)"
+            <Input label="Area of Expertise" placeholder="e.g., Full Stack Development, AI/ML, Web Development (comma-separated)"
               value={formData.expertise}
               onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
               icon={<Briefcase className="w-5 h-5" />}
             />
 
-            <Select
-              label="Years of Experience (Optional)"
+            <Select label="Years of Experience (Optional)"
               options={[
                 { value: '', label: 'Select experience' },
                 { value: '0-2', label: '0-2 years' },
@@ -245,9 +240,7 @@ export default function MentorOnboarding() {
               </div>
             </div>
 
-            <Input
-              label="LinkedIn Profile (Optional)"
-              placeholder="https://linkedin.com/in/yourprofile"
+            <Input label="LinkedIn Profile (Optional)" placeholder="https://linkedin.com/in/yourprofile"
               value={formData.linkedin_url}
               onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
               type="url"

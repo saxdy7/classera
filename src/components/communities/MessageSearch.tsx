@@ -51,12 +51,11 @@ export function MessageSearch({ channelId, onClose }: MessageSearchProps) {
         <div className="absolute top-0 right-0 w-80 h-full bg-card border-l border-border z-20 flex flex-col">
             <div className="p-4 border-b border-border flex items-center gap-2">
                 <Search className="w-5 h-5 text-muted-foreground/70" />
-                <input
-                    type="text"
+                <input type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search messages..."
-                    className="flex-1 bg-transparent border-none focus:ring-0 text-sm"
+ placeholder="Search messages..."
+ className="flex-1 bg-transparent border-none text-sm"
                     autoFocus
                 />
                 <button

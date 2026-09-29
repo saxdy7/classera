@@ -150,12 +150,11 @@ export function ThreadView({ parentMessage, channelId, onClose, currentUser }: T
             {/* Reply Input */}
             <div className="p-4 border-t border-border">
                 <form onSubmit={handleSendReply} className="flex gap-2">
-                    <input
-                        type="text"
+                    <input type="text"
                         value={newReply}
                         onChange={(e) => setNewReply(e.target.value)}
-                        placeholder="Reply to thread..."
-                        className="flex-1 px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+ placeholder="Reply to thread..."
+ className="flex-1 px-3 py-2 rounded-lg border border-border text-sm"
                     />
                     <button
                         type="submit"

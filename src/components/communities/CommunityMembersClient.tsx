@@ -162,12 +162,10 @@ export function CommunityMembersClient({ communityId, currentUserRole }: Communi
                 <div className="mb-6">
                     <div className="relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-                        <input
-                            type="text"
-                            placeholder="Search members..."
+                        <input type="text" placeholder="Search members..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full pl-12 pr-4 py-3 rounded-lg border border-border"
                         />
                     </div>
                 </div>

@@ -18,13 +18,13 @@
   --font-mono: "JetBrains Mono";
   --font-body: "Plus Jakarta Sans";
 
-  /* Heading face for the product surface (.cl-v3). The Cognify system asks for
-     Geist + Space Grotesk + Geist Mono via next/font/google; neither family is
-     installed and there is no network here to add them, and next/font/google is
-     exactly what broke this layout before (see layout.tsx). Inter stands in for
-     both Geist and Space Grotesk — it is the same calm neutral grotesque the
-     system is reaching for — and JetBrains Mono stands in for Geist Mono. */
-  --font-heading: "Inter";
+  /* Heading face for the product surface (.cl-v3).
+     The reference admin uses a geometric humanist sans (Switzer/Satoshi class).
+     Those are Fontshare families and are not published to npm, so Plus Jakarta
+     Sans stands in — it is the closest match available and is already
+     self-hosted here. Inter stays the fallback; JetBrains Mono covers figures
+     and code. next/font/google is deliberately avoided (see layout.tsx). */
+  --font-heading: "Plus Jakarta Sans";
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -344,11 +344,14 @@ body {
   font-family: var(--font-body), sans-serif;
 }
 
-/* ── Always show dark text in form controls regardless of OS color scheme ── */
-input,
-select,
-textarea {
-  color: #0f172a !important;
+/* ── Always show dark text in form controls regardless of OS color scheme ──
+   Scoped OFF the product surface (`.cl-v3`): the `!important` colour and the
+   hard white fill overrode transparent/bare fields and any custom text colour.
+   The product surface sets its own field colours above. */
+:not(.cl-v3) > input,
+:not(.cl-v3) > select,
+:not(.cl-v3) > textarea {
+  color: #0f172a;
   background-color: #ffffff;
   -webkit-text-fill-color: #0f172a;
 }
@@ -401,10 +404,21 @@ html {
 /* Main content offset follows the sidebar rail width. Pages used to hard-code
    `md:ml-24` (96px) while the expanded rail is 260px, so an open sidebar sat on
    top of the content. --cl-sidebar-w is published by Sidebar. */
+/* `.cl-main` is a flex item next to the fixed rail. Flex items default to
+   `min-width: auto`, so they refuse to shrink below their content's intrinsic
+   width — a wide card grid or an unbroken string then pushed the column past
+   the viewport and the right-hand cards were clipped. `min-width: 0` lets it
+   shrink; the explicit max-width keeps it inside the rail offset. */
+.cl-main {
+  min-width: 0;
+}
+
 @media (min-width: 768px) {
   .cl-main {
     margin-left: var(--cl-sidebar-w, 260px);
-    transition: margin-left var(--cl-dur-panel) var(--cl-ease);
+    max-width: calc(100% - var(--cl-sidebar-w, 260px));
+    transition: margin-left var(--cl-dur-panel) var(--cl-ease),
+                max-width var(--cl-dur-panel) var(--cl-ease);
   }
 }
 
@@ -873,21 +887,36 @@ a:hover {
   color: var(--cl-body);
 }
 
-/* Type scale (DESIGN.md 2.3). The previous scale ran to a 40px/500 display h1;
-   this system caps page titles at text-2xl/3xl semibold with tight tracking,
-   and bans font-black and display tracking outright.
+/* Type — the product surface runs entirely on Plus Jakarta Sans, matching the
+   reference admin's geometric sans. Headings are 700 with tight negative
+   tracking (the reference sets its card and section titles noticeably bolder
+   than shadcn's default 600); body and UI text sit at 400/500.
    Specificity (0,1,1) intentionally beats the :where() rules above. */
+.cl-v3,
+.cl-v3 :where(button, input, select, textarea) {
+  font-family: var(--font-heading), var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .cl-v3 :is(h1, h2, h3, h4, h5, h6) {
   font-family: var(--font-heading), var(--font-ui), ui-sans-serif, system-ui, sans-serif;
   color: var(--cl-ink);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
-.cl-v3 h1 { font-size: 1.875rem; line-height: 1.2; }   /* text-3xl */
-.cl-v3 h2 { font-size: 1.5rem;   line-height: 1.25; }  /* text-2xl */
-.cl-v3 h3 { font-size: 1.125rem; line-height: 1.4; }   /* text-lg  */
-.cl-v3 h4 { font-size: 1rem;     line-height: 1.5; }
+.cl-v3 h1 { font-size: 1.5rem;   line-height: 1.25; letter-spacing: -0.025em; }
+.cl-v3 h2 { font-size: 1.25rem;  line-height: 1.3;  letter-spacing: -0.02em; }
+.cl-v3 h3 { font-size: 1rem;     line-height: 1.4; }
+.cl-v3 h4 { font-size: 0.9375rem; line-height: 1.45; }
 .cl-v3 :is(h5, h6) { font-size: 0.875rem; line-height: 1.5; }
+
+/* Figures — stat tiles, prices, counts. The reference sets these very bold
+   with tabular figures so columns of numbers stay aligned. */
+.cl-v3 .tabular-nums { font-variant-numeric: tabular-nums; }
+.cl-v3 :is(h1, h2, h3) .tabular-nums,
+.cl-v3 p.tabular-nums { font-weight: 700; }
 
 /* Eyebrow — the 10px uppercase group label from the system. */
 .cl-v3 .cl-eyebrow {
@@ -907,18 +936,112 @@ a:hover {
   color: var(--cl-ink);
 }
 
-/* Focus — the shadcn ring rather than the previous thickened ink border. */
-.cl-v3 :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+/* ── Focus ────────────────────────────────────────────────────────────────
+   Non-input controls get the shadcn ring. Inputs are handled separately
+   below: they previously shared this rule, and because its specificity is
+   (0,2,0) the ring beat every `focus:ring-0` utility — so an input sitting
+   inside an already-bordered container (search palette, chat composer) drew a
+   second box inside the first. That is the box-in-box artefact.
+   ───────────────────────────────────────────────────────────────────────── */
+.cl-v3 :is(a, button, summary, [tabindex]):focus-visible {
   outline: none;
-  border-color: var(--ring);
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
 }
 
-/* Form controls — 1px border, rounded-lg, neutral. */
-.cl-v3 :where(input, select, textarea) {
+/* ── Form controls ────────────────────────────────────────────────────────
+   One consistent field: 40px tall, 1px border, rounded-lg, readable 14px
+   text. `:where()` keeps specificity at zero so any Tailwind utility on the
+   element still wins.
+   ───────────────────────────────────────────────────────────────────────── */
+:where(.cl-v3) :where(input:not([type='checkbox']):not([type='radio']), select, textarea) {
   background-color: var(--cl-surface-card);
   border: 1px solid var(--border);
   border-radius: var(--cl-r-md);
+  min-height: 2.5rem;
+  /* Physical, not `padding-inline`: logical properties beat physical ones of
+     any specificity when declared later, and this sheet loads after Tailwind.
+     The scope is `:where(.cl-v3)` rather than `.cl-v3` for the same reason —
+     a bare class is (0,1,0), which TIES with a utility and then wins on source
+     order, so `pl-9` on an icon field was being ignored. */
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--cl-ink);
+}
+:where(.cl-v3) :where(textarea) {
+  padding-block: 0.625rem;
+  min-height: 5rem;
+}
+
+/* A focused field tints its own border and lifts a soft ring — one box only. */
+:where(.cl-v3) :where(input:not([type='checkbox']):not([type='radio']), select, textarea):focus-visible {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 40%, transparent);
+}
+
+/* ── Bare fields ──────────────────────────────────────────────────────────
+   `data-bare` marks an input that lives INSIDE a styled container (search
+   palette, chat composer, inline editors). It contributes no box of its own —
+   no border, no fill, no ring — and the container shows focus with
+   `focus-within:*`. This is what stops the double border.
+   ───────────────────────────────────────────────────────────────────────── */
+.cl-v3 [data-bare],
+.cl-v3 [data-bare]:focus,
+.cl-v3 [data-bare]:focus-visible {
+  border: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  min-height: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ── Selects ──────────────────────────────────────────────────────────────
+   The option LIST is drawn by the OS and cannot be styled directly, but two
+   things are in our control and both were unset: `accent-color`, which picks
+   the highlight colour (it was defaulting to the browser's harsh blue), and
+   `color-scheme`, which decides whether the popup paints light or dark. The
+   trigger itself gets the field treatment plus a custom chevron, since
+   `appearance: none` removes the native arrow along with the native styling.
+   ───────────────────────────────────────────────────────────────────────── */
+:where(.cl-v3) :where(select) {
+  -webkit-appearance: none;
+  appearance: none;
+  accent-color: var(--accent-purple);
+  color-scheme: light;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+/* Firefox and Chromium on Windows honour these; Safari ignores them. */
+:where(.cl-v3) :where(select) option {
+  background-color: var(--cl-surface-card);
+  color: var(--cl-ink);
+  padding: 0.5rem 0.75rem;
+}
+:where(.cl-v3) :where(select) option:checked {
+  background-color: var(--cl-surface-strong);
+  font-weight: 600;
+}
+:where(.cl-v3) :where(select):disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Safari renders a decoration box on type="search"; remove it everywhere. */
+.cl-v3 input[type='search']::-webkit-search-decoration,
+.cl-v3 input[type='search']::-webkit-search-cancel-button,
+.cl-v3 input[type='search']::-webkit-search-results-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* shadcn's base rule (`* { @apply border-border }`), scoped. Lets the design

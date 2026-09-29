@@ -263,14 +263,13 @@ export function ChatInterface({ currentUserId, otherUser, onBack }: ChatInterfac
       {/* Input Area */}
       <div className="p-4 border-t border-border bg-card">
         <div className="flex gap-2">
-          <input
-            type="text"
+          <input type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
+ placeholder="Type your message..."
             disabled={loading}
-            className="flex-1 px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors text-foreground placeholder:text-muted-foreground/70 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 px-4 py-3 border border-border rounded-lg transition-colors text-foreground placeholder:text-muted-foreground/70 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             onClick={sendMessage}

@@ -426,14 +426,13 @@ export default function FloatingAIAssistant({ quizCompleted = true }: { quizComp
         {/* Input Area */}
         <div className="p-4 bg-card border-t border-border">
           <div className="flex gap-2">
-            <input
-              type="text"
+            <input type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Ask anything..."
+ placeholder="Ask anything..."
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-muted border border-border rounded-lg focus:outline-none focus:border-foreground focus:ring-[3px] focus:ring-ring/50 text-sm disabled:opacity-50 transition-all"
+ className="flex-1 px-4 py-3 bg-muted border border-border rounded-lg text-sm disabled:opacity-50 transition-all"
             />
             <button
               onClick={handleSend}

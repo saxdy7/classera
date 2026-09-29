@@ -62,7 +62,14 @@ const LABELS: Record<string, string> = {
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export function BreadCrumbs({ className }: { className?: string }) {
+export function BreadCrumbs({
+  className,
+  overrideLast,
+}: {
+  className?: string;
+  /** Replaces the label of the final crumb, for pages that name themselves. */
+  overrideLast?: string;
+}) {
   const pathname = usePathname();
   const parts = pathname.split('/').filter(Boolean);
 
@@ -80,6 +87,7 @@ export function BreadCrumbs({ className }: { className?: string }) {
   });
 
   if (crumbs.length === 0) return null;
+  if (overrideLast) crumbs[crumbs.length - 1] = { ...crumbs[crumbs.length - 1], label: overrideLast };
 
   return (
     <nav aria-label="Breadcrumb" className={cn('flex min-w-0 items-center gap-1.5 text-sm', className)}>

@@ -295,9 +295,9 @@ export default function CareerCoachContent() {
                                 value={input}
                                 onChange={e => setInput(e.target.value)}
                                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
-                                placeholder="Ask your expert coach anything..."
+ placeholder="Ask your expert coach anything..."
                                 disabled={loading}
-                                className="min-h-[40px] max-h-[200px] flex-1 resize-none border-0 bg-transparent px-0 py-2.5 text-[15px] font-normal leading-relaxed text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0 focus:outline-none focus:ring-0"
+ className="min-h-[40px] max-h-[200px] flex-1 resize-none border-0 bg-transparent px-0 py-2.5 text-[15px] font-normal leading-relaxed text-foreground shadow-none outline-none placeholder:text-muted-foreground focus:border-0"
                             />
                             <button onClick={() => send()} disabled={loading || !input.trim()}
                                 className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">

@@ -290,9 +290,9 @@ export function AIChatInterface({ userName }: { userName: string }) {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Ask anything about your studies..."
+ placeholder="Ask anything about your studies..."
               disabled={loading}
-              className="w-full resize-none px-4 py-3 text-sm border border-border rounded-lg focus:outline-none focus:border-foreground focus:ring-[3px] focus:ring-ring/50 transition-all text-foreground placeholder:text-muted-foreground disabled:opacity-50 bg-card leading-relaxed"
+ className="w-full resize-none px-4 py-3 text-sm border border-border rounded-lg transition-all text-foreground placeholder:text-muted-foreground disabled:opacity-50 bg-card leading-relaxed"
               style={{ minHeight: '44px', maxHeight: '160px' }}
             />
           </div>

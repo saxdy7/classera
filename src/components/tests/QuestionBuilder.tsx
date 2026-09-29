@@ -155,8 +155,8 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
                         <textarea
                             value={question.question}
                             onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
-                            placeholder="Enter your question here..."
-                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="Enter your question here..."
+ className="w-full px-4 py-3 border border-border rounded-lg resize-none"
                             rows={3}
                         />
                     </div>
@@ -180,12 +180,11 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
                                         >
                                             {question.correctAnswer === oIndex && <Check className="w-4 h-4" />}
                                         </button>
-                                        <input
-                                            type="text"
+                                        <input type="text"
                                             value={option}
                                             onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                             placeholder={`Option ${oIndex + 1}`}
-                                            className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="flex-1 px-4 py-2 border border-border rounded-lg"
                                         />
                                         {(question.options?.length || 0) > 2 && (
                                             <button
@@ -219,8 +218,8 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
                             <textarea
                                 value={question.correctAnswer as string || ''}
                                 onChange={(e) => updateQuestion(qIndex, 'correctAnswer', e.target.value)}
-                                placeholder="Enter expected answer or key points for grading..."
-                                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="Enter expected answer or key points for grading..."
+ className="w-full px-4 py-3 border border-border rounded-lg resize-none"
                                 rows={3}
                             />
                             <p className="text-xs text-muted-foreground mt-1">
@@ -235,24 +234,21 @@ export function QuestionBuilder({ questions, onChange, testSubject }: QuestionBu
                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Marks *
                             </label>
-                            <input
-                                type="number"
-                                min="1"
+                            <input type="number" min="1"
                                 value={question.marks}
                                 onChange={(e) => updateQuestion(qIndex, 'marks', parseInt(e.target.value) || 1)}
-                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-2 border border-border rounded-lg"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Explanation (Optional)
                             </label>
-                            <input
-                                type="text"
+                            <input type="text"
                                 value={question.explanation || ''}
                                 onChange={(e) => updateQuestion(qIndex, 'explanation', e.target.value)}
-                                placeholder="Why is this the correct answer?"
-                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Why is this the correct answer?"
+ className="w-full px-4 py-2 border border-border rounded-lg"
                             />
                         </div>
                     </div>

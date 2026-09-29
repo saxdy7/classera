@@ -70,8 +70,8 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                         <textarea
                             value={question.question}
                             onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
-                            placeholder="Enter your question here..."
-                            className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+ placeholder="Enter your question here..."
+ className="w-full px-4 py-3 border border-border rounded-lg resize-none"
                             rows={3}
                         />
                     </div>
@@ -93,12 +93,11 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                                     >
                                         {question.correctAnswer === oIndex && <Check className="w-4 h-4" />}
                                     </button>
-                                    <input
-                                        type="text"
+                                    <input type="text"
                                         value={option}
                                         onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                         placeholder={`Option ${oIndex + 1}`}
-                                        className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="flex-1 px-4 py-2 border border-border rounded-lg"
                                     />
                                 </div>
                             ))}
@@ -112,24 +111,21 @@ export function MCQBuilder({ questions, onChange }: MCQBuilderProps) {
                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Marks *
                             </label>
-                            <input
-                                type="number"
-                                min="1"
+                            <input type="number" min="1"
                                 value={question.marks}
                                 onChange={(e) => updateQuestion(qIndex, 'marks', parseInt(e.target.value) || 1)}
-                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full px-4 py-2 border border-border rounded-lg"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-foreground/80 mb-2">
                                 Explanation (Optional)
                             </label>
-                            <input
-                                type="text"
+                            <input type="text"
                                 value={question.explanation || ''}
                                 onChange={(e) => updateQuestion(qIndex, 'explanation', e.target.value)}
-                                placeholder="Why is this the correct answer?"
-                                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="Why is this the correct answer?"
+ className="w-full px-4 py-2 border border-border rounded-lg"
                             />
                         </div>
                     </div>

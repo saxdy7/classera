@@ -160,12 +160,11 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                     <label className="block text-sm font-medium text-foreground/80 mb-2">
                         What can I help you learn?
                     </label>
-                    <input
-                        type="text"
+                    <input type="text"
                         value={topic}
                         onChange={(e) => setTopic(e.target.value)}
-                        placeholder="Enter a topic"
-                        className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+ placeholder="Enter a topic"
+ className="w-full px-4 py-3 border border-border rounded-lg"
                     />
                 </div>
 
@@ -206,11 +205,10 @@ export function AIGeneratorModal({ isOpen, onClose, initialFormat = 'course' }: 
                 {/* Optional Questions */}
                 <div className="mb-6">
                     <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="checkbox"
+                        <input type="checkbox"
                             checked={showQuestions}
                             onChange={(e) => setShowQuestions(e.target.checked)}
-                            className="rounded border-border"
+ className="rounded border-border"
                         />
                         <span className="text-sm text-foreground/80">
                             Answer the following questions for a better course

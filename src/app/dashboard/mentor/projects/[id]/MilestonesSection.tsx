@@ -73,18 +73,16 @@ export default function MilestonesSection({ assignmentId }: { assignmentId: stri
 
       {showForm && (
         <form onSubmit={addMilestone} className="flex flex-col sm:flex-row gap-2 mb-4">
-          <input
-            type="text"
+          <input type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Wire up the API"
-            className="flex-1 px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="e.g. Wire up the API"
+ className="flex-1 px-3 py-2 border border-border rounded-lg text-sm"
           />
-          <input
-            type="date"
+          <input type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ className="px-3 py-2 border border-border rounded-lg text-sm"
           />
           <button
             type="submit"

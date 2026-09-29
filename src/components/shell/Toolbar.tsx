@@ -52,22 +52,13 @@ export function SearchInput({ value, onChange, placeholder = 'Search…', classN
   return (
     <div className={cn('relative w-full sm:w-[280px]', className)}>
       <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-      <input
-        type="search"
+      <input type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-9 w-full rounded-md border border-border bg-muted pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:border-ring"
+ className="h-9 w-full rounded-md border border-border bg-muted pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring"
       />
     </div>
   );
 }
 
-export function Toolbar({ left, right, className }: { left?: React.ReactNode; right?: React.ReactNode; className?: string }) {
-  return (
-    <div className={cn('flex flex-col justify-between gap-4 border-b border-border pb-2 sm:flex-row sm:items-center', className)}>
-      <div className="flex items-center gap-3">{left}</div>
-      <div className="flex flex-wrap items-center gap-3">{right}</div>
-    </div>
-  );
-}

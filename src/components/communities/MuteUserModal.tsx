@@ -109,13 +109,12 @@ export function MuteUserModal({ communityId, userId, userName, onClose, onSucces
                         <label htmlFor="reason" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Reason (Optional)
                         </label>
-                        <textarea
-                            id="reason"
+                        <textarea id="reason"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
                             rows={3}
-                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-[var(--cl-error)] focus:border-transparent resize-none"
-                            placeholder="Why are you muting this user?"
+ className="w-full px-4 py-3 rounded-lg border border-border resize-none"
+ placeholder="Why are you muting this user?"
                         />
                     </div>
 

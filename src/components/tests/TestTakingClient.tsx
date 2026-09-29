@@ -489,7 +489,7 @@ export function TestTakingClient({ testId }: Props) {
                                     value={answers[currentQ.id] || ''}
                                     onChange={(e) => handleAnswerChange(currentQ.id, e.target.value)}
                                     placeholder={currentQ.type === 'coding' ? '// Write your code here...' : 'Write your answer here...'}
-                                    className="w-full h-52 p-4 bg-neutral-900 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent font-mono text-sm text-white placeholder-muted-foreground resize-none"
+ className="w-full h-52 p-4 bg-neutral-900 border border-border rounded-lg font-mono text-sm text-white placeholder-muted-foreground resize-none"
                                 />
                                 <p className="text-muted-foreground text-xs mt-2 text-right">
                                     {(answers[currentQ.id] || '').length} characters

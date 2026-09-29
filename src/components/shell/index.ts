@@ -1,12 +1,24 @@
 /**
- * Shell primitives — the UI vocabulary of the reference repos
- * (ronitrai27/aria-hackathon, ronitrai27/looma-sketch_collaborate_deploy),
- * transcribed for Classera's product pages. See each file for the exact
- * source recipe it copies.
+ * Shell primitives.
+ *
+ * `primitives.tsx` holds the current system — Amboras's admin layout language
+ * (neutral surfaces, bordered cards, stat tiles, list rows, toolbars) with
+ * aria/looma's single purple accent.
+ *
+ * The exports below it are the earlier aria/looma set, still used by the pages
+ * that were converted first.
  */
+export {
+  btnPrimary, btnSecondary, btnGhost, btnIcon,
+  Badge, CountBadge,
+  Toolbar, Tabs, FilterChips, SearchBar,
+  Stat, ItemCard, List, Row, Toggle, Empty, Section,
+  NavList, FieldRow, Panel,
+} from './primitives';
+
 export { PageHeader, SectionHeader, primaryButton, outlineButton } from './PageHeader';
 export { GradientCard, CreateTile, GradientCardSkeleton, CARD_GRADIENTS, gradientFor } from './GradientCard';
-export { Segmented, SearchInput, Toolbar } from './Toolbar';
+export { Segmented, SearchInput } from './Toolbar';
 export type { SegmentOption } from './Toolbar';
 export { StatCard } from './StatCard';
 export { EmptyState } from './EmptyState';

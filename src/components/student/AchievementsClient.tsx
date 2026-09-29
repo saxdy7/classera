@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Trophy, Award, Zap, Star, Target, BookOpen, Code2, Flame } from 'lucide-react';
+import { Stat } from '@/components/shell';
 
 interface Achievement {
   id: string;
@@ -135,58 +136,31 @@ export function AchievementsClient() {
 
         {/* Stats Cards */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            {/* Level */}
-            <div className="bg-card rounded-lg p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground/80">Level</h3>
-                <Zap className="text-amber-600" size={20} />
-              </div>
-              <div className="text-3xl font-semibold text-foreground">{stats.level}</div>
-              <div className="mt-3 w-full bg-muted rounded-full h-2">
-                <div
-                  className="bg-amber-500 h-2 rounded-full transition-all"
-                  style={{
-                    width: `${(stats.current_xp / stats.next_level_xp) * 100}%`,
-                  }}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {stats.current_xp} / {stats.next_level_xp} XP
-              </p>
-            </div>
-
-            {/* Points */}
-            <div className="bg-card rounded-lg p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground/80">Total Points</h3>
-                <Star className="text-accent-purple" size={20} />
-              </div>
-              <div className="text-3xl font-semibold text-foreground">{stats.total_points}</div>
-              <p className="text-xs text-muted-foreground mt-4">Lifetime points earned</p>
-            </div>
-
-            {/* Achievements */}
-            <div className="bg-card rounded-lg p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground/80">Achievements</h3>
-                <Award className="text-green-600" size={20} />
-              </div>
-              <div className="text-3xl font-semibold text-foreground">
-                {stats.achievements_unlocked}/{stats.total_achievements}
-              </div>
-              <p className="text-xs text-muted-foreground mt-4">Badges collected</p>
-            </div>
-
-            {/* Streak */}
-            <div className="bg-card rounded-lg p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground/80">Streak</h3>
-                <Flame className="text-destructive" size={20} />
-              </div>
-              <div className="text-3xl font-semibold text-foreground">{stats.streak_days}</div>
-              <p className="text-xs text-muted-foreground mt-4">Days in a row</p>
-            </div>
+          <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
+            <Stat
+              label="Level"
+              value={stats.level}
+              icon={Zap}
+              hint={
+                <>
+                  <span className="mb-1 block h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                    <span
+                      className="block h-full rounded-full bg-foreground transition-[width] duration-500"
+                      style={{ width: `${Math.min((stats.current_xp / stats.next_level_xp) * 100, 100)}%` }}
+                    />
+                  </span>
+                  {stats.current_xp} / {stats.next_level_xp} XP
+                </>
+              }
+            />
+            <Stat label="Total points" value={stats.total_points} icon={Star} hint="Lifetime points earned" />
+            <Stat
+              label="Achievements"
+              value={`${stats.achievements_unlocked}/${stats.total_achievements}`}
+              icon={Award}
+              hint="Badges collected"
+            />
+            <Stat label="Streak" value={stats.streak_days} icon={Flame} hint="Days in a row" />
           </div>
         )}
 

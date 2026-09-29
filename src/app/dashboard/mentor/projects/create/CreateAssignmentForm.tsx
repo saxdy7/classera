@@ -117,12 +117,11 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
               <label className="block text-sm font-medium text-foreground/80 mb-1.5">
                 Title <span className="text-destructive">*</span>
               </label>
-              <input
-                type="text"
+              <input type="text"
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                placeholder="e.g. Full-Stack Todo App"
-                className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ placeholder="e.g. Full-Stack Todo App"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm"
               />
             </div>
 
@@ -152,9 +151,9 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
               <textarea
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                placeholder="What should the student build?"
+ placeholder="What should the student build?"
                 rows={3}
-                className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm resize-none"
               />
             </div>
 
@@ -165,31 +164,29 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
               <textarea
                 value={form.requirements}
                 onChange={(e) => setForm((f) => ({ ...f, requirements: e.target.value }))}
-                placeholder="Specific requirements, grading criteria, tech stack constraints..."
+ placeholder="Specific requirements, grading criteria, tech stack constraints..."
                 rows={4}
-                className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm resize-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-foreground/80 mb-1.5">Deadline</label>
-                <input
-                  type="datetime-local"
+                <input type="datetime-local"
                   value={form.deadline}
                   onChange={(e) => setForm((f) => ({ ...f, deadline: e.target.value }))}
-                  className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground/80 mb-1.5">Max Score</label>
-                <input
-                  type="number"
+                <input type="number"
                   value={form.max_score}
                   min={1}
                   max={1000}
                   onChange={(e) => setForm((f) => ({ ...f, max_score: Number(e.target.value) }))}
-                  className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+ className="w-full px-3.5 py-2.5 border border-border rounded-lg text-sm"
                 />
               </div>
             </div>
@@ -200,13 +197,12 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
                 Required Technologies
               </label>
               <div className="flex gap-2">
-                <input
-                  type="text"
+                <input type="text"
                   value={techInput}
                   onChange={(e) => setTechInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTech(); } }}
-                  placeholder="React, Node.js, Python..."
-                  className="flex-1 px-3.5 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+ placeholder="React, Node.js, Python..."
+ className="flex-1 px-3.5 py-2.5 border border-border rounded-lg text-sm"
                 />
                 <button
                   type="button"
@@ -252,11 +248,10 @@ export default function CreateAssignmentForm({ students }: CreateAssignmentFormP
                       selected ? 'bg-accent-purple/10 border border-accent-purple' : 'hover:bg-muted/40 border border-transparent'
                     }`}
                   >
-                    <input
-                      type="checkbox"
+                    <input type="checkbox"
                       checked={selected}
                       onChange={() => toggleStudent(s.id)}
-                      className="w-4 h-4 text-accent-purple rounded accent-[var(--accent-purple)]"
+ className="w-4 h-4 text-accent-purple rounded accent-[var(--accent-purple)]"
                     />
                     {s.avatar_url ? (
                       <img src={s.avatar_url} alt={s.full_name} className="w-8 h-8 rounded-full object-cover" />

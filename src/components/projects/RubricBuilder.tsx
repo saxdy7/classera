@@ -110,43 +110,38 @@ export default function RubricBuilder({ assignmentId, existingRubric, onSave }: 
               )}
             </div>
 
-            <input
-              type="text"
-              placeholder="Criterion name (e.g., Code Quality)"
+            <input type="text" placeholder="Criterion name (e.g., Code Quality)"
               value={c.name}
               onChange={(e) => update(c.id, 'name', e.target.value)}
-              className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring placeholder-muted-foreground"
+ className="w-full text-sm border border-border rounded-lg px-3 py-2 placeholder-muted-foreground"
             />
 
-            <textarea
-              placeholder="Description (optional)"
+            <textarea placeholder="Description (optional)"
               value={c.description}
               onChange={(e) => update(c.id, 'description', e.target.value)}
               rows={2}
-              className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-ring placeholder-muted-foreground"
+ className="w-full text-sm border border-border rounded-lg px-3 py-2 resize-none placeholder-muted-foreground"
             />
 
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="text-xs text-muted-foreground font-medium mb-1 block">Max Points</label>
-                <input
-                  type="number"
+                <input type="number"
                   min={1}
                   max={1000}
                   value={c.max_points}
                   onChange={(e) => update(c.id, 'max_points', Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full text-sm border border-border rounded-lg px-3 py-2"
                 />
               </div>
               <div className="flex-1">
                 <label className="text-xs text-muted-foreground font-medium mb-1 block">Weight (%)</label>
-                <input
-                  type="number"
+                <input type="number"
                   min={0}
                   max={100}
                   value={c.weight}
                   onChange={(e) => update(c.id, 'weight', Math.max(0, Math.min(100, parseInt(e.target.value) || 0)))}
-                  className="w-full text-sm border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring"
+ className="w-full text-sm border border-border rounded-lg px-3 py-2"
                 />
               </div>
             </div>

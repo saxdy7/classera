@@ -114,11 +114,7 @@ export default function CreateCommunityPage() {
                 </div>
 
                 <div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
+                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
                     onChange={handleImageSelect}
                   />
                   <button
@@ -141,14 +137,12 @@ export default function CreateCommunityPage() {
               <label htmlFor="name" className="block text-sm font-medium text-black mb-2">
                 Community Name *
               </label>
-              <input
-                type="text"
-                id="name"
+              <input type="text" id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g., Computer Science Hub"
+ placeholder="e.g., Computer Science Hub"
                 required
-                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors"
+ className="w-full px-4 py-3 border border-border rounded-lg transition-colors"
               />
             </div>
 
@@ -157,14 +151,13 @@ export default function CreateCommunityPage() {
               <label htmlFor="description" className="block text-sm font-medium text-black mb-2">
                 Description *
               </label>
-              <textarea
-                id="description"
+              <textarea id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Describe what this community is about..."
+ placeholder="Describe what this community is about..."
                 required
                 rows={5}
-                className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:border-accent-purple transition-colors resize-none"
+ className="w-full px-4 py-3 border border-border rounded-lg transition-colors resize-none"
               />
             </div>
 
@@ -173,11 +166,10 @@ export default function CreateCommunityPage() {
               <h3 className="font-semibold text-black">Community Settings</h3>
 
               <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
+                <input type="checkbox"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="w-5 h-5 text-accent-purple rounded focus:ring-ring"
+ className="w-5 h-5 text-accent-purple rounded"
                 />
                 <div>
                   <p className="font-medium text-black">Active Community</p>
@@ -191,13 +183,7 @@ export default function CreateCommunityPage() {
                   All join requests will require your approval before students can access the community.
                 </p>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    id="manual"
-                    name="approval"
-                    value="manual"
-                    defaultChecked
-                    className="w-4 h-4 text-accent-purple"
+                  <input type="radio" id="manual" name="approval" value="manual" defaultChecked className="w-4 h-4 text-accent-purple"
                   />
                   <label htmlFor="manual" className="text-sm text-foreground/80">Manual Approval</label>
                 </div>

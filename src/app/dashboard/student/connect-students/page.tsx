@@ -239,12 +239,10 @@ export default function ConnectStudents() {
                 <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input
-                  type="text"
-                  placeholder="Search students by name, field..."
+                <input type="text" placeholder="Search students by name, field..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all"
+ className="w-full pl-12 pr-4 py-3.5 bg-card border border-border rounded-xl transition-all"
                 />
               </div>
               
@@ -252,7 +250,7 @@ export default function ConnectStudents() {
                 <select 
                   value={selectedSemester}
                   onChange={(e) => setSelectedSemester(e.target.value)}
-                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple font-medium text-foreground/80 appearance-none cursor-pointer transition-all"
+ className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-card border border-border rounded-xl font-medium text-foreground/80 appearance-none cursor-pointer transition-all"
                 >
                   <option>All Semesters</option>
                   {uniqueSemesters.map((sem) => (
@@ -268,7 +266,7 @@ export default function ConnectStudents() {
                 <select 
                   value={selectedSpecialization}
                   onChange={(e) => setSelectedSpecialization(e.target.value)}
-                  className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple font-medium text-foreground/80 appearance-none cursor-pointer transition-all"
+ className="w-full md:w-auto pl-4 pr-10 py-3.5 bg-card border border-border rounded-xl font-medium text-foreground/80 appearance-none cursor-pointer transition-all"
                 >
                   <option>All Fields</option>
                   {uniqueSpecializations.map((spec) => (

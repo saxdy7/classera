@@ -76,39 +76,26 @@ export default function StudentSettingsClient({ profile }: Props) {
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-1.5">Full Name</label>
-                        <input
-                            type="text"
+                        <input type="text"
                             value={form.full_name}
                             onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                            className="w-full px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all bg-card text-foreground"
+ className="w-full px-4 py-2.5 border border-border rounded-lg transition-all bg-card text-foreground"
                         />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-1.5">Email</label>
-                        <input
-                            type="email"
-                            value={profile.email || ''}
-                            disabled
-                            className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
+                        <input type="email" value={profile.email || ''} disabled className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
                         />
                         <p className="text-xs text-muted-foreground/70 mt-1">Email cannot be changed</p>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-1.5">University</label>
-                        <input
-                            type="text"
-                            value={profile.universities?.name || 'Not set'}
-                            disabled
-                            className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
+                        <input type="text" value={profile.universities?.name || 'Not set'} disabled className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
                         />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-foreground/80 mb-1.5">Specialization</label>
-                        <input
-                            type="text"
-                            value={profile.specialization_board || 'Not set'}
-                            disabled
-                            className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
+                        <input type="text" value={profile.specialization_board || 'Not set'} disabled className="w-full px-4 py-2.5 border border-border rounded-lg bg-muted/40 text-muted-foreground cursor-not-allowed"
                         />
                     </div>
                     <div>
@@ -117,29 +104,27 @@ export default function StudentSettingsClient({ profile }: Props) {
                             rows={3}
                             value={form.bio}
                             onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                            placeholder="Tell mentors about yourself..."
-                            className="w-full px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all bg-card text-foreground resize-none"
+ placeholder="Tell mentors about yourself..."
+ className="w-full px-4 py-2.5 border border-border rounded-lg transition-all bg-card text-foreground resize-none"
                         />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-foreground/80 mb-1.5">LinkedIn URL</label>
-                            <input
-                                type="url"
+                            <input type="url"
                                 value={form.linkedin_url}
                                 onChange={(e) => setForm({ ...form, linkedin_url: e.target.value })}
-                                placeholder="https://linkedin.com/in/..."
-                                className="w-full px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all bg-card text-foreground"
+ placeholder="https://linkedin.com/in/..."
+ className="w-full px-4 py-2.5 border border-border rounded-lg transition-all bg-card text-foreground"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-foreground/80 mb-1.5">GitHub URL</label>
-                            <input
-                                type="url"
+                            <input type="url"
                                 value={form.github_url}
                                 onChange={(e) => setForm({ ...form, github_url: e.target.value })}
-                                placeholder="https://github.com/..."
-                                className="w-full px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent-purple transition-all bg-card text-foreground"
+ placeholder="https://github.com/..."
+ className="w-full px-4 py-2.5 border border-border rounded-lg transition-all bg-card text-foreground"
                             />
                         </div>
                     </div>

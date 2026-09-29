@@ -128,12 +128,10 @@ export function StudentCommunitiesHub({ userId, universityId }: { userId: string
           {/* Search Bar */}
           <div className="relative max-w-2xl">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-            <input
-              type="text"
-              placeholder="Search communities..."
+            <input type="text" placeholder="Search communities..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-6 py-4 bg-card text-foreground rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-[rgba(255,255,255,0.5)] placeholder:text-muted-foreground/70"
+ className="w-full pl-12 pr-6 py-4 bg-card text-foreground rounded-xl font-medium placeholder:text-muted-foreground/70"
             />
           </div>
         </div>

@@ -62,14 +62,7 @@ export function EditCommunityForm({
                         <label htmlFor="name" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Community Name *
                         </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            defaultValue={initialData.name}
-                            required
-                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                            placeholder="e.g., LPU – Frontend Interview Prep"
+                        <input type="text" id="name" name="name" defaultValue={initialData.name} required className="w-full px-4 py-3 rounded-lg border border-border" placeholder="e.g., LPU – Frontend Interview Prep"
                         />
                     </div>
 
@@ -77,14 +70,7 @@ export function EditCommunityForm({
                         <label htmlFor="description" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Description *
                         </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            defaultValue={initialData.description || ''}
-                            required
-                            rows={4}
-                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-none"
-                            placeholder="Describe the purpose of this community..."
+                        <textarea id="description" name="description" defaultValue={initialData.description || ''} required rows={4} className="w-full px-4 py-3 rounded-lg border border-border resize-none" placeholder="Describe the purpose of this community..."
                         />
                     </div>
 
@@ -92,11 +78,7 @@ export function EditCommunityForm({
                         <label htmlFor="specialization" className="block text-sm font-semibold text-foreground/80 mb-2">
                             Specialization (Optional)
                         </label>
-                        <select
-                            id="specialization"
-                            name="specialization"
-                            defaultValue={initialData.specialization || ''}
-                            className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                        <select id="specialization" name="specialization" defaultValue={initialData.specialization || ''} className="w-full px-4 py-3 rounded-lg border border-border"
                         >
                             <option value="">None</option>
                             <option value="Full Stack Development">Full Stack Development</option>
@@ -113,12 +95,7 @@ export function EditCommunityForm({
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <input
-                            type="checkbox"
-                            id="is_active"
-                            name="is_active"
-                            defaultChecked={initialData.is_active}
-                            className="w-5 h-5 rounded border-border text-accent-purple focus:ring-ring"
+                        <input type="checkbox" id="is_active" name="is_active" defaultChecked={initialData.is_active} className="w-5 h-5 rounded border-border text-accent-purple"
                         />
                         <label htmlFor="is_active" className="text-sm font-semibold text-foreground/80">
                             Community is active

@@ -107,9 +107,7 @@ export function YouTubeVideosTab() {
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-        <input
-          type="text"
-          placeholder="Search for specific video tutorials..."
+        <input type="text" placeholder="Search for specific video tutorials..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -117,7 +115,7 @@ export function YouTubeVideosTab() {
               handleSearch();
             }
           }}
-          className="w-full pl-12 pr-32 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-destructive transition-colors"
+ className="w-full pl-12 pr-32 py-3 border-2 border-border rounded-lg focus:border-destructive transition-colors"
         />
         <button
           onClick={handleSearch}

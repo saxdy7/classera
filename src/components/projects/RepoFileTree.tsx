@@ -141,12 +141,10 @@ export default function RepoFileTree({ tree, onFileClick, selectedPath }: RepoFi
   return (
     <div className="flex flex-col h-full">
       <div className="px-3 pb-2">
-        <input
-          type="text"
-          placeholder="Search files..."
+        <input type="text" placeholder="Search files..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-3 py-1.5 text-sm bg-muted/40 border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-ring"
+ className="w-full px-3 py-1.5 text-sm bg-muted/40 border border-border rounded-lg"
         />
       </div>
       <div className="flex-1 overflow-y-auto">

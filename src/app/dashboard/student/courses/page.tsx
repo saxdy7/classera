@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
-import FloatingAIAssistant from '@/components/shared/FloatingAIAssistant';
 import { CoursesTabbedInterface } from '@/components/courses/CoursesTabbedInterface';
 import { BookOpen, Sparkles, TrendingUp } from 'lucide-react';
 
@@ -122,7 +121,6 @@ export default async function StudentCoursesPage() {
           </div>
         </main>
       </div>
-      <FloatingAIAssistant />
     </div>
   );
 }

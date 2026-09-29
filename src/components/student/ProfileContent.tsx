@@ -48,13 +48,11 @@ export function ProfileContent({ roadmaps, courses, githubConn }: ProfileContent
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         {/* Search Input */}
         <div className="flex-1 relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
-          <input
-            type="text"
-            placeholder="Search roadmaps & courses..."
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <input type="text" placeholder="Search roadmaps & courses..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition"
+ className="h-10 w-full rounded-lg border bg-card pl-9 pr-3 text-sm"
           />
         </div>
 
@@ -62,7 +60,7 @@ export function ProfileContent({ roadmaps, courses, githubConn }: ProfileContent
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as 'all' | 'roadmaps' | 'courses')}
-          className="px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition bg-card"
+ className="h-10 rounded-lg border bg-card text-sm"
         >
           <option value="all">All Content</option>
           <option value="roadmaps">Learning Paths Only</option>
@@ -79,7 +77,7 @@ export function ProfileContent({ roadmaps, courses, githubConn }: ProfileContent
             <div className="bg-card rounded-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-black flex items-center gap-2">
-                  <Award className="w-5 h-5 text-accent-purple" />
+                  <Award className="size-4 text-muted-foreground" />
                   Learning Paths
                 </h2>
                 <span className="text-sm text-muted-foreground font-medium">
@@ -113,7 +111,7 @@ export function ProfileContent({ roadmaps, courses, githubConn }: ProfileContent
             <div className="bg-card rounded-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-black flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-accent-purple" />
+                  <BookOpen className="size-4 text-muted-foreground" />
                   Enrolled Courses
                 </h2>
                 <span className="text-sm text-muted-foreground font-medium">
@@ -157,7 +155,7 @@ export function ProfileContent({ roadmaps, courses, githubConn }: ProfileContent
             <div className="space-y-4">
               <div className="p-4 bg-muted/40 rounded-lg">
                 <p className="text-sm text-foreground/80">Username</p>
-                <a href={`https://github.com/${githubConn.github_username}`} target="_blank" rel="noopener noreferrer" className="text-accent-purple font-medium hover:underline">
+                <a href={`https://github.com/${githubConn.github_username}`} target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:underline">
                   @{githubConn.github_username}
                 </a>
               </div>

@@ -3,13 +3,13 @@ import { redirect } from 'next/navigation';
 import { Header } from '@/components/shared/Header';
 import { Sidebar } from '@/components/shared/Sidebar';
 import RealCalendar from '@/components/shared/RealCalendar';
-import { StatCard, SectionHeader, GradientCard, EmptyState, getGreeting, gradientFor, primaryButton, outlineButton } from '@/components/shell';
+import { Stat, Section, ItemCard, List, Row, Empty, Badge, btnPrimary, btnSecondary, getGreeting } from '@/components/shell';
 import { Stagger, ScrollReveal } from '@/components/motion';
 import { ActivityBarChart } from '@/components/dashboard/ActivityBarChart';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  Users, ClipboardCheck, MessageSquare, Trophy,
+  Users, ClipboardCheck, MessageSquare, Trophy, BarChart2,
   GraduationCap, Target, UsersRound, GitBranch, Video, Plus,
 } from 'lucide-react';
 
@@ -155,12 +155,11 @@ export default async function MentorDashboard() {
     .map((s) => ({ student: s.student, avg: Math.round(s.total / s.count), count: s.count }))
     .sort((a, b) => b.avg - a.avg)
     .slice(0, 5);
-
   const quickActions = [
-    { href: '/dashboard/mentor/tests/create', icon: ClipboardCheck, title: 'Create a test', subtitle: 'Design an assessment' },
-    { href: '/dashboard/mentor/projects/create', icon: GitBranch, title: 'Assign a project', subtitle: 'Set a build brief with a rubric' },
-    { href: '/dashboard/mentor/communities/create', icon: UsersRound, title: 'Start a community', subtitle: 'Create a learning space' },
-    { href: '/dashboard/mentor/live-sessions', icon: Video, title: 'Host a live session', subtitle: 'Schedule a class or office hours' },
+    { href: '/dashboard/mentor/tests/create', icon: ClipboardCheck, title: 'Create a test', category: 'Assessment', description: 'Build a test, invite students and take it live.' },
+    { href: '/dashboard/mentor/projects/create', icon: GitBranch, title: 'Assign a project', category: 'Coursework', description: 'Set a build brief with a rubric and deadline.' },
+    { href: '/dashboard/mentor/communities/create', icon: UsersRound, title: 'Start a community', category: 'People', description: 'Create a space for discussion and resources.' },
+    { href: '/dashboard/mentor/live-sessions', icon: Video, title: 'Host a session', category: 'Teaching', description: 'Schedule a class or open office hours.' },
   ];
 
   const initials = (name?: string) =>
@@ -168,182 +167,170 @@ export default async function MentorDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header profile={{ id: user.id, ...profile }} />
+      <Header
+        profile={{ id: user.id, ...profile }}
+        title="Home"
+        meta={<Badge tone="neutral">{universityName}</Badge>}
+      />
       <div className="flex">
         <Sidebar role="mentor" />
         <main className="flex-1 cl-main p-6">
-          <div className="mx-auto w-full max-w-7xl space-y-10">
+          <div className="mx-auto w-full max-w-7xl space-y-8">
 
-            {/* ── Greeting — aria home page ── */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            {/* ── Greeting ── */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-                  {getGreeting()}, {firstName}
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  You&rsquo;re mentoring at <span className="font-medium text-foreground">{universityName}</span>. Guide your students, manage sessions and build communities.
-                </p>
+                <p className="text-sm text-muted-foreground">{getGreeting()}, {firstName}</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
+                  Here&rsquo;s how your students are doing.
+                </h2>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <Link href="/dashboard/mentor/messages" className={outlineButton}>
-                  <MessageSquare className="size-3.5" /> Messages
+                <Link href="/dashboard/mentor/messages" className={btnSecondary}>
+                  <MessageSquare className="size-4" /> Messages
                 </Link>
-                <Link href="/dashboard/mentor/tests/create" className={primaryButton}>
+                <Link href="/dashboard/mentor/tests/create" className={btnPrimary}>
                   <Plus className="size-4" /> New test
                 </Link>
               </div>
             </div>
 
             {/* ── Stats ── */}
-            <Stagger className="grid grid-cols-2 gap-4 lg:grid-cols-4" each={0.06}>
-              <StatCard label="Students" value={students.length || 0} icon={Users} href="/dashboard/mentor/students" />
-              <StatCard label="Live tests" value={liveTestsCount} icon={ClipboardCheck} href="/dashboard/mentor/tests" hint={`${tests.length} total`} />
-              <StatCard label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Trophy} href="/dashboard/mentor/analytics" />
-              <StatCard label="Conversations" value={conversations.length || 0} icon={MessageSquare} href="/dashboard/mentor/messages" />
+            <Stagger className="grid grid-cols-2 gap-4 lg:grid-cols-4" each={0.05}>
+              <Stat label="Students" value={students.length || 0} icon={Users} href="/dashboard/mentor/students" />
+              <Stat label="Live tests" value={liveTestsCount} icon={ClipboardCheck} href="/dashboard/mentor/tests" hint={`${tests.length} total`} />
+              <Stat label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Trophy} href="/dashboard/mentor/analytics" />
+              <Stat label="Conversations" value={conversations.length || 0} icon={MessageSquare} href="/dashboard/mentor/messages" />
             </Stagger>
 
-            {/* ── Quick actions — looma gradient grid + dashed create tile ── */}
-            <section className="space-y-4">
-              <SectionHeader icon={Target} title="Quick actions" description="Create something for your students." />
-              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" each={0.07}>
-                {quickActions.map((a, i) => (
-                  <GradientCard key={a.href} href={a.href} index={i + 4} icon={a.icon} title={a.title} subtitle={a.subtitle} footerLeft="Open" footerRight="→" />
+            {/* ── Quick actions ── */}
+            <Section title="Quick actions" description="Create something for your students.">
+              <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" each={0.06}>
+                {quickActions.map((a) => (
+                  <ItemCard
+                    key={a.href}
+                    href={a.href}
+                    icon={a.icon}
+                    title={a.title}
+                    category={a.category}
+                    description={a.description}
+                  />
                 ))}
               </Stagger>
-            </section>
+            </Section>
 
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
               <div className="space-y-8 xl:col-span-2">
 
-                {/* ── Submissions chart + Top students ── */}
+                {/* ── Chart + leaderboard ── */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                  <div className="rounded-xl border bg-card p-5">
-                    <h2 className="text-lg font-semibold tracking-tight text-foreground">Submissions this week</h2>
+                  <div className="rounded-xl border bg-card p-4">
+                    <h3 className="text-sm font-semibold text-foreground">Submissions this week</h3>
                     <p className="mb-4 text-xs text-muted-foreground">Across all your tests</p>
                     {submissions.length > 0 ? (
                       <ActivityBarChart data={submissionsByDay} color="#a855f7" />
                     ) : (
-                      <div className="flex h-[180px] items-center justify-center rounded-md border border-dashed bg-muted/40 text-sm text-muted-foreground">No submissions yet</div>
+                      <Empty icon={BarChart2} title="No submissions yet" description="Activity appears once students submit." className="py-10" />
                     )}
                   </div>
 
-                  <div className="rounded-xl border bg-card p-5">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Trophy className="size-4 text-amber-500" />
-                      <h2 className="text-lg font-semibold tracking-tight text-foreground">Top students</h2>
+                  <div className="rounded-xl border bg-card p-4">
+                    <div className="mb-3 flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-foreground">Top students</h3>
+                      <Link href="/dashboard/mentor/student-analytics" className="text-sm font-medium text-muted-foreground hover:text-foreground">View all</Link>
                     </div>
                     {topStudents.length > 0 ? (
-                      <div className="divide-y overflow-hidden rounded-lg border">
+                      <div className="divide-y">
                         {topStudents.map((entry, i) => (
-                          <Link key={entry.student?.id || i} href={entry.student?.id ? `/dashboard/mentor/student/${entry.student.id}` : '#'} className="group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/40">
-                            <span className="w-5 text-xs font-semibold tabular-nums text-muted-foreground">{i + 1}</span>
+                          <Link
+                            key={entry.student?.id || i}
+                            href={entry.student?.id ? `/dashboard/mentor/student/${entry.student.id}` : '#'}
+                            className="group flex items-center gap-3 py-2.5 transition-colors hover:bg-muted/40"
+                          >
+                            <span className="w-4 text-xs font-semibold tabular-nums text-muted-foreground">{i + 1}</span>
                             {entry.student?.avatar_url ? (
-                              <Image src={entry.student.avatar_url} alt="" width={32} height={32} className="size-8 shrink-0 rounded-full border object-cover" />
+                              <Image src={entry.student.avatar_url} alt="" width={28} height={28} className="size-7 shrink-0 rounded-full border object-cover" />
                             ) : (
-                              <div className="flex size-8 shrink-0 items-center justify-center rounded-full border bg-primary/10 text-xs font-semibold text-primary">{initials(entry.student?.full_name)}</div>
+                              <div className="flex size-7 shrink-0 items-center justify-center rounded-full border bg-muted text-[10px] font-semibold text-foreground">{initials(entry.student?.full_name)}</div>
                             )}
                             <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-medium text-foreground group-hover:text-accent-purple">{entry.student?.full_name || 'Student'}</p>
+                              <p className="truncate text-sm font-medium text-foreground">{entry.student?.full_name || 'Student'}</p>
                               <p className="text-xs text-muted-foreground">{entry.count} test{entry.count !== 1 ? 's' : ''}</p>
                             </div>
-                            <span className="text-sm font-semibold tabular-nums text-green-600">{entry.avg}%</span>
+                            <span className="shrink-0 text-sm font-semibold tabular-nums text-green-600">{entry.avg}%</span>
                           </Link>
                         ))}
                       </div>
                     ) : (
-                      <div className="flex h-[180px] items-center justify-center rounded-md border border-dashed bg-muted/40 text-sm text-muted-foreground">No graded submissions yet</div>
+                      <Empty icon={Trophy} title="No graded submissions" description="Rankings appear once tests are graded." className="py-10" />
                     )}
                   </div>
                 </div>
 
-                {/* ── Students at university — looma gradient cards ── */}
-                <ScrollReveal className="space-y-4">
-                  <SectionHeader
-                    icon={GraduationCap}
+                {/* ── Students ── */}
+                <ScrollReveal>
+                  <Section
                     title="Students at your university"
                     description={universityName}
-                    action={<Link href="/dashboard/mentor/students" className={outlineButton}>View all</Link>}
-                  />
-                  {students.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                      {students.slice(0, 6).map((student: any, i: number) => (
-                        <Link
-                          key={student.id}
-                          href={`/dashboard/mentor/student/${student.id}`}
-                          className={`group relative block h-[180px] overflow-hidden rounded-xl border bg-linear-to-br p-4 transition-transform hover:scale-[1.02] ${gradientFor(i + 1)}`}
-                        >
-                          <div className="pointer-events-none absolute -top-8 -right-8 size-32 rounded-full bg-white/40 blur-2xl" />
-                          <div className="relative flex items-start gap-3">
-                            {student.avatar_url ? (
-                              <Image src={student.avatar_url} alt="" width={44} height={44} className="size-11 rounded-full border-2 border-white/70 object-cover shadow-xs" />
-                            ) : (
-                              <div className="flex size-11 items-center justify-center rounded-full border-2 border-white/70 bg-white/60 text-sm font-semibold text-foreground shadow-xs">
-                                {initials(student.full_name)}
-                              </div>
-                            )}
-                            <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold text-foreground">{student.full_name}</p>
-                              <p className="truncate text-xs text-foreground/70">{student.specialization_board || 'Student'}</p>
-                            </div>
-                          </div>
-                          {student.current_semester && (
-                            <span className="relative mt-3 inline-block rounded-full border border-white/40 bg-white/60 px-2 py-0.5 text-[10px] font-semibold text-foreground">
-                              Semester {student.current_semester}
-                            </span>
-                          )}
-                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-white/10 bg-black/10 px-3 py-2.5 text-[11px] font-medium text-foreground/80 backdrop-blur-xs">
-                            <span>Student</span>
-                            <span className="text-accent-purple group-hover:underline">View profile →</span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState icon={GraduationCap} title="No students at your university yet" description="Students will appear here once they join." />
-                  )}
+                    count={students.length || undefined}
+                    action={<Link href="/dashboard/mentor/students" className={btnSecondary}>View all</Link>}
+                  >
+                    {students.length > 0 ? (
+                      <List>
+                        {students.slice(0, 6).map((student: any) => (
+                          <Row
+                            key={student.id}
+                            href={`/dashboard/mentor/student/${student.id}`}
+                            title={student.full_name}
+                            description={student.specialization_board || 'Student'}
+                            trailing={student.current_semester ? <Badge tone="neutral">Sem {student.current_semester}</Badge> : undefined}
+                          />
+                        ))}
+                      </List>
+                    ) : (
+                      <Empty icon={GraduationCap} title="No students yet" description="Students will appear here once they join your university." />
+                    )}
+                  </Section>
                 </ScrollReveal>
 
-                {/* ── Recent messages ── */}
-                <ScrollReveal className="space-y-4">
-                  <SectionHeader
-                    icon={MessageSquare}
+                {/* ── Messages ── */}
+                <ScrollReveal>
+                  <Section
                     title="Recent messages"
-                    action={<Link href="/dashboard/mentor/messages" className={outlineButton}>View all</Link>}
-                  />
-                  {conversations.length > 0 ? (
-                    <div className="divide-y overflow-hidden rounded-lg border bg-card">
-                      {conversations.map((conv: any) => (
-                        <Link key={conv.id} href={`/dashboard/mentor/messages?userId=${conv.user?.id}`} className="group flex items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40">
-                          <div className="relative shrink-0">
-                            {conv.user?.avatar_url ? (
-                              <Image src={conv.user.avatar_url} alt="" width={36} height={36} className="size-9 rounded-full border object-cover" />
-                            ) : (
-                              <div className="flex size-9 items-center justify-center rounded-full border bg-primary/10 text-xs font-semibold text-primary">{initials(conv.user?.full_name)}</div>
-                            )}
-                            {conv.unread && <span className="absolute -top-0.5 -right-0.5 size-2.5 rounded-full bg-accent-purple ring-2 ring-card" />}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-medium text-foreground group-hover:text-accent-purple">{conv.user?.full_name}</p>
-                            <p className="truncate text-xs text-muted-foreground">{conv.lastMessage}</p>
-                          </div>
-                          <span className="shrink-0 text-xs text-muted-foreground">{conv.time}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <EmptyState icon={MessageSquare} title="No messages yet" description="Your students will reach out soon." />
-                  )}
+                    action={<Link href="/dashboard/mentor/messages" className={btnSecondary}>View all</Link>}
+                  >
+                    {conversations.length > 0 ? (
+                      <List>
+                        {conversations.map((conv: any) => (
+                          <Row
+                            key={conv.id}
+                            href={`/dashboard/mentor/messages?userId=${conv.user?.id}`}
+                            title={conv.user?.full_name ?? 'Conversation'}
+                            description={conv.lastMessage}
+                            trailing={
+                              <>
+                                {conv.unread && <Badge tone="accent">New</Badge>}
+                                <span className="text-xs text-muted-foreground">{conv.time}</span>
+                              </>
+                            }
+                          />
+                        ))}
+                      </List>
+                    ) : (
+                      <Empty icon={MessageSquare} title="No messages yet" description="Your students will reach out soon." />
+                    )}
+                  </Section>
                 </ScrollReveal>
               </div>
 
               {/* ── Right column ── */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <RealCalendar userId={user.id} />
 
-                <div className="rounded-xl border bg-card p-5">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex size-11 items-center justify-center rounded-full border bg-primary/10 text-base font-semibold text-primary">
-                      {firstName[0]?.toUpperCase()}
+                <div className="rounded-xl border bg-card p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-full border bg-muted text-sm font-semibold text-foreground">
+                      {initials(profile.full_name)}
                     </div>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-foreground">{profile.full_name}</p>
@@ -352,10 +339,10 @@ export default async function MentorDashboard() {
                       </p>
                     </div>
                   </div>
-                  <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Target className="size-3.5" /> {universityName}
                   </p>
-                  <Link href="/dashboard/mentor/settings" className={`${outlineButton} mt-4 w-full justify-center`}>
+                  <Link href="/dashboard/mentor/settings" className={`${btnSecondary} mt-3 w-full`}>
                     Edit profile
                   </Link>
                 </div>
