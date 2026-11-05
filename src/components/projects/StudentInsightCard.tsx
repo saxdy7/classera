@@ -52,7 +52,7 @@ export default function StudentInsightCard({ submissionId, cachedNote, grade, an
         <p className="text-[10px] font-semibold uppercase text-accent-purple">Quality Grade</p>
         <Sparkles className="text-accent-purple w-6 h-6" />
       </div>
-      <p className="text-4xl font-semibold italic text-white mb-4">{grade ?? 'N/A'}</p>
+      <p className="text-4xl font-semibold tabular-nums text-foreground mb-4">{grade ?? '—'}</p>
       {loading ? (
         <div className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
           <Loader2 className="w-3 h-3 animate-spin" />

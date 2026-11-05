@@ -33,11 +33,11 @@ export async function LearningLayout({ children }: LearningLayoutProps) {
     const role = profile.role || 'student';
 
     return (
-        <div className="min-h-screen bg-card">
+        <div className="min-h-screen bg-transparent">
             <Header profile={{ id: user.id, ...profile, role }} />
-            <div className="flex bg-card">
+            <div className="flex bg-transparent">
                 <Sidebar role={role} />
-                <main className="flex-1 cl-main bg-card">
+                <main className="flex-1 cl-main bg-transparent">
                     {children}
                 </main>
             </div>

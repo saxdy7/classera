@@ -17,9 +17,9 @@ export function LearningNav() {
     const isActive = (href: string) => pathname.startsWith(href);
 
     return (
-        <div className="bg-card border-b sticky top-0 z-40">
+        <div className="sticky top-3 z-40 mx-auto mt-3 w-[calc(100%-1.5rem)] max-w-5xl rounded-full border border-white/70 bg-card/75 shadow-[0_16px_45px_-28px_rgba(30,35,45,.55)] backdrop-blur-2xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
+                <div className="flex h-14 items-center justify-between">
                     {/* Navigation Tabs */}
                     <nav className="flex items-center gap-2">
                         {navItems.map((item) => {
@@ -30,13 +30,13 @@ export function LearningNav() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${active
+                                    className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium transition-all duration-300 ${active
                                             ? item.color === 'purple'
-                                                ? 'bg-accent-purple/10 text-accent-purple'
+                                                ? 'bg-foreground text-background shadow-[0_8px_20px_-12px_rgba(15,23,42,.8)]'
                                                 : item.color === 'blue'
-                                                    ? 'bg-accent-purple/10 text-accent-purple'
-                                                    : 'bg-green-500/10 text-green-600'
-                                            : 'text-foreground/80 hover:bg-muted'
+                                                    ? 'bg-foreground text-background shadow-[0_8px_20px_-12px_rgba(15,23,42,.8)]'
+                                                    : 'bg-foreground text-background shadow-[0_8px_20px_-12px_rgba(15,23,42,.8)]'
+                                            : 'text-foreground/70 hover:-translate-y-0.5 hover:bg-white/60 hover:text-foreground'
                                         }`}
                                 >
                                     <Icon className="h-5 w-5" />

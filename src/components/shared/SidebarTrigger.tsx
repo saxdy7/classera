@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 export const SIDEBAR_EVENT = 'cl-sidebar-toggle';
 
 export function SidebarTrigger({ className }: { className?: string }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     try {
@@ -38,7 +38,6 @@ export function SidebarTrigger({ className }: { className?: string }) {
     const next = !expanded;
     setExpanded(next);
     try { window.localStorage.setItem('cl-sidebar-expanded', next ? '1' : '0'); } catch {}
-    document.documentElement.style.setProperty('--cl-sidebar-w', next ? '260px' : '68px');
     window.dispatchEvent(new CustomEvent(SIDEBAR_EVENT, { detail: next }));
   };
 
@@ -46,6 +45,7 @@ export function SidebarTrigger({ className }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
+      aria-expanded={expanded}
       aria-label={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
       title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
       className={cn(

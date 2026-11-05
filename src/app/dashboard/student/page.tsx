@@ -166,10 +166,10 @@ export default async function StudentDashboard() {
           <div className="mx-auto w-full max-w-7xl space-y-8">
 
             {/* ── Greeting ── */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <div className="min-w-0">
-                <p className="text-sm text-muted-foreground">{getGreeting()}, {firstName}</p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
+                <p className="text-sm font-medium text-muted-foreground">{getGreeting()}, {firstName}</p>
+                <h2 className="mt-2 max-w-2xl text-4xl font-bold leading-[1.04] tracking-[-.045em] text-foreground sm:text-5xl">
                   Let&rsquo;s keep your learning moving.
                 </h2>
               </div>
@@ -184,7 +184,7 @@ export default async function StudentDashboard() {
             </div>
 
             {/* ── Stats ── */}
-            <Stagger className="grid grid-cols-2 gap-4 lg:grid-cols-4" each={0.05}>
+            <Stagger className="grid grid-cols-2 gap-3 lg:grid-cols-4" each={0.07}>
               <Stat label="Courses" value={courseCount} icon={BookOpen} href="/dashboard/student/courses" />
               <Stat label="Tests taken" value={submissions.length || 0} icon={ClipboardCheck} href="/dashboard/student/tests" />
               <Stat label="Average score" value={avgScore !== null ? `${avgScore}%` : '—'} icon={Target} href="/dashboard/student/tests" />

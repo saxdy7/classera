@@ -19,7 +19,7 @@ export default async function StudentProjectsPage() {
   if (!profile || profile.role !== 'student') redirect('/dashboard/mentor');
 
   // Get all assignments assigned to this student, with submissions
-  const { data: assignedRows } = await admin
+  const { data: assignedRows, error: assignmentError } = await admin
     .from('assignment_students')
     .select(`
       assignment_id,
@@ -79,7 +79,7 @@ export default async function StudentProjectsPage() {
 
   return (
     <div className="min-h-screen bg-muted/40">
-      <Header profile={{ id: '1', full_name: 'Student', role: 'student', avatar_url: '' }} />
+      <Header profile={{ ...profile, id: user.id }} title="Projects" />
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 cl-main p-6 md:p-8">
@@ -89,10 +89,10 @@ export default async function StudentProjectsPage() {
             <div className="mb-8">
               <div className="flex items-center gap-2 text-accent-purple font-semibold text-[10px] uppercase tracking-[0.2em] mb-2">
                 <GitBranch className="w-4 h-4" />
-                Clario Project Hub
+                Student workspace
               </div>
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-none">Your Engineering Roadmap.</h1>
-              <p className="text-muted-foreground mt-2 font-medium">Build, commit, and master your technical skills.</p>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-none">My projects</h1>
+              <p className="text-muted-foreground mt-2">Track assignments, review repository activity, and read mentor feedback.</p>
             </div>
 
             {/* Stats */}
@@ -101,7 +101,7 @@ export default async function StudentProjectsPage() {
                 { label: 'Assigned', value: totalAssigned, color: 'bg-card border-border', text: 'text-foreground' },
                 { label: 'Completed', value: totalSubmitted, color: 'bg-card border-border', text: 'text-foreground' },
                 { label: 'Pending', value: totalPending, color: 'bg-card border-border', text: 'text-amber-600' },
-                { label: 'Avg. Quality Grade', value: grade ?? '—', color: 'bg-primary border-accent-purple', text: 'text-white' },
+                { label: 'Avg. Quality Grade', value: grade ?? '—', color: 'bg-primary text-white border-transparent', text: 'text-white' },
               ].map(({ label, value, color, text }) => (
                 <div key={label} className={`${color} border rounded-xl p-6`}>
                   <p className={`text-3xl font-semibold italic ${text || 'text-foreground'}`}>{value}</p>
@@ -116,7 +116,9 @@ export default async function StudentProjectsPage() {
               {/* Projects List */}
               <div className="lg:col-span-2 space-y-4">
                 <h3 className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-widest px-1">Current Assignments</h3>
-                {(!assignedRows || assignedRows.length === 0) ? (
+                {assignmentError ? (
+                  <p role="alert" className="rounded-xl border bg-card p-6">Assignments couldn’t load. Refresh to try again.</p>
+                ) : (!assignedRows || assignedRows.length === 0) ? (
                   <div className="bg-card rounded-xl border border-border p-12 text-center">
                     <p className="text-muted-foreground/70 font-semibold italic">No active projects yet.</p>
                   </div>

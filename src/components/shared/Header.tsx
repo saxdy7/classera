@@ -74,13 +74,13 @@ export function Header({ profile = {}, title, meta }: HeaderProps) {
   };
 
   const ghost =
-    'hidden lg:inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50';
+    'hidden lg:inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50';
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-background px-4',
-        'md:ml-[var(--cl-sidebar-w,260px)] md:transition-[margin-left] md:duration-200',
+        'cognify-header sticky top-3 z-40 mx-3 flex h-14 shrink-0 items-center justify-between gap-3 rounded-full border border-white/65 bg-card/72 px-3 shadow-[0_16px_45px_-28px_rgba(30,35,45,.55)] backdrop-blur-2xl',
+        'md:ml-[calc(var(--cl-sidebar-w,80px)+28px)] md:mr-5 md:transition-[margin-left] md:duration-300',
       )}
     >
       {/* Left: trigger · breadcrumb trail · status pills.
@@ -122,7 +122,7 @@ export function Header({ profile = {}, title, meta }: HeaderProps) {
         {/* The one prominent CTA, per Amboras */}
         <Link
           href="/roadmaps"
-          className="ml-1 hidden h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:inline-flex"
+          className="ml-1 hidden h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-[0_8px_22px_-10px_rgba(15,23,42,.8)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/85 sm:inline-flex"
         >
           Explore
         </Link>

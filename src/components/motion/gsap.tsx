@@ -246,8 +246,8 @@ export function PageTransition({ children, className }: { children: React.ReactN
     const ctx = gsap.context(() => {
       gsap.fromTo(
         el,
-        { opacity: 0, y: 8 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', clearProps: 'transform' },
+        { opacity: 0, y: 18, scale: 0.992, filter: 'blur(10px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'power4.out', clearProps: 'transform,filter' },
       );
     }, el);
     return () => ctx.revert();

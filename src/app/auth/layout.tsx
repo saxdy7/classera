@@ -9,5 +9,5 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="cl-app cl-v3">{children}</div>;
+  return <div className="cl-app cl-v3 app-ui auth-ui">{children}</div>;
 }

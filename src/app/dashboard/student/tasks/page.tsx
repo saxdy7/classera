@@ -30,14 +30,7 @@ export default async function StudentTasksPage() {
       <div className="flex">
         <Sidebar role="student" />
         <main className="flex-1 cl-main p-4 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-8">
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
-                My Tasks
-              </h1>
-              <p className="text-foreground/80">Manage your tasks with Kanban board</p>
-            </div>
-
+          <div className="max-w-[1500px] mx-auto">
             <TaskBoardClient initialTasks={tasks || []} userId={user.id} />
           </div>
         </main>

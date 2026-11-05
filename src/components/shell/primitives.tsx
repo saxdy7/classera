@@ -20,11 +20,11 @@ import { cn } from '@/lib/utils';
 
 /** Amboras primary: solid near-black, `h-9`, `rounded-lg`, icon + label. */
 export const btnPrimary =
-  'inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-[0_8px_22px_-10px_rgba(15,23,42,.7)] transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:-translate-y-0.5 hover:bg-primary/85 active:translate-y-px focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50';
 
 /** Amboras secondary: white, bordered, same height as the primary. */
 export const btnSecondary =
-  'inline-flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border bg-background px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-white/70 bg-card/75 px-4 text-sm font-semibold text-foreground backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:-translate-y-0.5 hover:bg-card active:translate-y-px focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50';
 
 /** Borderless, for header utilities ("What's new", "Support"). */
 export const btnGhost =
@@ -336,8 +336,8 @@ export function Stat({
   const body = (
     <div
       className={cn(
-        'flex h-full flex-col rounded-xl border bg-card p-4 transition-colors',
-        href && 'hover:bg-muted/40',
+        'cognify-stat flex h-full min-h-36 flex-col rounded-[28px] border-0 bg-card/72 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,.8),0_18px_42px_-30px_rgba(31,37,34,.45)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)]',
+        href && 'hover:-translate-y-1.5 hover:rotate-[-.35deg] hover:shadow-[inset_0_1px_0_rgba(255,255,255,.9),0_26px_55px_-28px_rgba(31,37,34,.55)]',
         className,
       )}
     >
@@ -380,7 +380,7 @@ export function ItemCard({
   const body = (
     <div
       className={cn(
-        'flex h-full flex-col rounded-xl border bg-card p-4 transition-colors hover:bg-muted/30',
+        'cognify-card flex h-full flex-col rounded-[28px] border border-white/65 bg-card/70 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,.8),0_18px_44px_-32px_rgba(31,37,34,.45)] backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(.2,.8,.2,1)] hover:-translate-y-1.5 hover:rotate-[.3deg] hover:bg-card/90',
         className,
       )}
     >
@@ -401,7 +401,7 @@ export function ItemCard({
 
 /** Container for Amboras list rows: one bordered card, hairline-divided rows. */
 export function List({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn('divide-y overflow-hidden rounded-xl border bg-card', className)}>{children}</div>;
+  return <div className={cn('divide-y divide-foreground/[0.06] overflow-hidden rounded-[28px] border border-white/65 bg-card/72 shadow-[inset_0_1px_0_rgba(255,255,255,.8),0_18px_44px_-32px_rgba(31,37,34,.4)] backdrop-blur-xl', className)}>{children}</div>;
 }
 
 /**

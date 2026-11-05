@@ -16,7 +16,8 @@ export default async function StudentCommunityDetailPage({
     searchParams: Promise<{ tab?: string }>;
 }) {
     const { id } = await params;
-    const { tab = 'feed' } = await searchParams; // Default to feed for students
+    const { tab: requestedTab } = await searchParams;
+    const tab = requestedTab === 'members' || requestedTab === 'chat' ? requestedTab : 'feed';
 
     const supabase = await createClient();
 
@@ -72,7 +73,7 @@ export default async function StudentCommunityDetailPage({
 
     return (
         <div className="min-h-screen bg-card">
-            <Header profile={profile} />
+            <Header profile={profile} title={community.name} />
             <div className="flex">
                 <Sidebar role="student" />
                 <main className="flex-1 p-4 md:p-8 cl-main">
@@ -86,71 +87,28 @@ export default async function StudentCommunityDetailPage({
                             Back to Communities
                         </Link>
 
-                        {/* Community Header */}
-                        <div className="bg-card rounded-xl border border-border p-8 mb-6">
-                            <div className="flex items-start justify-between">
-                                <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 rounded-xl flex items-center justify-center text-white text-3xl font-semibold bg-primary">
-                                        {community.name.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
-                                            {community.name}
-                                        </h1>
-                                        <p className="text-foreground/80 mb-3">{community.description}</p>
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2 text-sm text-foreground/80">
-                                                <Users className="w-4 h-4" />
-                                                <span>{memberCount} members</span>
-                                            </div>
-                                            <div className="text-sm text-muted-foreground">
-                                                Mentor: <span className="font-semibold text-foreground/80">{community.mentor?.full_name}</span>
-                                            </div>
-                                        </div>
+                        <header className="mb-5 rounded-3xl border border-black/10 bg-white/75 p-5 sm:p-8">
+                            <div className="flex items-start gap-4">
+                                <span aria-hidden className="grid size-12 shrink-0 place-items-center rounded-2xl bg-lime-200 text-xl font-bold text-lime-950">{community.name.charAt(0)}</span>
+                                <div className="min-w-0">
+                                    <h1 className="break-words font-bold">{community.name}</h1>
+                                    {community.description && <p className="mt-2 max-w-prose break-words text-sm text-muted-foreground">{community.description}</p>}
+                                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                                        <span className="inline-flex items-center gap-2"><Users className="size-4" />{memberCount} {memberCount === 1 ? 'member' : 'members'}</span>
+                                        {community.mentor?.full_name && <span>Mentor · {community.mentor.full_name}</span>}
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </header>
 
-                        {/* Tab Navigation */}
-                        <div className="flex gap-2 mb-6 border-b border-border">
-                            <Link
-                                href={`/dashboard/student/communities/${id}?tab=feed`}
-                                className={`px-6 py-3 font-semibold transition-colors ${tab === 'feed'
-                                    ? 'text-accent-purple border-b-2 border-accent-purple'
-                                    : 'text-foreground/80 hover:text-foreground'
-                                    }`}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <FileText className="w-5 h-5" />
-                                    Feed
-                                </div>
-                            </Link>
-                            <Link
-                                href={`/dashboard/student/communities/${id}?tab=chat`}
-                                className={`px-6 py-3 font-semibold transition-colors ${tab === 'chat'
-                                    ? 'text-accent-purple border-b-2 border-accent-purple'
-                                    : 'text-foreground/80 hover:text-foreground'
-                                    }`}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <MessageCircle className="w-5 h-5" />
-                                    Chat
-                                </div>
-                            </Link>
-                            <Link
-                                href={`/dashboard/student/communities/${id}?tab=members`}
-                                className={`px-6 py-3 font-semibold transition-colors ${tab === 'members'
-                                    ? 'text-accent-purple border-b-2 border-accent-purple'
-                                    : 'text-foreground/80 hover:text-foreground'
-                                    }`}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <Users className="w-5 h-5" />
-                                    Members
-                                </div>
-                            </Link>
-                        </div>
+                        <nav aria-label="Community sections" className="mb-6 inline-flex max-w-full gap-1 rounded-full border border-black/10 bg-white/80 p-1">
+                            {([{ key: 'feed', label: 'Feed', Icon: FileText }, { key: 'chat', label: 'Chat', Icon: MessageCircle }, { key: 'members', label: 'Members', Icon: Users }]).map(({ key, label, Icon }) => (
+                                <Link key={key} scroll={false} href={`/dashboard/student/communities/${id}?tab=${key}`} aria-current={tab === key ? 'page' : undefined}
+                                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-colors sm:px-5 ${tab === key ? 'bg-neutral-900 text-white' : 'text-neutral-700 hover:bg-neutral-100'}`}>
+                                    <Icon aria-hidden className="size-4" />{label}
+                                </Link>
+                            ))}
+                        </nav>
 
                         {/* Tab Content */}
                         {tab === 'feed' && (

@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils"
 const buttonVariants = cva(
   cn(
     "inline-flex items-center justify-center whitespace-nowrap gap-2 cl-press",
-    "rounded-lg text-sm font-semibold",
-    "transition-colors duration-200 ease-out",
+    "rounded-full text-sm font-semibold",
+    "transition-[color,background-color,border-color,box-shadow,transform] duration-300 ease-[cubic-bezier(.2,.8,.2,1)]",
     "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-foreground",
     "disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground disabled:border-transparent",
   ),
@@ -29,13 +29,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground border border-transparent hover:bg-primary/90",
+          "bg-primary text-primary-foreground border border-transparent shadow-[0_8px_22px_-10px_rgba(15,23,42,.7)] hover:-translate-y-0.5 hover:bg-primary/85",
         primary:
-          "bg-primary text-primary-foreground border border-transparent hover:bg-primary/90",
+          "bg-primary text-primary-foreground border border-transparent shadow-[0_8px_22px_-10px_rgba(15,23,42,.7)] hover:-translate-y-0.5 hover:bg-primary/85",
         secondary:
-          "bg-card text-foreground border border-border hover:bg-muted/40",
+          "bg-card/80 text-foreground border border-white/70 backdrop-blur-xl hover:-translate-y-0.5 hover:bg-card",
         outline:
-          "bg-card text-foreground border border-border hover:bg-muted/40",
+          "bg-card/80 text-foreground border border-white/70 backdrop-blur-xl hover:-translate-y-0.5 hover:bg-card",
         /** White button for placement on saturated category cards. */
         onColor:
           "bg-card text-foreground border border-transparent hover:bg-muted/40",

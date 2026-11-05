@@ -20,7 +20,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="cl-app cl-v3">
+    <div className="cl-app cl-v3 app-ui">
       <PageTransition>{children}</PageTransition>
     </div>
   );

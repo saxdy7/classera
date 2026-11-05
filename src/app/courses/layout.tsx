@@ -10,5 +10,5 @@ export default function CoursesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="cl-app cl-v3"><PageTransition>{children}</PageTransition></div>;
+  return <div className="cl-app cl-v3 app-ui portal-surface"><PageTransition>{children}</PageTransition></div>;
 }

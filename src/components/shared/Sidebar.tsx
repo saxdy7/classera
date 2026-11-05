@@ -76,7 +76,7 @@ function NavRow({
   const base = cn(
     'flex h-9 w-full items-center gap-2.5 rounded-lg px-3 text-sm transition-colors',
     'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
-    active ? 'bg-muted font-medium text-foreground' : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground',
+    active ? 'bg-white/15 font-medium text-white' : 'text-white/85 hover:bg-white/10 hover:text-white',
     !expanded && 'justify-center px-2',
   );
   const icon = (
@@ -108,7 +108,7 @@ function NavRow({
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [account, setAccount] = useState<{ id: string; name: string; email: string; avatar?: string } | null>(null);
@@ -125,7 +125,7 @@ export function Sidebar({ role }: SidebarProps) {
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    document.documentElement.style.setProperty('--cl-sidebar-w', expanded ? '260px' : '68px');
+    document.documentElement.style.setProperty('--cl-sidebar-w', expanded ? '272px' : '80px');
     try { window.localStorage.setItem('cl-sidebar-expanded', expanded ? '1' : '0'); } catch {}
   }, [expanded]);
 
@@ -248,16 +248,16 @@ export function Sidebar({ role }: SidebarProps) {
     <>
       {/* Desktop rail */}
       <aside
-        className="hidden md:flex md:fixed md:left-0 md:top-0 md:bottom-0 z-50 flex-col overflow-hidden border-r bg-[var(--sidebar)] text-[var(--sidebar-foreground)]"
-        style={{ width: expanded ? 260 : 68, transition: 'width 200ms cubic-bezier(0.4,0,0.2,1)', willChange: 'width' }}
+        className="cognify-sidebar hidden md:flex md:fixed md:left-3 md:top-3 md:bottom-3 z-50 flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[#151817]/96 text-white shadow-[0_28px_70px_-28px_rgba(8,12,10,.78)] backdrop-blur-2xl"
+        style={{ width: expanded ? 272 : 80, transition: 'width 420ms cubic-bezier(0.16,1,0.3,1)', willChange: 'width' }}
       >
         {/* Logo */}
-        <div className={cn('flex h-14 shrink-0 items-center gap-2', expanded ? 'px-4' : 'justify-center px-2')}>
+        <div className={cn('flex h-16 shrink-0 items-center gap-2', expanded ? 'px-4' : 'justify-center px-2')}>
           <Link href={`/dashboard/${role}`} className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-accent-purple text-white">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#c9f36b] text-[#17200e] shadow-[0_8px_24px_-10px_rgba(201,243,107,.9)] transition-transform duration-500 hover:-rotate-6 hover:scale-110">
               <GraduationCap className="size-4" />
             </span>
-            {expanded && <span className="truncate text-base font-semibold tracking-tight text-foreground">Classera</span>}
+            {expanded && <span className="truncate text-lg font-bold tracking-tight text-white">Classera</span>}
           </Link>
         </div>
 
@@ -291,10 +291,19 @@ export function Sidebar({ role }: SidebarProps) {
                 <div key={item.label} className="flex flex-col gap-0.5">
                   <NavRow
                     item={item}
-                    active={active && !item.children}
+                    active={active}
                     expanded={expanded}
                     open={open}
-                    onToggle={item.children ? () => toggleGroup(item.label, open) : undefined}
+                    onToggle={item.children ? () => {
+                      // A collapsed group must not be a dead icon. Open the rail
+                      // first, then reveal its children in the same interaction.
+                      if (!expanded) {
+                        window.dispatchEvent(new CustomEvent(SIDEBAR_EVENT, { detail: true }));
+                        setOpenGroups((groups) => ({ ...groups, [item.label]: true }));
+                        return;
+                      }
+                      toggleGroup(item.label, open);
+                    } : undefined}
                   />
                   {item.children && open && expanded && (
                     <div className="flex flex-col gap-0.5">
